@@ -8,12 +8,10 @@
 .wafpickle-*
 CVS
 npm-debug.log
-cert/**.srl
-cert/tmpCert/**crt
-cert/**.key
-cert/**.crt
-
-
+cert/**/*.srl
+cert/**/*.key
+cert/**/*.crt
+cert/**/*.csr
 
 # Logs
 logs
