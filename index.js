@@ -1,3 +1,5 @@
+var PROXY_PORT = 8001;
+
 var http      = require('http'),
     https     = require('https'),
     fs        = require('fs'),
@@ -11,11 +13,11 @@ var serverMgrInstance = new serverMgr();
 var httpProxyServer = http.createServer(function (req, res) {
     var urlPattern = url.parse(req.url);
     var options = {
-        hostname: urlPattern.host,
-        port: urlPattern.port || 80,
-        path: urlPattern.path,
-        method: req.method,
-        headers:req.headers
+        hostname : urlPattern.host,
+        port     : urlPattern.port || 80,
+        path     : urlPattern.path,
+        method   : req.method,
+        headers  : req.headers
     };
 
     var directReq = http.request(options,function(directRes){
@@ -46,7 +48,7 @@ httpProxyServer.on('connect', function(req, socket, head){
                     });
                 });     
             }catch(e){
-                console.log("err --");//TODO 
+                console.log("err when connect to local https server (__hostname)".replace(/__hostname/,hostname));//TODO 
             }
             
         }else{
@@ -55,4 +57,5 @@ httpProxyServer.on('connect', function(req, socket, head){
     });
 });
 
-httpProxyServer.listen(8001);
+httpProxyServer.listen(PROXY_PORT);
+console.log("proxy started at port " + PROXY_PORT);
