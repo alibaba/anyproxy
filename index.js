@@ -14,6 +14,7 @@ program
     .option('-t, --type [value]', 'http|https,http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
     .option('-c, --clear', 'clear all the tmp certificates')
+    .option('-h, --help', 'print help info')
     .parse(process.argv);
 
 var PROXY_PORT    = program.port || 8001,
@@ -27,6 +28,10 @@ if(program.clear){
         console.log("certificates cleared");
         process.exit(0);
     });
+
+}else if(program.help){
+    program.help();
+    
 }else{
     var serverMgrInstance = new serverMgr(),
         httpProxyServer;
