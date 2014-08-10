@@ -8,7 +8,9 @@ A simple and fast solution is to short the traffic between the user and the targ
 This is useful when you want to establish a standard proxy and do some forwarding tasks. But this can also be useless when using as a debug tool.
 
 To work as a debug tool of HTTPS, the proxy itself should do two things : intercept the request and cheat the browser with a valid certificate. This is what you know as the man-in-the-middle attack.
+
 In order to have a browser-trusted certificate, we would sign certificates dynamically. The first thing to do is to generate a self-signed root CA and import to the system keychain. After trusting this CA, all child certs signed by it can be naturally trusted by the browser. 
+
 What this proxy do is to generate and replace a temporary cert for any domain if neccessary. Using it, we can intercept all the https requests for debug. BTW, this is also what the charlse/fiddler do when you check the HTTPS_PROXY in preference settings.
 
 ## Feature
