@@ -10,11 +10,10 @@ var http      = require('http'),
     program   = require('commander');
 
 program
-    .option('-h, --host [value]', 'hostname for https proxy, localhost for default')
+    .option('-u, --url [value]', 'hostname for https proxy, localhost for default')
     .option('-t, --type [value]', 'http|https,http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
     .option('-c, --clear', 'clear all the tmp certificates')
-    .option('-h, --help', 'print help info')
     .parse(process.argv);
 
 var PROXY_PORT    = program.port || 8001,
@@ -23,13 +22,15 @@ var PROXY_PORT    = program.port || 8001,
     PROXY_TYPE    = /https/i.test(program.type)? T_PROXY_HTTPS : T_PROXY_HTTP;
     HOSTNAME      = program.host || "localhost";
 
+
+var count = 0;
 if(program.clear){
     exec("rm -rf ./cert/tmpCert",function(){
         console.log("certificates cleared");
         process.exit(0);
     });
 
-}else if(program.help){
+}else if(program.help && false){ //TODO 
     program.help();
     
 }else{
@@ -82,9 +83,6 @@ if(program.clear){
         }
     );    
 }
-
-
-
 
 function dealProxyUserHttpReq(req,res){
     var urlPattern = url.parse(req.url);
