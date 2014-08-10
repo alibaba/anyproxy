@@ -17,7 +17,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 * can work as http or https proxy
 * generate and intercept https requests for any domain without complaint by browser (only after you trust its root CA)
 
-## how to use
+## How to use
 ### step 0 - setup env
 * install NodeJS
 * install [openssl](http://www.openssl.org/) , i.e. the command ``openssl`` should be exposed to your shell
