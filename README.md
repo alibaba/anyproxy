@@ -24,7 +24,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 
 ### step 1 - clone codes
 * Clone repo with ``https://github.com/ottomao/anyproxy.git``
-* change working directory to http-proxy ``cd http-proxy``
+* change working directory to anyproxy ``cd anyproxy``
 
 ### step 2 - generate a rootCA and trust it
 * ``cd cert``
