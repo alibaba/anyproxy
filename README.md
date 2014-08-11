@@ -23,7 +23,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 * install [openssl](http://www.openssl.org/) , i.e. the command ``openssl`` should be exposed to your shell
 
 ### step 1 - clone codes
-* Clone repo with ``git clone https://github.com/ottomao/http-proxy``
+* Clone repo with ``https://github.com/ottomao/anyproxy.git``
 * change working directory to http-proxy ``cd http-proxy``
 
 ### step 2 - generate a rootCA and trust it
