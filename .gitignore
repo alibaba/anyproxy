@@ -6,6 +6,7 @@
 .lock-wscript
 .svn
 .wafpickle-*
+tmp.txt
 CVS
 npm-debug.log
 cert/**/*.srl
