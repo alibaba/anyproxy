@@ -1,9 +1,11 @@
 {
   "name": "anyproxy",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "https proxy over http",
   "main": "proxy.js",
-  "bin": "bin.js",
+  "bin": {
+    "anyproxy":"bin.js"
+  },
   "dependencies": {
     "async": "~0.9.0",
     "commander": "~2.3.0"
