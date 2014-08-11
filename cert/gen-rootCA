@@ -1,4 +1,6 @@
 #!/bin/bash
 
+outputPath=$1
+cd $outputPath
 openssl genrsa -out rootCA.key 2048
 openssl req -x509 -new -nodes -key rootCA.key -days 36500 -out rootCA.crt

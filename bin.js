@@ -1,5 +1,5 @@
 var program   = require('commander'),
-    mainProxy = require("./index.js");
+    mainProxy = require("./proxy.js");
 
 program
     .option('-u, --host [value]', 'hostname for https proxy, localhost for default')
@@ -9,12 +9,11 @@ program
     .parse(process.argv);
 
 if(program.clear){
-    exec("rm -rf ./cert/tmpCert",function(){
-        console.log("certificates cleared");
+    require("./lib/certMgr").clearCerts(function(){
+        console.log("all certs cleared");
         process.exit(0);
     });
 
 }else{
     mainProxy.startServer(program.type,program.port, program.host);
-
 }

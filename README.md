@@ -1,4 +1,4 @@
-http-proxy
+anyproxy
 ==========
 
 ## Intro
