@@ -29,7 +29,7 @@ function startServer(type, port, hostname){
             //creat server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){
-                    httpsServerMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
+                    certMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
                         if(err){
                             callback(err);
                         }else{
@@ -44,6 +44,7 @@ function startServer(type, port, hostname){
                 }else{
                     httpProxyServer = http.createServer(requestHandler);
                     callback(null);
+                    
                 }        
             },
 
