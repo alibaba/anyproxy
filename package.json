@@ -1,8 +1,9 @@
 {
-  "name": "http-proxy",
+  "name": "anyproxy",
   "version": "0.1.0",
   "description": "https proxy over http",
-  "main": "index.js",
+  "main": "proxy.js",
+  "bin": "bin.js",
   "dependencies": {
     "async": "~0.9.0",
     "commander": "~2.3.0"
