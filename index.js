@@ -9,47 +9,29 @@ var http      = require('http'),
     createCert= require("./lib/createCert"),
     program   = require('commander');
 
-program
-    .option('-u, --url [value]', 'hostname for https proxy, localhost for default')
-    .option('-t, --type [value]', 'http|https,http for default')
-    .option('-p, --port [value]', 'proxy port, 8001 for default')
-    .option('-c, --clear', 'clear all the tmp certificates')
-    .parse(process.argv);
+var T_TYPE_HTTP  = 0,
+    T_TYPE_HTTPS = 1,
+    DEFAULT_PORT = 8001,
+    DEFAULT_HOST = "localhost",
+    DEFAULT_TYPE = T_TYPE_HTTP;
 
-var PROXY_PORT    = program.port || 8001,
-    T_PROXY_HTTP  = 0,
-    T_PROXY_HTTPS = 1,
-    PROXY_TYPE    = /https/i.test(program.type)? T_PROXY_HTTPS : T_PROXY_HTTP;
-    HOSTNAME      = program.host || "localhost";
+var serverMgrInstance = new serverMgr(),
+    httpProxyServer;
 
-
-var count = 0;
-if(program.clear){
-    exec("rm -rf ./cert/tmpCert",function(){
-        console.log("certificates cleared");
-        process.exit(0);
-    });
-
-}else if(program.help && false){ //TODO 
-    program.help();
-    
-}else{
-    var serverMgrInstance = new serverMgr(),
-        httpProxyServer;
+function startServer(type, port, hostname){
+    var proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
+        proxyPort = port     || DEFAULT_PORT,
+        proxyHost = hostname || DEFAULT_HOST;
 
     async.series([
         //creat server
         function(callback){
-            if(PROXY_TYPE == T_PROXY_HTTP){
-                httpProxyServer = http.createServer(dealProxyUserHttpReq);
-                callback(null);
-            }else{
-
-                var keyFile = "./cert/tmpCert/__hostname.key".replace(/__hostname/,HOSTNAME),
-                    crtFile = "./cert/tmpCert/__hostname.crt".replace(/__hostname/,HOSTNAME);
+            if(proxyType == T_TYPE_HTTPS){
+                var keyFile = "./cert/tmpCert/__hostname.key".replace(/__hostname/,proxyHost),
+                    crtFile = "./cert/tmpCert/__hostname.crt".replace(/__hostname/,proxyHost);
 
                 if(!fs.existsSync(keyFile) || !fs.existsSync(crtFile)){
-                    createCert(HOSTNAME,function(){
+                    createCert(proxyHost,function(){
                         httpProxyServer = https.createServer({
                             key : fs.readFileSync(keyFile),
                             cert: fs.readFileSync(crtFile)
@@ -63,25 +45,32 @@ if(program.clear){
                     },dealProxyUserHttpReq);
                     callback(null);
                 }
+
+            }else{
+                httpProxyServer = http.createServer(dealProxyUserHttpReq);
+                callback(null);
+                
             }        
         },
 
-        //
         function(callback){
             //listen CONNECT method for https over http
             httpProxyServer.on('connect',dealProxyConnectReq);
-            httpProxyServer.listen(PROXY_PORT);
+            httpProxyServer.listen(proxyPort);
             callback(null);
 
-        }],function(err,result){
+        }],
+
+        //final callback
+        function(err,result){
             if(!err){
-                console.log( (PROXY_TYPE == T_PROXY_HTTP ? "Http" : "Https") + " proxy started at port " + PROXY_PORT);
+                console.log( (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at port " + proxyPort);
             }else{
                 console.log("err when start proxy server :(");
                 console.log(err);
             }
         }
-    );    
+    );
 }
 
 function dealProxyUserHttpReq(req,res){
@@ -108,7 +97,6 @@ function dealProxyUserHttpReq(req,res){
     directReq.end();    
 }
 
-
 function dealProxyConnectReq(req, socket, head){
     var hostname = req.url.split(":")[0];
 
@@ -131,3 +119,5 @@ function dealProxyConnectReq(req, socket, head){
         }
     });
 }
+
+module.exports.startServer = startServer;
