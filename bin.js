@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var program   = require('commander'),
     mainProxy = require("./proxy.js");
 
@@ -16,5 +18,5 @@ if(program.clear){
 
 }else{
     mainProxy.startServer(program.type,program.port, program.host);
-    
+
 }
