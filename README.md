@@ -33,7 +33,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 * ``cd ..``
 
 ### start server
-* ``node index.js``
+* ``node bin.js`` , or use ``node bin.js --help`` for help
 
 
 
