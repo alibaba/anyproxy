@@ -5,9 +5,9 @@ var http = require('http'),
     async          = require("async"),
     url            = require('url'),
     exec           = require('child_process').exec,
-    httpsServerMgr = require("./lib/httpsServerMgr"),
-    certMgr        = require("./lib/certMgr"),
     program        = require('commander'),
+    color          = require('colorful'),
+    certMgr        = require("./lib/certMgr"),
     requestHandler = require("./lib/requestHandler");
 
 var T_TYPE_HTTP  = 0,
@@ -16,17 +16,18 @@ var T_TYPE_HTTP  = 0,
     DEFAULT_HOST = "localhost",
     DEFAULT_TYPE = T_TYPE_HTTP;
 
-var httpsServerMgrInstance = new httpsServerMgr(),
-    httpProxyServer;
+var httpProxyServer;
 
-function startServer(type, port, hostname){
+function startServer(type, port, hostname,rule){
     var proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort = port     || DEFAULT_PORT,
         proxyHost = hostname || DEFAULT_HOST;
 
+    requestHandler.setRules(rule);
+
     async.series([
 
-            //creat server
+            //creat proxy server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){
                     certMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
@@ -36,21 +37,20 @@ function startServer(type, port, hostname){
                             httpProxyServer = https.createServer({
                                 key : keyContent,
                                 cert: crtContent
-                            },requestHandler);
+                            },requestHandler.userRequestHandler);
                             callback(null);
                         }
                     });
 
                 }else{
-                    httpProxyServer = http.createServer(requestHandler);
+                    httpProxyServer = http.createServer(requestHandler.userRequestHandler);
                     callback(null);
-                    
                 }        
             },
 
             //listen CONNECT method for https over http
             function(callback){
-                httpProxyServer.on('connect',dealProxyConnectReq);
+                httpProxyServer.on('connect',requestHandler.connectReqHandler);
                 httpProxyServer.listen(proxyPort);
                 callback(null);
             }
@@ -60,36 +60,15 @@ function startServer(type, port, hostname){
         //final callback
         function(err,result){
             if(!err){
-                console.log( (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at port " + proxyPort);
+                var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at port " + proxyPort;
+                console.log(color.green(tipText)); 
             }else{
-                console.log("err when start proxy server :(");
+                var tipText = "err when start proxy server :(";
+                console.log(color.red(tipText));
                 console.log(err);
             }
         }
     );
-}
-
-function dealProxyConnectReq(req, socket, head){
-    var hostname = req.url.split(":")[0];
-
-    //forward the https-request to local https server
-    httpsServerMgrInstance.fetchPort(hostname,function(err,port){
-        if(!err && port){
-            try{
-                var conn = net.connect(port, 'localhost', function(){
-                    socket.write('HTTP/' + req.httpVersion + ' 200 OK\r\n\r\n', 'UTF-8', function() {
-                        conn.pipe(socket);
-                        socket.pipe(conn);
-                    });
-                });     
-            }catch(e){
-                console.log("err when connect to local https server (__hostname)".replace(/__hostname/,hostname));//TODO 
-            }
-            
-        }else{
-            console.log("err fetch HTTPS server for host:" + hostname);
-        }
-    });
 }
 
 module.exports.startServer = startServer;
