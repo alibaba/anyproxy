@@ -16,10 +16,10 @@ email=a@b.com
 #Optional
 password=a
  
-if [ -z "$outputPath$domain" ]
+if [ -z "$domain" ]
 then
     echo "Argument not present."
-    echo "Useage $0 [common name]"
+    echo "Useage $0 [domain] [outputPath]"
  	
     exit 99
 fi

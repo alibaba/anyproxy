@@ -4,10 +4,11 @@
   "description": "https proxy over http",
   "main": "proxy.js",
   "bin": {
-    "anyproxy":"bin.js"
+    "anyproxy": "bin.js"
   },
   "dependencies": {
     "async": "~0.9.0",
+    "colorful": "^2.1.0",
     "commander": "~2.3.0"
   },
   "devDependencies": {},
