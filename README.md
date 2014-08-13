@@ -34,10 +34,10 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 
 ### step 3 - start server
 
-#### with default settings
+#### start with default settings
 * ``anyproxy``
 
-#### set port
+#### start a specific port
 * ``anyproxy --port 8001``
 
 #### start a https proxy
