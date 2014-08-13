@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "https proxy over http",
   "main": "proxy.js",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "~0.9.0",
+    "async-task-mgr": "^1.0.1",
     "colorful": "^2.1.0",
     "commander": "~2.3.0"
   },
