@@ -37,7 +37,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 #### start with default settings
 * ``anyproxy``
 
-#### start a specific port
+#### start with a specific port
 * ``anyproxy --port 8001``
 
 #### start a https proxy
@@ -49,7 +49,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 #### clear all the temperary certificates
 * ``anyproxy --clear``
 
-#### may file to local
+#### map file to local
 * ``anyproxy --rule /path/to/rule.js``
 * a sample schema of ruls.js is as follows
 
