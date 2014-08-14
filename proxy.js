@@ -1,3 +1,5 @@
+//TODO : get free port
+
 var http = require('http'),
     https          = require('https'),
     fs             = require('fs'),
@@ -16,13 +18,15 @@ var T_TYPE_HTTP  = 0,
     DEFAULT_HOST = "localhost",
     DEFAULT_TYPE = T_TYPE_HTTP;
 
-function startServer(type, port, hostname,ruleFile){
-    var proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
+function proxyServer(type, port, hostname,ruleFile){
+    var self      = this,
+        proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort = port     || DEFAULT_PORT,
-        proxyHost = hostname || DEFAULT_HOST,
-        httpProxyServer;
+        proxyHost = hostname || DEFAULT_HOST;
 
-    if(ruleFile){
+    self.httpProxyServer = null;
+
+    if(ruleFile){ //TODO : fs.join
         if(fs.existsSync(ruleFile)){
             requestHandler.setRules(require(ruleFile));
             console.log(color.green("rule file loaded"));
@@ -31,8 +35,8 @@ function startServer(type, port, hostname,ruleFile){
         }
     }
 
-    async.series([
-
+    async.series(
+        [
             //creat proxy server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){
@@ -40,7 +44,7 @@ function startServer(type, port, hostname,ruleFile){
                         if(err){
                             callback(err);
                         }else{
-                            httpProxyServer = https.createServer({
+                            self.httpProxyServer = https.createServer({
                                 key : keyContent,
                                 cert: crtContent
                             },requestHandler.userRequestHandler);
@@ -49,15 +53,15 @@ function startServer(type, port, hostname,ruleFile){
                     });
 
                 }else{
-                    httpProxyServer = http.createServer(requestHandler.userRequestHandler);
+                    self.httpProxyServer = http.createServer(requestHandler.userRequestHandler);
                     callback(null);
                 }        
             },
 
             //listen CONNECT method for https over http
             function(callback){
-                httpProxyServer.on('connect',requestHandler.connectReqHandler);
-                httpProxyServer.listen(proxyPort);
+                self.httpProxyServer.on('connect',requestHandler.connectReqHandler);
+                self.httpProxyServer.listen(proxyPort);
                 callback(null);
             }
             
@@ -75,8 +79,10 @@ function startServer(type, port, hostname,ruleFile){
             }
         }
     );
+
+    return self.httpProxyServer;
 }
 
-module.exports.startServer        = startServer;
+module.exports.proxyServer        = proxyServer;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;

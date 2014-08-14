@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "a charles/fiddle like web proxy for developers which can intercept https requests without browser warning",
   "main": "proxy.js",
   "bin": {
@@ -14,7 +14,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodeunit test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ottomao/anyproxy.git"
   },
   "author": "ottomao@gmail.com",
   "license": "ISC"
