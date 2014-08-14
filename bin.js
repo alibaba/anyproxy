@@ -25,5 +25,5 @@ if(program.clear){
         process.exit(0);
     });
 }else{
-    proxy.startServer(program.type,program.port, program.host ,program.rule);
+    new proxy.proxyServer(program.type,program.port, program.host ,program.rule);
 }

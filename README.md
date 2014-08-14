@@ -18,7 +18,7 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 * generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * can be used globally or as a nodejs module 
 
-## How to use
+## Usage
 ### step 0 - setup env
 
 * install NodeJS
@@ -56,7 +56,7 @@ npm install anyproxy
 var proxy = require("anyproxy");
 
 !proxy.isRootCAFileExists() && proxy.generateRootCA();
-proxy.startServer("http","8001", "localhost" ,"path/to/rule/file");
+new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file");
 
 ```
 
