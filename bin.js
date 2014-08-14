@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var program = require('commander'),
-    mainProxy   = require("./proxy.js"),
+var program     = require('commander'),
+    proxy       = require("./proxy.js"),
     color       = require('colorful'),
     fs          = require("fs");
 
@@ -25,12 +25,5 @@ if(program.clear){
         process.exit(0);
     });
 }else{
-    var handleRule;
-    if(program.rule){
-        console.log("parsing rule file..");
-        var handleRule = require(program.rule);
-    }
-
-    mainProxy.startServer(program.type,program.port, program.host ,handleRule);
-
+    proxy.startServer(program.type,program.port, program.host ,program.rule);
 }
