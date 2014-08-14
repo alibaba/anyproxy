@@ -8,7 +8,7 @@ var rules = {
         }
         ,{
             "host"      :/./,
-            "path"      :/png/,
+            "path"      :/\.(png|gif|jpg|jpeg)/,
             "localFile" :"/Users/Stella/tmp/test.png",
             "localDir"  :"~/"
         }

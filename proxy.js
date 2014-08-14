@@ -16,14 +16,20 @@ var T_TYPE_HTTP  = 0,
     DEFAULT_HOST = "localhost",
     DEFAULT_TYPE = T_TYPE_HTTP;
 
-var httpProxyServer;
-
-function startServer(type, port, hostname,rule){
+function startServer(type, port, hostname,ruleFile){
     var proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort = port     || DEFAULT_PORT,
-        proxyHost = hostname || DEFAULT_HOST;
+        proxyHost = hostname || DEFAULT_HOST,
+        httpProxyServer;
 
-    requestHandler.setRules(rule);
+    if(ruleFile){
+        if(fs.existsSync(ruleFile)){
+            requestHandler.setRules(require(ruleFile));
+            console.log(color.green("rule file loaded"));
+        }else{
+            console.log(color.red("can not find rule file"));
+        }
+    }
 
     async.series([
 
@@ -71,4 +77,6 @@ function startServer(type, port, hostname,rule){
     );
 }
 
-module.exports.startServer = startServer;
+module.exports.startServer        = startServer;
+module.exports.generateRootCA     = certMgr.generateRootCA;
+module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;

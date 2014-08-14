@@ -2,20 +2,21 @@ anyproxy
 ==========
 
 ## Intro
-While there are lots of proxy written by nodejs in github, most of them can not handle users' HTTPS requests perfectly. A typical problem is that the browser will throw warning like INVALID_CERTIFICATE when some https requests are sent. 
+While there are lots of proxy written by nodejs in github, most of them can not handle users' HTTPS requests perfectly. A typical problem is that the browser will throw warning like INVALID_CERTIFICATE when they want to intercept some https requests. 
 
 A simple and fast solution is to short the traffic between the user and the target server. That is to say, what the proxy do is to forward all the traffic of both sides, without intercepting or looking inside. 
-This is useful when you want to establish a standard proxy and do some forwarding tasks. But this can also be useless when using as a debug tool.
+This is useful when you want to establish a standard proxy and forwarding data. But this can also be useless when being used as a debug tool.
 
-To work as a debug tool of HTTPS, the proxy itself should do two things : intercept the request and cheat the browser with a valid certificate,aka the man-in-the-middle(MITM) attack.
+To work as a debug tool of HTTPS, the proxy itself should do two things: intercept the request and cheat the browser with a valid certificate,aka the man-in-the-middle(MITM) attack.
 
-In order to have a browser-trusted certificate, we would sign certificates dynamically. The first thing to do is to generate a self-signed root CA and import to the system keychain. After trusting this CA, all child certs signed by it can be naturally trusted by the browser. 
+In order to have a browser-trusted certificate, we would sign certificates dynamically. The first thing to do is to generate a self-signed root CA and import to the system keychain. After trusting this CA, all child certs inherit from root CA can be naturally trusted by the browser. 
 
-What this proxy do is to generate and replace a temporary cert for any domain if neccessary. Using it, we can intercept any requests for debug. BTW, this is also what the charlse/fiddler do when you check the HTTPS_PROXY in preference settings.
+What this proxy do is to generate and replace a temporary cert for any domain if neccessary. Using it, we can intercept any requests for debug. BTW, this is also what the charlse/fiddler do when you check the enable_ssl_proxy in preference.
 
 ## Feature
-* can work as http or https proxy
-* generate and intercept https requests for any domain without complaint by browser (only after you trust its root CA)
+* work as http or https proxy
+* generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
+* can be used globally or as a nodejs module 
 
 ## How to use
 ### step 0 - setup env
@@ -46,11 +47,25 @@ What this proxy do is to generate and replace a temporary cert for any domain if
 
 ### others
 
+#### work as a module
+```
+npm install anyproxy
+```
+
+```javascript
+var proxy = require("anyproxy");
+
+!proxy.isRootCAFileExists() && proxy.generateRootCA();
+proxy.startServer("http","8001", "localhost" ,"path/to/rule/file");
+
+```
+
 #### clear all the temperary certificates
 * ``anyproxy --clear``
 
 #### map file to local
-* ``anyproxy --rule /path/to/rule.js``
+* ``anyproxy --rule /path/to/ruleFile.js``
+* actually ruleFile.js is a module for Nodejs
 * a sample schema of ruls.js is as follows
 
 ```javascript
@@ -64,7 +79,7 @@ var rules = {
         }
         ,{
             "host"      :/./,
-            "path"      :/png/,
+            "path"      :/\.(png|gif|jpg|jpeg)/,
             "localFile" :"/Users/Stella/tmp/test.png",
             "localDir"  :"~/"
         }

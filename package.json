@@ -1,7 +1,7 @@
 {
   "name": "anyproxy",
-  "version": "1.0.1",
-  "description": "https proxy over http",
+  "version": "1.1.0",
+  "description": "a charles/fiddle like web proxy for developers which can intercept https requests without browser warning",
   "main": "proxy.js",
   "bin": {
     "anyproxy": "bin.js"
