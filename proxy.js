@@ -26,9 +26,13 @@ function proxyServer(type, port, hostname,ruleFile){
 
     self.httpProxyServer = null;
 
-    if(ruleFile){ //TODO : fs.join
+    if(ruleFile){
         if(fs.existsSync(ruleFile)){
-            requestHandler.setRules(require(ruleFile));
+            try{ //for abs path
+                requestHandler.setRules(require(ruleFile)); //todo : require path
+            }catch(e){ //for relative path
+                requestHandler.setRules(require("./" + ruleFile));
+            }
             console.log(color.green("rule file loaded"));
         }else{
             console.log(color.red("can not find rule file"));
