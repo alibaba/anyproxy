@@ -6,11 +6,17 @@ var rules = {
             "localFile" :"",             //this file will be returned to user when host and path pattern both meets the request
             "localDir"  :"~/"            //find the file of same name in localdir. anyproxy will not read localDir settings unless localFile is falsy
         }
+        // ,{
+        //     "host"      :/./,
+        //     "path"      :/\.(png|gif|jpg|jpeg)/,
+        //     "localFile" :"/Users/Stella/tmp/test.png",
+        //     "localDir"  :"~/"
+        // }
         ,{
             "host"      :/./,
-            "path"      :/\.(png|gif|jpg|jpeg)/,
-            "localFile" :"/Users/Stella/tmp/test.png",
-            "localDir"  :"~/"
+            "path"      :/tps/,
+            "localFile" :"",
+            "localDir"  :"/Users/Stella/tmp/"
         }
     ]
     ,"httpsConfig":{
