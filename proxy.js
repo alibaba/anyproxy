@@ -1,5 +1,3 @@
-//TODO : get free port
-
 var http = require('http'),
     https          = require('https'),
     fs             = require('fs'),
@@ -10,6 +8,7 @@ var http = require('http'),
     program        = require('commander'),
     color          = require('colorful'),
     certMgr        = require("./lib/certMgr"),
+    getPort        = require("./lib/getPort"),
     requestHandler = require("./lib/requestHandler");
 
 var T_TYPE_HTTP  = 0,
@@ -25,6 +24,10 @@ function proxyServer(type, port, hostname,ruleFile){
         proxyHost = hostname || DEFAULT_HOST;
 
     self.httpProxyServer = null;
+    self.close = function(){
+        self.httpProxyServer && self.httpProxyServer.close();
+        console.log(color.green("server closed :" + proxyHost + ":" + proxyPort));
+    }
 
     if(ruleFile){
         if(fs.existsSync(ruleFile)){
@@ -68,7 +71,6 @@ function proxyServer(type, port, hostname,ruleFile){
                 self.httpProxyServer.listen(proxyPort);
                 callback(null);
             }
-            
         ],
 
         //final callback
@@ -84,7 +86,6 @@ function proxyServer(type, port, hostname,ruleFile){
         }
     );
 
-    return self.httpProxyServer;
 }
 
 module.exports.proxyServer        = proxyServer;
