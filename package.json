@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "a charles/fiddle like web proxy for developers which can intercept https requests without browser warning",
   "main": "proxy.js",
   "bin": {
@@ -12,7 +12,9 @@
     "colorful": "^2.1.0",
     "commander": "~2.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tunnel": "0.0.3"
+  },
   "scripts": {
     "test": "nodeunit test.js"
   },
