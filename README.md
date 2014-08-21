@@ -32,7 +32,6 @@ Usage
 ### step 0 - setup env
 
 * install [NodeJS](http://nodejs.org/)
-* install [openssl](http://wiki.openssl.org/index.php/Compilation_and_Installation) ,if you want to use HTTPS-related features. After that, the command ``openssl`` should be exposed to your shell
 
 ### step 1 - install
 
@@ -47,6 +46,9 @@ Usage
 
 Using https features
 ----------------
+### install openssl
+* install [openssl](http://wiki.openssl.org/index.php/Compilation_and_Installation) ,if you want to use HTTPS-related features. After that, the command ``openssl`` should be exposed to your shell
+
 ### generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
 * execute ``anyproxy --root`` ,follow the instructions on screen
