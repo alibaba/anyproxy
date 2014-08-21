@@ -1,7 +1,7 @@
 {
   "name": "anyproxy",
-  "version": "1.1.2",
-  "description": "a charles/fiddle like web proxy for developers which can intercept https requests without browser warning",
+  "version": "1.2.0",
+  "description": "another proxy written in NODEJS, which can handle HTTPS requests and CROS perfectly",
   "main": "proxy.js",
   "bin": {
     "anyproxy": "bin.js"
