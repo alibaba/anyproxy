@@ -109,7 +109,5 @@ module.exports = rules;
 ```
 
 ## Contact
-Author : Otto Mao, from Shanghai,China
-ottomao@gmail.com
-
-Please feel free to raise any issue about this project, or give me some advice on this poor english doc. :)
+Please feel free to raise any issue about this project, or give us some advice on this doc. :)
+Email: alipay-sh-wd@list.alibaba-inc.com
