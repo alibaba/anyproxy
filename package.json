@@ -1,7 +1,7 @@
 {
   "name": "anyproxy",
-  "version": "1.2.8",
-  "description": "a charles/fiddler like proxy written in NodeJs, which can handle HTTPS requests and CROS perfectly",
+  "version": "1.2.9",
+  "description": "a charles/fiddler like proxy written in NodeJs, which can handle HTTPS requests and CROS perfectly.",
   "main": "proxy.js",
   "bin": {
     "anyproxy": "bin.js"
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alipay-ct-wd"
+    "url": "https://github.com/alipay-ct-wd/anyproxy"
   },
   "author": "alipay-sh-wd@list.alibaba-inc.com",
   "license": "ISC"
