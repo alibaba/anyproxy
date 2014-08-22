@@ -17,6 +17,10 @@ var rules = {
             "path"      :/tps/,
             "localFile" :"",
             "localDir"  :"/Users/Stella/tmp/"
+        },{
+            "host"      :/./,
+            "path"      :/\.(js)/,
+            "sleep"     :5//seconds
         }
     ]
     ,"httpsConfig":{
