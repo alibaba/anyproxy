@@ -1,11 +1,14 @@
 anyproxy
 ==========
+another proxy written in NodeJS, which can handle HTTPS requests and CORS perfectly. Produced by Alipay-ct-wd.
+Anyproxy是支付宝-创新终端技术部推出的一款基于NodeJS的web代理工具，用来解决HTTPS代理、跨域请求（CORS）等移动端调试中的常见问题。
+
 
 Feature
 ------------
 * work as http or https proxy
 * generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
-* support CROS-related http header, you could use make cross-domain requests via this proxy
+* support CORS-related http header, you could use make cross-domain requests via this proxy
 * can be used globally or as a nodejs module 
 
 
