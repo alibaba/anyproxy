@@ -109,5 +109,5 @@ module.exports = rules;
 ```
 
 ## Contact
-Please feel free to raise any issue about this project, or give us some advice on this doc. :)
-Email: alipay-sh-wd@list.alibaba-inc.com
+* Please feel free to raise any issue about this project, or give us some advice on this doc. :)
+* Email: alipay-sh-wd@list.alibaba-inc.com
