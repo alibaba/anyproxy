@@ -10,7 +10,8 @@
     "async": "~0.9.0",
     "async-task-mgr": "^1.0.1",
     "colorful": "^2.1.0",
-    "commander": "~2.3.0"
+    "commander": "~2.3.0",
+    "sleep": "~1.1.8"
   },
   "devDependencies": {
     "tunnel": "0.0.3"
