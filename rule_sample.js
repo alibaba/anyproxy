@@ -19,8 +19,16 @@ var rules = {
             "localDir"  :"/Users/Stella/tmp/"
         },{
             "host"      :/./,
-            "path"      :/\.(js)/,
+            "path"      :/response\.(json)/,
             "sleep"     :5//seconds
+        },{
+            "host"      :/./,
+            "path"      :/(.*)\.html/,
+            "callback"  :function(res){
+                //remoty.js will be inject into response via callback
+                res.write("<script type=\"text\/javascript\" src=\"http:\/\/localhost:3001\/remoty\.js\"><\/script>");
+                res.write("<script type=\"text\/javascript\" src=\"http:\/\/localhost:8080\/target\/target\-script\-min\.js\#anonymous\"><\/script>");
+            }
         }
     ]
     ,"httpsConfig":{
