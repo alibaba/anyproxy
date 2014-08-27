@@ -1,21 +1,27 @@
 var http = require('http'),
     https          = require('https'),
     fs             = require('fs'),
-    net            = require('net'),
     async          = require("async"),
     url            = require('url'),
-    exec           = require('child_process').exec,
     program        = require('commander'),
     color          = require('colorful'),
     certMgr        = require("./lib/certMgr"),
     getPort        = require("./lib/getPort"),
-    requestHandler = require("./lib/requestHandler");
+    requestHandler = require("./lib/requestHandler"),
+    Recorder       = require("./lib/Recorder"),
+    entities       = require("entities"),
+    express        = require("express"),
+    WebSocketServer= require('ws').Server;
+
+GLOBAL.recorder = new Recorder();
 
 var T_TYPE_HTTP  = 0,
-    T_TYPE_HTTPS = 1,
-    DEFAULT_PORT = 8001,
-    DEFAULT_HOST = "localhost",
-    DEFAULT_TYPE = T_TYPE_HTTP;
+    T_TYPE_HTTPS           = 1,
+    DEFAULT_PORT           = 8001,
+    DEFAULT_WEB_PORT       = 8002,
+    DEFAULT_WEBSOCKET_PORT = 8003,
+    DEFAULT_HOST           = "localhost",
+    DEFAULT_TYPE           = T_TYPE_HTTP;
 
 function proxyServer(type, port, hostname,ruleFile){
     var self      = this,
@@ -28,6 +34,8 @@ function proxyServer(type, port, hostname,ruleFile){
         self.httpProxyServer && self.httpProxyServer.close();
         console.log(color.green("server closed :" + proxyHost + ":" + proxyPort));
     }
+
+    startWebServer();
 
     if(ruleFile){
         if(fs.existsSync(ruleFile)){
@@ -87,6 +95,59 @@ function proxyServer(type, port, hostname,ruleFile){
     );
 
 }
+
+function startWebServer(port){
+    port = port || DEFAULT_WEB_PORT;
+
+    //web interface
+    var app = express();
+    app.use(function(req, res, next) {
+        res.setHeader("note", "THIS IS A REQUEST FROM ANYPROXY WEB INTERFACE");
+        return next();
+    });
+
+    app.get("/summary",function(req,res){
+        GLOBAL.recorder.getSummaryList(function(err,docs){
+            if(err){
+                res.end(err.toString());
+            }else{
+                res.json(docs.slice(docs.length -500));
+            }
+        });
+    });
+
+    app.get("/body",function(req,res){
+        var reqQuery = url.parse(req.url,true);
+        var id = reqQuery.query.id;
+
+        res.setHeader("Content-Type","text/html");
+        res.writeHead(200);
+
+        var body = GLOBAL.recorder.getBody(id);
+        res.end(entities.encodeHTML(body));
+    });
+
+    app.use(express.static(__dirname + '/web'));
+
+    app.listen(port);
+
+    var tipText = "web interface started at port " + port;
+    console.log(color.green(tipText));
+
+
+
+    //web socket interface
+    var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
+    wss.broadcast = function(data) {
+        for(var i in this.clients){
+            this.clients[i].send(data);
+        }
+    };
+    GLOBAL.recorder.on("update",function(data){
+        wss.broadcast( JSON.stringify(data) );
+    });
+}
+
 
 module.exports.proxyServer        = proxyServer;
 module.exports.generateRootCA     = certMgr.generateRootCA;
