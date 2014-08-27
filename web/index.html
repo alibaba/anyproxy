@@ -240,7 +240,14 @@
 						
 						$('.J_recordDetailOverlay').css("width",$('.J_recordDetailOverlay').width() - deltaPageX);
 						$('.J_recordDetailOverlay').css("left",pageX + deltaPageX);
-						
+						if($('.J_recordDetailOverlay').width()<=100){
+							$('.J_recordDetailOverlay').animate({
+								'right': $('.J_recordDetailOverlay').width()
+							},300,function(){
+								$('.J_escBtn').trigger('click');
+							});
+							
+						}
 						pageX = e.pageX;
 						$('#ghostbar').remove();
 						$(document).unbind('mousemove');
