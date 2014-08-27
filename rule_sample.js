@@ -23,7 +23,7 @@ var rules = {
             "sleep"     :5//seconds
         },{
             "host"      :/./,
-            "path"      :/(.*)\.html/,
+            "path"      :/html/,
             "callback"  :function(res){
                 //remoty.js will be inject into response via callback
                 res.write("<script type=\"text\/javascript\" src=\"http:\/\/localhost:3001\/remoty\.js\"><\/script>");
