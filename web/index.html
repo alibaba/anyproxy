@@ -26,8 +26,11 @@
 	</div>
 
 	<div class="recordDetailOverlay J_recordDetailOverlay" style="display:none">
+		<div id="dragbar"></div>
 		<span class="escBtn J_escBtn">Close (ESC)</span>
-		<div class="J_recordDetailOverlayContent"></div>
+		<div class="J_recordDetailOverlayContentWrapper">
+			<div class="J_recordDetailOverlayContent"></div>
+		</div>
 	</div>
 
 	<script type="text/template" id="main_table_row">
@@ -208,6 +211,52 @@
 					console.log(e);
 				}
 
+
+				var i = 0;
+				var dragging = false,
+				pageX = 0;
+				$('#dragbar').mousedown(function(e){
+					pageX = e.pageX;
+					e.preventDefault();
+					dragging = true;
+					var main = $('.J_recordDetailOverlay');
+					var ghostbar = $('<div>',{
+						id:'ghostbar',
+						css: {
+							height: main.outerHeight(),
+							top: main.offset().top,
+							left: main.offset().left
+						}
+					}).appendTo('body');
+
+					$(document).mousemove(function(e){
+						ghostbar.css("left",e.pageX);
+					});
+				});
+
+				$(document).mouseup(function(e){
+					if (dragging) {
+						var deltaPageX = e.pageX - pageX;
+						
+						$('.J_recordDetailOverlay').css("width",$('.J_recordDetailOverlay').width() - deltaPageX);
+						$('.J_recordDetailOverlay').css("left",pageX + deltaPageX);
+						if($('.J_recordDetailOverlay').width()<=100){
+							$('.J_recordDetailOverlay').animate({
+								'right': $('.J_recordDetailOverlay').width()
+							},300,function(){
+								$('.J_escBtn').trigger('click');
+							});
+							
+						}
+						pageX = e.pageX;
+						$('#ghostbar').remove();
+						$(document).unbind('mousemove');
+						dragging = false;
+						
+					}
+				});
+
+
 			});
 
 		});
@@ -298,8 +347,8 @@
 			background: #FFF;
 			border-left: 1px solid #CCC;
 			top: 0;
-			padding: 10px 10px 20px 10px;
-			overflow-y:scroll;
+			padding: 0;
+			overflow:hidden;
 			box-sizing: border-box;
 			-moz-box-sizing: border-box;
 			-webkit-box-sizing: border-box;
@@ -312,11 +361,30 @@
 			color: #777;
 			cursor: pointer;
 			text-decoration: underline;
+			z-index:1;
 		}
 
 		.recordDetailOverlay li{
 			white-space: nowrap;
 			word-wrap: break-word;
+		}
+		.J_recordDetailOverlayContentWrapper{
+			width:100%;
+			height:100%;
+			position:relative;
+			right:0;
+			overflow:scroll;
+			margin-left:3px;
+		}
+		.J_recordDetailOverlayContent{
+			padding:20px;
+			height:100%;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			content: "";
+			display: table;
+			clear: both;
 		}
 
 		.data_id{
@@ -339,6 +407,23 @@
 		.http_status_504
 		{
 			color: #910A0A;
+		}
+
+		#dragbar{
+			position:absolute;
+			left:0px;
+			background-color:black;
+			height:100%;
+			width: 3px;
+			cursor: col-resize;
+		}
+		#ghostbar{
+		    width:3px;
+		    background-color:#000;
+		    opacity:0.5;
+		    position:absolute;
+		    cursor: col-resize;
+		    z-index:999
 		}
 	</style>
 </body>
