@@ -146,9 +146,6 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		$(document).on("keyup",function(e){
 			if(e.keyCode == 88 && e.ctrlKey){ // ctrl + x
 				clearLogs();
-			}else{
-				console.log("key up");
-				console.log(e);		
 			}
 		});
 
@@ -160,6 +157,10 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		var dataSocket = new WebSocket("ws://127.0.0.1:8003");
 		dataSocket.onmessage = function(event){
 			var data = JSON.parse(event.data);
+
+			var reqDate = new Date(data.startTime);
+			data.startTimeStr = reqDate.toLocaleDateString()+ " " + reqDate.toLocaleTimeString();
+
 
 			var previous;
 			if(previous = recList.get(data.id)){
