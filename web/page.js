@@ -144,7 +144,7 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		});
 
 		$(document).on("keyup",function(e){
-			if(e.keyCode == 88 && e.ctrlKey){ //ctrl x
+			if(e.keyCode == 88 && e.ctrlKey){ // ctrl + x
 				clearLogs();
 			}else{
 				console.log("key up");
@@ -178,7 +178,7 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 
 	//draggable panel
 	(function(){
-		var i = 0;
+		var i        = 0;
 		var dragging = false,
 		pageX = 0;
 		$('#dragbar').mousedown(function(e){
@@ -204,7 +204,6 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 			if (dragging) {
 				var deltaPageX = e.pageX - pageX;
 				
-				$('.J_recordDetailOverlay').css("width",$('.J_recordDetailOverlay').width() - deltaPageX);
 				$('.J_recordDetailOverlay').css("left",pageX + deltaPageX);
 				if($('.J_recordDetailOverlay').width()<=100){
 					$('.J_recordDetailOverlay').animate({

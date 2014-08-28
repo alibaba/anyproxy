@@ -99,9 +99,9 @@
 
 .recordDetailOverlay{
 	z-index: 1;
-	width: 61.8%;
 	height: 100%;
 	position: fixed;
+	left: 35%;
 	right: 0;
 	background: #FFF;
 	border-left: 1px solid #CCC;
