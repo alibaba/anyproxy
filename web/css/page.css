@@ -148,3 +148,23 @@
 {
 	color: #910A0A;
 }
+
+
+#dragbar{
+	position:absolute;
+	left:0px;
+	top:0px;
+	height: 100%;
+	float: left;
+	background-color:#CCC;
+	width: 3px;
+	cursor: col-resize;
+}
+#ghostbar{
+    width:3px;
+    background-color:#000;
+    opacity:0.5;
+    position:absolute;
+    cursor: col-resize;
+    z-index:999
+}
