@@ -176,4 +176,52 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 
 	});
 
+	//draggable panel
+	(function(){
+		var i = 0;
+		var dragging = false,
+		pageX = 0;
+		$('#dragbar').mousedown(function(e){
+			pageX = e.pageX;
+			e.preventDefault();
+			dragging = true;
+			var main = $('.J_recordDetailOverlay');
+			var ghostbar = $('<div>',{
+				id:'ghostbar',
+				css: {
+					height: main.outerHeight(),
+					top: main.offset().top,
+					left: main.offset().left
+				}
+			}).appendTo('body');
+
+			$(document).mousemove(function(e){
+				ghostbar.css("left",e.pageX);
+			});
+		});
+
+		$(document).mouseup(function(e){
+			if (dragging) {
+				var deltaPageX = e.pageX - pageX;
+				
+				$('.J_recordDetailOverlay').css("width",$('.J_recordDetailOverlay').width() - deltaPageX);
+				$('.J_recordDetailOverlay').css("left",pageX + deltaPageX);
+				if($('.J_recordDetailOverlay').width()<=100){
+					$('.J_recordDetailOverlay').animate({
+						'right': $('.J_recordDetailOverlay').width()
+					},300,function(){
+						$('.J_escBtn').trigger('click');
+					});
+					
+				}
+				pageX = e.pageX;
+				$('#ghostbar').remove();
+				$(document).unbind('mousemove');
+				dragging = false;
+				
+			}
+		});
+
+	})();
+
 });
