@@ -54,6 +54,14 @@
 	width: 180px;
 }
 
+.mainTableWrapper .col_mime{
+	width: 150px;
+}
+
+.mainTableWrapper .col_time{
+	width: 160px;
+}
+
 .mainTableWrapper tr.row_odd{
 	background: #f5f5f5;
 }
