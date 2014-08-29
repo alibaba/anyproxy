@@ -33,7 +33,7 @@ var rules = {
     ]
     ,"httpsConfig":{
         "bypassAll" : false,  //by setting this to true, anyproxy will not intercept any https request
-        "interceptDomains":[/www\.a\.com/,/www\.b\.com/] //by setting bypassAll:false, requests towards these domains will be intercepted, and try to meet the map rules above
+        "interceptDomains":[/www\.alipay\.com/,/www\.b\.com/] //by setting bypassAll:false, requests towards these domains will be intercepted, and try to meet the map rules above
     }
 }
 

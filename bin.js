@@ -26,4 +26,5 @@ if(program.clear){
     });
 }else{
     new proxy.proxyServer(program.type,program.port, program.host ,program.rule);
+
 }
