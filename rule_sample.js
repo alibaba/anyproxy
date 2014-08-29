@@ -19,8 +19,7 @@ var rules = {
             "localDir"  :"/Users/Stella/tmp/"
         },{
             "host"      :/./,
-            "path"      :/response\.(json)/,
-            "sleep"     :5//seconds
+            "path"      :/response\.(json)/
         },{
             "host"      :/./,
             "path"      :/html/,
@@ -33,7 +32,7 @@ var rules = {
     ]
     ,"httpsConfig":{
         "bypassAll" : false,  //by setting this to true, anyproxy will not intercept any https request
-        "interceptDomains":[/www\.alipay\.com/,/www\.b\.com/] //by setting bypassAll:false, requests towards these domains will be intercepted, and try to meet the map rules above
+        "interceptDomains":[/www\.example\.com/] //by setting bypassAll:false, requests towards these domains will be intercepted, and try to meet the map rules above
     }
 }
 
