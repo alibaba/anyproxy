@@ -1,6 +1,6 @@
 anyproxy
 ==========
-another proxy written in NodeJS, which can handle HTTPS requests and CORS perfectly. Produced by Alipay-ct-wd.
+another proxy written in NodeJS, which can handle HTTPS requests and CORS perfectly.
 
 Feature
 ------------
@@ -95,7 +95,7 @@ var rules = {
         ,{
             "host"      :/./,
             "path"      :/\.(png|gif|jpg|jpeg)/,
-            "localFile" :"/Users/Stella/tmp/test.png",
+            "localFile" :"/Users/Username/tmp/test.png",
             "localDir"  :"~/"
         }
     ]
@@ -111,4 +111,3 @@ module.exports = rules;
 
 ## Contact
 * Please feel free to raise any issue about this project, or give us some advice on this doc. :)
-* Email: alipay-sh-wd@list.alibaba-inc.com

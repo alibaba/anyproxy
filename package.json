@@ -14,7 +14,6 @@
     "entities": "^1.1.1",
     "express": "^4.8.5",
     "nedb": "^0.11.0",
-    "sleep": "~1.1.8",
     "ws": "^0.4.32"
   },
   "devDependencies": {

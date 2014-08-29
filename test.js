@@ -52,7 +52,7 @@ module.exports.testHttpsOverHttp = function(test){
 	    });
 
 	    var req = https.request({
-			host: 'www.alipay.com',
+			host: 'www.gotofail.com',
 			port: 443,
 			agent: tunnelingAgent
 	    },function(res){
