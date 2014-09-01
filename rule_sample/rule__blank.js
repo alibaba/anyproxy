@@ -10,7 +10,8 @@ module.exports = {
 		return false;
 	},
 
-	//response to user via local logic, be called when shouldUseLocalResponse returns true
+    //you may deal the response locally instead of sending it to server
+    //this function be called when shouldUseLocalResponse returns true
 	//callback(statusCode,resHeader,responseData)
 	//e.g. callback(200,{"content-type":"text/html"},"hello world")
 	dealLocalResponse : function(req,callback){
