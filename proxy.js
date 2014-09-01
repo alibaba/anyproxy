@@ -40,7 +40,7 @@ function proxyServer(type, port, hostname,ruleFile){
     if(ruleFile){
         if(fs.existsSync(ruleFile)){
             try{ //for abs path
-                requestHandler.setRules(require(ruleFile)); //todo : require path
+                requestHandler.setRules(require(ruleFile));
             }catch(e){ //for relative path
                 requestHandler.setRules(require("./" + ruleFile));
             }
@@ -73,9 +73,10 @@ function proxyServer(type, port, hostname,ruleFile){
                 }        
             },
 
-            //listen CONNECT method for https over http
             function(callback){
+                //listen CONNECT method for https over http
                 self.httpProxyServer.on('connect',requestHandler.connectReqHandler);
+
                 self.httpProxyServer.listen(proxyPort);
                 callback(null);
             }
@@ -135,9 +136,11 @@ function startWebServer(port){
     console.log(color.green(tipText));
 
 
-
     //web socket interface
     var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
+    wss.on("connection",function(ws){
+        console.log("wss connection");
+    });
     wss.broadcast = function(data) {
         for(var i in this.clients){
             this.clients[i].send(data);
