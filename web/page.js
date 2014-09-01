@@ -155,12 +155,15 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 
 		//data via web socket
 		var dataSocket = new WebSocket("ws://127.0.0.1:8003");
+		dataSocket.onopen = function(){
+			console.log("dataSocket open");
+		}
+
 		dataSocket.onmessage = function(event){
 			var data = JSON.parse(event.data);
 
 			var reqDate = new Date(data.startTime);
 			data.startTimeStr = reqDate.toLocaleDateString()+ " " + reqDate.toLocaleTimeString();
-
 
 			var previous;
 			if(previous = recList.get(data.id)){
