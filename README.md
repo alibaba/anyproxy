@@ -25,9 +25,10 @@ Usage
 
 How to write your own rule file
 -------------------
+* with rule file, you can modify a request at any stage, no matter it's before sending or after servers' responding.
+* actually ruleFile.js is a module for Nodejs, feel free to include your own modules.
 * ``anyproxy --rule /path/to/ruleFile.js``
-* actually ruleFile.js is a module for Nodejs
-* more samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
+* you may learn how it works by our samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
 * rule file scheme
 ```javascript
 module.exports = {
@@ -98,7 +99,6 @@ module.exports = {
 };
 ```
 
-
 Using https features
 ----------------
 ### install openssl
@@ -131,10 +131,6 @@ new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file");
 
 #### clear all the temperary certificates
 * ``anyproxy --clear``
-
-#### map file to local
-
-* a sample schema of ruls.js is as follows
 
 
 ## Contact
