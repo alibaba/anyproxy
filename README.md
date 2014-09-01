@@ -1,33 +1,13 @@
 anyproxy
 ==========
-another proxy written in NodeJS, which can handle HTTPS requests and CORS perfectly.
+A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 Feature
 ------------
 * work as http or https proxy
-* generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
-* support CORS-related http header, you could use make cross-domain requests via this proxy
-* can be used globally or as a nodejs module 
-
-
-Why we write another proxy
-------------
-
-### To perfectly support https proxy
-While there are lots of proxy written by nodejs in github, most of them can not handle users' HTTPS requests perfectly. A typical problem is that the browser will throw warning like INVALID_CERTIFICATE when they want to intercept some https requests. 
-
-A simple and fast solution is to short the traffic between the user and the target server. That is to say, what the proxy do is to forward all the traffic of both sides, without intercepting or looking inside. 
-This is useful when you want to establish a standard proxy and forwarding data. But this can also be useless when being used as a debug tool.
-
-To work as a debug tool of HTTPS, the proxy itself should do two things: intercept the request and cheat the browser with a valid certificate,aka the man-in-the-middle(MITM) attack.
-
-In order to have a browser-trusted certificate, we would sign certificates dynamically. The first thing to do is to generate a self-signed root CA and import to the system keychain. After trusting this CA, all child certs inherit from root CA can be naturally trusted by the browser. 
-
-What this proxy do is to generate and replace a temporary cert for any domain if neccessary. Using it, we can intercept any requests for debug. BTW, this is also what the charlse/fiddler do when you check the enable_ssl_proxy in preference.
-
-### To support cross-domain requests
-By properly responding HTTP OPTIONS request and Access-Control-Allow-* headers on server side, we can perform cross-domain requests in modern browsers. Anyproxy will automatically handle these things for you, no matter the remote server supports or not. This can be extremely useful for those who often debug webpages embedded in a special browser.
-
+* fully configurable, you can write your own rule file in javascript to change users' request or modify response
+* when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
+ 
 Usage
 --------------
 ### step 0 - setup env
@@ -43,6 +23,80 @@ Usage
 * start with default settings : ``anyproxy``
 * start with a specific port:  ``anyproxy --port 8001``
 
+How to write your own rule file
+-------------------
+* ``anyproxy --rule /path/to/ruleFile.js``
+* actually ruleFile.js is a module for Nodejs
+* more samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
+* rule file scheme
+```javascript
+module.exports = {
+    /*
+    thess functions are required
+    you may leave their bodies blank if necessary
+    */
+
+    //whether to intercept this request by local logic
+    //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
+    shouldUseLocalResponse : function(req){
+        return false;
+    },
+
+    //response to user via local logic, be called when shouldUseLocalResponse returns true
+    //callback(statusCode,resHeader,responseData)
+    //e.g. callback(200,{"content-type":"text/html"},"hello world")
+    dealLocalResponse : function(req,callback){
+        //callback(statusCode,resHeader,responseData)
+    },
+
+    //req is user's request sent to the proxy server
+    // option is how the proxy server will send request to the real server. i.e. require("http").request(option,function(){...})
+    //you may return a customized option to replace the original option
+    replaceRequestOption : function(req,option){
+        var newOption = option;
+        return newOption;
+    },
+
+    //replace the request protocol when sending to the real server
+    //protocol : "http" or "https"
+    replaceRequestProtocol:function(req,protocol){
+        var newProtocol = protocol;
+        return newProtocol;
+    },
+
+    //replace the statusCode before it's sent to the user
+    replaceResponseStatusCode: function(req,res,statusCode){
+        var newStatusCode = statusCode;
+        return newStatusCode;
+    },
+
+    //replace the httpHeader before it's sent to the user
+    //Here header == res.headers
+    replaceResponseHeader: function(req,res,header){
+        var newHeader = header;
+        return newHeader;
+    },
+
+    //replace the response from the server before it's sent to the user
+    //you may return either a Buffer or a string
+    //serverResData is a Buffer, you may get its content by calling serverResData.toString()
+    replaceServerResData: function(req,res,serverResData){
+        return serverResData;
+    },
+
+    //add a pause before sending response to user
+    pauseBeforeSendingResponse : function(req,res){
+        var timeInMS = 1; //delay all requests for 1ms
+        return timeInMS; 
+    },
+
+    //should intercept https request, or it will be forwarded to real server
+    shouldInterceptHttpsReq :function(req){
+        return false;
+    }
+
+};
+```
 
 
 Using https features
@@ -60,11 +114,11 @@ Using https features
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 
 
-others
+Others
 -----------------
 #### work as a module
 ```
-npm install anyproxy
+npm install anyproxy --save
 ```
 
 ```javascript
@@ -79,35 +133,9 @@ new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file");
 * ``anyproxy --clear``
 
 #### map file to local
-* ``anyproxy --rule /path/to/ruleFile.js``
-* actually ruleFile.js is a module for Nodejs
+
 * a sample schema of ruls.js is as follows
 
-```javascript
-var rules = {
-    "map" :[
-        {
-            "host"      :/./,            //regExp
-            "path"      :/\/path\/test/, //regExp
-            "localFile" :"",             //this file will be returned to user when host and path pattern both meets the request
-            "localDir"  :"~/"            //find the file of same name in localdir. anyproxy will not read localDir settings unless localFile is falsy
-        }
-        ,{
-            "host"      :/./,
-            "path"      :/\.(png|gif|jpg|jpeg)/,
-            "localFile" :"/Users/Username/tmp/test.png",
-            "localDir"  :"~/"
-        }
-    ]
-    ,"httpsConfig":{
-        "bypassAll" : false,  //by setting this to true, anyproxy will not intercept any https request
-        "interceptDomains":[/www\.a\.com/,/www\.b\.com/] //by setting bypassAll:false, requests towards these domains will be intercepted, and try to meet the map rules above
-    }
-}
-
-module.exports = rules;
-
-```
 
 ## Contact
 * Please feel free to raise any issue about this project, or give us some advice on this doc. :)
