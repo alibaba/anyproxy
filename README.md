@@ -31,7 +31,7 @@ How to write your own rule file
 ```javascript
 module.exports = {
     /*
-    thess functions are required
+    these functions are required
     you may leave their bodies blank if necessary
     */
 
