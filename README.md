@@ -5,7 +5,7 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 Feature
 ------------
 * work as http or https proxy
-* fully configurable, you can write your own rule file in javascript to change users' request or modify response
+* fully configurable, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
  
 Usage
@@ -23,7 +23,7 @@ Usage
 
 How to write your own rule file
 -------------------
-* with rule file, you can modify a request at any stage, no matter it's before sending or after servers' responding.
+* with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
 * actually ruleFile.js is a module for Nodejs, feel free to include your own modules.
 * ``anyproxy --rule /path/to/ruleFile.js``
 * you may learn how it works by our samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
@@ -100,15 +100,15 @@ module.exports = {
 
 Using https features
 ----------------
-### install openssl
+#### step 1 - install openssl
 * install [openssl](http://wiki.openssl.org/index.php/Compilation_and_Installation) ,if you want to use HTTPS-related features. After that, the command ``openssl`` should be exposed to your shell
 
-### generate a rootCA and trust it
+#### step 2 - generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
 * execute ``anyproxy --root`` ,follow the instructions on screen
 * you will see some tip like *rootCA generated at : /usr/lib...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly
 
-### start a https proxy
+#### step 3 - start a https proxy
 * ``anyproxy --type https --host my.domain.com``
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 
@@ -129,7 +129,7 @@ new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file");
 ```
 
 #### clear all the temperary certificates
-* ``anyproxy --clear``
+``anyproxy --clear``
 
 
 ## Contact
