@@ -15,6 +15,12 @@ var http = require('http'),
 
 GLOBAL.recorder = new Recorder();
 
+//mix some modules to global.util
+try{
+    GLOBAL.util = {};
+    GLOBAL.util['iconv-lite'] = require("iconv-lite");
+}catch(e){}
+
 var T_TYPE_HTTP  = 0,
     T_TYPE_HTTPS           = 1,
     DEFAULT_PORT           = 8001,
