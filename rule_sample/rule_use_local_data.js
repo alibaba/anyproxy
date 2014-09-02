@@ -1,9 +1,9 @@
 //replace all the images with local one
 
-var url  = require("url"),
-    path = require("path"),
-    fs   = require("fs"),
-    buffer = require("buffer");
+var url = require("url"),
+    path    = require("path"),
+    fs      = require("fs"),
+    buffer  = require("buffer");
 
 var map = [
         {
@@ -15,7 +15,7 @@ var map = [
     ];
 
 module.exports = {
-    shouldUseLocalResponse : function(req){
+    shouldUseLocalResponse : function(req,reqBody){
         var host       = req.headers.host,
             urlPattern = url.parse(req.url),
             path       = urlPattern.path;
@@ -45,31 +45,10 @@ module.exports = {
         return false;
     },
 
-    dealLocalResponse : function(req,callback){
+    dealLocalResponse : function(req,reqBody,callback){
         if(req.replaceLocalFile){
             callback(200, {"content-type":"image/png"}, fs.readFileSync(req.replaceLocalFile) );
         }
-    },
-
-    replaceRequestOption : function(req,option){
-    },
-
-    replaceRequestProtocol:function(req,protocol){
-    },
-
-    replaceResponseStatusCode: function(req,res,statusCode){
-    },
-
-    replaceResponseHeader: function(req,res,header){
-    },
-
-    replaceServerResData: function(req,res,serverResData){
-    },
-
-    pauseBeforeSendingResponse : function(req,res){
-    },
-
-    shouldInterceptHttpsReq :function(req){
     }
 };
 

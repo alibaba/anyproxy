@@ -15,6 +15,12 @@ var http = require('http'),
 
 GLOBAL.recorder = new Recorder();
 
+//mix some modules to global.util
+try{
+    GLOBAL.util = {};
+    GLOBAL.util['iconv-lite'] = require("iconv-lite");
+}catch(e){}
+
 var T_TYPE_HTTP  = 0,
     T_TYPE_HTTPS           = 1,
     DEFAULT_PORT           = 8001,
@@ -138,9 +144,7 @@ function startWebServer(port){
 
     //web socket interface
     var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
-    wss.on("connection",function(ws){
-        console.log("wss connection");
-    });
+    wss.on("connection",function(ws){});
     wss.broadcast = function(data) {
         for(var i in this.clients){
             this.clients[i].send(data);

@@ -2,7 +2,7 @@
 // Ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 
 module.exports = {
-    shouldUseLocalResponse : function(req){
+    shouldUseLocalResponse : function(req,reqBody){
         //intercept all options request
         if(req.method == "OPTIONS"){
             return true;
@@ -11,33 +11,16 @@ module.exports = {
         }
     },
 
-    dealLocalResponse : function(req,callback){
+    dealLocalResponse : function(req,reqBody,callback){
         if(req.method == "OPTIONS"){
             callback(200,mergeCORSHeader(req.headers),"");
         }
     },
 
-    replaceRequestOption : function(req,option){
-    },
-
-    replaceRequestProtocol:function(req,protocol){
-    },
-
-    replaceResponseStatusCode: function(req,res,statusCode){
-    },
-
     replaceResponseHeader: function(req,res,header){
         return mergeCORSHeader(req.headers, header);
-    },
-
-    replaceServerResData: function(req,res,serverResData){
-    },
-
-    pauseBeforeSendingResponse : function(req,res){
-    },
-
-    shouldInterceptHttpsReq :function(req){
     }
+    
 };
 
 function mergeCORSHeader(reqHeader,originHeader){
