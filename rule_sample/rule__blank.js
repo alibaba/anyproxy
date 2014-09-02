@@ -18,8 +18,7 @@ module.exports = {
 	//callback(statusCode,resHeader,responseData)
 	//e.g. callback(200,{"content-type":"text/html"},"hello world")
 	dealLocalResponse : function(req,reqBody,callback){
-        callback(200,{"content-type":"text/html"},reqBody);
-        //callback(statusCode,resHeader,responseData)
+        callback(statusCode,resHeader,responseData)
 	},
 
     //replace the request protocol when sending to the real server
@@ -40,11 +39,7 @@ module.exports = {
 
     //replace the request body
     replaceRequestData: function(req,data){
-        // console.log(data.toString().indexOf("alipay.acquire.order.precreate"));
-        // if(data.toString().indexOf("alipay.acquire.order.precreate") >= 0){
-        //     req.needReplaceResponse = true;
-        // }
-        // return text;
+        return data;
     },
 
     //replace the statusCode before it's sent to the user
