@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "a charles/fiddler like proxy written in NodeJs, which can handle HTTPS requests and CROS perfectly.",
   "main": "proxy.js",
   "bin": {
@@ -13,6 +13,7 @@
     "commander": "~2.3.0",
     "entities": "^1.1.1",
     "express": "^4.8.5",
+    "iconv-lite": "^0.4.4",
     "nedb": "^0.11.0",
     "ws": "^0.4.32"
   },

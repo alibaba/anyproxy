@@ -154,10 +154,12 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		}
 
 		//data via web socket
-		var dataSocket = new WebSocket("ws://127.0.0.1:8003");
-		dataSocket.onopen = function(){
-			console.log("dataSocket open");
+		if(!WebSocket){
+			alert("WebSocket is required. Please use a modern browser.");
+			return;
 		}
+		var dataSocket = new WebSocket("ws://127.0.0.1:8003");
+		dataSocket.onopen = function(){}
 
 		dataSocket.onmessage = function(event){
 			var data = JSON.parse(event.data);
