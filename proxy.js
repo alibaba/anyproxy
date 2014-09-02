@@ -144,9 +144,7 @@ function startWebServer(port){
 
     //web socket interface
     var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
-    wss.on("connection",function(ws){
-        console.log("wss connection");
-    });
+    wss.on("connection",function(ws){});
     wss.broadcast = function(data) {
         for(var i in this.clients){
             this.clients[i].send(data);

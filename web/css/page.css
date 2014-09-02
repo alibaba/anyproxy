@@ -13,6 +13,10 @@
 	margin: 0 5px;
 }
 
+.topHead .btn_disable{
+	color: #777;
+}
+
 .mainTableWrapper{
 	margin-top: 0;
 }
