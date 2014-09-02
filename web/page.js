@@ -13,7 +13,6 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 	$(function(){
 
 		//record detail
-		//backbone太麻烦了，这里手写拉倒..
 		var DetailView = function(){
 			var self      = this,
 				$detailEl = $(".J_recordDetailOverlay"),
@@ -153,6 +152,25 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 			recList.reset();
 		}
 
+		//pause btn
+		var ifPause = false;
+		(function(){
+			var statusBtn = $(".J_statusBtn");
+			statusBtn.on("click",function(e){
+				e.stopPropagation();
+				e.preventDefault();
+
+				$(".J_statusBtn").removeClass("btn_disable");
+				$(this).addClass("btn_disable");
+
+				if(/stop/i.test($(this).html()) ){
+					ifPause = true;
+				}else{
+					ifPause = false;
+				}
+			});
+		})();
+
 		//data via web socket
 		if(!WebSocket){
 			alert("WebSocket is required. Please use a modern browser.");
@@ -162,6 +180,7 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		dataSocket.onopen = function(){}
 
 		dataSocket.onmessage = function(event){
+			if(ifPause) return;
 			var data = JSON.parse(event.data);
 
 			var reqDate = new Date(data.startTime);
