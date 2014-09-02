@@ -1,3 +1,9 @@
+//mix some modules to global.util
+try{
+    GLOBAL.util = {};
+    GLOBAL.util['iconv-lite'] = require("iconv-lite");
+}catch(e){}
+
 var http = require('http'),
     https          = require('https'),
     fs             = require('fs'),
@@ -14,12 +20,6 @@ var http = require('http'),
     WebSocketServer= require('ws').Server;
 
 GLOBAL.recorder = new Recorder();
-
-//mix some modules to global.util
-try{
-    GLOBAL.util = {};
-    GLOBAL.util['iconv-lite'] = require("iconv-lite");
-}catch(e){}
 
 var T_TYPE_HTTP  = 0,
     T_TYPE_HTTPS           = 1,
@@ -54,6 +54,9 @@ function proxyServer(type, port, hostname,ruleFile){
         }else{
             console.log(color.red("can not find rule file"));
         }
+    }else{
+        rules = require("./lib/rule_default.js");
+        requestHandler.setRules(rules);
     }
 
     async.series(
