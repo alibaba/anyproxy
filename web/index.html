@@ -9,6 +9,8 @@
 	<div class="topHead">
 		<h1>Anyproxy</h1>
 		<a href="#" class="J_clearBtn"><span class="topBtn">Clear Logs(Ctrl+X)</span></a>
+		<a href="#" class="J_statusBtn"><span class="topBtn">Stop</span></a>
+		<a href="#" class="J_statusBtn btn_disable"><span class="topBtn">Resume</span></a>
 	</div>
 
 	<div class="mainTableWrapper J_mainTable">
@@ -55,6 +57,13 @@
 				    <li><span title="<%= path %>"><%= path %></span></li>
 				    <% _.each(reqHeader, function(v,k) { %> <li><strong><%= k %></strong> : <%= v %></li><% }); %>
 				</ul>
+			</div>
+		</section>
+
+		<section class="reqBody">
+			<h4 class="subTitle">request body</h4>
+			<div class="detail">
+				<p><%= reqBody %></p>
 			</div>
 		</section>
 
