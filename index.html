@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>Anyproxy</h1>
-        <p>a charles/fiddler like proxy written in NodeJs, which can handle HTTPS requests and CROS perfectly.</p>
+        <p>A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.</p>
 
         <p class="view"><a href="https://github.com/alipay-ct-wd/anyproxy">View the Project on GitHub <small>alipay-ct-wd/anyproxy</small></a></p>
 
@@ -28,37 +28,202 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="anyproxy" class="anchor" href="#anyproxy"><span class="octicon octicon-link"></span></a>anyproxy</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>
+<a name="feature" class="anchor" href="#feature"><span class="octicon octicon-link"></span></a>Feature</h2>
+
+<ul>
+<li>work as http or https proxy</li>
+<li>fully configurable, you can modify a request at any stage by your own javascript code</li>
+<li>when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)</li>
+<li>provide a web interface</li>
+</ul><p><img src="http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg" alt="screenshot"></p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a name="step-1---install" class="anchor" href="#step-1---install"><span class="octicon octicon-link"></span></a>step 1 - install</h3>
+
+<ul>
+<li>install <a href="http://nodejs.org/">NodeJS</a>
+</li>
+<li>
+<code>npm install -g anyproxy</code> , may require <code>sudo</code>
+</li>
+</ul><h3>
+<a name="step-2---start-server" class="anchor" href="#step-2---start-server"><span class="octicon octicon-link"></span></a>step 2 - start server</h3>
+
+<ul>
+<li>start with default settings : <code>anyproxy</code>
+</li>
+<li>start with a specific port:  <code>anyproxy --port 8001</code>
+</li>
+</ul><h3>
+<a name="step-3---launch-web-interface" class="anchor" href="#step-3---launch-web-interface"><span class="octicon octicon-link"></span></a>step 3 - launch web interface</h3>
+
+<ul>
+<li>visit <a href="http://127.0.0.1:8002">http://127.0.0.1:8002</a> with modern browsers</li>
+</ul><h2>
+<a name="how-to-write-your-own-rule-file" class="anchor" href="#how-to-write-your-own-rule-file"><span class="octicon octicon-link"></span></a>How to write your own rule file</h2>
+
+<ul>
+<li>with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.</li>
+<li>actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules.</li>
+<li><code>anyproxy --rule /path/to/ruleFile.js</code></li>
+<li>you may learn how it works by our samples: <a href="https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample">https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample</a>
+</li>
+<li>
+<p>samples in <a href="https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample">rule_sample</a></p>
+
+<ul>
+<li><p><strong>rule__blank.js</strong>, blank rule file with some comments. You may read this before writing your own rule file.</p></li>
+<li><p><strong>rule_adjust_response_time.js</strong>, delay all the response for 1500ms</p></li>
+<li>
+<strong>rule_allow_CORS.js</strong>, add CORS headers to allow cross-domain ajax request</li>
+<li>
+<strong>rule_intercept_some_https_requests.js</strong>, intercept https requests toward github.com</li>
+<li>
+<strong>rule_remove_cache_header.js</strong>, remove all cache-related headers from server</li>
+<li>
+<strong>rule_replace_request_option.js</strong>, replace request parameters before sending to the server</li>
+<li>
+<strong>rule_replace_response_data.js</strong>, modify response data</li>
+<li>
+<strong>rule_replace_response_status_code.js</strong>, replace server's status code</li>
+<li>
+<strong>rule_use_local_data.js</strong>, map some requests to local file</li>
+</ul>
+</li>
+<li><p>rule file scheme is as follows, you may also get it from <a href="https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule__blank.js">rule__blank.js</a></p></li>
+</ul><div class="highlight highlight-javascript"><pre>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="cm">/*</span>
+<span class="cm">    these functions will overwrite the default ones, write your own when necessary.</span>
+<span class="cm">    */</span>
+
+    <span class="c1">//whether to intercept this request by local logic</span>
+    <span class="c1">//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore</span>
+    <span class="nx">shouldUseLocalResponse</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">reqBody</span><span class="p">){</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//you may deal the response locally instead of sending it to server</span>
+    <span class="c1">//this function be called when shouldUseLocalResponse returns true</span>
+    <span class="c1">//callback(statusCode,resHeader,responseData)</span>
+    <span class="c1">//e.g. callback(200,{"content-type":"text/html"},"hello world")</span>
+    <span class="nx">dealLocalResponse</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">reqBody</span><span class="p">,</span><span class="nx">callback</span><span class="p">){</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="nx">statusCode</span><span class="p">,</span><span class="nx">resHeader</span><span class="p">,</span><span class="nx">responseData</span><span class="p">)</span>
+    <span class="p">},</span>
+
+    <span class="c1">//replace the request protocol when sending to the real server</span>
+    <span class="c1">//protocol : "http" or "https"</span>
+    <span class="nx">replaceRequestProtocol</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">protocol</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">newProtocol</span> <span class="o">=</span> <span class="nx">protocol</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">newProtocol</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//req is user's request sent to the proxy server</span>
+    <span class="c1">//option is how the proxy server will send request to the real server. i.e. require("http").request(option,function(){...})</span>
+    <span class="c1">//you may return a customized option to replace the original option</span>
+    <span class="c1">//you should not write content-length header in options, since anyproxy will handle it for you</span>
+    <span class="nx">replaceRequestOption</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">option</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">newOption</span> <span class="o">=</span> <span class="nx">option</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">newOption</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//replace the request body</span>
+    <span class="nx">replaceRequestData</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">data</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//replace the statusCode before it's sent to the user</span>
+    <span class="nx">replaceResponseStatusCode</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">statusCode</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">newStatusCode</span> <span class="o">=</span> <span class="nx">statusCode</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">newStatusCode</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//replace the httpHeader before it's sent to the user</span>
+    <span class="c1">//Here header == res.headers</span>
+    <span class="nx">replaceResponseHeader</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">header</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">newHeader</span> <span class="o">=</span> <span class="nx">header</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">newHeader</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//replace the response from the server before it's sent to the user</span>
+    <span class="c1">//you may return either a Buffer or a string</span>
+    <span class="c1">//serverResData is a Buffer, you may get its content by calling serverResData.toString()</span>
+    <span class="nx">replaceServerResData</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">,</span><span class="nx">serverResData</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nx">serverResData</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="c1">//add a pause before sending response to user</span>
+    <span class="nx">pauseBeforeSendingResponse</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">timeInMS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//delay all requests for 1ms</span>
+        <span class="k">return</span> <span class="nx">timeInMS</span><span class="p">;</span> 
+    <span class="p">},</span>
+
+    <span class="c1">//should intercept https request, or it will be forwarded to real server</span>
+    <span class="nx">shouldInterceptHttpsReq</span> <span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">){</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+</pre></div>
+
+<h2>
+<a name="using-https-features" class="anchor" href="#using-https-features"><span class="octicon octicon-link"></span></a>Using https features</h2>
+
+<h4>
+<a name="step-1---install-openssl" class="anchor" href="#step-1---install-openssl"><span class="octicon octicon-link"></span></a>step 1 - install openssl</h4>
+
+<ul>
+<li>install <a href="http://wiki.openssl.org/index.php/Compilation_and_Installation">openssl</a> ,if you want to use HTTPS-related features. After that, the command <code>openssl</code> should be exposed to your shell</li>
+</ul><h4>
+<a name="step-2---generate-a-rootca-and-trust-it" class="anchor" href="#step-2---generate-a-rootca-and-trust-it"><span class="octicon octicon-link"></span></a>step 2 - generate a rootCA and trust it</h4>
+
+<ul>
+<li>you should do this when it is the first time to start anyproxy</li>
+<li>execute <code>anyproxy --root</code> ,follow the instructions on screen</li>
+<li>you will see some tip like <em>rootCA generated at : /usr/lib...</em> . <code>cd</code> to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly</li>
+</ul><h4>
+<a name="step-3---start-a-https-proxy" class="anchor" href="#step-3---start-a-https-proxy"><span class="octicon octicon-link"></span></a>step 3 - start a https proxy</h4>
+
+<ul>
+<li><code>anyproxy --type https --host my.domain.com</code></li>
+<li>the param <code>host</code> is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.</li>
+</ul><h2>
+<a name="others" class="anchor" href="#others"><span class="octicon octicon-link"></span></a>Others</h2>
+
+<h4>
+<a name="work-as-a-module" class="anchor" href="#work-as-a-module"><span class="octicon octicon-link"></span></a>work as a module</h4>
+
+<pre><code>npm install anyproxy --save
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">proxy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"anyproxy"</span><span class="p">);</span>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<span class="o">!</span><span class="nx">proxy</span><span class="p">.</span><span class="nx">isRootCAFileExists</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">generateRootCA</span><span class="p">();</span> <span class="c1">//please manually trust this rootCA</span>
+<span class="k">new</span> <span class="nx">proxy</span><span class="p">.</span><span class="nx">proxyServer</span><span class="p">(</span><span class="s2">"http"</span><span class="p">,</span><span class="s2">"8001"</span><span class="p">,</span> <span class="s2">"localhost"</span> <span class="p">,</span><span class="s2">"path/to/rule/file.js"</span><span class="p">);</span>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+</pre></div>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<h4>
+<a name="clear-all-the-temperary-certificates" class="anchor" href="#clear-all-the-temperary-certificates"><span class="octicon octicon-link"></span></a>clear all the temperary certificates</h4>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p><code>anyproxy --clear</code></p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<h2>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>Please feel free to raise any issue about this project, or give us some advice on this doc. :)</li>
+</ul>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/alipay-ct-wd">alipay-ct-wd</a></p>
