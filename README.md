@@ -5,7 +5,7 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 Feature
 ------------
 * work as http or https proxy
-* fully configurable, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
+* fully configurable, you can modify a request at any stage by your own javascript code
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
  
 Usage
@@ -24,10 +24,23 @@ Usage
 How to write your own rule file
 -------------------
 * with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
-* actually ruleFile.js is a module for Nodejs, feel free to include your own modules.
+* actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules.
 * ``anyproxy --rule /path/to/ruleFile.js``
 * you may learn how it works by our samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
-* rule file scheme
+* samples in [rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
+    * **rule__blank.js**, blank rule file with some comments. You may read this before writing your own rule file.
+
+    * **rule_adjust_response_time.js**, delay all the response for 1500ms
+    * **rule_allow_CORS.js**, add CORS headers to allow cross-domain ajax request
+    * **rule_intercept_some_https_requests.js**, intercept https requests toward github.com
+    * **rule_remove_cache_header.js**, remove all cache-related headers from server
+    * **rule_replace_request_option.js**, replace request parameters before sending to the server
+    * **rule_replace_response_data.js**, modify response data
+    * **rule_replace_response_status_code.js**, replace server's status code
+    * **rule_use_local_data.js**, map some requests to local file
+
+* rule file scheme is as follows, you may also get it from [rule__blank.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule__blank.js)
+
 ```javascript
 
 module.exports = {
@@ -38,11 +51,7 @@ module.exports = {
     //whether to intercept this request by local logic
     //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
     shouldUseLocalResponse : function(req,reqBody){
-        if(/hello/.test(reqBody.toString())){
-            return true;
-        }else{
-            return false;
-        }
+        return false;
     },
 
     //you may deal the response locally instead of sending it to server
@@ -134,8 +143,8 @@ npm install anyproxy --save
 ```javascript
 var proxy = require("anyproxy");
 
-!proxy.isRootCAFileExists() && proxy.generateRootCA();
-new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file");
+!proxy.isRootCAFileExists() && proxy.generateRootCA(); //please manually trust this rootCA
+new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file.js");
 
 ```
 
