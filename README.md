@@ -7,6 +7,9 @@ Feature
 * work as http or https proxy
 * fully configurable, you can modify a request at any stage by your own javascript code
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
+* provide a web interface
+
+![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
  
 Usage
 --------------
@@ -20,6 +23,10 @@ Usage
 
 * start with default settings : ``anyproxy``
 * start with a specific port:  ``anyproxy --port 8001``
+
+### step 3 - launch web interface
+
+* visit [http://127.0.0.1:8002](http://127.0.0.1:8002) with modern browsers
 
 How to write your own rule file
 -------------------
