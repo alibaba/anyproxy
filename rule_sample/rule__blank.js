@@ -6,11 +6,7 @@ module.exports = {
 	//whether to intercept this request by local logic
 	//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
 	shouldUseLocalResponse : function(req,reqBody){
-        if(/hello/.test(reqBody.toString())){
-            return true;
-        }else{
-    		return false;
-        }
+        return false;
 	},
 
     //you may deal the response locally instead of sending it to server
