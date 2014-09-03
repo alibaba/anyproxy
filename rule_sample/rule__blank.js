@@ -2,6 +2,9 @@ module.exports = {
 	/*
 	these functions will overwrite the default ones, write your own when necessary.
 	*/
+    summary:function(){
+        console.log("this is a blank rule for anyproxy");
+    },
 
 	//whether to intercept this request by local logic
 	//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
