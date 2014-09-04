@@ -36,7 +36,6 @@ How to write your own rule file
 * you may learn how it works by our samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
 * samples in [rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
     * **rule__blank.js**, blank rule file with some comments. You may read this before writing your own rule file.
-
     * **rule_adjust_response_time.js**, delay all the response for 1500ms
     * **rule_allow_CORS.js**, add CORS headers to allow cross-domain ajax request
     * **rule_intercept_some_https_requests.js**, intercept https requests toward github.com
