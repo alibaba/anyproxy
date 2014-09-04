@@ -7,7 +7,7 @@ Feature
 * work as http or https proxy
 * fully configurable, you can modify a request at any stage by your own javascript code
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
-* provide a web interface
+* a web interface is availabe for you to view request details
 
 ![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
  
@@ -54,6 +54,9 @@ module.exports = {
     /*
     these functions will overwrite the default ones, write your own when necessary.
     */
+    summary:function(){
+        console.log("this is a blank rule for anyproxy");
+    },
 
     //whether to intercept this request by local logic
     //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
@@ -76,8 +79,7 @@ module.exports = {
         return newProtocol;
     },
 
-    //req is user's request sent to the proxy server
-    //option is how the proxy server will send request to the real server. i.e. require("http").request(option,function(){...})
+    //req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
     //you may return a customized option to replace the original option
     //you should not write content-length header in options, since anyproxy will handle it for you
     replaceRequestOption : function(req,option){
@@ -150,8 +152,17 @@ npm install anyproxy --save
 ```javascript
 var proxy = require("anyproxy");
 
-!proxy.isRootCAFileExists() && proxy.generateRootCA(); //please manually trust this rootCA
-new proxy.proxyServer("http","8001", "localhost" ,"path/to/rule/file.js");
+//create cert when you want to use https features
+//please manually trust this rootCA when it is the first time you run it
+!proxy.isRootCAFileExists() && proxy.generateRootCA(); 
+
+var options = {
+    type     : "http",
+    port     : "8001",
+    hostname : "localhost",
+    rule     : require("path/to/my/ruleModule.js")
+};
+new proxy.proxyServer(options);
 
 ```
 

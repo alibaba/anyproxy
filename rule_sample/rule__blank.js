@@ -27,8 +27,7 @@ module.exports = {
     	return newProtocol;
     },
 
-    //req is user's request sent to the proxy server
-    //option is how the proxy server will send request to the real server. i.e. require("http").request(option,function(){...})
+    //req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
     //you may return a customized option to replace the original option
     //you should not write content-length header in options, since anyproxy will handle it for you
     replaceRequestOption : function(req,option){

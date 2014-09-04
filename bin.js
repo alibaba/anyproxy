@@ -25,6 +25,27 @@ if(program.clear){
         process.exit(0);
     });
 }else{
-    new proxy.proxyServer(program.type,program.port, program.host ,program.rule);
+    var ruleModule;
 
+    if(program.rule){
+        if(fs.existsSync(program.rule)){
+            try{ //for abs path
+                ruleModule = require(program.rule);
+            }catch(e){ //for relative path
+                ruleModule = require("./" + program.rule);
+            }
+            console.log(color.green("rule file loaded"));
+        }else{
+            console.log(color.red("can not find rule file"));
+        }
+    }
+
+    new proxy.proxyServer({
+        type : program.type,
+        port : program.port,
+        hostname : program.hostname,
+        rule : ruleModule
+    });
 }
+
+

@@ -15,13 +15,14 @@ var http = require('http'),
     getPort        = require("./lib/getPort"),
     requestHandler = require("./lib/requestHandler"),
     Recorder       = require("./lib/Recorder"),
+    util           = require("./lib/util"),
     entities       = require("entities"),
     express        = require("express"),
     WebSocketServer= require('ws').Server;
 
 GLOBAL.recorder = new Recorder();
 
-var T_TYPE_HTTP  = 0,
+var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
     DEFAULT_PORT           = 8001,
     DEFAULT_WEB_PORT       = 8002,
@@ -29,35 +30,22 @@ var T_TYPE_HTTP  = 0,
     DEFAULT_HOST           = "localhost",
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
-function proxyServer(type, port, hostname,ruleFile){
-    var self      = this,
-        proxyType = /https/i.test(type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
-        proxyPort = port     || DEFAULT_PORT,
-        proxyHost = hostname || DEFAULT_HOST;
+//option
+//option.type     : 'http'(default) or 'https'
+//option.port     : 8001(default)
+//option.rule     : ruleModule
+//option.hostname : localhost(default)
+function proxyServer(option){
+    option = option || {};
 
+    var self       = this,
+        proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
+        proxyPort  = option.port     || DEFAULT_PORT,
+        proxyHost  = option.hostname || DEFAULT_HOST,
+        proxyRules = option.rule;
+
+    requestHandler.setRules(proxyRules);
     self.httpProxyServer = null;
-    self.close = function(){
-        self.httpProxyServer && self.httpProxyServer.close();
-        console.log(color.green("server closed :" + proxyHost + ":" + proxyPort));
-    }
-
-    startWebServer();
-
-    if(ruleFile){
-        if(fs.existsSync(ruleFile)){
-            try{ //for abs path
-                requestHandler.setRules(require(ruleFile));
-            }catch(e){ //for relative path
-                requestHandler.setRules(require("./" + ruleFile));
-            }
-            console.log(color.green("rule file loaded"));
-        }else{
-            console.log(color.red("can not find rule file"));
-        }
-    }else{
-        rules = require("./lib/rule_default.js");
-        requestHandler.setRules(rules);
-    }
 
     async.series(
         [
@@ -82,11 +70,17 @@ function proxyServer(type, port, hostname,ruleFile){
                 }        
             },
 
+            //listen CONNECT method for https over http
             function(callback){
-                //listen CONNECT method for https over http
                 self.httpProxyServer.on('connect',requestHandler.connectReqHandler);
 
                 self.httpProxyServer.listen(proxyPort);
+                callback(null);
+            },
+
+            //start web interface
+            function(callback){
+                startWebServer();
                 callback(null);
             }
         ],
@@ -104,6 +98,10 @@ function proxyServer(type, port, hostname,ruleFile){
         }
     );
 
+    self.close = function(){
+        self.httpProxyServer && self.httpProxyServer.close();
+        console.log(color.green("server closed :" + proxyHost + ":" + proxyPort));
+    }
 }
 
 function startWebServer(port){
