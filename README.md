@@ -23,6 +23,7 @@ Usage
 
 * start with default settings : ``anyproxy``
 * start with a specific port:  ``anyproxy --port 8001``
+* start with a rule file: ``anyproxy --rule ./rule_sample/rule_allow_CORS.js``
 
 ### step 3 - launch web interface
 
