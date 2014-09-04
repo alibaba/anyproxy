@@ -1,7 +1,8 @@
 //mix some modules to global.util
 try{
-    GLOBAL.util = {};
-    GLOBAL.util['iconv-lite'] = require("iconv-lite");
+    GLOBAL.util                     = require('./lib/util');
+    GLOBAL.util['iconv-lite']       = require("iconv-lite");
+    GLOBAL.util['colorful']         = require("colorful");
 }catch(e){}
 
 var http = require('http'),
@@ -42,7 +43,7 @@ function proxyServer(option){
         proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort  = option.port     || DEFAULT_PORT,
         proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule;
+        proxyRules = option.rule || require('./lib/rule_default');
 
     requestHandler.setRules(proxyRules);
     self.httpProxyServer = null;
