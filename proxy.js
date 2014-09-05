@@ -43,9 +43,9 @@ function proxyServer(option){
         proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort  = option.port     || DEFAULT_PORT,
         proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule || require('./lib/rule_default');
+        proxyRules = option.rule || require('./lib/rule_default'); 
 
-    requestHandler.setRules(proxyRules);
+    requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
 
     async.series(
