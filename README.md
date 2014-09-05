@@ -1,6 +1,7 @@
 anyproxy
 ==========
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
+
 (Some Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
@@ -39,31 +40,31 @@ How to write your own rule file
 * ``anyproxy --rule /path/to/ruleFile.js``
 * you may learn how it works by our samples: [https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
 * samples in [rule_sample](https://github.com/alipay-ct-wd/anyproxy/tree/master/rule_sample)
-    * **rule__blank.js**,
+    * **[rule__blank.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule__blank.js)**,
         * blank rule file with some comments. You may read this before writing your own rule file.
         * 空白的规则文件模板，和一些注释
-    * **rule_adjust_response_time.js**
+    * **[rule_adjust_response_time.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_adjust_response_time.js)**
         * delay all the response for 1500ms
         * 把所有的响应延迟1500毫秒
-    * **rule_allow_CORS.js**
+    * **[rule_allow_CORS.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_allow_CORS.js)**
         * add CORS headers to allow cross-domain ajax request
         * 为ajax请求增加跨域头
-    * **rule_intercept_some_https_requests.js**
+    * **[rule_intercept_some_https_requests.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_intercept_some_https_requests.js)**
         * intercept https requests toward github.com and append some data
         * 截获github.com的https请求，再在最后加点文字
-    * **rule_remove_cache_header.js**
+    * **[rule_remove_cache_header.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_remove_cache_header.js)**
         * remove all cache-related headers from server
         * 去除响应头里缓存相关的头
-    * **rule_replace_request_option.js**
+    * **[rule_replace_request_option.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_request_option.js)**
         * replace request parameters before sending to the server
         * 在请求发送到服务端前对参数做一些调整
-    * **rule_replace_response_data.js**
+    * **[rule_replace_response_data.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_response_data.js)**
         * modify response data
         * 修改响应数据
-    * **rule_replace_response_status_code.js**
+    * **[rule_replace_response_status_code.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_response_status_code.js)**
         * replace server's status code
         * 改变服务端响应的http状态码
-    * **rule_use_local_data.js**
+    * **[rule_use_local_data.js](https://github.com/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_use_local_data.js)**
         * map some requests to local file
         * 把响应映射到本地
 
