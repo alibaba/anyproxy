@@ -3,6 +3,7 @@ try{
     GLOBAL.util                     = require('./lib/util');
     GLOBAL.util['iconv-lite']       = require("iconv-lite");
     GLOBAL.util['colorful']         = require("colorful");
+    GLOBAL.util['path']             = require("path");
 }catch(e){}
 
 var http = require('http'),
@@ -35,6 +36,9 @@ var T_TYPE_HTTP            = 0,
 var default_rule = require('./lib/rule_default');
 if(fs.existsSync(path.join(util.getUserHome(),"/.anyproxy/rule_default.js"))){
     default_rule = require(path.join(util.getUserHome(),"/.anyproxy/rule_default"));
+}
+if(fs.existsSync(process.cwd() + '/rule.js')){
+    default_rule = require(process.cwd() + '/rule');
 }
 
 //option
