@@ -34,8 +34,12 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
 var default_rule = require('./lib/rule_default');
-if(fs.existsSync(path.join(util.getUserHome(),"/.anyproxy/rule_default.js"))){
-    default_rule = require(path.join(util.getUserHome(),"/.anyproxy/rule_default"));
+var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
+if(!fs.existsSync(anyproxyHome)){
+    fs.mkdirSync(anyproxyHome);
+}
+if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
+    default_rule = require(path.join(anyproxyHome,"rule_default"));
 }
 if(fs.existsSync(process.cwd() + '/rule.js')){
     default_rule = require(process.cwd() + '/rule');
