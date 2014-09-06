@@ -3,6 +3,7 @@ try{
     GLOBAL.util                     = require('./lib/util');
     GLOBAL.util['iconv-lite']       = require("iconv-lite");
     GLOBAL.util['colorful']         = require("colorful");
+    GLOBAL.util['path']             = require("path");
 }catch(e){}
 
 var http = require('http'),
@@ -19,6 +20,7 @@ var http = require('http'),
     util           = require("./lib/util"),
     entities       = require("entities"),
     express        = require("express"),
+    path           = require("path"),
     WebSocketServer= require('ws').Server;
 
 GLOBAL.recorder = new Recorder();
@@ -30,6 +32,18 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_WEBSOCKET_PORT = 8003,
     DEFAULT_HOST           = "localhost",
     DEFAULT_TYPE           = T_TYPE_HTTP;
+
+var default_rule = require('./lib/rule_default');
+var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
+if(!fs.existsSync(anyproxyHome)){
+    fs.mkdirSync(anyproxyHome);
+}
+if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
+    default_rule = require(path.join(anyproxyHome,"rule_default"));
+}
+if(fs.existsSync(process.cwd() + '/rule.js')){
+    default_rule = require(process.cwd() + '/rule');
+}
 
 //option
 //option.type     : 'http'(default) or 'https'
@@ -43,7 +57,7 @@ function proxyServer(option){
         proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort  = option.port     || DEFAULT_PORT,
         proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule || require('./lib/rule_default'); 
+        proxyRules = option.rule || default_rule; 
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
