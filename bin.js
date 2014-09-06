@@ -32,7 +32,7 @@ if(program.clear){
             try{ //for abs path
                 ruleModule = require(program.rule);
             }catch(e){ //for relative path
-                ruleModule = require("./" + program.rule);
+                ruleModule = require(process.cwd() + '/' + program.rule.replace(/^\.\//,''));
             }
             console.log(color.green("rule file loaded"));
         }else{
