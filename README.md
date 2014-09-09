@@ -38,37 +38,37 @@ How to write your own rule file
 * with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
 * actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules.
 * ``anyproxy --rule /path/to/ruleFile.js``
-* you may learn how it works by our samples: [/alipay-ct-wd/anyproxy/tree/master/rule_sample](/alipay-ct-wd/anyproxy/tree/master/rule_sample)
-* samples in [rule_sample](/alipay-ct-wd/anyproxy/tree/master/rule_sample)
-    * **[rule__blank.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule__blank.js)**,
+* you may learn how it works by our samples: [./rule_sample](./rule_sample)
+* samples in [rule_sample](./rule_sample)
+    * **[rule__blank.js](./rule_sample/rule__blank.js)**,
         * blank rule file with some comments. You may read this before writing your own rule file.
         * 空白的规则文件模板，和一些注释
-    * **[rule_adjust_response_time.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_adjust_response_time.js)**
+    * **[rule_adjust_response_time.js](./rule_sample/rule_adjust_response_time.js)**
         * delay all the response for 1500ms
         * 把所有的响应延迟1500毫秒
-    * **[rule_allow_CORS.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_allow_CORS.js)**
+    * **[rule_allow_CORS.js](./rule_sample/rule_allow_CORS.js)**
         * add CORS headers to allow cross-domain ajax request
         * 为ajax请求增加跨域头
-    * **[rule_intercept_some_https_requests.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_intercept_some_https_requests.js)**
+    * **[rule_intercept_some_https_requests.js](./rule_sample/rule_intercept_some_https_requests.js)**
         * intercept https requests toward github.com and append some data
         * 截获github.com的https请求，再在最后加点文字
-    * **[rule_remove_cache_header.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_remove_cache_header.js)**
+    * **[rule_remove_cache_header.js](./rule_sample/rule_remove_cache_header.js)**
         * remove all cache-related headers from server
         * 去除响应头里缓存相关的头
-    * **[rule_replace_request_option.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_request_option.js)**
+    * **[rule_replace_request_option.js](./rule_sample/rule_replace_request_option.js)**
         * replace request parameters before sending to the server
         * 在请求发送到服务端前对参数做一些调整
-    * **[rule_replace_response_data.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_response_data.js)**
+    * **[rule_replace_response_data.js](./rule_sample/rule_replace_response_data.js)**
         * modify response data
         * 修改响应数据
-    * **[rule_replace_response_status_code.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_replace_response_status_code.js)**
+    * **[rule_replace_response_status_code.js](./rule_sample/rule_replace_response_status_code.js)**
         * replace server's status code
         * 改变服务端响应的http状态码
-    * **[rule_use_local_data.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule_use_local_data.js)**
+    * **[rule_use_local_data.js](./rule_sample/rule_use_local_data.js)**
         * map some requests to local file
         * 把响应映射到本地
 
-* rule file scheme is as follows, you may also get it from [rule__blank.js](/alipay-ct-wd/anyproxy/blob/master/rule_sample/rule__blank.js)
+* rule file scheme is as follows, you may also get it from [rule__blank.js](./rule_sample/rule__blank.js)
 
 ```javascript
 
