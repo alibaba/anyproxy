@@ -2,7 +2,7 @@ anyproxy
 ==========
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
-(Some Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
+(Some Chinese in this doc is nothing but translation of key points. Be relax if you dont understand.)
 
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
 
@@ -157,7 +157,7 @@ Using https features
 #### step 2 - generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
 * execute ``anyproxy --root`` ,follow the instructions on screen
-* you will see some tip like *rootCA generated at : /usr/lib...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly
+* **[important!]you will see some tip like *rootCA generated at : /usr/lib...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
 
 #### step 3 - start a https proxy
 * ``anyproxy --type https --host my.domain.com``
