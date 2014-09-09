@@ -38,8 +38,8 @@ How to write your own rule file
 * with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
 * actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules.
 * ``anyproxy --rule /path/to/ruleFile.js``
-* you may learn how it works by our samples: [./rule_sample](./rule_sample)
-* samples in [rule_sample](./rule_sample)
+* you may learn how it works by our samples: ./rule_sample
+* samples in ./rule_sample
     * **[rule__blank.js](./rule_sample/rule__blank.js)**,
         * blank rule file with some comments. You may read this before writing your own rule file.
         * 空白的规则文件模板，和一些注释
