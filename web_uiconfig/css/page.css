@@ -2,13 +2,10 @@
 	background: #000;
 	height: 42px;
 	position: relative;
-	-webkit-box-shadow: 0px 3px 23px 0px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    0px 3px 23px 0px rgba(50, 50, 50, 0.75);
-	box-shadow:         0px 3px 23px 0px rgba(50, 50, 50, 0.75);
 }
 
 .topHead h1{
-	color: #CCCCCC;
+	color: rgb(204,204,204);
 	display: inline-block;
 }
 
@@ -18,17 +15,6 @@
 
 .topHead .btn_disable{
 	color: #777;
-}
-
-.ruleDesc{
-	background: #88C4FE;
-	border-bottom: 1px solid #333;
-}
-
-.ruleDesc h4{
-	color: #333;
-	line-height: 25px;
-	margin: 0;
 }
 
 .mainTableWrapper{

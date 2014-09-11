@@ -4,6 +4,8 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
+因为一些集团开源/专利限制，我们暂时把anyproxy迁回了gitlab。如果喜欢，欢迎到[https://github.com/alipay-ct-wd/anyproxy](https://github.com/alipay-ct-wd/anyproxy)为我们点赞。
+
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
 
 Feature
@@ -12,6 +14,7 @@ Feature
 * fully configurable, you can modify a request at any stage by your own javascript code
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * a web interface is availabe for you to view request details
+* (beta)a web UI interface for you to replace some remote response with local data
 
 ![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
  
@@ -73,27 +76,39 @@ How to write your own rule file
 ```javascript
 
 module.exports = {
-    /*
-    these functions will overwrite the default ones, write your own when necessary.
-    */
     summary:function(){
-        console.log("this is a blank rule for anyproxy");
+        return "this is a blank rule for anyproxy";
     },
 
-    //whether to intercept this request by local logic
+
+    //=======================
+    //when getting a request from user
+    //收到用户请求之后
+    //=======================
+
+    //是否在本地直接发送响应（不再向服务器发出请求）
+    //whether to intercept this request by local logic 
     //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
     shouldUseLocalResponse : function(req,reqBody){
         return false;
     },
 
+    //如果shouldUseLocalResponse返回true，会调用这个函数来获取本地响应内容
     //you may deal the response locally instead of sending it to server
-    //this function be called when shouldUseLocalResponse returns true
+    //this function be called when shouldUseLocalResponse returns true 
     //callback(statusCode,resHeader,responseData)
     //e.g. callback(200,{"content-type":"text/html"},"hello world")
     dealLocalResponse : function(req,reqBody,callback){
         callback(statusCode,resHeader,responseData)
     },
 
+
+    //=======================
+    //when ready to send a request to server
+    //向服务端发出请求之前
+    //=======================
+
+    //替换向服务器发出的请求协议（http和https的替换）
     //replace the request protocol when sending to the real server
     //protocol : "http" or "https"
     replaceRequestProtocol:function(req,protocol){
@@ -101,6 +116,7 @@ module.exports = {
         return newProtocol;
     },
 
+    //替换向服务器发出的请求参数（option)
     //req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
     //you may return a customized option to replace the original option
     //you should not write content-length header in options, since anyproxy will handle it for you
@@ -109,17 +125,25 @@ module.exports = {
         return newOption;
     },
 
+    //替换请求的body
     //replace the request body
     replaceRequestData: function(req,data){
         return data;
     },
 
+    //=======================
+    //when ready to send the response to user after receiving response from server
+    //向用户返回服务端的响应之前
+    //=======================
+
+    //替换服务器响应的http状态码
     //replace the statusCode before it's sent to the user
     replaceResponseStatusCode: function(req,res,statusCode){
         var newStatusCode = statusCode;
         return newStatusCode;
     },
 
+    //替换服务器响应的http头
     //replace the httpHeader before it's sent to the user
     //Here header == res.headers
     replaceResponseHeader: function(req,res,header){
@@ -127,6 +151,7 @@ module.exports = {
         return newHeader;
     },
 
+    //替换服务器响应的数据
     //replace the response from the server before it's sent to the user
     //you may return either a Buffer or a string
     //serverResData is a Buffer, you may get its content by calling serverResData.toString()
@@ -134,12 +159,18 @@ module.exports = {
         return serverResData;
     },
 
+    //在请求返回给用户前的延迟时间
     //add a pause before sending response to user
     pauseBeforeSendingResponse : function(req,res){
         var timeInMS = 1; //delay all requests for 1ms
         return timeInMS; 
     },
 
+    //=======================
+    //https config
+    //=======================
+
+    //是否截获https请求
     //should intercept https request, or it will be forwarded to real server
     shouldInterceptHttpsReq :function(req){
         return false;

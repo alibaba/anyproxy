@@ -2,10 +2,10 @@ module.exports = {
 	/*
 	These functions will overwrite the default ones, write your own when necessary.
     Comments in Chinese are nothing but a translation of key points. Be relax if you dont understand.
-    致中文用户：中文注释都是只摘要，必要时请参阅英文注释。欢迎提出修改建议。
+    致中文用户：中文注释都是只摘要，必要时请参阅英文文档。欢迎提出修改建议。
 	*/
     summary:function(){
-        console.log("this is a blank rule for anyproxy");
+        return "this is a blank rule for anyproxy";
     },
 
 

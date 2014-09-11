@@ -1,11 +1,11 @@
 seajs.config({
-	    base: 'http://static.alipayobjects.com/',
-	    alias: {
-			'$'         : 'jquery/jquery/1.7.2/jquery',
-			'Backbone'  : 'gallery/backbone/1.1.2/backbone.js',
-			'Underscore': 'gallery/underscore/1.6.0/underscore.js'
-	    }
-	});
+    base: 'http://static.alipayobjects.com/',
+    alias: {
+		'$'         : 'jquery/jquery/1.7.2/jquery',
+		'Backbone'  : 'gallery/backbone/1.1.2/backbone.js',
+		'Underscore': 'gallery/underscore/1.6.0/underscore.js'
+    }
+});
 
 seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 	Backbone.$ = $;

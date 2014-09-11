@@ -17,10 +17,13 @@ var http = require('http'),
     getPort        = require("./lib/getPort"),
     requestHandler = require("./lib/requestHandler"),
     Recorder       = require("./lib/Recorder"),
+    inherits       = require("util").inherits,
     util           = require("./lib/util"),
     entities       = require("entities"),
     express        = require("express"),
     path           = require("path"),
+    juicer         = require('juicer'),
+    events         = require("events"),
     WebSocketServer= require('ws').Server;
 
 GLOBAL.recorder = new Recorder();
@@ -30,6 +33,7 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_PORT           = 8001,
     DEFAULT_WEB_PORT       = 8002,
     DEFAULT_WEBSOCKET_PORT = 8003,
+    DEFAULT_CONFIG_PORT    = 8080,
     DEFAULT_HOST           = "localhost",
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
@@ -57,7 +61,7 @@ function proxyServer(option){
         proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort  = option.port     || DEFAULT_PORT,
         proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule || default_rule; 
+        proxyRules = option.rule     || default_rule; 
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
@@ -95,7 +99,15 @@ function proxyServer(option){
 
             //start web interface
             function(callback){
-                startWebServer();
+                var webServer  = new proxyWebServer();
+                var wss = webServer.wss;
+
+                var configServer = new UIConfigServer(DEFAULT_CONFIG_PORT);
+                configServer.on("rule_changed",function() {
+                    console.log(arguments);
+                })
+                // var wss = proxyWebServer();
+
                 callback(null);
             }
         ],
@@ -119,7 +131,90 @@ function proxyServer(option){
     }
 }
 
-function startWebServer(port){
+// doing
+function UIConfigServer(port){
+    var self = this;
+
+    var app          = express(),
+        customerRule = {
+            summary: function(){
+                console.log("replace some response with local response");
+                return "replace some response with local response";
+            }
+        },
+        userKey;
+
+
+    customerRule.shouldUseLocalResponse = function(req,reqBody){
+        var url = req.url;
+        if(userKey){
+            var ifMatch = false;
+            userKey.map(function(item){
+                if(ifMatch) return;
+
+                var matchCount = 0;
+                if( !item.urlKey && !item.reqBodyKey){
+                    ifMatch = false;
+                    return;
+                }else{
+                    if(!item.urlKey || (item.urlKey && url.indexOf(item.urlKey) >= 0 ) ){
+                        ++matchCount;
+                    }
+
+                    if(!item.reqBodyKey || (item.reqBodyKey && reqBody.toString().indexOf(item.reqBodyKey) >= 0) ){
+                        ++matchCount;
+                    }
+
+                    ifMatch = (matchCount==2);
+                    if(ifMatch){
+                        req.willResponse = item.localResponse;
+                    }
+                }
+            });
+
+            return ifMatch;
+        }else{
+            return false;
+        }
+    };
+
+    customerRule.dealLocalResponse = function(req,reqBody,callback){
+        callback(200,{"content-type":"text/html"},req.willResponse)
+
+        return req.willResponse;
+    };
+
+    app.post("/update",function(req,res){
+        var data = "";
+        req.on("data",function(chunk){
+            data += chunk;
+        });
+
+        req.on("end",function(){
+            userKey = JSON.parse(data);
+
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json;charset=UTF-8");
+            res.end(JSON.stringify({success : true}));
+
+            requestHandler.setRules(customerRule);    
+            self.emit("rule_changed");
+        });
+    });
+
+    app.use(express.static(__dirname + "/web_uiconfig"));
+    app.listen(port);
+
+    self.app = app;
+}
+
+inherits(UIConfigServer, events.EventEmitter);
+
+
+
+function proxyWebServer(port){
+    var self = this;
+
     port = port || DEFAULT_WEB_PORT;
 
     //web interface
@@ -150,13 +245,22 @@ function startWebServer(port){
         res.end(entities.encodeHTML(body));
     });
 
+    app.use(function(req,res,next){
+        var indexHTML       = fs.readFileSync("./web/index.html",{encoding:"utf8"});
+            
+        if(req.url == "/"){
+            res.setHeader("Content-Type", "text/html");
+            res.end(indexHTML.replace("{{rule}}",requestHandler.getRuleSummary()) );
+        }else{
+            next();
+        }
+    });
+
     app.use(express.static(__dirname + '/web'));
 
     app.listen(port);
 
     var tipText = "web interface started at port " + port;
-    console.log(color.green(tipText));
-
 
     //web socket interface
     var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
@@ -169,6 +273,9 @@ function startWebServer(port){
     GLOBAL.recorder.on("update",function(data){
         wss.broadcast( JSON.stringify(data) );
     });
+
+    self.app  = app;
+    self.wss  = wss;
 }
 
 

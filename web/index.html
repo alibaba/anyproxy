@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
     <link rel="stylesheet" href="/css/page.css" />
     <link rel="icon" type="image/png" href="/favico.png" />
+    <script charset="utf-8" id="seajsnode"src="http://static.alipayobjects.com/seajs/??seajs/2.2.0/sea.js,seajs-combo/1.0.1/seajs-combo.js,seajs-style/1.0.2/seajs-style.js"></script>
+    
 </head>
 <body>
 	<div class="topHead">
@@ -12,8 +14,11 @@
 		<a href="#" class="J_clearBtn"><span class="topBtn">Clear Logs(Ctrl+X)</span></a>
 		<a href="#" class="J_statusBtn"><span class="topBtn">Stop</span></a>
 		<a href="#" class="J_statusBtn btn_disable"><span class="topBtn">Resume</span></a>
+		<a href="http://localhost:8080"><span class="topBtn">Config Local Response(beta)</span></a>
 	</div>
-
+	<div class="ruleDesc">
+		<h4>rule : <strong>{{rule}}</strong></h4>
+	</div>
 	<div class="mainTableWrapper J_mainTable">
 		<table class="uk-table uk-table-condensed uk-table-hover">
 			<thead>
@@ -90,7 +95,6 @@
 		<% } %>
 	</script>
 
-	<script charset="utf-8" id="seajsnode"src="http://static.alipayobjects.com/seajs/??seajs/2.2.0/sea.js,seajs-combo/1.0.1/seajs-combo.js,seajs-style/1.0.2/seajs-style.js"></script>
 	<script src="/page.js"></script>
 
 </body>
