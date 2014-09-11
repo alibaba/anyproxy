@@ -10,4 +10,6 @@ echo "rootCA generated at :"
 pwd
 echo "============="
 
+chmod 666 rootCA.*
+
 exit 0
