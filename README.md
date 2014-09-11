@@ -192,7 +192,7 @@ Using https features
 
 #### step 2 - generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
-* execute ``anyproxy --root`` ,follow the instructions on screen
+* execute ``sudo anyproxy --root`` ,follow the instructions on screen
 * **[important!]you will see some tip like *rootCA generated at : /usr/lib...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
 
 #### step 3 - start a https proxy
