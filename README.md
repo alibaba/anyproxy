@@ -4,7 +4,7 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
-因为一些集团开源/专利限制，我们暂时把anyproxy迁回了gitlab。如果喜欢，欢迎到[https://github.com/alipay-ct-wd/anyproxy](https://github.com/alipay-ct-wd/anyproxy)为我们点赞。
+因为一些安全政策，我们暂时把anyproxy迁回了gitlab，待开源申请完成后再开放。如果喜欢，欢迎到[https://github.com/alipay-ct-wd/anyproxy](https://github.com/alipay-ct-wd/anyproxy)为我们点star。
 
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
 
