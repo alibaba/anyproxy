@@ -36,13 +36,17 @@ Usage
 
 * visit [http://127.0.0.1:8002](http://127.0.0.1:8002) with modern browsers
 
-How to write your own rule file
+Rule module
 -------------------
-* with rule file, you can modify a request at any stage, no matter it's just before sending or after servers' responding.
-* actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules.
-* ``anyproxy --rule /path/to/ruleFile.js``
-* you may learn how it works by our samples: ./rule_sample
-* samples in ./rule_sample
+* with customized rule module, you may hack an http request at any stage, no matter it's just before sending or after servers' responding.
+* actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules and logic. You may get the entire scheme via [rule__blank.js](./rule_sample/rule__blank.js).
+* to invoke your rule file: ``anyproxy --rule /path/to/ruleFile.js``
+* the following figure explains the whole procedure of an http request, and the corresponding functions in rule module
+
+![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
+
+* here we also provide some samples in ./rule_sample
+* sample list
     * **[rule__blank.js](./rule_sample/rule__blank.js)**,
         * blank rule file with some comments. You may read this before writing your own rule file.
         * 空白的规则文件模板，和一些注释
@@ -71,7 +75,7 @@ How to write your own rule file
         * map some requests to local file
         * 把响应映射到本地
 
-* rule file scheme is as follows, you may also get it from [rule__blank.js](./rule_sample/rule__blank.js)
+* and here is the scheme in rule module
 
 ```javascript
 
@@ -179,10 +183,6 @@ module.exports = {
 };
 
 ```
-
-* the following figure explains the whole procedure of a http request
-
-![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
 Using https features
 ----------------
