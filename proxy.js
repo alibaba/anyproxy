@@ -246,7 +246,7 @@ function proxyWebServer(port){
     });
 
     app.use(function(req,res,next){
-        var indexHTML       = fs.readFileSync("./web/index.html",{encoding:"utf8"});
+        var indexHTML       = fs.readFileSync(__dirname + "/web/index.html",{encoding:"utf8"});
             
         if(req.url == "/"){
             res.setHeader("Content-Type", "text/html");
