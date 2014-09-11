@@ -180,6 +180,9 @@ module.exports = {
 
 ```
 
+this figure explains the whole procedure of a http request
+![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
+
 Using https features
 ----------------
 #### step 1 - install openssl
