@@ -180,7 +180,7 @@ module.exports = {
 
 ```
 
-* this figure explains the whole procedure of a http request
+* the following figure explains the whole procedure of a http request
 
 ![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
@@ -199,6 +199,9 @@ Using https features
 * ``anyproxy --type https --host my.domain.com``
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 
+#### others
+* root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
+* to clear all the temperary certificates ``anyproxy --clear``
 
 Others
 -----------------
@@ -223,9 +226,6 @@ var options = {
 new proxy.proxyServer(options);
 
 ```
-
-#### clear all the temperary certificates
-``anyproxy --clear``
 
 
 ## Contact
