@@ -43,6 +43,6 @@ openssl req -new -key $outputPath$domain.key -out $outputPath$domain.csr -passin
  
 #Generating a Self-Signed Certificate
 openssl x509 -req -days 365 -in $outputPath$domain.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out $outputPath$domain.crt
-#-signkey $outputPath$domain.key
+# -signkey $outputPath$domain.key
 #openssl x509 -req -in host.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out host.crt -days 365
 echo "Finished"

@@ -7,24 +7,24 @@ try{
 }catch(e){}
 
 var http = require('http'),
-    https          = require('https'),
-    fs             = require('fs'),
-    async          = require("async"),
-    url            = require('url'),
-    program        = require('commander'),
-    color          = require('colorful'),
-    certMgr        = require("./lib/certMgr"),
-    getPort        = require("./lib/getPort"),
-    requestHandler = require("./lib/requestHandler"),
-    Recorder       = require("./lib/Recorder"),
-    inherits       = require("util").inherits,
-    util           = require("./lib/util"),
-    entities       = require("entities"),
-    express        = require("express"),
-    path           = require("path"),
-    juicer         = require('juicer'),
-    events         = require("events"),
-    WebSocketServer= require('ws').Server;
+    https           = require('https'),
+    fs              = require('fs'),
+    async           = require("async"),
+    url             = require('url'),
+    program         = require('commander'),
+    color           = require('colorful'),
+    certMgr         = require("./lib/certMgr"),
+    getPort         = require("./lib/getPort"),
+    requestHandler  = require("./lib/requestHandler"),
+    Recorder        = require("./lib/Recorder"),
+    inherits        = require("util").inherits,
+    util            = require("./lib/util"),
+    entities        = require("entities"),
+    express         = require("express"),
+    path            = require("path"),
+    juicer          = require('juicer'),
+    events          = require("events"),
+    WebSocketServer = require('ws').Server;
 
 GLOBAL.recorder = new Recorder();
 
