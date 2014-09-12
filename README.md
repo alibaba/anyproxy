@@ -193,9 +193,13 @@ Using https features
 #### step 2 - generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
 * execute ``sudo anyproxy --root`` ,follow the instructions on screen
-* **[important!]you will see some tip like *rootCA generated at : /usr/lib...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
+* **[important!]you will see some tip like *rootCA generated at : ~/.anyproxy_certs...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
+* when debug https requests, you have to trust this rootCA on all of your clients.
 
-#### step 3 - start a https proxy
+#### Done!
+* start your anyproxy, it will intercept all the https requests for you
+
+#### to start a https proxy
 * ``anyproxy --type https --host my.domain.com``
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 
