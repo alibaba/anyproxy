@@ -4,8 +4,6 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
-因为一些安全政策，我们暂时把anyproxy迁回了gitlab，待开源申请完成后再开放。如果喜欢，欢迎到[https://github.com/alipay-ct-wd/anyproxy](https://github.com/alipay-ct-wd/anyproxy)为我们点star。
-
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
 
 Feature
@@ -196,10 +194,10 @@ Using https features
 * **[important!]you will see some tip like *rootCA generated at : ~/.anyproxy_certs...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
 * when debug https requests, you have to trust this rootCA on all of your clients.
 
-#### Done!
+#### done!
 * start your anyproxy, it will intercept all the https requests for you
 
-#### to start a https proxy
+#### to start an https proxy
 * ``anyproxy --type https --host my.domain.com``
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 
