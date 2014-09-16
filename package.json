@@ -16,7 +16,9 @@
     "iconv-lite": "^0.4.4",
     "juicer": "^0.6.6-stable",
     "nedb": "^0.11.0",
-    "ws": "^0.4.32"
+    "ws": "^0.4.32",
+    "socks5-http-client": "^0.1.6",
+    "socks5-https-client": "^0.2.2"
   },
   "devDependencies": {},
   "scripts": {
