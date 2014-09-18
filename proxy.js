@@ -54,8 +54,11 @@ if(fs.existsSync(process.cwd() + '/rule.js')){
 //option
 //option.type     : 'http'(default) or 'https'
 //option.port     : 8001(default)
-//option.rule     : ruleModule
 //option.hostname : localhost(default)
+//option.rule     : ruleModule
+//option.webPort       : 8002(default)
+//option.socketPort    : 8003(default)
+//option.webConfigPort : 8080(default)
 function proxyServer(option){
     option = option || {};
 
@@ -63,7 +66,16 @@ function proxyServer(option){
         proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
         proxyPort  = option.port     || DEFAULT_PORT,
         proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule     || default_rule; 
+        proxyRules = option.rule     || default_rule,
+        proxyWebPort    = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
+        socketPort      = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
+        proxyConfigPort = option.webConfigPort || DEFAULT_CONFIG_PORT;    //port to ui config server
+
+    var portList = {
+        proxyWebPort    : proxyWebPort,
+        socketPort      : socketPort,
+        proxyConfigPort : proxyConfigPort
+    };
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
@@ -101,14 +113,13 @@ function proxyServer(option){
 
             //start web interface
             function(callback){
-                var webServer  = new proxyWebServer();
+                var webServer  = new proxyWebServer(portList);
                 var wss = webServer.wss;
 
-                var configServer = new UIConfigServer(DEFAULT_CONFIG_PORT);
+                var configServer = new UIConfigServer(proxyConfigPort);
                 configServer.on("rule_changed",function() {
                     console.log(arguments);
                 })
-                // var wss = proxyWebServer();
 
                 callback(null);
             }
@@ -133,7 +144,7 @@ function proxyServer(option){
     }
 }
 
-// doing
+// BETA : UIConfigServer
 function UIConfigServer(port){
     var self = this;
 
@@ -146,6 +157,7 @@ function UIConfigServer(port){
         },
         userKey;
 
+    port = port || DEFAULT_CONFIG_PORT;
 
     customerRule.shouldUseLocalResponse = function(req,reqBody){
         var url = req.url;
@@ -213,10 +225,13 @@ function UIConfigServer(port){
 inherits(UIConfigServer, events.EventEmitter);
 
 
-function proxyWebServer(port){
+function proxyWebServer(portList){
     var self = this;
 
-    port = port || DEFAULT_WEB_PORT;
+    portList        = portList || {};
+    port            = portList.proxyWebPort || DEFAULT_WEB_PORT;
+    webSocketPort   = portList.socketPort || DEFAULT_WEBSOCKET_PORT;
+    proxyConfigPort = portList.proxyConfigPort;
 
     //web interface
     var app = express();
@@ -251,7 +266,11 @@ function proxyWebServer(port){
             
         if(req.url == "/"){
             res.setHeader("Content-Type", "text/html");
-            res.end(indexHTML.replace("{{rule}}",requestHandler.getRuleSummary()) );
+            res.end(util.simpleRender(indexHTML, {
+                rule            : requestHandler.getRuleSummary(),
+                webSocketPort   : webSocketPort,
+                proxyConfigPort : proxyConfigPort
+            }));
         }else{
             next();
         }
@@ -264,7 +283,7 @@ function proxyWebServer(port){
     var tipText = "web interface started at port " + port;
 
     //web socket interface
-    var wss = new WebSocketServer({port: DEFAULT_WEBSOCKET_PORT});
+    var wss = new WebSocketServer({port: webSocketPort});
     wss.on("connection",function(ws){});
     wss.broadcast = function(data) {
         for(var i in this.clients){

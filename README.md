@@ -220,10 +220,13 @@ var proxy = require("anyproxy");
 !proxy.isRootCAFileExists() && proxy.generateRootCA(); 
 
 var options = {
-    type     : "http",
-    port     : "8001",
-    hostname : "localhost",
-    rule     : require("path/to/my/ruleModule.js")
+    type          : "http",
+    port          : 8001,
+    hostname      : "localhost",
+    rule          : require("path/to/my/ruleModule.js"),
+    webPort       : 8002, // port for web interface
+    socketPort    : 8003, // internal port for web socket, replace this when it is conflict with your own service
+    webConfigPort : 8080 // internal port for web config(beta), replace this when it is conflict with your own service
 };
 new proxy.proxyServer(options);
 

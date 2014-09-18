@@ -176,7 +176,8 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 			alert("WebSocket is required. Please use a modern browser.");
 			return;
 		}
-		var dataSocket = new WebSocket("ws://127.0.0.1:8003");
+		var socketPort = $("#socketPort").val() || "8003",
+		    dataSocket = new WebSocket("ws://127.0.0.1:" + socketPort);
 		dataSocket.onopen = function(){}
 
 		dataSocket.onmessage = function(event){
