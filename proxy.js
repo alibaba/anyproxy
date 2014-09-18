@@ -21,12 +21,11 @@ var http = require('http'),
     Recorder        = require("./lib/Recorder"),
     inherits        = require("util").inherits,
     util            = require("./lib/util"),
-    entities        = require("entities"),
-    express         = require("express"),
     path            = require("path"),
     juicer          = require('juicer'),
     events          = require("events"),
-    WebSocketServer = require('ws').Server;
+    express         = require("express"),
+    fork            = require("child_process").fork;
 
 GLOBAL.recorder = new Recorder();
 
@@ -35,7 +34,7 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_PORT           = 8001,
     DEFAULT_WEB_PORT       = 8002,
     DEFAULT_WEBSOCKET_PORT = 8003,
-    DEFAULT_CONFIG_PORT    = 8080,
+    DEFAULT_CONFIG_PORT    = 8088,
     DEFAULT_HOST           = "localhost",
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
@@ -55,10 +54,10 @@ if(fs.existsSync(process.cwd() + '/rule.js')){
 //option.type     : 'http'(default) or 'https'
 //option.port     : 8001(default)
 //option.hostname : localhost(default)
-//option.rule     : ruleModule
+//option.rule          : ruleModule
 //option.webPort       : 8002(default)
 //option.socketPort    : 8003(default)
-//option.webConfigPort : 8080(default)
+//option.webConfigPort : 8088(default)
 function proxyServer(option){
     option = option || {};
 
@@ -70,12 +69,6 @@ function proxyServer(option){
         proxyWebPort    = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
         socketPort      = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort = option.webConfigPort || DEFAULT_CONFIG_PORT;    //port to ui config server
-
-    var portList = {
-        proxyWebPort    : proxyWebPort,
-        socketPort      : socketPort,
-        proxyConfigPort : proxyConfigPort
-    };
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
@@ -113,8 +106,25 @@ function proxyServer(option){
 
             //start web interface
             function(callback){
-                var webServer  = new proxyWebServer(portList);
-                var wss = webServer.wss;
+
+                //web interface
+                var child_webServer = fork(path.join(__dirname,"./webServer.js"),[proxyWebPort, socketPort , proxyConfigPort,requestHandler.getRuleSummary()]);
+                child_webServer.on("message",function(data){
+                    if(data.type == "reqBody" && data.id){
+                        child_webServer.send({
+                            type : "body",
+                            id   : data.id,
+                            body : GLOBAL.recorder.getBody(data.id)
+                        })
+                    }
+                });
+
+                GLOBAL.recorder.on("update",function(data){
+                    child_webServer.send({
+                        type: "update",
+                        body: data
+                    });
+                });
 
                 var configServer = new UIConfigServer(proxyConfigPort);
                 configServer.on("rule_changed",function() {
@@ -224,79 +234,6 @@ function UIConfigServer(port){
 
 inherits(UIConfigServer, events.EventEmitter);
 
-
-function proxyWebServer(portList){
-    var self = this;
-
-    portList        = portList || {};
-    port            = portList.proxyWebPort || DEFAULT_WEB_PORT;
-    webSocketPort   = portList.socketPort || DEFAULT_WEBSOCKET_PORT;
-    proxyConfigPort = portList.proxyConfigPort;
-
-    //web interface
-    var app = express();
-    app.use(function(req, res, next) {
-        res.setHeader("note", "THIS IS A REQUEST FROM ANYPROXY WEB INTERFACE");
-        return next();
-    });
-
-    app.get("/summary",function(req,res){
-        GLOBAL.recorder.getSummaryList(function(err,docs){
-            if(err){
-                res.end(err.toString());
-            }else{
-                res.json(docs.slice(docs.length -500));
-            }
-        });
-    });
-
-    app.get("/body",function(req,res){
-        var reqQuery = url.parse(req.url,true);
-        var id = reqQuery.query.id;
-
-        res.setHeader("Content-Type","text/html");
-        res.writeHead(200);
-
-        var body = GLOBAL.recorder.getBody(id);
-        res.end(entities.encodeHTML(body));
-    });
-
-    app.use(function(req,res,next){
-        var indexHTML       = fs.readFileSync(__dirname + "/web/index.html",{encoding:"utf8"});
-            
-        if(req.url == "/"){
-            res.setHeader("Content-Type", "text/html");
-            res.end(util.simpleRender(indexHTML, {
-                rule            : requestHandler.getRuleSummary(),
-                webSocketPort   : webSocketPort,
-                proxyConfigPort : proxyConfigPort
-            }));
-        }else{
-            next();
-        }
-    });
-
-    app.use(express.static(__dirname + '/web'));
-
-    app.listen(port);
-
-    var tipText = "web interface started at port " + port;
-
-    //web socket interface
-    var wss = new WebSocketServer({port: webSocketPort});
-    wss.on("connection",function(ws){});
-    wss.broadcast = function(data) {
-        for(var i in this.clients){
-            this.clients[i].send(data);
-        }
-    };
-    GLOBAL.recorder.on("update",function(data){
-        wss.broadcast( JSON.stringify(data) );
-    });
-
-    self.app  = app;
-    self.wss  = wss;
-}
 
 
 module.exports.proxyServer        = proxyServer;

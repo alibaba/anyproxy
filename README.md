@@ -226,7 +226,7 @@ var options = {
     rule          : require("path/to/my/ruleModule.js"),
     webPort       : 8002, // port for web interface
     socketPort    : 8003, // internal port for web socket, replace this when it is conflict with your own service
-    webConfigPort : 8080 // internal port for web config(beta), replace this when it is conflict with your own service
+    webConfigPort : 8088 // internal port for web config(beta), replace this when it is conflict with your own service
 };
 new proxy.proxyServer(options);
 
