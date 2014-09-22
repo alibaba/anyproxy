@@ -184,6 +184,7 @@ module.exports = {
 
 Using https features
 ----------------
+
 #### step 1 - install openssl
 * openssl is availabe here : [http://wiki.openssl.org/index.php/Compilation_and_Installation](http://wiki.openssl.org/index.php/Compilation_and_Installation) 
 * using ``openssl version -a `` to make sure it is accessible via you command line.
@@ -194,12 +195,14 @@ Using https features
 * **[important!]you will see some tip like *rootCA generated at : ~/.anyproxy_certs...* . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly**
 * when debug https requests, you have to trust this rootCA on all of your clients.
 
-#### done!
-* start your anyproxy, it will intercept all the https requests for you
+#### to intercept(decrypt) https requests
+* start your anyproxy as normal. When rootCA is generated, it will intercept all the https requests for you automatically.
+* if you get a warning like 'unsafe connection', please check if the root CA is trusted correctly.
 
 #### to start an https proxy
 * ``anyproxy --type https --host my.domain.com``
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
+* using **https proxy** means your request towards proxy will be encrypted. Please notice that this feature has nothing to do with **intercept https requests**.
 
 #### others
 * root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
