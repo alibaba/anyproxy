@@ -63,8 +63,6 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,recorder)
 
     app.listen(port);
 
-    var tipText = "web interface started at port " + port;
-
     //web socket interface
     var wss = new WebSocketServer({port: webSocketPort});
     wss.on("connection",function(ws){});

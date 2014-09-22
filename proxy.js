@@ -119,6 +119,11 @@ function proxyServer(option){
                     }
                 });
 
+                //kill web server when father process exits
+                process.on("exit",function(){
+                    child_webServer.kill(); 
+                });
+
                 GLOBAL.recorder.on("update",function(data){
                     child_webServer.send({
                         type: "update",
@@ -130,6 +135,9 @@ function proxyServer(option){
                 configServer.on("rule_changed",function() {
                     console.log(arguments);
                 })
+
+                var tipText = "web interface started at port " + proxyWebPort;
+                console.log(color.green(tipText));
 
                 callback(null);
             }
