@@ -25,6 +25,7 @@ var http = require('http'),
     juicer          = require('juicer'),
     events          = require("events"),
     express         = require("express"),
+    ip              = require("ip"),
     fork            = require("child_process").fork;
 
 GLOBAL.recorder = new Recorder();
@@ -108,14 +109,15 @@ function proxyServer(option){
             function(callback){
 
                 //web interface
-                var child_webServer = fork(path.join(__dirname,"./webServer.js"),[proxyWebPort, socketPort , proxyConfigPort,requestHandler.getRuleSummary()]);
+                var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address()];
+                var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
                 child_webServer.on("message",function(data){
                     if(data.type == "reqBody" && data.id){
                         child_webServer.send({
                             type : "body",
                             id   : data.id,
                             body : GLOBAL.recorder.getBody(data.id)
-                        })
+                        });
                     }
                 });
 
@@ -241,7 +243,6 @@ function UIConfigServer(port){
 }
 
 inherits(UIConfigServer, events.EventEmitter);
-
 
 
 module.exports.proxyServer        = proxyServer;

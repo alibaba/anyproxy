@@ -8,7 +8,7 @@ var express         = require("express"),
     entities        = require("entities"),
     WebSocketServer = require('ws').Server;
 
-function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,recorder){
+function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress){
     var self = this;
 
     if(arguments.length < 3){
@@ -52,7 +52,8 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,recorder)
             res.end(util.simpleRender(indexHTML, {
                 rule            : ruleSummary || "",
                 webSocketPort   : webSocketPort,
-                proxyConfigPort : proxyConfigPort
+                proxyConfigPort : proxyConfigPort,
+                ipAddress       : ipAddress || "127.0.0.1"
             }));
         }else{
             next();
@@ -60,7 +61,6 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,recorder)
     });
 
     app.use(express.static(__dirname + '/web'));
-
     app.listen(port);
 
     //web socket interface
@@ -83,8 +83,9 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,recorder)
 inherits(proxyWebServer, events.EventEmitter);
 
 var	param  = process.argv.slice(2),
-    server = new proxyWebServer(param[0],param[1],param[2],param[3]),
+    server = new proxyWebServer(param[0],param[1],param[2],param[3],param[4]),
 	cbMap = {}; // id body cb
+
 
 process.on("message",function(data){
 

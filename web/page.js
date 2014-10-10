@@ -176,8 +176,9 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 			alert("WebSocket is required. Please use a modern browser.");
 			return;
 		}
-		var socketPort = $("#socketPort").val() || "8003",
-		    dataSocket = new WebSocket("ws://127.0.0.1:" + socketPort);
+		var socketPort = $("#socketPort").val(),
+			baseUrl    = $("#baseUrl").val(),
+		    dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
 		dataSocket.onopen = function(){}
 
 		dataSocket.onmessage = function(event){
@@ -196,8 +197,8 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		}
 
 		dataSocket.onerror = function(e){
-			alert("socket err, please refresh");
 			console.log(e);
+			alert("socket err, please refresh");
 		}
 
 	});

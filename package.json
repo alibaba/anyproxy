@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "2.4.4",
+  "version": "2.4.6",
   "description": "A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.",
   "main": "proxy.js",
   "bin": {
@@ -14,11 +14,12 @@
     "entities": "^1.1.1",
     "express": "^4.8.5",
     "iconv-lite": "^0.4.4",
+    "ip": "^0.3.2",
     "juicer": "^0.6.6-stable",
     "nedb": "^0.11.0",
-    "ws": "^0.4.32",
     "socks5-http-client": "^0.1.6",
-    "socks5-https-client": "^0.2.2"
+    "socks5-https-client": "^0.2.2",
+    "ws": "^0.4.32"
   },
   "devDependencies": {},
   "scripts": {

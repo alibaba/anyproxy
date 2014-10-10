@@ -197,7 +197,7 @@ Using https features
 
 #### to intercept(decrypt) https requests
 * start your anyproxy as normal. When rootCA is generated, it will intercept all the https requests for you automatically.
-* if you get a warning like 'unsafe connection', please check if the root CA is trusted correctly.
+* if you get a warning like 'unsafe connection', please check if the root CA is correctly trusted .
 
 #### to start an https proxy
 * ``anyproxy --type https --host my.domain.com``
