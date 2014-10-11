@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anyproxy</title>
+    <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
+    <link rel="stylesheet" href="/css/page.css" />
+    <link rel="icon" type="image/png" href="/favico.png" />
+    <script charset="utf-8" id="seajsnode"src="http://static.alipayobjects.com/seajs/??seajs/2.2.0/sea.js,seajs-combo/1.0.1/seajs-combo.js,seajs-style/1.0.2/seajs-style.js"></script>
+    
+</head>
+<body>
+	<div id="J_detailPanel" class="detailPanel"></div>
+	<script type="text/javascript">
+		seajs.config({
+		    base: 'http://static.alipayobjects.com/',
+		    alias: {
+				'$'         : 'jquery/jquery/1.7.2/jquery',
+				'Backbone'  : 'gallery/backbone/1.1.2/backbone.js',
+				'Underscore': 'gallery/underscore/1.6.0/underscore.js'
+		    }
+		});
+
+		seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,Detail) {
+
+			window.render = function(data){
+				Detail.render(data,function(tpl){
+					$("#J_detailPanel").html(tpl);
+				});
+				
+			}
+
+			//init render
+			if(window.renderData){
+				window.render(window.renderData);
+			}
+		});
+
+
+
+	</script>
+
+	<style type="text/css">
+	body{
+		word-wrap: break-word;
+	}
+
+	.detailPanel{
+		padding: 40px 20px;
+		font-size: 22px;
+		line-height: 30px;
+	}
+
+	.subTitle{
+		border-left: 6px solid #1FA2D6;
+		font-size: 24px;
+		line-height: 36px;
+		font-weight: bold;
+	}
+	</style>
+
+</body>
+</html>

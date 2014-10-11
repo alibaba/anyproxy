@@ -7,8 +7,10 @@ seajs.config({
     }
 });
 
-seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
+seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,Detail) {
 	Backbone.$ = $;
+
+	var isInApp = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.list;
 
 	$(function(){
 
@@ -37,30 +39,12 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 				self.hideDetail();
 			});
 
-			self.addMask = function(){
-
-			}
-
 			self.showDetail = function(data){
-				var tpl = _.template($("#detail_tpl").html() , data);
-
-				$(".J_recordDetailOverlayContent",$detailEl).html(tpl);
-			    $detailEl.show();
-			    $mask.show();
-
-			    if(data.statusCode){ //if finished
-			    	$.ajax({
-			    		url:"/body?id=" + data._id,
-			    		headers:{
-			    			anyproxy_web_req : true
-			    		},
-			    		type : "GET",
-			    		success:function(data){
-				    	    $(".J_responseBody", $detailEl).html(data);
-				    	}
-			    	});
-
-			    }
+				Detail.render(data,function(tpl){
+					$(".J_recordDetailOverlayContent",$detailEl).html(tpl);
+				    $detailEl.show();
+				    $mask.show();
+				});
 			};
 
 			self.hideDetail = function(){
@@ -106,7 +90,11 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 					e.stopPropagation();
 					var self = this;
 					var detailData = self.model.toJSON();
-					self.detailPanel.showDetail(detailData);
+					if(!isInApp){
+						self.detailPanel.showDetail(detailData);
+					}else{ 
+						window.webkit.messageHandlers.list.postMessage(JSON.stringify(detailData))
+					}
 				}
 			},
 			render: function(){
@@ -186,7 +174,7 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 			var data = JSON.parse(event.data);
 
 			var reqDate = new Date(data.startTime);
-			data.startTimeStr = reqDate.toLocaleDateString()+ " " + reqDate.toLocaleTimeString();
+			data.startTimeStr = reqDate.toLocaleTimeString() + "";
 
 			var previous;
 			if(previous = recList.get(data.id)){
@@ -249,5 +237,20 @@ seajs.use(['$','Underscore' ,'Backbone'], function($, _, Backbone) {
 		});
 
 	})();
+
+	// Date.prototype.Format = function (fmt) {
+	//     var o = {
+	//         "M+": this.getMonth() + 1, //月份 
+	//         "d+": this.getDate(), //日 
+	//         "h+": this.getHours(), //小时 
+	//         "m+": this.getMinutes(), //分 
+	//         "s+": this.getSeconds(), //秒 
+	//         "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+	//         "S": this.getMilliseconds() //毫秒 
+	//     };
+	//     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	//     for (var k in o) if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	//     return fmt;
+	// }
 
 });

@@ -77,7 +77,7 @@
 }
 
 .mainTableWrapper .col_time{
-	width: 160px;
+	width: 140px;
 }
 
 .mainTableWrapper tr.row_odd{
@@ -93,13 +93,11 @@
 	background: #CCC;
 }
 
-.resHeader{
-	width: 400px;
-}
-
-.resBody textarea{
-	width: 400px;
-	height: 280px;
+.resBody .resBodyContent{
+	min-width: 200px;
+	padding: 10px;
+	border: 1px solid #99baca;
+	background: #f5fbfe;
 }
 
 .subTitle{
