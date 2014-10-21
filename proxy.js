@@ -4,6 +4,8 @@ try{
     GLOBAL.util['iconv-lite']       = require("iconv-lite");
     GLOBAL.util['colorful']         = require("colorful");
     GLOBAL.util['path']             = require("path");
+    GLOBAL.util['jsdom']            = require('jsdom');
+    GLOBAL.util['jquery']           = require('jquery');
     GLOBAL.util['Socks5ClientHttpAgent']    = require('socks5-http-client/lib/Agent');
     GLOBAL.util['Socks5ClientHttpsAgent']   = require('socks5-https-client/lib/Agent');
 }catch(e){}
