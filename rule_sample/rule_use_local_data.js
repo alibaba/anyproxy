@@ -1,7 +1,5 @@
 //replace all the images with local one
-var url     = require("url"),
-    path    = require("path"),
-    fs      = require("fs");
+var fs      = require("fs");
 
 var LOCAL_IMAGE = "/Users/path/to/image.png";
 
