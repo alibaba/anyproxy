@@ -157,9 +157,10 @@ module.exports = {
     //replace the response from the server before it's sent to the user
     //you may return either a Buffer or a string
     //serverResData is a Buffer, you may get its content by calling serverResData.toString()
-    replaceServerResData: function(req,res,serverResData){
-        return serverResData;
+    replaceServerResDataAsync: function(req,res,serverResData,callback){
+        callback(serverResData);
     },
+    //replaceServerResData is deprecated
 
     //在请求返回给用户前的延迟时间
     //add a pause before sending response to user

@@ -2,15 +2,15 @@
 
 module.exports = {
 
-    replaceServerResData: function(req,res,serverResData){
+    replaceServerResDataAsync: function(req,res,serverResData,callback){
 
         //append "hello world" to all web pages
         if(/html/i.test(res.headers['content-type'])){
             var newDataStr = serverResData.toString();
             newDataStr += "hello world!";
-            return newDataStr;
+            callback(newDataStr);
         }else{
-            return serverResData;
+            callback(serverResData);
         }
 
     }

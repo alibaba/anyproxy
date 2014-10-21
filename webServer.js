@@ -6,10 +6,12 @@ var express         = require("express"),
     events          = require("events"),
     inherits        = require("util").inherits,
     entities        = require("entities"),
+    qrCode          = require('qrcode-npm'),
     WebSocketServer = require('ws').Server;
 
 function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress){
-    var self = this;
+    var self = this,
+        myAbsAddress = "http://" + ipAddress + ":" + port +"/";
 
     if(arguments.length < 3){
     	throw new Error("please assign ports");
@@ -42,6 +44,22 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
         fetchBody(id,function(body){
 	        res.end(entities.encodeHTML(body));
         });
+    });
+
+    //make qr code
+    app.get("/qr",function(req,res){
+        var qr        = qrCode.qrcode(4, 'M'),
+            targetUrl = myAbsAddress,
+            qrImageTag,
+            resDom;
+
+        qr.addData(targetUrl);
+        qr.make();
+        qrImageTag = qr.createImgTag(4);
+
+        resDom = '<a href="__url"> __img <br> click or scan qr code to start client </a>'.replace(/__url/,targetUrl).replace(/__img/,qrImageTag);
+        res.setHeader("Content-Type", "text/html");
+        res.end(resDom);
     });
 
     app.use(function(req,res,next){

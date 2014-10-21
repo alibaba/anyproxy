@@ -3,12 +3,12 @@
 module.exports = {
 
 
-    replaceServerResData: function(req,res,serverResData){
+    replaceServerResDataAsync: function(req,res,serverResData,callback){
         //add "hello github" to all github pages
         if(req.headers.host == "github.com"){
             serverResData += "hello github";
         }
-        return serverResData;
+        callback(serverResData);
     },
 
     shouldInterceptHttpsReq :function(req){

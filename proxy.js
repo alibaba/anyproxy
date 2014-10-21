@@ -135,12 +135,16 @@ function proxyServer(option){
 
                 var configServer = new UIConfigServer(proxyConfigPort);
                 configServer.on("rule_changed",function() {
-                    console.log(arguments);
+                    // console.log(arguments);
                 })
 
-                var tipText = "web interface started at port " + proxyWebPort;
+                var tipText,webUrl;
+                webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
+                tipText = "web interface started at : " + webUrl;
                 console.log(color.green(tipText));
 
+                tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
+                console.log(color.green(tipText));
                 callback(null);
             }
         ],
