@@ -5,6 +5,10 @@ var LOCAL_IMAGE = "/Users/path/to/image.png";
 
 module.exports = {
 
+    summary:function(){
+        return "replace all the images with local one";
+    },
+
     //mark if use local response
     shouldUseLocalResponse : function(req,reqBody){
         if(/\.(png|gif|jpg|jpeg)$/.test(req.url)){

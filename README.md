@@ -71,7 +71,7 @@ Rule module
         * 改变服务端响应的http状态码
     * **[rule_use_local_data.js](./rule_sample/rule_use_local_data.js)**
         * map some requests to local file
-        * 把响应映射到本地
+        * 把图片响应映射到本地
 
 * and here is the scheme in rule module
 

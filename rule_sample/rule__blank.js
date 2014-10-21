@@ -11,8 +11,6 @@ module.exports = {
 
 
 
-
-
     //=======================
     //when getting a request from user
     //收到用户请求之后
@@ -21,6 +19,7 @@ module.exports = {
     //是否在本地直接发送响应（不再向服务器发出请求）
 	//whether to intercept this request by local logic 
 	//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
+    //req is the user's request sent to the proxy server
 	shouldUseLocalResponse : function(req,reqBody){
         return false;
 	},
@@ -33,10 +32,6 @@ module.exports = {
 	dealLocalResponse : function(req,reqBody,callback){
         callback(statusCode,resHeader,responseData)
 	},
-
-
-
-
 
 
 
@@ -54,9 +49,9 @@ module.exports = {
     },
 
     //替换向服务器发出的请求参数（option)
-    //req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
-    //you may return a customized option to replace the original option
-    //you should not write content-length header in options, since anyproxy will handle it for you
+    //option is the configuration of the http request sent to remote server. You may refers to http://nodejs.org/api/http.html#http_http_request_options_callback
+    //you may return a customized option to replace the original one
+    //you should not overwrite content-length header in options, since anyproxy will handle it for you
     replaceRequestOption : function(req,option){
         var newOption = option;
         return newOption;
@@ -67,8 +62,6 @@ module.exports = {
     replaceRequestData: function(req,data){
         return data;
     },
-
-
 
 
 
@@ -111,9 +104,6 @@ module.exports = {
     	var timeInMS = 1; //delay all requests for 1ms
     	return timeInMS; 
     },
-
-
-
 
 
 
