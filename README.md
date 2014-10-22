@@ -22,7 +22,7 @@ Usage
 ### step 1 - install
 
 * install [NodeJS](http://nodejs.org/)
-* ``npm install -g anyproxy`` , may require ``sudo``
+* ``tnpm install -g anyproxy`` , may require ``sudo``
 
 ### step 2 - start server
 
