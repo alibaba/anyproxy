@@ -213,8 +213,8 @@ Others
 -----------------
 
 #### to save request data 
-* to save request data to local file, using the following param ``` anyproxy --file /path/to/file ```
-* anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some duplicate record in local file. Remember to use the last records with the same id.
+* to save request data to local file, use ``` anyproxy --file /path/to/file ```
+* anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some redundant record in local file. For those dupplicated ones with the same id, just use the lastest line of record.
 
 #### work as a module for nodejs
 ```
