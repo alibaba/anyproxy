@@ -205,7 +205,7 @@ Using https features
 * the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
 * using **https proxy** means your request towards proxy will be encrypted. Please notice that this feature has nothing to do with **intercept https requests**.
 
-#### others
+#### about certs
 * root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
 * to clear all the temperary certificates ``anyproxy --clear``
 
