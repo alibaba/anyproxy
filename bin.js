@@ -7,9 +7,10 @@ var program     = require('commander'),
 
 program
     .option('-u, --host [value]', 'hostname for https proxy, localhost for default')
-    .option('-t, --type [value]', 'http|https,http for default')
+    .option('-t, --type [value]', 'http|https, http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
-    .option('-r, --rule [value]', 'rule file to map localfiles')
+    .option('-f, --file [value]', 'save request data to a specified file, will use in-memory db if not specified')
+    .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
     .option('-c, --clear', 'clear all the tmp certificates')
     .parse(process.argv);
@@ -41,10 +42,11 @@ if(program.clear){
     }
 
     new proxy.proxyServer({
-        type : program.type,
-        port : program.port,
+        type     : program.type,
+        port     : program.port,
         hostname : program.hostname,
-        rule : ruleModule
+        dbFile   : program.file,
+        rule     : ruleModule
     });
 }
 

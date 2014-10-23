@@ -211,7 +211,12 @@ Using https features
 
 Others
 -----------------
-#### work as a module
+
+#### to save request data 
+* to save request data to local file, using the following param ``` anyproxy --file /path/to/file ```
+* anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some duplicate record in local file. Remember to use the last records with the same id.
+
+#### work as a module for nodejs
 ```
 npm install anyproxy --save
 ```
@@ -228,6 +233,7 @@ var options = {
     port          : 8001,
     hostname      : "localhost",
     rule          : require("path/to/my/ruleModule.js"),
+    dbFile        : null,  //save request data to a specified file, will use in-memory db if not specified
     webPort       : 8002, // port for web interface
     socketPort    : 8003, // internal port for web socket, replace this when it is conflict with your own service
     webConfigPort : 8088 // internal port for web config(beta), replace this when it is conflict with your own service
@@ -238,4 +244,5 @@ new proxy.proxyServer(options);
 
 
 ## Contact
+* anyproxy用户旺旺群：1203077233
 * Please feel free to raise any issue about this project, or give us some advice on this doc. :)

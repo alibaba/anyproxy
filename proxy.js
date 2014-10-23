@@ -30,8 +30,6 @@ var http = require('http'),
     ip              = require("ip"),
     fork            = require("child_process").fork;
 
-GLOBAL.recorder = new Recorder();
-
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
     DEFAULT_PORT           = 8001,
@@ -61,6 +59,7 @@ if(fs.existsSync(process.cwd() + '/rule.js')){
 //option.webPort       : 8002(default)
 //option.socketPort    : 8003(default)
 //option.webConfigPort : 8088(default)
+//option.dbFile        : null(default)
 function proxyServer(option){
     option = option || {};
 
@@ -72,6 +71,12 @@ function proxyServer(option){
         proxyWebPort    = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
         socketPort      = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort = option.webConfigPort || DEFAULT_CONFIG_PORT;    //port to ui config server
+
+    if(option.dbFile){
+        GLOBAL.recorder = new Recorder({filename: option.dbFile});
+    }else{
+        GLOBAL.recorder = new Recorder();
+    }
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
@@ -125,7 +130,7 @@ function proxyServer(option){
 
                 //kill web server when father process exits
                 process.on("exit",function(){
-                    child_webServer.kill(); 
+                    child_webServer.kill();
                 });
 
                 GLOBAL.recorder.on("update",function(data){
