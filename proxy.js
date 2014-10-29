@@ -1,13 +1,13 @@
 //mix some modules to global.util
 try{
-    GLOBAL.util                     = require('./lib/util');
-    GLOBAL.util['iconv-lite']       = require("iconv-lite");
-    GLOBAL.util['colorful']         = require("colorful");
-    GLOBAL.util['path']             = require("path");
-    GLOBAL.util['jsdom']            = require('jsdom');
-    GLOBAL.util['jquery']           = require('jquery');
-    GLOBAL.util['Socks5ClientHttpAgent']    = require('socks5-http-client/lib/Agent');
-    GLOBAL.util['Socks5ClientHttpsAgent']   = require('socks5-https-client/lib/Agent');
+    GLOBAL.util                           = require('./lib/util');
+    GLOBAL.util['iconv-lite']             = require("iconv-lite");
+    GLOBAL.util['colorful']               = require("colorful");
+    GLOBAL.util['path']                   = require("path");
+    GLOBAL.util['jsdom']                  = require('jsdom');
+    GLOBAL.util['jquery']                 = require('jquery');
+    GLOBAL.util['Socks5ClientHttpAgent']  = require('socks5-http-client/lib/Agent');
+    GLOBAL.util['Socks5ClientHttpsAgent'] = require('socks5-https-client/lib/Agent');
 }catch(e){}
 
 var http = require('http'),
@@ -28,7 +28,9 @@ var http = require('http'),
     events          = require("events"),
     express         = require("express"),
     ip              = require("ip"),
-    fork            = require("child_process").fork;
+    fork            = require("child_process").fork,
+    ThrottleGroup   = require("stream-throttle").ThrottleGroup;
+
 
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
@@ -60,6 +62,7 @@ if(fs.existsSync(process.cwd() + '/rule.js')){
 //option.socketPort    : 8003(default)
 //option.webConfigPort : 8088(default)
 //option.dbFile        : null(default)
+//option.throttle      : null(default) 
 function proxyServer(option){
     option = option || {};
 
@@ -76,6 +79,11 @@ function proxyServer(option){
         GLOBAL.recorder = new Recorder({filename: option.dbFile});
     }else{
         GLOBAL.recorder = new Recorder();
+    }
+
+    if(option.throttle){
+        console.log("throttle :" + option.throttle + "kb/s");
+        GLOBAL._throttle = new ThrottleGroup({rate: 1024 * parseInt(option.throttle) }); // rate - byte/sec
     }
 
     requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule

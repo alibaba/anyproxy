@@ -12,6 +12,7 @@ program
     .option('-f, --file [value]', 'save request data to a specified file, will use in-memory db if not specified')
     .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
+    .option('-l, --throttle [value]', 'throttle speed in kb/s')
     .option('-c, --clear', 'clear all the tmp certificates')
     .parse(process.argv);
 
@@ -46,6 +47,7 @@ if(program.clear){
         port     : program.port,
         hostname : program.hostname,
         dbFile   : program.file,
+        throttle : program.throttle,
         rule     : ruleModule
     });
 }
