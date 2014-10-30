@@ -7,6 +7,7 @@ try{
     GLOBAL.util['jsdom']            = require('jsdom');
     GLOBAL.util['cookie']           = require('cookie');
     GLOBAL.util['jquery']           = require('jquery');
+    GLOBAL.util['mysql']            = require('mysql');
     GLOBAL.util['Socks5ClientHttpAgent']    = require('socks5-http-client/lib/Agent');
     GLOBAL.util['Socks5ClientHttpsAgent']   = require('socks5-https-client/lib/Agent');
 }catch(e){}
