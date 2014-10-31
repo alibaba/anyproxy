@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "2.7.1",
+  "version": "2.7.3",
   "description": "A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.",
   "main": "proxy.js",
   "bin": {
@@ -30,7 +30,10 @@
   "scripts": {
     "test": "nodeunit test.js"
   },
-  "repository": {},
+  "repository": {
+    "type":"git",
+    "url" :"https://github.com/alibaba/anyproxy"  
+  },
   "author": "ottomao@gmail.com",
   "license": "ISC"
 }

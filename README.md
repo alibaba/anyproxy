@@ -217,7 +217,7 @@ Others
 * anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some redundant record in local file. For those dupplicated ones with the same id, just use the lastest line of record.
 
 #### throttling
-* e.g. throttle to 10kb , use ``` anyproxy --throttle 10 ```
+* e.g. throttle to 10kb/s (kbyte/sec) , use ``` anyproxy --throttle 10 ```
 * this is just a rough throttling for downstream, not for network simulation
 
 #### work as a module for nodejs
