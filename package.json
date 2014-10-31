@@ -24,7 +24,8 @@
     "socks5-https-client": "^0.2.2",
     "stream-throttle": "^0.1.3",
     "ws": "^0.4.32",
-    "cookie":"^0.1.2"
+    "cookie":"^0.1.2",
+    "mysql":"^2.5.2"
   },
   "devDependencies": {},
   "scripts": {
