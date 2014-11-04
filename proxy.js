@@ -65,18 +65,20 @@ if(fs.existsSync(process.cwd() + '/rule.js')){
 //option.webConfigPort : 8088(default)
 //option.dbFile        : null(default)
 //option.throttle      : null(default) 
+//option.disableWebInterface
 function proxyServer(option){
     option = option || {};
 
     var self       = this,
-        proxyType  = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
-        proxyPort  = option.port     || DEFAULT_PORT,
-        proxyHost  = option.hostname || DEFAULT_HOST,
-        proxyRules = option.rule     || default_rule,
-        proxyWebPort    = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
-        socketPort      = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
-        proxyConfigPort = option.webConfigPort || DEFAULT_CONFIG_PORT;    //port to ui config server
-
+        proxyType           = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
+        proxyPort           = option.port     || DEFAULT_PORT,
+        proxyHost           = option.hostname || DEFAULT_HOST,
+        proxyRules          = option.rule     || default_rule,
+        proxyWebPort        = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
+        socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
+        proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
+        disableWebInterface = !!option.disableWebInterface ;
+        
     if(option.dbFile){
         GLOBAL.recorder = new Recorder({filename: option.dbFile});
     }else{
@@ -124,45 +126,51 @@ function proxyServer(option){
 
             //start web interface
             function(callback){
-
-                //web interface
-                var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address()];
-                var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
-                child_webServer.on("message",function(data){
-                    if(data.type == "reqBody" && data.id){
-                        child_webServer.send({
-                            type : "body",
-                            id   : data.id,
-                            body : GLOBAL.recorder.getBody(data.id)
-                        });
-                    }
-                });
-
-                //kill web server when father process exits
-                process.on("exit",function(){
-                    child_webServer.kill();
-                });
-
-                GLOBAL.recorder.on("update",function(data){
-                    child_webServer.send({
-                        type: "update",
-                        body: data
+                if(disableWebInterface){
+                    console.log('web interface is disabled');
+                    callback(null);
+                }else{
+                    
+                    //web interface
+                    var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address()];
+                    var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
+                    child_webServer.on("message",function(data){
+                        if(data.type == "reqBody" && data.id){
+                            child_webServer.send({
+                                type : "body",
+                                id   : data.id,
+                                body : GLOBAL.recorder.getBody(data.id)
+                            });
+                        }
                     });
-                });
 
-                var configServer = new UIConfigServer(proxyConfigPort);
-                configServer.on("rule_changed",function() {
-                    // console.log(arguments);
-                })
+                    //TODO : uncaught exception
+                    //kill web server when father process exits
+                    process.on("exit",function(){
+                        child_webServer.kill();
+                    });
 
-                var tipText,webUrl;
-                webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                tipText = "web interface started at : " + webUrl;
-                console.log(color.green(tipText));
+                    GLOBAL.recorder.on("update",function(data){
+                        child_webServer.send({
+                            type: "update",
+                            body: data
+                        });
+                    });
 
-                tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
-                console.log(color.green(tipText));
-                callback(null);
+                    var configServer = new UIConfigServer(proxyConfigPort);
+                    configServer.on("rule_changed",function() {
+                        // console.log(arguments);
+                    });
+
+                    var tipText,webUrl;
+                    webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
+                    tipText = "web interface started at : " + webUrl;
+                    console.log(color.green(tipText));
+
+                    tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
+                    console.log(color.green(tipText));
+                    callback(null);
+                }
             }
         ],
 

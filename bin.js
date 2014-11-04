@@ -48,7 +48,8 @@ if(program.clear){
         hostname : program.hostname,
         dbFile   : program.file,
         throttle : program.throttle,
-        rule     : ruleModule
+        rule     : ruleModule,
+        disableWebInterface:false
     });
 }
 
