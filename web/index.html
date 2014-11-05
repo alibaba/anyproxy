@@ -53,7 +53,7 @@
 
 	<script type="text/template" id="main_table_row">
 		<td class="data_id"><%= _id %></td>
-		<td><%= method %></td>
+		<td><%= method %> <span class="protocol protocol_<%= protocol %>" title="https"><i class="iconfont">&#xf00c9;</i></span> </td>
 		<td class="http_status http_status_<%= statusCode %>"><%= statusCode %></td>
 		<td title="<%= host %>"><%= host %></td>
 		<td title="<%= path %>"><%= path %></td>
