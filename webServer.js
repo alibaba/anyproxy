@@ -3,6 +3,7 @@ var express         = require("express"),
     url             = require('url'),
     fs              = require("fs"),
     util            = require("./lib/util"),
+    certMgr         = require("./lib/certMgr"),
     events          = require("events"),
     inherits        = require("util").inherits,
     entities        = require("entities"),
@@ -10,8 +11,10 @@ var express         = require("express"),
     WebSocketServer = require('ws').Server;
 
 function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress){
-    var self = this,
-        myAbsAddress = "http://" + ipAddress + ":" + port +"/";
+
+    var self         = this,
+        myAbsAddress = "http://" + ipAddress + ":" + port +"/",
+        crtFilePath  = certMgr.getRootCAFilePath();
 
     if(arguments.length < 3){
     	throw new Error("please assign ports");
@@ -44,6 +47,17 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
         fetchBody(id,function(body){
 	        res.end(entities.encodeHTML(body));
         });
+    });
+
+    app.get("/fetchCrtFile",function(req,res){
+        if(crtFilePath){
+            res.setHeader("Content-Type","application/x-x509-ca-cert");
+            res.setHeader("Content-Disposition",'attachment; filename="rootCA.crt"');
+            res.end(fs.readFileSync(crtFilePath,{encoding:null}));
+        }else{
+            res.setHeader("Content-Type","text/html");
+            res.end("can not file rootCA ,plase use <strong>anyproxy --root</strong> to generate one");
+        }
     });
 
     //make qr code

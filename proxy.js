@@ -146,9 +146,11 @@ function proxyServer(option){
 
                     //TODO : uncaught exception
                     //kill web server when father process exits
-                    process.on("exit",function(){
+                    process.on("exit uncaughtException",function(){
                         child_webServer.kill();
+                        process.exit();
                     });
+
 
                     GLOBAL.recorder.on("update",function(data){
                         child_webServer.send({

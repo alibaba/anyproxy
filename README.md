@@ -207,6 +207,7 @@ Using https features
 
 #### about certs
 * root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
+* to get the rootCA.crt file , you may either find it in local dir or download it via anyproxy web interface
 * to clear all the temperary certificates ``anyproxy --clear``
 
 Others
