@@ -45,7 +45,7 @@ if(program.clear){
     new proxy.proxyServer({
         type     : program.type,
         port     : program.port,
-        hostname : program.hostname,
+        hostname : program.host,
         dbFile   : program.file,
         throttle : program.throttle,
         rule     : ruleModule,
