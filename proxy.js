@@ -150,8 +150,14 @@ function proxyServer(option){
 
                     //TODO : uncaught exception
                     //kill web server when father process exits
-                    process.on("exit uncaughtException",function(){
+                    process.on("exit",function(code){
                         child_webServer.kill();
+                        console.log('AnyProxy is about to exit with code:', code);
+                        process.exit();
+                    });
+                    process.on("uncaughtException",function(err){
+                        child_webServer.kill();
+                        console.log('Caught exception: ' + err);
                         process.exit();
                     });
 
