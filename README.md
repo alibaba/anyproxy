@@ -81,12 +81,8 @@ module.exports = {
     summary:function(){
         return "this is a blank rule for anyproxy";
     },
-    //
-    externalHttpProxies:[
-      "http://127.0.0.1:8877",
-      "http://127.0.0.1:8866"
-      //...
-    ],
+
+
     //=======================
     //when getting a request from user
     //收到用户请求之后
