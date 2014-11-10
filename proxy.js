@@ -155,6 +155,7 @@ function proxyServer(option){
                         console.log('AnyProxy is about to exit with code:', code);
                         process.exit();
                     });
+                    
                     process.on("uncaughtException",function(err){
                         child_webServer.kill();
                         console.log('Caught exception: ' + err);
