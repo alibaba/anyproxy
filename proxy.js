@@ -13,6 +13,7 @@ try{
     GLOBAL.util['HttpProxyAgent']         = require('http-proxy-agent');
     GLOBAL.util['HttpsProxyAgent']        = require('https-proxy-agent');
     GLOBAL.util['tcp-ping']               = require('tcp-ping');
+    GLOBAL.util['async']                  = require('async');
 }catch(e){}
 
 var http = require('http'),
