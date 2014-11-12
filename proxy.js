@@ -10,10 +10,9 @@ try{
     GLOBAL.util['mysql']                  = require('mysql');
     GLOBAL.util['Socks5ClientHttpAgent']  = require('socks5-http-client/lib/Agent');
     GLOBAL.util['Socks5ClientHttpsAgent'] = require('socks5-https-client/lib/Agent');
-    GLOBAL.util['HttpProxyAgent']         = require("http-proxy-agent");
-    GLOBAL.util['HttpsProxyAgent']        = require("https-proxy-agent");
-    
-
+    GLOBAL.util['HttpProxyAgent']         = require('http-proxy-agent');
+    GLOBAL.util['HttpsProxyAgent']        = require('https-proxy-agent');
+    GLOBAL.util['tcp-ping']               = require('tcp-ping');
 }catch(e){}
 
 var http = require('http'),
