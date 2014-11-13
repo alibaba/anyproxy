@@ -2,9 +2,11 @@ anyproxy
 ==========
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
-(Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
+[wiki - 代理服务器的新轮子](https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy) ，介绍我们为什么要再造一个代理服务器，anyproxy与众不同的结构与功能。
 
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
+
+(Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 Feature
 ------------
@@ -22,7 +24,8 @@ Usage
 ### step 1 - install
 
 * install [NodeJS](http://nodejs.org/)
-* ``tnpm install -g anyproxy`` , may require ``sudo``
+* ``npm install -g anyproxy`` , may require ``sudo``
+* python is optional, it will be OK if you get some error about it during installing.
 
 ### step 2 - start server
 
@@ -209,6 +212,7 @@ Using https features
 * root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
 * to get the rootCA.crt file , you may either find it in local dir or download it via anyproxy web interface
 * to clear all the temperary certificates ``anyproxy --clear``
+* https features may be unstable in windows
 
 Others
 -----------------

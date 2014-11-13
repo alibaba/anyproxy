@@ -56,8 +56,8 @@ if(!fs.existsSync(anyproxyHome)){
 if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
     default_rule = require(path.join(anyproxyHome,"rule_default"));
 }
-if(fs.existsSync(process.cwd() + '/rule.js')){
-    default_rule = require(process.cwd() + '/rule');
+if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
+    default_rule = require(path.join(process.cwd(),'rule'));
 }
 
 //option
