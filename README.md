@@ -24,7 +24,8 @@ Usage
 ### step 1 - install
 
 * install [NodeJS](http://nodejs.org/)
-* ``tnpm install -g anyproxy`` , may require ``sudo``
+* ``npm install -g anyproxy`` , may require ``sudo``
+* python is optional, it will be OK if you get some error about it during installing.
 
 ### step 2 - start server
 
@@ -211,6 +212,7 @@ Using https features
 * root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
 * to get the rootCA.crt file , you may either find it in local dir or download it via anyproxy web interface
 * to clear all the temperary certificates ``anyproxy --clear``
+* https features may be unstable in windows
 
 Others
 -----------------
