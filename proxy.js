@@ -10,10 +10,10 @@ try{
     GLOBAL.util['mysql']                  = require('mysql');
     GLOBAL.util['Socks5ClientHttpAgent']  = require('socks5-http-client/lib/Agent');
     GLOBAL.util['Socks5ClientHttpsAgent'] = require('socks5-https-client/lib/Agent');
-    GLOBAL.util['HttpProxyAgent']         = require("http-proxy-agent");
-    GLOBAL.util['HttpsProxyAgent']        = require("https-proxy-agent");
-    
-
+    GLOBAL.util['HttpProxyAgent']         = require('http-proxy-agent');
+    GLOBAL.util['HttpsProxyAgent']        = require('https-proxy-agent');
+    GLOBAL.util['tcp-ping']               = require('tcp-ping');
+    GLOBAL.util['async']                  = require('async');
 }catch(e){}
 
 var http = require('http'),
@@ -150,8 +150,15 @@ function proxyServer(option){
 
                     //TODO : uncaught exception
                     //kill web server when father process exits
-                    process.on("exit uncaughtException",function(){
+                    process.on("exit",function(code){
                         child_webServer.kill();
+                        console.log('AnyProxy is about to exit with code:', code);
+                        process.exit();
+                    });
+                    
+                    process.on("uncaughtException",function(err){
+                        child_webServer.kill();
+                        console.log('Caught exception: ' + err);
                         process.exit();
                     });
 
