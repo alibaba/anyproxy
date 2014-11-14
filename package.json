@@ -19,28 +19,30 @@
     "stream-throttle": "^0.1.3",
     "ws": "^0.4.32"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "nodeunit test.js"
+  "devDependencies": {
+    "proxy-eval": "^1.1.0"
   },
-  "optionalDependencies":{
-    "underscore":"^1.7.0",
-    "cookie":"^0.1.2",
-    "mysql":"^2.5.2",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "optionalDependencies": {
+    "underscore": "^1.7.0",
+    "cookie": "^0.1.2",
+    "mysql": "^2.5.2",
     "iconv-lite": "^0.4.4",
     "ip": "^0.3.2",
     "jquery": "^2.1.1",
     "jsdom": "^1.0.3",
     "socks5-http-client": "^0.1.6",
     "socks5-https-client": "^0.2.2",
-    "http-proxy-agent":"^0.2.6",
-    "https-proxy-agent":"^0.3.5",
-    "tcp-ping":"^0.1.1",
-    "request":"^2.48.0"
+    "http-proxy-agent": "^0.2.6",
+    "https-proxy-agent": "^0.3.5",
+    "tcp-ping": "^0.1.1",
+    "request": "^2.48.0"
   },
   "repository": {
-    "type":"git",
-    "url" :"https://github.com/alibaba/anyproxy"  
+    "type": "git",
+    "url": "https://github.com/alibaba/anyproxy"
   },
   "author": "ottomao@gmail.com",
   "license": "ISC"
