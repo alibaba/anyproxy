@@ -15,6 +15,8 @@ try{
     GLOBAL.util['tcp-ping']               = require('tcp-ping');
     GLOBAL.util['request']                = require('request');
     GLOBAL.util['async']                  = require('async');
+    GLOBAL.util['underscore']             = require('underscore');
+    GLOBAL.util['moment']                 = require('moment');
 }catch(e){}
 
 var http = require('http'),
