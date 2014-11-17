@@ -149,7 +149,6 @@ function proxyServer(option){
                         }
                     });
 
-                    //TODO : uncaught exception
                     //kill web server when father process exits
                     process.on("exit",function(code){
                         child_webServer.kill();
