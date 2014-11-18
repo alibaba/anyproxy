@@ -6,7 +6,6 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 ![](https://i.alipayobjects.com/i/ecmng/png/201409/3NKRCRk2Uf.png_250x.png)
 
-(Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 Feature
 ------------
@@ -15,6 +14,7 @@ Feature
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * a web interface is availabe for you to view request details
 * (beta)a web UI interface for you to replace some remote response with local data
+* (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 ![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
  
@@ -39,15 +39,12 @@ Usage
 
 Rule module
 -------------------
-* with customized rule module, you may hack an http request at any stage, no matter it's just before sending or after servers' responding.
-* actually ruleFile.js is a module for Nodejs, feel free to invoke your own modules and logic. You may get the entire scheme via [rule__blank.js](./rule_sample/rule__blank.js).
-* to invoke your rule file: ``anyproxy --rule /path/to/ruleFile.js``
-* the following figure explains the whole procedure of an http request, and the corresponding functions in rule module
+* Rule module is the specialty for anyproxy. Unlike other proxy, here you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, it would be much more flexible to meet your own demands.
 
+* It's highly recommended to read this guide before using it: [What is rule file and how to write one ?](https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one)
 ![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
-* here we also provide some samples in ./rule_sample
-* sample list
+* Besides, we provide some samples rules in ./rule_sample
     * **[rule__blank.js](./rule_sample/rule__blank.js)**,
         * blank rule file with some comments. You may read this before writing your own rule file.
         * 空白的规则文件模板，和一些注释
@@ -76,118 +73,10 @@ Rule module
         * map some requests to local file
         * 把图片响应映射到本地
 
-* and here is the scheme in rule module
-
-```javascript
-
-module.exports = {
-    summary:function(){
-        return "this is a blank rule for anyproxy";
-    },
-
-
-    //=======================
-    //when getting a request from user
-    //收到用户请求之后
-    //=======================
-
-    //是否在本地直接发送响应（不再向服务器发出请求）
-    //whether to intercept this request by local logic 
-    //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
-    shouldUseLocalResponse : function(req,reqBody){
-        return false;
-    },
-
-    //如果shouldUseLocalResponse返回true，会调用这个函数来获取本地响应内容
-    //you may deal the response locally instead of sending it to server
-    //this function be called when shouldUseLocalResponse returns true 
-    //callback(statusCode,resHeader,responseData)
-    //e.g. callback(200,{"content-type":"text/html"},"hello world")
-    dealLocalResponse : function(req,reqBody,callback){
-        callback(statusCode,resHeader,responseData)
-    },
-
-
-    //=======================
-    //when ready to send a request to server
-    //向服务端发出请求之前
-    //=======================
-
-    //替换向服务器发出的请求协议（http和https的替换）
-    //replace the request protocol when sending to the real server
-    //protocol : "http" or "https"
-    replaceRequestProtocol:function(req,protocol){
-        var newProtocol = protocol;
-        return newProtocol;
-    },
-
-    //替换向服务器发出的请求参数（option)
-    //req is user's request which will be sent to the proxy server, docs : http://nodejs.org/api/http.html#http_http_request_options_callback
-    //you may return a customized option to replace the original option
-    //you should not write content-length header in options, since anyproxy will handle it for you
-    replaceRequestOption : function(req,option){
-        var newOption = option;
-        return newOption;
-    },
-
-    //替换请求的body
-    //replace the request body
-    replaceRequestData: function(req,data){
-        return data;
-    },
-
-    //=======================
-    //when ready to send the response to user after receiving response from server
-    //向用户返回服务端的响应之前
-    //=======================
-
-    //替换服务器响应的http状态码
-    //replace the statusCode before it's sent to the user
-    replaceResponseStatusCode: function(req,res,statusCode){
-        var newStatusCode = statusCode;
-        return newStatusCode;
-    },
-
-    //替换服务器响应的http头
-    //replace the httpHeader before it's sent to the user
-    //Here header == res.headers
-    replaceResponseHeader: function(req,res,header){
-        var newHeader = header;
-        return newHeader;
-    },
-
-    //替换服务器响应的数据
-    //replace the response from the server before it's sent to the user
-    //you may return either a Buffer or a string
-    //serverResData is a Buffer, you may get its content by calling serverResData.toString()
-    replaceServerResDataAsync: function(req,res,serverResData,callback){
-        callback(serverResData);
-    },
-    //replaceServerResData is deprecated
-
-    //在请求返回给用户前的延迟时间
-    //add a pause before sending response to user
-    pauseBeforeSendingResponse : function(req,res){
-        var timeInMS = 1; //delay all requests for 1ms
-        return timeInMS; 
-    },
-
-    //=======================
-    //https config
-    //=======================
-
-    //是否截获https请求
-    //should intercept https request, or it will be forwarded to real server
-    shouldInterceptHttpsReq :function(req){
-        return false;
-    }
-
-};
-
-```
 
 Using https features
 ----------------
+After configuring rootCA, anyproxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
 #### step 1 - install openssl
 * openssl is availabe here : [http://wiki.openssl.org/index.php/Compilation_and_Installation](http://wiki.openssl.org/index.php/Compilation_and_Installation) 
@@ -220,12 +109,15 @@ Others
 #### to save request data 
 * to save request data to local file, use ``` anyproxy --file /path/to/file ```
 * anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some redundant record in local file. For those dupplicated ones with the same id, just use the lastest line of record.
+* [TrafficeRecorder](https://github.com/ottomao/TrafficRecorder) is another tool based on anyproxy to help recording all requests. You may have a try.
 
 #### throttling
-* e.g. throttle to 10kb/s (kbyte/sec) , use ``` anyproxy --throttle 10 ```
+* for instance, ``` anyproxy --throttle 10 ``` sets the speed limit to 10kb/s (kbyte/sec)
 * this is just a rough throttling for downstream, not for network simulation
 
 #### work as a module for nodejs
+* use it as a module and develop your own proxy.
+
 ```
 npm install anyproxy --save
 ```
@@ -256,8 +148,8 @@ new proxy.proxyServer(options);
 Contact
 -----------------
 
+* Please feel free to [raise issue](https://github.com/alibaba/anyproxy/issues), or give us some advice. :)
 * anyproxy用户旺旺群：1203077233
-* Please feel free to raise any issue about this project, or give us some advice on this doc. :)
 
 
 License

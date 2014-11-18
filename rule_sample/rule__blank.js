@@ -1,3 +1,7 @@
+/*
+read the following wiki before using rule file
+https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one
+*/
 module.exports = {
 	/*
 	These functions will overwrite the default ones, write your own when necessary.
@@ -15,6 +19,12 @@ module.exports = {
     //when getting a request from user
     //收到用户请求之后
     //=======================
+
+    //是否截获https请求
+    //should intercept https request, or it will be forwarded to real server
+    shouldInterceptHttpsReq :function(req){
+        return false;
+    },
 
     //是否在本地直接发送响应（不再向服务器发出请求）
 	//whether to intercept this request by local logic 
@@ -103,18 +113,6 @@ module.exports = {
     pauseBeforeSendingResponse : function(req,res){
     	var timeInMS = 1; //delay all requests for 1ms
     	return timeInMS; 
-    },
-
-
-
-    //=======================
-    //https config
-    //=======================
-
-    //是否截获https请求
-    //should intercept https request, or it will be forwarded to real server
-    shouldInterceptHttpsReq :function(req){
-        return false;
     }
 
 };
