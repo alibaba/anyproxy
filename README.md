@@ -85,7 +85,7 @@ After configuring rootCA, anyproxy could help to decrypt https requests, whose a
 #### step 2 - generate a rootCA and trust it
 * you should do this when it is the first time to start anyproxy
 * execute ``sudo anyproxy --root`` ,follow the instructions on screen
-* [important!]you will see some tip like *rootCA generated at : ~/.anyproxy_certs... . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the *crt file directly
+* [important!]you will see some tip like *rootCA generated at : ~/.anyproxy_certs... . ``cd`` to that directory, add/trust the rootCA.crt file to your system keychain. In OSX, you may do that by open the \*.crt file directly
 * when debug https requests, you have to trust this rootCA on all of your clients.
 
 #### to intercept(decrypt) https requests
