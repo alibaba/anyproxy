@@ -41,7 +41,7 @@ Rule module
 -------------------
 * Rule module is the specialty for anyproxy. Unlike other proxy, here you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, it would be much more flexible to meet your own demands.
 
-* It's highly recommended to read this guide before using it: [What is rule file and how to write one ?](https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one)
+* It's highly recommended to read this guide before using: [What is rule file and how to write one ?](https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one)
 ![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
 * Besides, we provide some samples rules in ./rule_sample
