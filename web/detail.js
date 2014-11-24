@@ -7,8 +7,8 @@ define("./detail",['$', 'gallery/underscore/1.6.0/underscore.js'],function(requi
 		'		<h4 class="subTitle">request</h4>'+
 		'		<div class="detail">'+
 		'			<ul class="uk-list">'+
-		'			    <li><%= method %> <%= host %></li>'+
-		'			    <li><span title="<%= path %>"><%= path %></span></li>'+
+		'			    <li><%= method %> <span title="<%= path %>"><%= path %></span> HTTP/1.1</li>'+
+		// '			    <li></li>'+
 		'			    <% _.each(reqHeader, function(v,k) { %> <li><strong><%= k %></strong> : <%= v %></li><% }); %>'+
 		'			</ul>'+
 		'		</div>'+
