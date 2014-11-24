@@ -49,7 +49,7 @@ Rule module
 ![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
 
-Using https features
+Https features
 ----------------
 After configuring rootCA, anyproxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
