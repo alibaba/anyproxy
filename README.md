@@ -18,7 +18,7 @@ Feature
 
 ![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
  
-Usage
+Quick Start
 --------------
 
 ### step 1 - install
