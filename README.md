@@ -1,5 +1,19 @@
 anyproxy
 ==========
+
+https://img.shields.io/npm/v/anyproxy.svg
+
+[![NPM version][npm-image]][npm-url]
+[![node version][node-image]][node-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: https://img.shields.io/npm/v/anyproxy.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/anyproxy
+[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
+[node-url]: http://nodejs.org/download/
+[download-image]: https://img.shields.io/npm/dm/anyproxy.svg?style=flat-square
+[download-url]: https://npmjs.org/package/anyproxy
+
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
 [wiki - 代理服务器的新轮子](https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy) ，介绍我们为什么要再造一个代理服务器，anyproxy与众不同的结构与功能。
