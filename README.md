@@ -1,8 +1,6 @@
 anyproxy
 ==========
 
-https://img.shields.io/npm/v/anyproxy.svg
-
 [![NPM version][npm-image]][npm-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
