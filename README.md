@@ -28,7 +28,7 @@ Feature
 * (beta)a web UI interface for you to replace some remote response with local data
 * (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
-![screenshot](http://gtms03.alicdn.com/tps/i3/TB1ddyqGXXXXXbXXpXXihxC1pXX-1000-549.jpg_640x640q90.jpg)
+![screenshot](http://gtms01.alicdn.com/tps/i1/TB1NE2XGVXXXXb3aXXXtdG9TVXX-2324-1416.png_640x640q90.jpg)
  
 Quick Start
 --------------
