@@ -182,8 +182,8 @@ function proxyServer(option){
                     });
 
                     var tipText,webUrl;
-                    webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                    tipText = "GUI interface started at : " + webUrl;
+                    webUrl  = "http://" + ip.address() + ":" + proxyWebPort +"/";
+                    tipText = "GUI interface started at : " + webUrl + "\n";
                     console.log(color.green(tipText));
 
                     // tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
