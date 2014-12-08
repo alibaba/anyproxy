@@ -141,7 +141,8 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 		}
 
 		//pause btn
-		var ifPause = false;
+		var ifPause     = false,
+			indicatorEl = $("#J_indicator");
 		(function(){
 			var statusBtn = $(".J_statusBtn");
 			statusBtn.on("click",function(e){
@@ -153,8 +154,12 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 
 				if(/stop/i.test($(this).html()) ){
 					ifPause = true;
+					indicatorEl.fadeOut();
+					// indicatorEl.css("visibility","hidden");
 				}else{
 					ifPause = false;
+					indicatorEl.fadeIn();
+					// indicatorEl.css("visibility","visible");
 				}
 			});
 		})();
@@ -165,9 +170,11 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 			return;
 		}
 		var socketPort = $("#socketPort").val(),
-			baseUrl    = $("#baseUrl").val(),
-		    dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
-		dataSocket.onopen = function(){}
+			baseUrl     = $("#baseUrl").val(),
+			dataSocket  = new WebSocket("ws://" + baseUrl + ":" + socketPort);
+		dataSocket.onopen = function(){
+			indicatorEl.css("visibility","visible");
+		}
 
 		dataSocket.onmessage = function(event){
 			if(ifPause) return;
@@ -184,8 +191,12 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 			}
 		}
 
+		dataSocket.onclose = function(e){
+		}
+
 		dataSocket.onerror = function(e){
 			console.log(e);
+			indicatorEl.css("visibility","hidden");
 			alert("socket err, please refresh");
 		}
 

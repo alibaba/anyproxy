@@ -51,9 +51,10 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
 var default_rule = require('./lib/rule_default');
+
 //may be unreliable in windows
-var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
 try{
+    var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
     if(!fs.existsSync(anyproxyHome)){
         fs.mkdirSync(anyproxyHome);
     }
@@ -63,9 +64,7 @@ try{
     if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
         default_rule = require(path.join(process.cwd(),'rule'));
     }
-}catch(e){
-
-}
+}catch(e){}
 
 //option
 //option.type     : 'http'(default) or 'https'
@@ -184,11 +183,11 @@ function proxyServer(option){
 
                     var tipText,webUrl;
                     webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                    tipText = "web interface started at : " + webUrl;
+                    tipText = "GUI interface started at : " + webUrl;
                     console.log(color.green(tipText));
 
-                    tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
-                    console.log(color.green(tipText));
+                    // tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
+                    // console.log(color.green(tipText));
                     callback(null);
                 }
             }
@@ -197,7 +196,7 @@ function proxyServer(option){
         //final callback
         function(err,result){
             if(!err){
-                var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at port " + proxyPort;
+                var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
                 console.log(color.green(tipText)); 
             }else{
                 var tipText = "err when start proxy server :(";

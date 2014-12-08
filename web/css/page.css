@@ -29,10 +29,48 @@
 	width: 220px;
 	height: 55px;
 	overflow: hidden;
+	position: relative;
 }
 
-.topHead h1{
-	color: #CCCCCC;
+.topHead .logoWrapper h1{
+	color: #333;
+	line-height: 55px;
+	text-align: center;
+	margin: 0;
+}
+
+.topHead .logoWrapper .logo_bottom {
+	position: absolute;
+	left:  -25px;
+	bottom: 0px;
+}
+
+.anim_rotation{
+    -webkit-animation: rotation 1.2s infinite cubic-bezier(.63,.33,.46,.71);
+}
+
+@-webkit-keyframes rotation {
+    0% {
+    	-webkit-transform: rotate(0deg);
+    	opacity: 0.1;
+    }
+
+    20% {
+    	opacity: 0.1;
+    }
+
+    40% {
+    	opacity: 0.25;
+    }
+
+    80% {
+    	opacity: 0.1;
+    }
+
+    100% {
+    	-webkit-transform: rotate(359deg);
+    	opacity: 0.1;
+    }
 }
 
 .topHead .ctrlWrapper{
@@ -86,6 +124,11 @@
 
 .mainTableWrapper table{
 	table-layout: fixed;
+}
+
+.mainTableWrapper thead{
+	background: #DDD;
+	border-bottom: 1px solid #777;
 }
 
 .mainTableWrapper td,
@@ -205,7 +248,7 @@
 }
 
 .http_status{
-	font-weight: 700;
+	/*font-weight: 700;*/
 }
 
 .http_status_200{
