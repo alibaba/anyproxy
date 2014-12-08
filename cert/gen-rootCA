@@ -12,4 +12,6 @@ echo "============="
 
 chmod 666 rootCA.*
 
+open .
+
 exit 0

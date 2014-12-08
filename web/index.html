@@ -11,15 +11,28 @@
 <body>
 
 	<div class="topHead">
-		<h1>Anyproxy</h1>
-		<a href="#" class="J_clearBtn"><span class="topBtn">Clear Logs(Ctrl+X)</span></a>
-		<a href="#" class="J_statusBtn"><span class="topBtn">Stop</span></a>
-		<a href="#" class="J_statusBtn btn_disable"><span class="topBtn">Resume</span></a>
-		<a href="/fetchCrtFile" target="_blank"><span class="topBtn">Fetch rootCA.crt</span></a>
-		<a href="http://localhost:{{proxyConfigPort}}"><span class="topBtn">Config Local Response(beta)</span></a>
-	</div>
-	<div class="ruleDesc">
-		<h4>rule : <strong>{{rule}}</strong></h4>
+		<div class="logoWrapper">
+			<h1>Anyproxy</h1>
+		</div>
+
+		<div class="ctrlWrapper">
+			<a href="#" class="J_statusBtn"><span class="topBtn"><i class="uk-icon-stop"></i>Stop</span></a>
+			<a href="#" class="J_statusBtn btn_disable"><span class="topBtn"><i class="uk-icon-play"></i>Resume</span></a>
+			<a href="#" class="J_clearBtn"><span class="topBtn"><i class="uk-icon-eraser"></i>Clear Logs(Ctrl+X)</span></a>
+			<span class="sep">|</span>
+			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>Fetch rootCA.crt</span></a>
+			<a href="http://localhost:{{proxyConfigPort}}"><span class="topBtn"><i class="uk-icon-cog"></i>Config Local Response(beta)</span></a>
+			<span class="sep">|</span>
+			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-external-link-square"></i>Anyproxy(Github)</span></a>
+
+		</div>
+
+		<div class="ruleDesc">
+			<span><i class="uk-icon-chain"></i>{{rule}}</span>
+		</div>
+
+		<div style="clear:both"></div>
+		
 	</div>
 	<div class="mainTableWrapper J_mainTable">
 		<table class="uk-table uk-table-condensed uk-table-hover">

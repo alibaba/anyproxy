@@ -1,3 +1,4 @@
+/*custom iconfont*/
 @font-face {font-family: 'iconfont';
     src: url('iconfont.eot'); /* IE9*/
     src: url('iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
@@ -16,36 +17,67 @@
 
 
 .topHead{
-	background: #000;
-	height: 42px;
+	height: 55px;
 	position: relative;
-	-webkit-box-shadow: 0px 3px 23px 0px rgba(50, 50, 50, 0.75);
+/*	-webkit-box-shadow: 0px 3px 23px 0px rgba(50, 50, 50, 0.75);
 	-moz-box-shadow:    0px 3px 23px 0px rgba(50, 50, 50, 0.75);
 	box-shadow:         0px 3px 23px 0px rgba(50, 50, 50, 0.75);
+*/}
+
+.topHead .logoWrapper{
+	float: left;
+	width: 220px;
+	height: 55px;
+	overflow: hidden;
 }
 
 .topHead h1{
 	color: #CCCCCC;
-	display: inline-block;
+}
+
+.topHead .ctrlWrapper{
+	height: 35px;
+	line-height: 35px;
 }
 
 .topHead .topBtn{
-	margin: 0 5px;
+	margin-right: 8px;
+	transition:0.1s;
+	padding: 4px;
+	border-radius: 2px;
+}
+
+.topHead .topBtn:hover{
+	background: #07D;
+	transition:0.1s;
+	color: #FFF;
+}
+
+.topHead a:hover{
+	text-decoration: none;
+}
+
+.topHead i{
+	margin-right: 3px;
 }
 
 .topHead .btn_disable{
 	color: #777;
 }
 
-.ruleDesc{
-	background: #88C4FE;
+.topHead .ruleDesc{
+	height: 20px;
 	border-bottom: 1px solid #333;
 }
 
-.ruleDesc h4{
-	color: #333;
-	line-height: 25px;
-	margin: 0;
+.topHead .ruleDesc span{
+	padding-left: 3px;
+}
+
+.topHead .ctrlWrapper .sep{
+	display: inline-block;
+	margin: 0 8px;
+	color: #777;
 }
 
 .mainTableWrapper{
