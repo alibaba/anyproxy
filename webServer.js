@@ -116,7 +116,8 @@ inherits(proxyWebServer, events.EventEmitter);
 
 var	param  = process.argv.slice(2),
     server = new proxyWebServer(param[0],param[1],param[2],param[3],param[4]),
-	cbMap = {}; // id body cb
+	cbMap  = {}, // id body cb
+    lastestHeartbeat = new Date().getTime();
 
 
 process.on("message",function(data){
@@ -130,8 +131,17 @@ process.on("message",function(data){
 			cbMap[key].body = data.body;
 			cbMap[key].cb.call(null,data.body);
 		}catch(e){}
-	}
+	}else if(data.type == "watch"){
+        lastestHeartbeat = new Date().getTime();
+    }
 });
+
+//watch dog
+setInterval(function(){
+    if(new Date().getTime() - lastestHeartbeat  > 10 * 1000){
+        process.exit();
+    }
+},7000);
 
 function fetchBody(id,cb){
 	var key = id + "";

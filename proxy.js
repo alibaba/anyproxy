@@ -1,22 +1,5 @@
-//mix some modules to global.util
 try{
-    GLOBAL.util                           = require('./lib/util');
-    GLOBAL.util['iconv-lite']             = require("iconv-lite");
-    GLOBAL.util['colorful']               = require("colorful");
-    GLOBAL.util['path']                   = require("path");
-    GLOBAL.util['jsdom']                  = require('jsdom');
-    GLOBAL.util['cookie']                 = require('cookie');
-    GLOBAL.util['jquery']                 = require('jquery');
-    GLOBAL.util['mysql']                  = require('mysql');
-    GLOBAL.util['Socks5ClientHttpAgent']  = require('socks5-http-client/lib/Agent');
-    GLOBAL.util['Socks5ClientHttpsAgent'] = require('socks5-https-client/lib/Agent');
-    GLOBAL.util['HttpProxyAgent']         = require('http-proxy-agent');
-    GLOBAL.util['HttpsProxyAgent']        = require('https-proxy-agent');
-    GLOBAL.util['tcp-ping']               = require('tcp-ping');
-    GLOBAL.util['request']                = require('request');
-    GLOBAL.util['async']                  = require('async');
-    GLOBAL.util['underscore']             = require('underscore');
-    GLOBAL.util['moment']                 = require('moment');
+    GLOBAL.util = require('./lib/util');
 }catch(e){}
 
 var http = require('http'),
@@ -155,6 +138,13 @@ function proxyServer(option){
                         }
                     });
 
+                    //watch dog
+                    setInterval(function(argument) {
+                        child_webServer.send({
+                            type:"watch"
+                        });
+                    },5000);
+
                     //kill web server when father process exits
                     process.on("exit",function(code){
                         child_webServer.kill();
@@ -168,7 +158,6 @@ function proxyServer(option){
                         process.exit();
                     });
 
-
                     GLOBAL.recorder.on("update",function(data){
                         child_webServer.send({
                             type: "update",
@@ -177,9 +166,7 @@ function proxyServer(option){
                     });
 
                     var configServer = new UIConfigServer(proxyConfigPort);
-                    configServer.on("rule_changed",function() {
-                        // console.log(arguments);
-                    });
+                    configServer.on("rule_changed",function() {});
 
                     var tipText,webUrl;
                     webUrl  = "http://" + ip.address() + ":" + proxyWebPort +"/";
