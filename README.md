@@ -22,6 +22,7 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 特性
 ------------
 * 支持https明文代理
+* 支持低网速模拟
 * 全流程开放，可以用javascript控制代理流程中的任意步骤。搭建前端个性化调试环境的利器。
 * 提供web版界面，供观测请求情况
 
