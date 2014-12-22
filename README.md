@@ -13,11 +13,17 @@ anyproxy
 [download-url]: https://npmjs.org/package/anyproxy
 
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
+(Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 [wiki - 代理服务器的新轮子](https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy) ，介绍我们为什么要再造一个代理服务器，anyproxy与众不同的结构与功能。
 
 ![](http://gtms02.alicdn.com/tps/i2/TB1dMz.GVXXXXXxXVXXwCydIXXX-250-250.png)
 
+特性
+------------
+* 支持https明文代理
+* 全流程开放，可以用javascript控制代理流程中的任意步骤。搭建前端个性化调试环境的利器。
+* 提供web版界面，供观测请求情况
 
 Feature
 ------------
@@ -26,7 +32,6 @@ Feature
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * a web interface is availabe for you to view request details
 * (beta)a web UI interface for you to replace some remote response with local data
-* (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1NE2XGVXXXXb3aXXXtdG9TVXX-2324-1416.png_640x640q90.jpg)
  
