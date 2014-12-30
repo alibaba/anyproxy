@@ -34,7 +34,7 @@ Feature
 * a web interface is availabe for you to view request details
 * (beta)a web UI interface for you to replace some remote response with local data
 
-![screenshot](http://gtms01.alicdn.com/tps/i1/TB1NE2XGVXXXXb3aXXXtdG9TVXX-2324-1416.png_640x640q90.jpg)
+![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
  
 Quick Start
 --------------
