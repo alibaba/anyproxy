@@ -101,7 +101,7 @@ Others
 #### to save request data 
 * to save request data to local file, use ``` anyproxy --file /path/to/file ```
 * anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some redundant record in local file. For those dupplicated ones with the same id, just use the lastest line of record.
-* [TrafficeRecorder](https://github.com/ottomao/TrafficRecorder) is another tool based on anyproxy to help recording all requests. You may have a try.
+* [TrafficeRecorder](https://github.com/ottomao/TrafficRecorder) is another tool based on anyproxy to help recording all request data, including header and body. You may have a try.
 
 #### throttling
 * for instance, ``` anyproxy --throttle 10 ``` sets the speed limit to 10kb/s (kbyte/sec)

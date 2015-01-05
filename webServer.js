@@ -10,7 +10,7 @@ var express         = require("express"),
     qrCode          = require('qrcode-npm'),
     WebSocketServer = require('ws').Server;
 
-function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress){
+function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress,menuListStr){
 
     var self         = this,
         myAbsAddress = "http://" + ipAddress + ":" + port +"/",
@@ -85,7 +85,8 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
                 rule            : ruleSummary || "",
                 webSocketPort   : webSocketPort,
                 proxyConfigPort : proxyConfigPort,
-                ipAddress       : ipAddress || "127.0.0.1"
+                ipAddress       : ipAddress || "127.0.0.1",
+                menu            : menuListStr
             }));
         }else{
             next();
@@ -115,7 +116,7 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
 inherits(proxyWebServer, events.EventEmitter);
 
 var	param  = process.argv.slice(2),
-    server = new proxyWebServer(param[0],param[1],param[2],param[3],param[4]),
+    server = new proxyWebServer(param[0],param[1],param[2],param[3],param[4],param[5]),
 	cbMap  = {}, // id body cb
     lastestHeartbeat = new Date().getTime();
 

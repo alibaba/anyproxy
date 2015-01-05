@@ -124,9 +124,20 @@ function proxyServer(option){
                     console.log('web interface is disabled');
                     callback(null);
                 }else{
-                    
+
+                    var customMenuConfig = proxyRules.customMenu,
+                        menuList    = [],
+                        menuListStr;
+
+                    if(customMenuConfig && customMenuConfig.length){
+                        for(var i = 0 ; i < customMenuConfig.length ; i++){
+                            menuList.push(customMenuConfig[i].name);
+                        }
+                    }
+                    menuListStr = menuList.join("@@@");
+
                     //web interface
-                    var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address()];
+                    var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address(),menuListStr];
                     var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
                     child_webServer.on("message",function(data){
                         if(data.type == "reqBody" && data.id){
@@ -248,8 +259,7 @@ function UIConfigServer(port){
     };
 
     customerRule.dealLocalResponse = function(req,reqBody,callback){
-        callback(200,{"content-type":"text/html"},req.willResponse)
-
+        callback(200,{"content-type":"text/html"},req.willResponse);
         return req.willResponse;
     };
 

@@ -24,7 +24,9 @@
 			<a href="#" class="J_clearBtn"><span class="topBtn"><i class="uk-icon-eraser"></i>Clear Logs(Ctrl+X)</span></a>
 			<span class="sep">|</span>
 			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>Fetch rootCA.crt</span></a>
-			<a href="http://localhost:{{proxyConfigPort}}"><span class="topBtn"><i class="uk-icon-cog"></i>Config Local Response(beta)</span></a>
+			<a href="#"><span class="topBtn"><i class="uk-icon-cog"></i>Others</span></a>
+
+			<!-- <a href="http://localhost:{{proxyConfigPort}}"><span class="topBtn"><i class="uk-icon-cog"></i>Config Local Response(beta)</span></a> -->
 			<span class="sep">|</span>
 			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-external-link-square"></i>Anyproxy(Github)</span></a>
 
@@ -66,6 +68,7 @@
 
 	<input type="hidden" id="socketPort" value="{{webSocketPort}}" />
 	<input type="hidden" id="baseUrl" value="{{ipAddress}}" />
+	<input type="hidden" id="customMenu" value="{{menu}}" />
 
 
 	<script type="text/template" id="main_table_row">

@@ -3,11 +3,13 @@ seajs.config({
     alias: {
 		'$'         : 'jquery/jquery/1.7.2/jquery',
 		'Backbone'  : 'gallery/backbone/1.1.2/backbone.js',
-		'Underscore': 'gallery/underscore/1.6.0/underscore.js'
+		'Underscore': 'gallery/underscore/1.6.0/underscore.js',
+		"Handlebars": 'gallery/handlebars/1.0.2/handlebars.js',
+		"Popup"     : 'arale/popup/1.1.6/popup'
     }
 });
 
-seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,Detail) {
+seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], function($, _, Backbone,Handlebars,Popup,Detail) {
 	Backbone.$ = $;
 
 	var isInApp = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.list;
@@ -164,6 +166,11 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 			});
 		})();
 
+		//render custom menu
+		var customMenu     = $("#customMenu").val().split("@@@");
+		console.log(customMenu);
+
+
 		//data via web socket
 		if(!WebSocket){
 			alert("WebSocket is required. Please use a modern browser.");
@@ -227,7 +234,7 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 		});
 
 		$(document).mouseup(function(e){
-			if (dragging) {
+			if(dragging){
 				var deltaPageX = e.pageX - pageX;
 				
 				$('.J_recordDetailOverlay').css("left",pageX + deltaPageX);
@@ -237,13 +244,11 @@ seajs.use(['$', 'Underscore', 'Backbone',"./detail"], function($, _, Backbone,De
 					},300,function(){
 						$('.J_escBtn').trigger('click');
 					});
-					
 				}
 				pageX = e.pageX;
 				$('#ghostbar').remove();
 				$(document).unbind('mousemove');
 				dragging = false;
-				
 			}
 		});
 
