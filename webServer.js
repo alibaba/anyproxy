@@ -76,6 +76,21 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
         res.end(resDom);
     });
 
+    app.get("/qr_root",function(req,res){
+        var qr        = qrCode.qrcode(4, 'M'),
+            targetUrl = myAbsAddress + "fetchCrtFile",
+            qrImageTag,
+            resDom;
+
+        qr.addData(targetUrl);
+        qr.make();
+        qrImageTag = qr.createImgTag(4);
+
+        resDom = '<a href="__url"> __img <br> click or scan qr code to download rootCA.crt </a>'.replace(/__url/,targetUrl).replace(/__img/,qrImageTag);
+        res.setHeader("Content-Type", "text/html");
+        res.end(resDom);
+    });
+
     app.use(function(req,res,next){
         var indexHTML       = fs.readFileSync(__dirname + "/web/index.html",{encoding:"utf8"});
             
