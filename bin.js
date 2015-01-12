@@ -3,9 +3,12 @@
 var program     = require('commander'),
     proxy       = require("./proxy.js"),
     color       = require('colorful'),
-    fs          = require("fs");
+    fs          = require("fs"),
+    packageInfo = require("./package.json");
+
 
 program
+    .version(packageInfo.version)
     .option('-u, --host [value]', 'hostname for https proxy, localhost for default')
     .option('-t, --type [value]', 'http|https, http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')

@@ -1,3 +1,7 @@
+12 Jan 2015: anyproxy 3.0.4:
+
+    * show anyproxy version by --version
+
 12 Jan 2015: anyproxy 3.0.3:
 
     * Bugfix: https throttle 
