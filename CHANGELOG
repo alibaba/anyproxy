@@ -1,0 +1,8 @@
+12 Jan 2015: anyproxy 3.0.3:
+
+    * Bugfix: https throttle 
+
+
+9 Jan 2015: anyproxy 3.0.2:
+
+    * UI improvement: add link and qr code to root CA file.
