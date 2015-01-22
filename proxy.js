@@ -60,6 +60,7 @@ try{
 //option.dbFile        : null(default)
 //option.throttle      : null(default) 
 //option.disableWebInterface
+//option.interceptHttps ,internal param for https
 function proxyServer(option){
     option = option || {};
 
@@ -77,6 +78,10 @@ function proxyServer(option){
         GLOBAL.recorder = new Recorder({filename: option.dbFile});
     }else{
         GLOBAL.recorder = new Recorder();
+    }
+
+    if(!!option.interceptHttps){
+        default_rule.setInterceptFlag(true);
     }
 
     if(option.throttle){

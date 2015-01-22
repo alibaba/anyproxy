@@ -1,11 +1,14 @@
+22 Jan 2015: anyproxy 3.1.0:
+
+    * will NOT intercept https request by default. Use ``anyproxy --intercept`` to turn on this feature.
+
 12 Jan 2015: anyproxy 3.0.4:
 
     * show anyproxy version by --version
 
 12 Jan 2015: anyproxy 3.0.3:
 
-    * Bugfix: https throttle 
-
+    * Bugfix: https throttle
 
 9 Jan 2015: anyproxy 3.0.2:
 

@@ -6,7 +6,6 @@ var program     = require('commander'),
     fs          = require("fs"),
     packageInfo = require("./package.json");
 
-
 program
     .version(packageInfo.version)
     .option('-u, --host [value]', 'hostname for https proxy, localhost for default')
@@ -16,6 +15,7 @@ program
     .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
     .option('-l, --throttle [value]', 'throttle speed in kb/s (kbyte / sec)')
+    .option('-i, --intercept', 'intercept(decrypt) https requests when root CA exists')
     .option('-c, --clear', 'clear all the tmp certificates')
     .parse(process.argv);
 
@@ -46,16 +46,13 @@ if(program.clear){
     }
 
     new proxy.proxyServer({
-        type     : program.type,
-        port     : program.port,
-        hostname : program.host,
-        dbFile   : program.file,
-        throttle : program.throttle,
-        rule     : ruleModule,
-        disableWebInterface:false
+        type                : program.type,
+        port                : program.port,
+        hostname            : program.host,
+        dbFile              : program.file,
+        throttle            : program.throttle,
+        rule                : ruleModule,
+        disableWebInterface : false,    
+        interceptHttps      : program.intercept
     });
 }
-
-
-
-

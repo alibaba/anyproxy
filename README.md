@@ -81,8 +81,8 @@ After configuring rootCA, anyproxy could help to decrypt https requests, whose a
 * you should trust this rootCA on all of your clients.
 
 #### to intercept(decrypt) https requests
-* start your anyproxy as normal. When rootCA is generated, it will intercept all the https requests for you automatically.
-* if you get a warning like 'unsafe connection', please check if the root CA is correctly trusted .
+* start your anyproxy by ``anyproxy --intercept``. When rootCA exists, it will intercept(decrypt) all the https requests for you.
+* if you meet with a warning like 'unsafe connection', please check if the root CA is correctly trusted by your operation system.
 
 #### to start an https proxy
 * ``anyproxy --type https --host my.domain.com``
