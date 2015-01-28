@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.",
   "main": "proxy.js",
   "bin": {
@@ -11,8 +11,9 @@
     "async-task-mgr": ">=1.1.0",
     "colorful": "^2.1.0",
     "commander": "~2.3.0",
-    "entities": "^1.1.1",
+    "ent": "^2.2.0",
     "express": "^4.8.5",
+    "iconv-lite": "^0.4.6",
     "ip": "^0.3.2",
     "juicer": "^0.6.6-stable",
     "nedb": "^0.11.0",

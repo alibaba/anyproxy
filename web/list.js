@@ -166,10 +166,8 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 			});
 		})();
 
-		//render custom menu
+		//[test]render custom menu
 		var customMenu     = $("#customMenu").val().split("@@@");
-		console.log(customMenu);
-
 
 		//data via web socket
 		if(!WebSocket){

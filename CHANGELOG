@@ -1,3 +1,7 @@
+22 Jan 2015: anyproxy 3.1.1:
+
+    * convert GBK to UTF8 in web interface
+
 22 Jan 2015: anyproxy 3.1.0:
 
     * will NOT intercept https request by default. Use ``anyproxy --intercept`` to turn on this feature.

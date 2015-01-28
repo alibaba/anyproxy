@@ -21,8 +21,9 @@ var http = require('http'),
     express         = require("express"),
     ip              = require("ip"),
     fork            = require("child_process").fork,
-    ThrottleGroup   = require("stream-throttle").ThrottleGroup;
-
+    ThrottleGroup   = require("stream-throttle").ThrottleGroup,
+    iconv           = require('iconv-lite'),
+    Buffer          = require('buffer').Buffer;
 
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
@@ -146,10 +147,32 @@ function proxyServer(option){
                     var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
                     child_webServer.on("message",function(data){
                         if(data.type == "reqBody" && data.id){
-                            child_webServer.send({
-                                type : "body",
-                                id   : data.id,
-                                body : GLOBAL.recorder.getBody(data.id)
+
+                            GLOBAL.recorder.getSingleRecord(data.id,function(err,doc){
+                                var result;
+                                try{
+                                    var record = doc[0],
+                                        resHeader   = record['resHeader'] || {},
+                                        bodyContent = GLOBAL.recorder.getBody(data.id);
+
+                                    result = bodyContent;
+                                    if(/charset=gbk/i.test(JSON.stringify(resHeader))){
+                                        result = iconv.decode(bodyContent, 'GBK');
+                                    }
+
+                                    child_webServer.send({
+                                        type : "body",
+                                        id   : data.id,
+                                        body : result.toString()
+                                    });
+                                }catch(e){
+                                    child_webServer.send({
+                                        type : "body",
+                                        id   : null,
+                                        body : null,
+                                        error:e.toString()
+                                    });
+                                }
                             });
                         }
                     });

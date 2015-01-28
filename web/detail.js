@@ -35,7 +35,7 @@ define("./detail",['$', 'gallery/underscore/1.6.0/underscore.js'],function(requi
 		'		<section class="resBody">'+
 		'			<h4 class="subTitle">response body</h4>'+
 		'			<div class="detail">'+
-		'				<div class="J_responseBody resBodyContent"></div>'+
+		'				<pre class="J_responseBody resBodyContent"></pre>'+
 		'			</div>'+
 		'		</section>'+
 		'	<% } %>';

@@ -6,7 +6,7 @@ var express         = require("express"),
     certMgr         = require("./lib/certMgr"),
     events          = require("events"),
     inherits        = require("util").inherits,
-    entities        = require("entities"),
+    ent             = require("ent"),
     qrCode          = require('qrcode-npm'),
     WebSocketServer = require('ws').Server;
 
@@ -38,14 +38,13 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
     // });
 
     app.get("/body",function(req,res){
-        var reqQuery = url.parse(req.url,true);
-        var id = reqQuery.query.id;
+        var id = req.query.id;
 
         res.setHeader("Content-Type","text/html");
         res.writeHead(200);
 
         fetchBody(id,function(body){
-	        res.end(entities.encodeHTML(body));
+            res.end(ent.encode(body));
         });
     });
 
