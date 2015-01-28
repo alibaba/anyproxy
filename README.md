@@ -31,7 +31,7 @@ Feature
 * work as http or https proxy
 * fully configurable, you can modify a request at any stage by your own javascript code
 * when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
-* a web interface is availabe for you to view request details
+* a web interface for you to watch realtime request details, where html string with (almost) any charset could be shown correctly
 * (beta)a web UI interface for you to replace some remote response with local data
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)

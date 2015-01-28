@@ -156,9 +156,16 @@ function proxyServer(option){
                                         bodyContent = GLOBAL.recorder.getBody(data.id);
 
                                     result = bodyContent;
-                                    if(/charset=gbk/i.test(JSON.stringify(resHeader))){
-                                        result = iconv.decode(bodyContent, 'GBK');
-                                    }
+                                    //detect charset and convert to utf8 for web interface
+                                    try{
+                                        var charsetMatch = JSON.stringify(resHeader).match(/charset="?([a-zA-Z0-9\-]+)"?/);
+                                        if(charsetMatch && charsetMatch.length > 1){
+                                            var currentCharset = charsetMatch[1].toLowerCase();
+                                            if(currentCharset != "utf-8" && iconv.encodingExists(currentCharset)){
+                                                result = iconv.decode(bodyContent, currentCharset);
+                                            }
+                                        }
+                                    }catch(e){}
 
                                     child_webServer.send({
                                         type : "body",
