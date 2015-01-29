@@ -27,6 +27,9 @@ The following are sample rules.
 * rule_replace_response_status_code.js
     * replace server's status code
     * 改变服务端响应的http状态码
+* rule_reverse_proxy.js
+    * assign a specific ip address for request
+    * 为请求绑定目标ip
 * rule_use_local_data.js
     * map some requests to local file
     * 把图片响应映射到本地

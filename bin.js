@@ -4,6 +4,7 @@ var program     = require('commander'),
     proxy       = require("./proxy.js"),
     color       = require('colorful'),
     fs          = require("fs"),
+    path        = require("path"),
     packageInfo = require("./package.json");
 
 program
@@ -33,15 +34,16 @@ if(program.clear){
     var ruleModule;
 
     if(program.rule){
-        if(fs.existsSync(program.rule)){
-            try{ //for abs path
+        var ruleFilePath = path.join(process.cwd(),program.rule);
+        try{
+            if(fs.existsSync(ruleFilePath)){
                 ruleModule = require(program.rule);
-            }catch(e){ //for relative path
-                ruleModule = require(process.cwd() + '/' + program.rule.replace(/^\.\//,''));
+                console.log("rule file loaded :" + ruleFilePath);
+            }else{
+                console.log(color.red("can not find rule file"));
             }
-            console.log(color.green("rule file loaded"));
-        }else{
-            console.log(color.red("can not find rule file"));
+        }catch(e){
+            console.log("failed to load rule file :" + e.toString());
         }
     }
 
