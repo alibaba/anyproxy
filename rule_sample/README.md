@@ -9,9 +9,6 @@ The following are sample rules.
 * rule_allow_CORS.js
     * add CORS headers to allow cross-domain ajax request
     * 为ajax请求增加跨域头
-* rule_assign_ip_address.js
-    * assign an ip address to a specified domain
-    * 为某个域名指定ip地址
 * rule_intercept_some_https_requests.js
     * intercept https requests toward github.com and append some data
     * 截获github.com的https请求，再在最后加点文字
