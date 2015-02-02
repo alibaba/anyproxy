@@ -15,7 +15,7 @@ anyproxy
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
-[wiki - 代理服务器的新轮子](https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy) ，介绍我们为什么要再造一个代理服务器，anyproxy开放式的设计可以解决什么样的问题。
+[中文wiki - 代理服务器的新轮子](https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy) ，介绍我们为什么要再造一个代理服务器，anyproxy开放式的设计可以解决什么样的问题。
 
 ![](http://gtms02.alicdn.com/tps/i2/TB1dMz.GVXXXXXxXVXXwCydIXXX-250-250.png)
 
