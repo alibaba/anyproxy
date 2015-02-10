@@ -1,3 +1,7 @@
+10 Feb 2015: anyproxy 3.2.0:
+
+    * using SNI when intercepting https requests
+
 28 Jan 2015: anyproxy 3.1.2:
 
     * thanks to iconv-lite, almost webpage with any charset can be correctly decoded in web interface.

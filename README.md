@@ -23,16 +23,15 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 ------------
 * 支持https明文代理
 * 支持低网速模拟
-* 全流程开放，可以用javascript控制代理流程中的任意步骤。搭建前端个性化调试环境的利器。
-* 提供web版界面，供观测请求情况
+* 全流程开放，可以用javascript控制代理流程中的任意步骤，搭建前端个性化调试环境
+* 提供web版界面，观测请求情况
 
 Feature
 ------------
 * work as http or https proxy
-* fully configurable, you can modify a request at any stage by your own javascript code
-* when working as https proxy, it can generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
+* fully configurable, you could modify a request at any stage with your customized javascript code
+* when working as https proxy, it could generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * a web interface for you to watch realtime request details, where html string with (almost) any charset could be shown correctly
-* (beta)a web UI interface for you to replace some remote response with local data
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
  
