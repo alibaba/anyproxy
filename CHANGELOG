@@ -1,3 +1,7 @@
+10 Feb 2015: anyproxy 3.2.1:
+
+    * bugfix for 3.2.0
+
 10 Feb 2015: anyproxy 3.2.0:
 
     * using SNI when intercepting https requests
