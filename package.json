@@ -25,7 +25,7 @@
     "proxy-eval": ">=1.1.1"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "sh test.sh"
   },
   "optionalDependencies": {},
   "repository": {
