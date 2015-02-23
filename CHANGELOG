@@ -1,3 +1,7 @@
+23 Feb 2015: anyproxy 3.2.2:
+
+    * [bugfix for relative rule path](https://github.com/alibaba/anyproxy/pull/18)
+    
 10 Feb 2015: anyproxy 3.2.1:
 
     * bugfix for 3.2.0
