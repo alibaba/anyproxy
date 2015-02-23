@@ -37,7 +37,7 @@ if(program.clear){
         var ruleFilePath = path.join(process.cwd(),program.rule);
         try{
             if(fs.existsSync(ruleFilePath)){
-                ruleModule = require(program.rule);
+                ruleModule = require(ruleFilePath);
                 console.log("rule file loaded :" + ruleFilePath);
             }else{
                 console.log(color.red("can not find rule file"));
@@ -54,7 +54,7 @@ if(program.clear){
         dbFile              : program.file,
         throttle            : program.throttle,
         rule                : ruleModule,
-        disableWebInterface : false,    
+        disableWebInterface : false,
         interceptHttps      : program.intercept
     });
 }
