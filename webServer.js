@@ -115,7 +115,11 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
     wss.on("connection",function(ws){});
     wss.broadcast = function(data) {
         for(var i in this.clients){
-            this.clients[i].send(data);
+            try{
+                this.clients[i].send(data);
+            }catch(e){
+                console.log("websocket failed to send data, " + e);
+            }
         }
     };
 
