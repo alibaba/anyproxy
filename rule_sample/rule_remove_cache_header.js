@@ -18,7 +18,3 @@ module.exports = {
         return header;
     }
 };
-
-function disableCacheHeader(header){
-
-}
