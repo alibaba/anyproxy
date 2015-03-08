@@ -48,7 +48,12 @@ try{
     if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
         default_rule = require(path.join(process.cwd(),'rule'));
     }
-}catch(e){}
+}catch(e){
+    if(e){
+        console.log("error" + e);
+        throw e;
+    }
+}
 
 //option
 //option.type     : 'http'(default) or 'https'
@@ -59,7 +64,7 @@ try{
 //option.socketPort    : 8003(default)
 //option.webConfigPort : 8088(default)
 //option.dbFile        : null(default)
-//option.throttle      : null(default) 
+//option.throttle      : null(default)
 //option.disableWebInterface
 //option.interceptHttps ,internal param for https
 function proxyServer(option){
@@ -74,7 +79,7 @@ function proxyServer(option){
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
         disableWebInterface = !!option.disableWebInterface ;
-        
+
     if(option.dbFile){
         GLOBAL.recorder = new Recorder({filename: option.dbFile});
     }else{
@@ -113,7 +118,7 @@ function proxyServer(option){
                 }else{
                     self.httpProxyServer = http.createServer(requestHandler.userRequestHandler);
                     callback(null);
-                }        
+                }
             },
 
             //listen CONNECT method for https over http
@@ -197,7 +202,7 @@ function proxyServer(option){
                         console.log('AnyProxy is about to exit with code:', code);
                         process.exit();
                     });
-                    
+
                     process.on("uncaughtException",function(err){
                         child_webServer.kill();
                         console.log('Caught exception: ' + err);
@@ -230,7 +235,7 @@ function proxyServer(option){
         function(err,result){
             if(!err){
                 var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
-                console.log(color.green(tipText)); 
+                console.log(color.green(tipText));
             }else{
                 var tipText = "err when start proxy server :(";
                 console.log(color.red(tipText));
@@ -311,7 +316,7 @@ function UIConfigServer(port){
             res.setHeader("Content-Type", "application/json;charset=UTF-8");
             res.end(JSON.stringify({success : true}));
 
-            requestHandler.setRules(customerRule);    
+            requestHandler.setRules(customerRule);
             self.emit("rule_changed");
         });
     });
