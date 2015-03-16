@@ -33,8 +33,6 @@ Feature
 * when working as https proxy, AnyProxy could intercept https requests for any domain without complaint by browser (after you trust its root CA)
 * a web interface for you to watch realtime request details, where html with (almost) any charset could be shown correctly
 
-![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
-
 Quick Start
 --------------
 
@@ -44,15 +42,20 @@ Quick Start
 * ``npm install -g anyproxy`` , may require ``sudo``
 * python is optional, it will be OK if you get some error about it during installing.
 
-### step 2 - start server
+### step 2 - start proxy server
 
 * start with default settings : ``anyproxy``
-* start with a specific port:  ``anyproxy --port 8001``
-* start with a rule file: ``anyproxy --rule ./rule_sample/rule_allow_CORS.js``
+* ...or start with a specific port:  ``anyproxy --port 8001``
+* ...start with a rule file: ``anyproxy --rule ./rule_sample/rule_allow_CORS.js``
 
 ### step 3 - launch web interface
 
-* visit [http://127.0.0.1:8002](http://127.0.0.1:8002) with modern browsers
+* visit [http://127.0.0.1:8002](http://127.0.0.1:8002) ,you will see realtime requests
+* be sure to use web interface with modern browsers
+
+![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
+
+
 
 Rule module
 -------------------
