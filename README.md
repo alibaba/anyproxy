@@ -56,13 +56,11 @@ Quick Start
 
 Rule module
 -------------------
-* Rule module is the specialty for anyproxy. Think it as a middleware, you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, it would be much more flexible to meet your own demands.
+* Rule module is the specialty for AnyProxy. Think it as a middleware, you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, AnyProxy would be flexible to meet your own demands.
 
 * It's highly recommended to read this guide before using: [What is rule file and how to write one ?](https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one)
 
 * An entire scheme of rule file could be found at [./rule_sample/rule__blank.js](https://github.com/alibaba/anyproxy/blob/master/rule_sample/rule__blank.js). Besides, there are some samples at [./rule_sample](https://github.com/alibaba/anyproxy/tree/master/rule_sample). That may help you a lot when writing your own rule files.
-
-![](https://t.alipayobjects.com/images/T1v8pbXjJqXXXXXXXX.png)
 
 
 Https features
