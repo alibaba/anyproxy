@@ -1,4 +1,4 @@
-anyproxy
+AnyProxy
 ==========
 
 [![NPM version][npm-image]][npm-url]
@@ -23,15 +23,15 @@ A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 ------------
 * 支持https明文代理
 * 支持低网速模拟
-* 全流程开放，可以用javascript控制代理流程中的任意步骤，搭建前端个性化调试环境
+* 支持二次开发，可以用javascript控制代理的全部流程，搭建前端个性化调试环境
 * 提供web版界面，观测请求情况
 
 Feature
 ------------
 * work as http or https proxy
 * fully configurable, you could modify a request at any stage with your customized javascript code
-* when working as https proxy, it could generate and intercept https requests for any domain without complaint by browser (after you trust its root CA)
-* a web interface for you to watch realtime request details, where html string with (almost) any charset could be shown correctly
+* when working as https proxy, AnyProxy could intercept https requests for any domain without complaint by browser (after you trust its root CA)
+* a web interface for you to watch realtime request details, where html with (almost) any charset could be shown correctly
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
  
@@ -54,10 +54,9 @@ Quick Start
 
 * visit [http://127.0.0.1:8002](http://127.0.0.1:8002) with modern browsers
 
-
 Rule module
 -------------------
-* Rule module is the specialty for anyproxy. Unlike other proxy, here you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, it would be much more flexible to meet your own demands.
+* Rule module is the specialty for anyproxy. Think it as a middleware, you could write your own code to hack requests at any stage, no matter it is about to response or the proxy just gets the request. In this way, it would be much more flexible to meet your own demands.
 
 * It's highly recommended to read this guide before using: [What is rule file and how to write one ?](https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one)
 
@@ -68,31 +67,11 @@ Rule module
 
 Https features
 ----------------
-After configuring rootCA, anyproxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
-#### step 1 - install openssl
-* openssl is availabe here : [http://wiki.openssl.org/index.php/Compilation_and_Installation](http://wiki.openssl.org/index.php/Compilation_and_Installation) 
-* using ``openssl version -a `` to make sure it is accessible via you command line.
+After configuring rootCA, AnyProxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
-#### step 2 - generate a rootCA and trust it
-* execute ``sudo anyproxy --root``
-* start anyproxy by ``anyproxy``, fetch rootCA.crt via http://localhost:8002/fetchCrtFile, then open and trust it.
-* you should trust this rootCA on all of your clients.
+A guide about configuring https features is here : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy)
 
-#### to intercept(decrypt) https requests
-* start your anyproxy by ``anyproxy --intercept``. When rootCA exists, it will intercept(decrypt) all the https requests for you.
-* if you meet with a warning like 'unsafe connection', please check if the root CA is correctly trusted by your operation system.
-
-#### to start an https proxy
-* ``anyproxy --type https --host my.domain.com``
-* the param ``host`` is required with https proxy and it should be kept exactly what it it when you config your browser. Otherwise, you may get some warning about security.
-* using **https proxy** means your request towards proxy will be encrypted. Please notice that this feature has nothing to do with **intercept https requests**.
-
-#### about certs
-* root certs and temperary certs are stored at ``path.join(util.getUserHome(),"/.anyproxy_certs/")``
-* to get the rootCA.crt file , you may either find it in local dir or download it via anyproxy web interface
-* to clear all the temperary certificates ``anyproxy --clear``
-* https features may be unstable in windows
 
 Others
 -----------------
@@ -140,7 +119,7 @@ Contact
 -----------------
 
 * Please feel free to [raise issue](https://github.com/alibaba/anyproxy/issues), or give us some advice. :)
-* anyproxy用户旺旺群：1203077233
+* AnyProxy用户旺旺群：1203077233
 
 
 License
