@@ -34,7 +34,7 @@ Feature
 * a web interface for you to watch realtime request details, where html with (almost) any charset could be shown correctly
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
- 
+
 Quick Start
 --------------
 
@@ -67,7 +67,6 @@ Rule module
 
 Https features
 ----------------
-
 After configuring rootCA, AnyProxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
 A guide about configuring https features is here : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy)
@@ -75,8 +74,17 @@ A guide about configuring https features is here : [https://github.com/alibaba/a
 
 Others
 -----------------
+#### to install node modules
 
-#### to save request data 
+* to install node modules for supporting rules development, use ``` anyproxy install ```
+* for example ``` anyproxy install underscore ```
+* and in rule file
+```
+var base = path.join(process.env.NODE_PATH,'anyproxy','node_modules');
+var underscore = require(path.join(base,'underscore'));
+```
+
+#### to save request data
 * to save request data to local file, use ``` anyproxy --file /path/to/file ```
 * anyproxy uses [nedb](https://github.com/louischatriot/nedb) to save request data. Since NeDB's persistence uses an append-only format, you may get some redundant record in local file. For those dupplicated ones with the same id, just use the lastest line of record.
 * [TrafficeRecorder](https://github.com/ottomao/TrafficRecorder) is another tool based on anyproxy to help recording all request data, including header and body. You may have a try.
@@ -97,7 +105,7 @@ var proxy = require("anyproxy");
 
 //create cert when you want to use https features
 //please manually trust this rootCA when it is the first time you run it
-!proxy.isRootCAFileExists() && proxy.generateRootCA(); 
+!proxy.isRootCAFileExists() && proxy.generateRootCA();
 
 var options = {
     type          : "http",
@@ -108,7 +116,7 @@ var options = {
     webPort       : 8002,  // optional, port for web interface
     socketPort    : 8003,  // optional, internal port for web socket, replace this when it is conflict with your own service
     webConfigPort : 8088,  // optional, internal port for web config(beta), replace this when it is conflict with your own service
-    throttle      : 10,    // optional, speed limit in kb/s 
+    throttle      : 10,    // optional, speed limit in kb/s
     disableWebInterface : false //optional, set it when you don't want to use the web interface
 };
 new proxy.proxyServer(options);
