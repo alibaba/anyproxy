@@ -74,15 +74,6 @@ A guide about configuring https features is here : [https://github.com/alibaba/a
 
 Others
 -----------------
-#### to install node modules
-
-* to install node modules for supporting rules development, use ``` anyproxy install ```
-* for example ``` anyproxy install underscore ```
-* and in rule file
-```
-var base = path.join(process.env.NODE_PATH,'anyproxy','node_modules');
-var underscore = require(path.join(base,'underscore'));
-```
 
 #### to save request data
 * to save request data to local file, use ``` anyproxy --file /path/to/file ```
