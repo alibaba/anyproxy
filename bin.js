@@ -46,12 +46,13 @@ if(program.clear){
     var ruleModule;
 
     if(program.rule){
-        var ruleFilePath = path.join(process.cwd(),program.rule);
+        var ruleFilePath = path.resolve(process.cwd(),program.rule);
         try{
             if(fs.existsSync(ruleFilePath)){
                 ruleModule = require(ruleFilePath);
                 console.log("rule file loaded :" + ruleFilePath);
             }else{
+                console.log(ruleFilePath);
                 console.log(color.red("can not find rule file"));
             }
         }catch(e){
