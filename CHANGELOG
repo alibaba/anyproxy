@@ -1,4 +1,8 @@
-23 Feb 2015: anyproxy 3.2.4:
+20 Mar 2015: anyproxy 3.2.5:
+
+    * bugfix for internal https server 
+
+19 Mar 2015: anyproxy 3.2.4:
 
     * bugfix for absolute rule path
 
