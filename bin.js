@@ -5,7 +5,8 @@ var program     = require('commander'),
     fs          = require("fs"),
     path        = require("path"),
     npm         = require("npm"),
-    packageInfo = require("./package.json");
+    packageInfo = require("./package.json"),
+    logUtil     = require("./lib/log");
 
 program
     .version(packageInfo.version)
@@ -17,6 +18,7 @@ program
     .option('-g, --root [value]', 'generate root CA')
     .option('-l, --throttle [value]', 'throttle speed in kb/s (kbyte / sec)')
     .option('-i, --intercept', 'intercept(decrypt) https requests when root CA exists')
+    .option('-s, --silent', 'do not print anything into terminal')
     .option('-c, --clear', 'clear all the tmp certificates')
     .option('install', 'install node modules')
     .parse(process.argv);
@@ -37,26 +39,29 @@ if(program.clear){
     }, function (er) {
         npm.commands.install(program.args || [], function (er, data) {
             if(er)throw er;
-        })
-        npm.registry.log.on("log", function (message) {
-        })
+        });
+        npm.registry.log.on("log", function (message) {});
     });
 }else{
     var proxy = require("./proxy.js");
     var ruleModule;
+
+    if(program.silent){
+        logUtil.setPrintStatus(false);
+    }
 
     if(program.rule){
         var ruleFilePath = path.resolve(process.cwd(),program.rule);
         try{
             if(fs.existsSync(ruleFilePath)){
                 ruleModule = require(ruleFilePath);
-                console.log("rule file loaded :" + ruleFilePath);
+                logUtil.printLog("rule file loaded :" + ruleFilePath);
             }else{
-                console.log(ruleFilePath);
-                console.log(color.red("can not find rule file"));
+                var logText = color.red("can not find rule file at " + ruleFilePath);
+                logUtil.printLog(logText, logUtil.T_ERR);
             }
         }catch(e){
-            console.log("failed to load rule file :" + e.toString());
+            logUtil.printLog("failed to load rule file :" + e.toString(), logUtil.T_ERR);
         }
     }
 
@@ -68,6 +73,7 @@ if(program.clear){
         throttle            : program.throttle,
         rule                : ruleModule,
         disableWebInterface : false,
-        interceptHttps      : program.intercept
+        interceptHttps      : program.intercept,
+        silent              : program.silent
     });
 }
