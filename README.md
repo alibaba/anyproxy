@@ -73,7 +73,7 @@ After configuring rootCA, AnyProxy could help to decrypt https requests, whose a
 A guide about configuring https features is here : 
 
 * Eng : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy) 
-* 中文 : [https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)
+* 中文教程 : [https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)
 
 
 Others
