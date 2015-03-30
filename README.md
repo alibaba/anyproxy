@@ -70,7 +70,10 @@ Https features
 ----------------
 After configuring rootCA, AnyProxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
-A guide about configuring https features is here : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy)
+A guide about configuring https features is here : 
+
+* Eng : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy) 
+* 中文 : [https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)
 
 
 Others
@@ -109,7 +112,8 @@ var options = {
     socketPort    : 8003,  // optional, internal port for web socket, replace this when it is conflict with your own service
     webConfigPort : 8088,  // optional, internal port for web config(beta), replace this when it is conflict with your own service
     throttle      : 10,    // optional, speed limit in kb/s
-    disableWebInterface : false //optional, set it when you don't want to use the web interface
+    disableWebInterface : false, //optional, set it when you don't want to use the web interface
+    silent        : false, //optional, do not print anything into terminal. do not set it when you are still debugging.
 };
 new proxy.proxyServer(options);
 
