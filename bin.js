@@ -33,6 +33,7 @@ if(program.clear){
     require("./lib/certMgr").generateRootCA(function(){
         process.exit(0);
     });
+
 }else if(program.install){
     npm.load({
         "prefix": process.env.NODE_PATH + '/anyproxy/'
