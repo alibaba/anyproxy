@@ -3,27 +3,28 @@ try{
 }catch(e){}
 
 var http = require('http'),
-    https           = require('https'),
-    fs              = require('fs'),
-    async           = require("async"),
-    url             = require('url'),
-    program         = require('commander'),
-    color           = require('colorful'),
-    certMgr         = require("./lib/certMgr"),
-    getPort         = require("./lib/getPort"),
-    requestHandler  = require("./lib/requestHandler"),
-    Recorder        = require("./lib/recorder"),
-    inherits        = require("util").inherits,
-    util            = require("./lib/util"),
-    path            = require("path"),
-    juicer          = require('juicer'),
-    events          = require("events"),
-    express         = require("express"),
-    ip              = require("ip"),
-    fork            = require("child_process").fork,
-    ThrottleGroup   = require("stream-throttle").ThrottleGroup,
-    iconv           = require('iconv-lite'),
-    Buffer          = require('buffer').Buffer;
+    https          = require('https'),
+    fs             = require('fs'),
+    async          = require("async"),
+    url            = require('url'),
+    program        = require('commander'),
+    color          = require('colorful'),
+    certMgr        = require("./lib/certMgr"),
+    getPort        = require("./lib/getPort"),
+    requestHandler = require("./lib/requestHandler"),
+    Recorder       = require("./lib/recorder"),
+    logUtil        = require("./lib/log"),
+    inherits       = require("util").inherits,
+    util           = require("./lib/util"),
+    path           = require("path"),
+    juicer         = require('juicer'),
+    events         = require("events"),
+    express        = require("express"),
+    ip             = require("ip"),
+    fork           = require("child_process").fork,
+    ThrottleGroup  = require("stream-throttle").ThrottleGroup,
+    iconv          = require('iconv-lite'),
+    Buffer         = require('buffer').Buffer;
 
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
@@ -50,7 +51,7 @@ try{
     }
 }catch(e){
     if(e){
-        console.log("error" + e);
+        logUtil.printLog("error" + e, logUtil.T_ERR);
         throw e;
     }
 }
@@ -66,6 +67,7 @@ try{
 //option.dbFile        : null(default)
 //option.throttle      : null(default)
 //option.disableWebInterface
+//option.silent        : false(default)
 //option.interceptHttps ,internal param for https
 function proxyServer(option){
     option = option || {};
@@ -78,7 +80,12 @@ function proxyServer(option){
         proxyWebPort        = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
-        disableWebInterface = !!option.disableWebInterface ;
+        disableWebInterface = !!option.disableWebInterface,
+        ifSilent            = !!option.silent;
+
+    if(ifSilent){
+        logUtil.setPrintStatus(false);
+    }
 
     if(option.dbFile){
         GLOBAL.recorder = new Recorder({filename: option.dbFile});
@@ -91,7 +98,7 @@ function proxyServer(option){
     }
 
     if(option.throttle){
-        console.log("throttle :" + option.throttle + "kb/s");
+        logUtil.printLog("throttle :" + option.throttle + "kb/s");
         GLOBAL._throttle = new ThrottleGroup({rate: 1024 * parseInt(option.throttle) }); // rate - byte/sec
     }
 
@@ -132,7 +139,7 @@ function proxyServer(option){
             //start web interface
             function(callback){
                 if(disableWebInterface){
-                    console.log('web interface is disabled');
+                    logUtil.printLog('web interface is disabled');
                     callback(null);
                 }else{
 
@@ -199,13 +206,13 @@ function proxyServer(option){
                     //kill web server when father process exits
                     process.on("exit",function(code){
                         child_webServer.kill();
-                        console.log('AnyProxy is about to exit with code:', code);
+                        logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
                         process.exit();
                     });
 
                     process.on("uncaughtException",function(err){
                         child_webServer.kill();
-                        console.log('Caught exception: ' + err);
+                        logUtil.printLog('Caught exception: ' + err, logUtil.T_ERR);
                         process.exit();
                     });
 
@@ -222,10 +229,10 @@ function proxyServer(option){
                     var tipText,webUrl;
                     webUrl  = "http://" + ip.address() + ":" + proxyWebPort +"/";
                     tipText = "GUI interface started at : " + webUrl;
-                    console.log(color.green(tipText));
+                    logUtil.printLog(color.green(tipText));
 
                     // tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
-                    // console.log(color.green(tipText));
+                    // logUtil.printLog(color.green(tipText));
                     callback(null);
                 }
             }
@@ -235,18 +242,18 @@ function proxyServer(option){
         function(err,result){
             if(!err){
                 var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
-                console.log(color.green(tipText));
+                logUtil.printLog(color.green(tipText));
             }else{
                 var tipText = "err when start proxy server :(";
-                console.log(color.red(tipText));
-                console.log(err);
+                logUtil.printLog(color.red(tipText), logUtil.T_ERR);
+                logUtil.printLog(err, logUtil.T_ERR);
             }
         }
     );
 
     self.close = function(){
         self.httpProxyServer && self.httpProxyServer.close();
-        console.log(color.green("server closed :" + proxyHost + ":" + proxyPort));
+        logUtil.printLog(color.green("server closed :" + proxyHost + ":" + proxyPort));
     }
 }
 
@@ -257,7 +264,7 @@ function UIConfigServer(port){
     var app          = express(),
         customerRule = {
             summary: function(){
-                console.log("replace some response with local response");
+                logUtil.printLog("replace some response with local response");
                 return "replace some response with local response";
             }
         },

@@ -8,6 +8,7 @@ var express         = require("express"),
     inherits        = require("util").inherits,
     ent             = require("ent"),
     qrCode          = require('qrcode-npm'),
+    logUtil         = require("./lib/log"),
     WebSocketServer = require('ws').Server;
 
 function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress,menuListStr){
@@ -118,7 +119,7 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
             try{
                 this.clients[i].send(data);
             }catch(e){
-                console.log("websocket failed to send data, " + e);
+                logUtil.printLog("websocket failed to send data, " + e, logUtil.T_ERR);
             }
         }
     };

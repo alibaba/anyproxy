@@ -50,7 +50,7 @@ Quick Start
 
 ### step 3 - launch web interface
 
-* visit [http://127.0.0.1:8002](http://127.0.0.1:8002) ,you will see realtime requests
+* visit [http://127.0.0.1:8002](http://127.0.0.1:8002) ,you will see realtime requests in your browser
 * be sure to use web interface with modern browsers
 
 ![screenshot](http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif)
@@ -70,10 +70,9 @@ Https features
 ----------------
 After configuring rootCA, AnyProxy could help to decrypt https requests, whose approach is also called Man-In-The-Middle(MITM).
 
-A guide about configuring https features is here : 
+A guide about configuring https features is here : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy) 
 
-* Eng : [https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy](https://github.com/alibaba/anyproxy/wiki/How-to-config-https-proxy) 
-* 中文教程 : [https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)
+HTTPS配置中文教程 : [https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)
 
 
 Others
