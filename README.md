@@ -48,7 +48,9 @@ Quick Start
 * ...or start with a specific port:  ``anyproxy --port 8001``
 * ...start with a rule file: ``anyproxy --rule ./rule_sample/rule_allow_CORS.js``
 
-### step 3 - launch web interface
+### step 3 - set up proxy settings in your browser , or system ,or mobile devices ,etc
+
+### step 4 - launch web interface
 
 * visit [http://127.0.0.1:8002](http://127.0.0.1:8002) ,you will see realtime requests in your browser
 * be sure to use web interface with modern browsers
