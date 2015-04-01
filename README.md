@@ -50,6 +50,8 @@ Quick Start
 
 ### step 3 - set up proxy settings in your browser , or system ,or mobile devices ,etc
 
+* default proxy should be 127.0.0.1:8001 , or you_ip_address:8001 on remote devices
+
 ### step 4 - launch web interface
 
 * visit [http://127.0.0.1:8002](http://127.0.0.1:8002) ,you will see realtime requests in your browser
