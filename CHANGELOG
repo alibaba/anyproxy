@@ -1,4 +1,4 @@
-31 Mar 2015: anyproxy 3.2.5:
+31 Mar 2015: anyproxy 3.3.0:
 
     * optimize https features in windows
     * add switch to mute the console
