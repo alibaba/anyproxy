@@ -2,6 +2,8 @@ try{
     GLOBAL.util = require('./lib/util');
 }catch(e){}
 
+GLOBAL.AnyProxy = GLOBAL.anyproxy = GLOBAL.Anyproxy = {};
+
 var http = require('http'),
     https          = require('https'),
     fs             = require('fs'),
