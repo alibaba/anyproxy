@@ -183,21 +183,28 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 
 		dataSocket.onmessage = function(event){
 			if(ifPause) return;
-			var data = JSON.parse(event.data);
+			try{
+				var data = JSON.parse(event.data);
 
-			var reqDate = new Date(data.startTime);
-			data.startTimeStr = reqDate.format("hh:mm:ss") + "";
+				if(data.type == 'update'){
+					var content = data.content;
+					var reqDate = new Date(content.startTime);
+					content.startTimeStr = reqDate.format("hh:mm:ss") + "";
 
-			var previous;
-			if(previous = recList.get(data.id)){
-				previous.set(data);	
-			}else{
-				recList.add(new RecordModel(data),{merge: true});
+					var previous;
+					if(previous = recList.get(content.id)){
+						previous.set(content);	
+					}else{
+						recList.add(new RecordModel(content),{merge: true});
+					}
+				}
+
+			}catch(e){
+				console.log(e);
 			}
 		}
 
-		dataSocket.onclose = function(e){
-		}
+		dataSocket.onclose = function(e){}
 
 		dataSocket.onerror = function(e){
 			console.log(e);

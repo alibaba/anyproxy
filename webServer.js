@@ -8,8 +8,7 @@ var express         = require("express"),
     inherits        = require("util").inherits,
     ent             = require("ent"),
     qrCode          = require('qrcode-npm'),
-    logUtil         = require("./lib/log"),
-    WebSocketServer = require('ws').Server;
+    logUtil         = require("./lib/log");
 
 function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress,menuListStr){
 
@@ -37,17 +36,6 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
     //         }
     //     });
     // });
-
-    app.get("/body",function(req,res){
-        var id = req.query.id;
-
-        res.setHeader("Content-Type","text/html");
-        res.writeHead(200);
-
-        fetchBody(id,function(body){
-            res.end(ent.encode(body));
-        });
-    });
 
     app.get("/fetchCrtFile",function(req,res){
         if(crtFilePath){
@@ -111,25 +99,7 @@ function proxyWebServer(port,webSocketPort,proxyConfigPort,ruleSummary,ipAddress
     app.use(express.static(__dirname + '/web'));
     app.listen(port);
 
-    //web socket interface
-    var wss = new WebSocketServer({port: webSocketPort});
-    wss.on("connection",function(ws){});
-    wss.broadcast = function(data) {
-        for(var i in this.clients){
-            try{
-                this.clients[i].send(data);
-            }catch(e){
-                logUtil.printLog("websocket failed to send data, " + e, logUtil.T_ERR);
-            }
-        }
-    };
-
-    self.on("update",function(data){
-        wss.broadcast( JSON.stringify(data) );
-    })
-
     self.app  = app;
-    self.wss  = wss;
 }
 
 inherits(proxyWebServer, events.EventEmitter);
@@ -140,37 +110,15 @@ var	param  = process.argv.slice(2),
     lastestHeartbeat = new Date().getTime();
 
 
+//watch dog
 process.on("message",function(data){
-
-	if(data.type == "update"){
-		server.emit("update",data.body);
-
-	}else if( data.type == "body"){
-		try{
-			var key = data.id + "";
-			cbMap[key].body = data.body;
-			cbMap[key].cb.call(null,data.body);
-		}catch(e){}
-	}else if(data.type == "watch"){
+    if(data.type == "watch"){
         lastestHeartbeat = new Date().getTime();
     }
 });
 
-//watch dog
 setInterval(function(){
     if(new Date().getTime() - lastestHeartbeat  > 10 * 1000){
         process.exit();
     }
 },7000);
-
-function fetchBody(id,cb){
-	var key = id + "";
-	if(cbMap[key]){
-		cb(cbMap[key].body);
-	}else{
-		cbMap[key] = {
-			cb : cb
-		};
-		process.send({type : "reqBody", id: id});
-	}
-}

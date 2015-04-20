@@ -43,21 +43,23 @@ define("./detail",['$', 'gallery/underscore/1.6.0/underscore.js'],function(requi
 	function render(data,cb){
 		var $baseTpl = $(_.template(tpl, data));
 
-	    if(data.statusCode){ //if finished
-	    	$.ajax({
-	    		url     : "/body?id=" + data._id,
-	    		headers : {
-	    			anyproxy_web_req : true
-	    		},
-	    		type    : "GET",
-	    		success : function(data){
-		    	    $(".J_responseBody", $baseTpl).html(data);
-		    	    cb($baseTpl);
-		    	}
-	    	});
-	    }else{
-	    	cb($baseTpl);
-	    }
+		cb($baseTpl);
+
+	    // if(data.statusCode){ //if finished
+	    // 	$.ajax({
+	    // 		url     : "/body?id=" + data._id,
+	    // 		headers : {
+	    // 			anyproxy_web_req : true
+	    // 		},
+	    // 		type    : "GET",
+	    // 		success : function(data){
+		   //  	    $(".J_responseBody", $baseTpl).html(data);
+		   //  	    cb($baseTpl);
+		   //  	}
+	    // 	});
+	    // }else{
+	    // 	cb($baseTpl);
+	    // }
 	}
 
 	exports.render = render;

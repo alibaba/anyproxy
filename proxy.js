@@ -3,28 +3,30 @@ try{
 }catch(e){}
 
 var http = require('http'),
-    https          = require('https'),
-    fs             = require('fs'),
-    async          = require("async"),
-    url            = require('url'),
-    program        = require('commander'),
-    color          = require('colorful'),
-    certMgr        = require("./lib/certMgr"),
-    getPort        = require("./lib/getPort"),
-    requestHandler = require("./lib/requestHandler"),
-    Recorder       = require("./lib/recorder"),
-    logUtil        = require("./lib/log"),
-    inherits       = require("util").inherits,
-    util           = require("./lib/util"),
-    path           = require("path"),
-    juicer         = require('juicer'),
-    events         = require("events"),
-    express        = require("express"),
-    ip             = require("ip"),
-    fork           = require("child_process").fork,
-    ThrottleGroup  = require("stream-throttle").ThrottleGroup,
-    iconv          = require('iconv-lite'),
-    Buffer         = require('buffer').Buffer;
+    https           = require('https'),
+    fs              = require('fs'),
+    async           = require("async"),
+    url             = require('url'),
+    program         = require('commander'),
+    color           = require('colorful'),
+    certMgr         = require("./lib/certMgr"),
+    getPort         = require("./lib/getPort"),
+    requestHandler  = require("./lib/requestHandler"),
+    Recorder        = require("./lib/recorder"),
+    logUtil         = require("./lib/log"),
+    inherits        = require("util").inherits,
+    util            = require("./lib/util"),
+    path            = require("path"),
+    juicer          = require('juicer'),
+    events          = require("events"),
+    express         = require("express"),
+    ip              = require("ip"),
+    fork            = require("child_process").fork,
+    ThrottleGroup   = require("stream-throttle").ThrottleGroup,
+    iconv           = require('iconv-lite'),
+    Buffer          = require('buffer').Buffer,
+    WebSocketServer = require('ws').Server;
+
 
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
@@ -81,7 +83,9 @@ function proxyServer(option){
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
         disableWebInterface = !!option.disableWebInterface,
-        ifSilent            = !!option.silent;
+        ifSilent            = !!option.silent,
+        wss,
+        child_webServer;
 
     if(ifSilent){
         logUtil.setPrintStatus(false);
@@ -128,10 +132,11 @@ function proxyServer(option){
                 }
             },
 
-            //listen CONNECT method for https over http
             function(callback){
+                //listen CONNECT request for https over http
                 self.httpProxyServer.on('connect',requestHandler.connectReqHandler);
 
+                //start proxy server
                 self.httpProxyServer.listen(proxyPort);
                 callback(null);
             },
@@ -140,9 +145,8 @@ function proxyServer(option){
             function(callback){
                 if(disableWebInterface){
                     logUtil.printLog('web interface is disabled');
-                    callback(null);
                 }else{
-
+                    //[beta] customMenu
                     var customMenuConfig = proxyRules.customMenu,
                         menuList    = [],
                         menuListStr;
@@ -156,45 +160,77 @@ function proxyServer(option){
 
                     //web interface
                     var args = [proxyWebPort, socketPort, proxyConfigPort, requestHandler.getRuleSummary(), ip.address(),menuListStr];
-                    var child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
-                    child_webServer.on("message",function(data){
-                        if(data.type == "reqBody" && data.id){
+                    child_webServer = fork(path.join(__dirname,"./webServer.js"),args);
 
-                            GLOBAL.recorder.getSingleRecord(data.id,function(err,doc){
-                                var result;
-                                try{
-                                    var record = doc[0],
-                                        resHeader   = record['resHeader'] || {},
-                                        bodyContent = GLOBAL.recorder.getBody(data.id);
+                    //deal websocket data
+                    var wsDataDealer = function(){};
+                    inherits(wsDataDealer,events.EventEmitter);
+                    var dealer = new wsDataDealer();
 
-                                    result = bodyContent;
-                                    //detect charset and convert to utf8 for web interface
-                                    try{
-                                        var charsetMatch = JSON.stringify(resHeader).match(/charset="?([a-zA-Z0-9\-]+)"?/);
-                                        if(charsetMatch && charsetMatch.length > 1){
-                                            var currentCharset = charsetMatch[1].toLowerCase();
-                                            if(currentCharset != "utf-8" && iconv.encodingExists(currentCharset)){
-                                                result = iconv.decode(bodyContent, currentCharset);
-                                            }
-                                        }
-                                    }catch(e){}
+                    GLOBAL.recorder.on("update",function(data){
+                        wss && wss.broadcast({
+                            type   : "update",
+                            content: data
+                        });
+                    });
 
-                                    child_webServer.send({
-                                        type : "body",
-                                        id   : data.id,
-                                        body : result.toString()
-                                    });
-                                }catch(e){
-                                    child_webServer.send({
+                    dealer.on("message",function(ws,jsonData){
+                        if(jsonData.type == "reqBody" && jsonData.id){
+                            GLOBAL.recorder.getBodyUTF8(jsonData.id, function(err, data){
+                                var result = {};
+
+                                if(err){
+                                    result = {
                                         type : "body",
                                         id   : null,
                                         body : null,
-                                        error:e.toString()
-                                    });
+                                        error: err.toString()
+                                    };    
+                                }else{
+                                    result = {
+                                        type : "body",
+                                        id   : data.id,
+                                        body : data
+                                    };
                                 }
+                                ws.send(JSON.stringify(result));
                             });
                         }
                     });
+
+                    dealer.on("message",function(ws,jsonData){
+                        // another dealer here...
+                    });
+
+                    //web socket interface
+                    wss = new WebSocketServer({port: socketPort});
+                    wss.on("connection",function(ws){
+                        ws.on("message",function(msg){
+                            try{
+                                var msgObj = JSON.parse(msg);
+                                dealer && dealer.emit("message",ws,msgObj);
+                            }catch(e){
+                                var result = {
+                                    type : "error",
+                                    error: "failed to parse your request : " + e.toString()
+                                };
+                                ws.send(JSON.stringify(result));
+                            }
+                        });
+                    });
+                    wss.broadcast = function(data) {
+                        if(typeof data == "object"){
+                            data = JSON.stringify(data);
+                        }
+
+                        for(var i in this.clients){
+                            try{
+                                this.clients[i].send(data);
+                            }catch(e){
+                                logUtil.printLog("websocket failed to send data, " + e, logUtil.T_ERR);
+                            }
+                        }
+                    };
 
                     //watch dog
                     setInterval(function(argument) {
@@ -202,39 +238,34 @@ function proxyServer(option){
                             type:"watch"
                         });
                     },5000);
-
-                    //kill web server when father process exits
-                    process.on("exit",function(code){
-                        child_webServer.kill();
-                        logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
-                        process.exit();
-                    });
-
-                    process.on("uncaughtException",function(err){
-                        child_webServer.kill();
-                        logUtil.printLog('Caught exception: ' + err, logUtil.T_ERR);
-                        process.exit();
-                    });
-
-                    GLOBAL.recorder.on("update",function(data){
-                        child_webServer.send({
-                            type: "update",
-                            body: data
-                        });
-                    });
-
-                    var configServer = new UIConfigServer(proxyConfigPort);
-                    configServer.on("rule_changed",function() {});
-
-                    var tipText,webUrl;
-                    webUrl  = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                    tipText = "GUI interface started at : " + webUrl;
-                    logUtil.printLog(color.green(tipText));
-
-                    // tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
-                    // logUtil.printLog(color.green(tipText));
-                    callback(null);
                 }
+                callback(null);
+            },
+
+            //server status manager
+            function(callback){
+
+                //kill web server when father process exits
+                process.on("exit",function(code){
+                    child_webServer.kill();
+                    logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
+                    process.exit();
+                });
+
+                process.on("uncaughtException",function(err){
+                    child_webServer.kill();
+                    logUtil.printLog('Caught exception: ' + err, logUtil.T_ERR);
+                    process.exit();
+                });
+
+                var tipText,webUrl;
+                webUrl  = "http://" + ip.address() + ":" + proxyWebPort +"/";
+                tipText = "GUI interface started at : " + webUrl;
+                logUtil.printLog(color.green(tipText));
+
+                // tipText = "[alpha]qr code to for iOS client: " + webUrl + "qr";
+                // logUtil.printLog(color.green(tipText));
+                callback(null);
             }
         ],
 
@@ -334,7 +365,9 @@ function UIConfigServer(port){
     self.app = app;
 }
 
-inherits(UIConfigServer, events.EventEmitter);
+// var configServer = new UIConfigServer(proxyConfigPort);
+// configServer.on("rule_changed",function() {});
+// inherits(UIConfigServer, events.EventEmitter);
 
 
 module.exports.proxyServer        = proxyServer;
