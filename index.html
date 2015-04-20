@@ -114,14 +114,14 @@
 </ul>
 
 <div class="highlight highlight-javascript"><pre>
-<span class="pl-sv">module</span>.exports <span class="pl-k">=</span> {
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> {
     <span class="pl-c">/*</span>
 <span class="pl-c">    these functions will overwrite the default ones, write your own when necessary.</span>
 <span class="pl-c">    */</span>
 
     <span class="pl-c">//whether to intercept this request by local logic</span>
     <span class="pl-c">//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore</span>
-    <span class="pl-en">shouldUseLocalResponse</span> : <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">reqBody</span>){
+    <span class="pl-en">shouldUseLocalResponse</span> : <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">reqBody</span>){
         <span class="pl-k">return</span> <span class="pl-c1">false</span>;
     },
 
@@ -129,14 +129,14 @@
     <span class="pl-c">//this function be called when shouldUseLocalResponse returns true</span>
     <span class="pl-c">//callback(statusCode,resHeader,responseData)</span>
     <span class="pl-c">//e.g. callback(200,{"content-type":"text/html"},"hello world")</span>
-    <span class="pl-en">dealLocalResponse</span> : <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">reqBody</span>,<span class="pl-vpf">callback</span>){
+    <span class="pl-en">dealLocalResponse</span> : <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">reqBody</span>,<span class="pl-smi">callback</span>){
         callback(statusCode,resHeader,responseData)
     },
 
     <span class="pl-c">//replace the request protocol when sending to the real server</span>
     <span class="pl-c">//protocol : "http" or "https"</span>
-    <span class="pl-en">replaceRequestProtocol</span>:<span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">protocol</span>){
-        <span class="pl-s">var</span> newProtocol <span class="pl-k">=</span> protocol;
+    <span class="pl-en">replaceRequestProtocol</span>:<span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">protocol</span>){
+        <span class="pl-k">var</span> newProtocol <span class="pl-k">=</span> protocol;
         <span class="pl-k">return</span> newProtocol;
     },
 
@@ -144,44 +144,44 @@
     <span class="pl-c">//option is how the proxy server will send request to the real server. i.e. require("http").request(option,function(){...})</span>
     <span class="pl-c">//you may return a customized option to replace the original option</span>
     <span class="pl-c">//you should not write content-length header in options, since anyproxy will handle it for you</span>
-    <span class="pl-en">replaceRequestOption</span> : <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">option</span>){
-        <span class="pl-s">var</span> newOption <span class="pl-k">=</span> option;
+    <span class="pl-en">replaceRequestOption</span> : <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">option</span>){
+        <span class="pl-k">var</span> newOption <span class="pl-k">=</span> option;
         <span class="pl-k">return</span> newOption;
     },
 
     <span class="pl-c">//replace the request body</span>
-    <span class="pl-en">replaceRequestData</span>: <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">data</span>){
+    <span class="pl-en">replaceRequestData</span>: <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">data</span>){
         <span class="pl-k">return</span> data;
     },
 
     <span class="pl-c">//replace the statusCode before it's sent to the user</span>
-    <span class="pl-en">replaceResponseStatusCode</span>: <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">res</span>,<span class="pl-vpf">statusCode</span>){
-        <span class="pl-s">var</span> newStatusCode <span class="pl-k">=</span> statusCode;
+    <span class="pl-en">replaceResponseStatusCode</span>: <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">res</span>,<span class="pl-smi">statusCode</span>){
+        <span class="pl-k">var</span> newStatusCode <span class="pl-k">=</span> statusCode;
         <span class="pl-k">return</span> newStatusCode;
     },
 
     <span class="pl-c">//replace the httpHeader before it's sent to the user</span>
     <span class="pl-c">//Here header == res.headers</span>
-    <span class="pl-en">replaceResponseHeader</span>: <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">res</span>,<span class="pl-vpf">header</span>){
-        <span class="pl-s">var</span> newHeader <span class="pl-k">=</span> header;
+    <span class="pl-en">replaceResponseHeader</span>: <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">res</span>,<span class="pl-smi">header</span>){
+        <span class="pl-k">var</span> newHeader <span class="pl-k">=</span> header;
         <span class="pl-k">return</span> newHeader;
     },
 
     <span class="pl-c">//replace the response from the server before it's sent to the user</span>
     <span class="pl-c">//you may return either a Buffer or a string</span>
     <span class="pl-c">//serverResData is a Buffer, you may get its content by calling serverResData.toString()</span>
-    <span class="pl-en">replaceServerResData</span>: <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">res</span>,<span class="pl-vpf">serverResData</span>){
+    <span class="pl-en">replaceServerResData</span>: <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">res</span>,<span class="pl-smi">serverResData</span>){
         <span class="pl-k">return</span> serverResData;
     },
 
     <span class="pl-c">//add a pause before sending response to user</span>
-    <span class="pl-en">pauseBeforeSendingResponse</span> : <span class="pl-st">function</span>(<span class="pl-vpf">req</span>,<span class="pl-vpf">res</span>){
-        <span class="pl-s">var</span> timeInMS <span class="pl-k">=</span> <span class="pl-c1">1</span>; <span class="pl-c">//delay all requests for 1ms</span>
+    <span class="pl-en">pauseBeforeSendingResponse</span> : <span class="pl-k">function</span>(<span class="pl-smi">req</span>,<span class="pl-smi">res</span>){
+        <span class="pl-k">var</span> timeInMS <span class="pl-k">=</span> <span class="pl-c1">1</span>; <span class="pl-c">//delay all requests for 1ms</span>
         <span class="pl-k">return</span> timeInMS; 
     },
 
     <span class="pl-c">//should intercept https request, or it will be forwarded to real server</span>
-    <span class="pl-en">shouldInterceptHttpsReq</span> :<span class="pl-st">function</span>(<span class="pl-vpf">req</span>){
+    <span class="pl-en">shouldInterceptHttpsReq</span> :<span class="pl-k">function</span>(<span class="pl-smi">req</span>){
         <span class="pl-k">return</span> <span class="pl-c1">false</span>;
     }
 
@@ -224,10 +224,10 @@
 <pre><code>npm install anyproxy --save
 </code></pre>
 
-<div class="highlight highlight-javascript"><pre><span class="pl-s">var</span> proxy <span class="pl-k">=</span> <span class="pl-s3">require</span>(<span class="pl-s1"><span class="pl-pds">"</span>anyproxy<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> proxy <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">"</span>anyproxy<span class="pl-pds">"</span></span>);
 
 <span class="pl-k">!</span>proxy.isRootCAFileExists() <span class="pl-k">&amp;&amp;</span> proxy.generateRootCA(); <span class="pl-c">//please manually trust this rootCA</span>
-<span class="pl-k">new</span> <span class="pl-en">proxy.proxyServer</span>(<span class="pl-s1"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>,<span class="pl-s1"><span class="pl-pds">"</span>8001<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span> ,<span class="pl-s1"><span class="pl-pds">"</span>path/to/rule/file.js<span class="pl-pds">"</span></span>);
+<span class="pl-k">new</span> <span class="pl-en">proxy.proxyServer</span>(<span class="pl-s"><span class="pl-pds">"</span>http<span class="pl-pds">"</span></span>,<span class="pl-s"><span class="pl-pds">"</span>8001<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span> ,<span class="pl-s"><span class="pl-pds">"</span>path/to/rule/file.js<span class="pl-pds">"</span></span>);
 </pre></div>
 
 <h4>
@@ -248,7 +248,7 @@
     <div id="footer_wrap" class="outer">
       <footer class="inner">
         <p class="copyright">Anyproxy maintained by <a href="https://github.com/alibaba">alibaba</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
 
