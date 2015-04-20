@@ -13,6 +13,7 @@ program
     .option('-u, --host [value]', 'hostname for https proxy, localhost for default')
     .option('-t, --type [value]', 'http|https, http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
+    .option('-w, --web [value]' , 'web GUI port, 8002 for default')
     .option('-f, --file [value]', 'save request data to a specified file, will use in-memory db if not specified')
     .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
@@ -72,6 +73,7 @@ if(program.clear){
         hostname            : program.host,
         dbFile              : program.file,
         throttle            : program.throttle,
+        webPort             : program.web,
         rule                : ruleModule,
         disableWebInterface : false,
         interceptHttps      : program.intercept,

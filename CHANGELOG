@@ -1,3 +1,7 @@
+20 Apr 2015: anyproxy 3.3.1:
+
+    * now you can assign your own port for web gui
+
 31 Mar 2015: anyproxy 3.3.0:
 
     * optimize https features in windows
