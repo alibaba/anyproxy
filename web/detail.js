@@ -40,26 +40,29 @@ define("./detail",['$', 'gallery/underscore/1.6.0/underscore.js'],function(requi
 		'		</section>'+
 		'	<% } %>';
 
+	var cbMap = {};
+
+	//data via web socket
+	var socketPort  = $("#socketPort").val(),
+		baseUrl     = $("#baseUrl").val(),
+		dataSocket  = new WebSocket("ws://" + baseUrl + ":" + socketPort);
+
 	function render(data,cb){
-		var $baseTpl = $(_.template(tpl, data));
-
-		cb($baseTpl);
-
-	    // if(data.statusCode){ //if finished
-	    // 	$.ajax({
-	    // 		url     : "/body?id=" + data._id,
-	    // 		headers : {
-	    // 			anyproxy_web_req : true
-	    // 		},
-	    // 		type    : "GET",
-	    // 		success : function(data){
-		   //  	    $(".J_responseBody", $baseTpl).html(data);
-		   //  	    cb($baseTpl);
-		   //  	}
-	    // 	});
-	    // }else{
-	    // 	cb($baseTpl);
-	    // }
+		var resultEl = $(_.template(tpl, data)),
+			id       = data._id;
+		try{
+			//if finished
+			var reqRef = "r" + Math.random() + "_" + new Date().getTime();
+			if(data.statusCode){
+				//fetch body
+				ws.reqBody(id,function(content){
+					$(".J_responseBody", resultEl).html(he.encode(content.body));
+					cb(resultEl);
+				});
+			}
+		}catch(e){
+			cb(resultEl);
+		};
 	}
 
 	exports.render = render;

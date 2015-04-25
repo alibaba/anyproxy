@@ -9,14 +9,11 @@
     
 </head>
 <body>
-
 	<div class="topHead">
 		<div class="logoWrapper">
 			<h1>Anyproxy</h1>
 			<img class="logo_bottom anim_rotation" id="J_indicator" src="./logo_bottom.png" width="50" height="50" style="visibility:hidden" />
 		</div>
-
-
 
 		<div class="ctrlWrapper">
 			<a href="#" class="J_statusBtn"><span class="topBtn"><i class="uk-icon-stop"></i>Stop</span></a>
@@ -27,7 +24,6 @@
 			<a href="/qr_root" class="J_fetchRootQR" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>QRCode of rootCA.crt</span></a>
 			<!-- <a href="#"><span class="topBtn"><i class="uk-icon-cog"></i>Others</span></a> -->
 
-			<!-- <a href="http://localhost:{{proxyConfigPort}}"><span class="topBtn"><i class="uk-icon-cog"></i>Config Local Response(beta)</span></a> -->
 			<span class="sep">|</span>
 			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-external-link-square"></i>Anyproxy(Github)</span></a>
 
@@ -66,11 +62,9 @@
 		</div>
 	</div>
 
-
-	<input type="hidden" id="socketPort" value="{{webSocketPort}}" />
+	<input type="hidden" id="socketPort" value="{{wsPort}}" />
 	<input type="hidden" id="baseUrl" value="{{ipAddress}}" />
 	<input type="hidden" id="customMenu" value="{{menu}}" />
-
 
 	<script type="text/template" id="main_table_row">
 		<td class="data_id"><%= _id %></td>
@@ -83,6 +77,8 @@
 	</script>
 
 
+	<script src="/anyproxy_wsUtil.js"></script>
+	<script src="/he.js"></script>
 	<script src="/list.js"></script>
 </body>
 </html>

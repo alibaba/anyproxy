@@ -14,180 +14,168 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 
 	var isInApp = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.list;
 
-	$(function(){
+	//record detail
+	var DetailView = function(){
+		var self      = this,
+			$detailEl = $(".J_recordDetailOverlay"),
+			$mask;
 
-		//record detail
-		var DetailView = function(){
-			var self      = this,
-				$detailEl = $(".J_recordDetailOverlay"),
-				$mask;
+		//init mask
+		$mask = $("<div></div>").addClass("overlay_mask").hide();
+		$("body").append($mask);
 
-			//init mask
-			$mask = $("<div></div>").addClass("overlay_mask").hide();
-			$("body").append($mask);
-
-			//bind events
-			$(document).on("keyup",function(e){
-				if(e.keyCode == 27){ //ESC
-					self.hideDetail();
-				}
-			});
-
-			$mask.on("click",function(e){
+		//bind events
+		$(document).on("keyup",function(e){
+			if(e.keyCode == 27){ //ESC
 				self.hideDetail();
-			});
-
-			$(".J_escBtn",$detailEl).on("click",function(e){
-				self.hideDetail();
-			});
-
-			self.showDetail = function(data){
-				Detail.render(data,function(tpl){
-					$(".J_recordDetailOverlayContent",$detailEl).html(tpl);
-				    $detailEl.show();
-				    $mask.show();
-				});
-			};
-
-			self.hideDetail = function(){
-				$detailEl.hide();
-				$mask.hide();
-			};
-		};	
-		var detailPanel     = new DetailView();
-
-		//record list
-		var RecordModel = Backbone.Model.extend({});
-		var RecordList  = Backbone.Collection.extend({
-			initialize:function(){
-				var self = this;
-
-				self.on("add",function(data){
-					new RecordRowView({
-						model:data,
-						detailPanel : detailPanel
-					});
-				});
-
-				self.on("reset",function(){
-					$(".J_tableBody").empty();
-				});
 			}
 		});
 
-		var RecordRowView = Backbone.View.extend({
-			tagName : "tr",
-			className:function(){
-				return this.model.toJSON().id % 2 ? "row_odd" : "row_even";
-			},
-			tpl   : $("#main_table_row").html(),
-			initialize:function(data){
-				var self = this;
-				self.model.on("change",self.render,self);
-				self.addNewRecord();
-				self.detailPanel = data.detailPanel;
-			},
-			events: {
-				click: function(e){
-					e.stopPropagation();
-					var self = this;
-					var detailData = self.model.toJSON();
-					if(!isInApp){
-						self.detailPanel.showDetail(detailData);
-					}else{ 
-						window.webkit.messageHandlers.list.postMessage(JSON.stringify(detailData));
-					}
-				}
-			},
-			render: function(){
-				var self = this,
-					data = self.model.toJSON();
-				if(!data.statusCode){
-					data.statusCode = "-";
-				}else{
-					self.$el.addClass("record_status_done")
-				}
-
-				if(!data.mime){
-					data.mime = "-";
-				}
-
-				var html = _.template(self.tpl, data);
-				self.$el.attr("recordId",data.id).empty().html(html);
-
-				return self;
-			},
-			addNewRecord:function(){
-				$(".J_tableBody").prepend(this.render().$el);
-			}
+		$mask.on("click",function(e){
+			self.hideDetail();
 		});
 
-		var recList         = new RecordList();
+		$(".J_escBtn",$detailEl).on("click",function(e){
+			self.hideDetail();
+		});
 
-		//other controllers
-		$(".J_clearBtn").on("click",function(e){
+		self.showDetail = function(data){
+			Detail.render(data,function(tpl){
+				$(".J_recordDetailOverlayContent",$detailEl).html(tpl);
+			    $detailEl.show();
+			    $mask.show();
+			});
+		};
+
+		self.hideDetail = function(){
+			$detailEl.hide();
+			$mask.hide();
+		};
+	};	
+	var detailPanel     = new DetailView();
+
+	//record list
+	var RecordModel = Backbone.Model.extend({});
+	var RecordList  = Backbone.Collection.extend({
+		initialize:function(){
+			var self = this;
+
+			self.on("add",function(data){
+				new RecordRowView({
+					model:data,
+					detailPanel : detailPanel
+				});
+			});
+
+			self.on("reset",function(){
+				$(".J_tableBody").empty();
+			});
+		}
+	});
+
+	var RecordRowView = Backbone.View.extend({
+		tagName : "tr",
+		className:function(){
+			return this.model.toJSON().id % 2 ? "row_odd" : "row_even";
+		},
+		tpl   : $("#main_table_row").html(),
+		initialize:function(data){
+			var self = this;
+			self.model.on("change",self.render,self);
+			self.addNewRecord();
+			self.detailPanel = data.detailPanel;
+		},
+		events: {
+			click: function(e){
+				e.stopPropagation();
+				var self = this;
+				var detailData = self.model.toJSON();
+				if(!isInApp){
+					self.detailPanel.showDetail(detailData);
+				}else{ 
+					window.webkit.messageHandlers.list.postMessage(JSON.stringify(detailData));
+				}
+			}
+		},
+		render: function(){
+			var self = this,
+				data = self.model.toJSON();
+			if(!data.statusCode){
+				data.statusCode = "-";
+			}else{
+				self.$el.addClass("record_status_done")
+			}
+
+			if(!data.mime){
+				data.mime = "-";
+			}
+
+			var html = _.template(self.tpl, data);
+			self.$el.attr("recordId",data.id).empty().html(html);
+
+			return self;
+		},
+		addNewRecord:function(){
+			$(".J_tableBody").prepend(this.render().$el);
+		}
+	});
+
+	var recList         = new RecordList();
+
+	//other controllers
+	$(".J_clearBtn").on("click",function(e){
+		e.stopPropagation();
+		e.preventDefault();
+
+		clearLogs();
+	});
+
+	$(document).on("keyup",function(e){
+		if(e.keyCode == 88 && e.ctrlKey){ // ctrl + x
+			clearLogs();
+		}
+	});
+
+	function clearLogs(){
+		recList.reset();
+	}
+
+	//pause btn
+	var ifPause     = false,
+		indicatorEl = $("#J_indicator");
+	(function(){
+		var statusBtn = $(".J_statusBtn");
+		statusBtn.on("click",function(e){
 			e.stopPropagation();
 			e.preventDefault();
 
-			clearLogs();
-		});
+			$(".J_statusBtn").removeClass("btn_disable");
+			$(this).addClass("btn_disable");
 
-		$(document).on("keyup",function(e){
-			if(e.keyCode == 88 && e.ctrlKey){ // ctrl + x
-				clearLogs();
+			if(/stop/i.test($(this).html()) ){
+				ifPause = true;
+				indicatorEl.fadeOut();
+				// indicatorEl.css("visibility","hidden");
+			}else{
+				ifPause = false;
+				indicatorEl.fadeIn();
+				// indicatorEl.css("visibility","visible");
 			}
 		});
+	})();
 
-		function clearLogs(){
-			recList.reset();
-		}
+	//invoke AnyProxy web socket util
+	(function(){
+		try{
+			var ws = window.ws = new anyproxy_wsUtil({
+				baseUrl     : $("#baseUrl").val(),
+				port        : $("#socketPort").val(),
+				onOpen : function(){
+					indicatorEl.css("visibility","visible");
+				},
+				onGetUpdate : function(content){
+					if(ifPause) return;
 
-		//pause btn
-		var ifPause     = false,
-			indicatorEl = $("#J_indicator");
-		(function(){
-			var statusBtn = $(".J_statusBtn");
-			statusBtn.on("click",function(e){
-				e.stopPropagation();
-				e.preventDefault();
-
-				$(".J_statusBtn").removeClass("btn_disable");
-				$(this).addClass("btn_disable");
-
-				if(/stop/i.test($(this).html()) ){
-					ifPause = true;
-					indicatorEl.fadeOut();
-					// indicatorEl.css("visibility","hidden");
-				}else{
-					ifPause = false;
-					indicatorEl.fadeIn();
-					// indicatorEl.css("visibility","visible");
-				}
-			});
-		})();
-
-		//[test]render custom menu
-		var customMenu     = $("#customMenu").val().split("@@@");
-
-		//data via web socket
-		if(!WebSocket){
-			alert("WebSocket is required. Please use a modern browser.");
-			return;
-		}
-		var socketPort = $("#socketPort").val(),
-			baseUrl     = $("#baseUrl").val(),
-			dataSocket  = new WebSocket("ws://" + baseUrl + ":" + socketPort);
-		dataSocket.onopen = function(){
-			indicatorEl.css("visibility","visible");
-		}
-
-		dataSocket.onmessage = function(event){
-			if(ifPause) return;
-			try{
-				var data = JSON.parse(event.data);
-
-				if(data.type == 'update'){
-					var content = data.content;
 					var reqDate = new Date(content.startTime);
 					content.startTimeStr = reqDate.format("hh:mm:ss") + "";
 
@@ -197,22 +185,24 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 					}else{
 						recList.add(new RecordModel(content),{merge: true});
 					}
+				},
+				onError     : function(e){
+					console.log(e);
+					indicatorEl.css("visibility","hidden");
+					alert("socket err, please refresh");
+				},
+				onClose     : function(e){
+					console.log(e);
+					indicatorEl.css("visibility","hidden");
+					alert("socket closed, please refresh");	
 				}
-
-			}catch(e){
-				console.log(e);
-			}
+			});
+			window.ws = ws;
+			
+		}catch(e){
+			alert("failed to invoking web socket on this browser");
 		}
-
-		dataSocket.onclose = function(e){}
-
-		dataSocket.onerror = function(e){
-			console.log(e);
-			indicatorEl.css("visibility","hidden");
-			alert("socket err, please refresh");
-		}
-
-	});
+	})();
 
 	//draggable panel
 	(function(){
