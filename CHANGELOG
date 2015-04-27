@@ -1,3 +1,7 @@
+27 Apr: anyproxy 3.3.1:
+
+    * optimize web server and web socket interface
+
 20 Apr 2015: anyproxy 3.3.1:
 
     * now you can assign your own port for web gui
