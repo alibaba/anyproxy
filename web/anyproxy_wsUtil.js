@@ -83,12 +83,10 @@ anyproxy_wsUtil.prototype.reqBody = function(id,callback){
 		type   : "reqBody",
 		id     : id
 	};
-	if(!callback){
-		this.send(payload);
-	}else{
+	if(callback){
 		var reqRef = "r_" + Math.random()*100 + "_" + (new Date().getTime());
 		payload.reqRef = reqRef;
 		this.bodyCbMap[reqRef] = callback;
-		this.send(payload);
 	}
+	this.send(payload);
 };

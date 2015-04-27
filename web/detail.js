@@ -42,11 +42,6 @@ define("./detail",['$', 'gallery/underscore/1.6.0/underscore.js'],function(requi
 
 	var cbMap = {};
 
-	//data via web socket
-	var socketPort  = $("#socketPort").val(),
-		baseUrl     = $("#baseUrl").val(),
-		dataSocket  = new WebSocket("ws://" + baseUrl + ":" + socketPort);
-
 	function render(data,cb){
 		var resultEl = $(_.template(tpl, data)),
 			id       = data._id;
