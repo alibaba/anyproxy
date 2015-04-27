@@ -1,7 +1,6 @@
-var proxy   = require("../proxy.js"),
+var proxy       = require("../proxy.js"),
 	proxyTester = require("proxy-eval"),
 	WebSocket   = require("ws");
-
 
 //start a new proxy at port 8995, with websocket port 8996
 var SOCKET_PORT = 8996,
@@ -17,7 +16,6 @@ new proxy.proxyServer({
 
 exports.avalibility = function(test){
     test.expect(2);
-
 	var updateCount = 0;
 
 	//test web socket
