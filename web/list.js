@@ -14,6 +14,8 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 
 	var isInApp = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.list;
 
+
+
 	//record detail
 	var DetailView = function(){
 		var self      = this,
