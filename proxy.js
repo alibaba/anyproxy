@@ -23,7 +23,6 @@ var http = require('http'),
     events          = require("events"),
     express         = require("express"),
     ip              = require("ip"),
-    ent             = require("ent"),
     ThrottleGroup   = require("stream-throttle").ThrottleGroup,
     iconv           = require('iconv-lite'),
     Buffer          = require('buffer').Buffer;

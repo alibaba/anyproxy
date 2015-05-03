@@ -37,23 +37,8 @@
 		<div style="clear:both"></div>
 		
 	</div>
-	<div class="mainTableWrapper J_mainTable">
-		<table class="uk-table uk-table-condensed uk-table-hover">
-			<thead>
-				<tr>
-					<th class="col_id">id</th>
-					<th class="col_method">method</th>
-					<th class="col_code">code</th>
-					<th class="col_host">host</th>
-					<th class="col_path">path</th>
-					<th class="col_mime">mime type</th>
-					<th class="col_time">time</th>
-				</tr>
-			</thead>
-			<tbody class="J_tableBody"></tbody>
-		</table>
-	</div>
 
+	<div class="mainTableWrapper" id="J_content"></div>
 
 	<div class="recordDetailOverlay J_recordDetailOverlay" style="display:none">
 		<div id="dragbar"></div>
@@ -63,13 +48,11 @@
 		</div>
 	</div>
 
-	<div id="J_content"></div>
-
 	<input type="hidden" id="socketPort" value="{{wsPort}}" />
 	<input type="hidden" id="baseUrl" value="{{ipAddress}}" />
 	<input type="hidden" id="customMenu" value="{{menu}}" />
 
-	<script id="main_table_row">
+	<script id="main_table_row" type="text/template">
 		<td class="data_id"><%= _id %></td>
 		<td><%= method %> <span class="protocol protocol_<%= protocol %>" title="https"><i class="iconfont">&#xf00c9;</i></span> </td>
 		<td class="http_status http_status_<%= statusCode %>"><%= statusCode %></td>
@@ -79,58 +62,144 @@
 		<td><%= startTimeStr %></td>
 	</script>
 
-
+	<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
 	<script src="/anyproxy_wsUtil.js"></script>
 	<script src="/he.js"></script>
 	<script src="/list.js"></script>
 
 	<script type="text/jsx">
-	var RecordPanel = React.createClass({
-		getInitialState : function(){
-			return {
-				list : []
-			};
-		},
-		render : function(){
-			var rowCollection = this.state.list.map(function(item){
+
+	seajs.config({
+	    base: 'http://static.alipayobjects.com/',
+	    alias: {
+			'$'         : 'jquery/jquery/1.7.2/jquery',
+			"Popup"     : 'arale/popup/1.1.6/popup',
+			"base"      : 'arale/base/1.1.1/base',
+			"events"     : 'arale/events/1.1.0/events'
+	    }
+	});
+
+	seajs.use(['$','events',"Popup"], function($, Events,Popup) {
+
+		var ifPause     = false,
+			indicatorEl = $("#J_indicator"),
+		    recordSet   = [];
+
+		//make a simple event center via arale-base
+		//Event : wsGetUpdate
+		//Event : recordSetUpdated
+		var eventCenter = new Events();
+
+		function updateRecordSet(newRecord){
+			if(newRecord && newRecord.id){
+				recordSet[newRecord.id] = newRecord;
+				eventCenter.trigger("recordSetUpdated");
+			}
+		}
+		eventCenter.on("wsGetUpdate",updateRecordSet);
+
+		//invoke AnyProxy web socket util
+		var t ;
+		(function(){
+			try{
+				var ws = window.ws = new anyproxy_wsUtil({
+					baseUrl     : document.getElementById("baseUrl").value,
+					port        : document.getElementById("socketPort").value,
+					onOpen : function(){
+						indicatorEl.css("visibility","visible");
+					},
+					onGetUpdate : function(content){
+
+						// if(ifPause) return;
+
+						// var reqDate = new Date(content.startTime);
+						// content.startTimeStr = reqDate.format("hh:mm:ss") + "";
+						eventCenter.trigger("wsGetUpdate",content);
+					},
+					onError     : function(e){
+						indicatorEl.css("visibility","hidden");
+						alert("socket err, please refresh");
+					},
+					onClose     : function(e){
+						indicatorEl.css("visibility","hidden");
+						alert("socket closed, please refresh");	
+					}
+				});
+				window.ws = ws;
+				
+			}catch(e){
+				alert("failed to invoking web socket on this browser");
+			}
+		})();
+
+		var RecordPanel = React.createClass({
+			getInitialState : function(){
+				return {
+					list : []
+				};
+			},
+			render : function(){
+				var rowCollection = [];
+				for(var i = this.state.list.length-1 ; i >=0 ; i--){
+					var item = this.state.list[i];
+					if(item){
+						rowCollection.push(<RecordRow key={item.id} data={item}></RecordRow>);
+					}
+				}
+
 				return (
-					<RecordRow data={item}></RecordRow>
+					<table className="uk-table uk-table-condensed uk-table-hover">
+						<thead>
+							<tr>
+								<th className="col_id">id</th>
+								<th className="col_method">method</th>
+								<th className="col_code">code</th>
+								<th className="col_host">host</th>
+								<th className="col_path">path</th>
+								<th className="col_mime">mime type</th>
+								<th className="col_time">time</th>
+							</tr>
+						</thead>
+						<tbody>
+							{rowCollection}
+						</tbody>
+					</table>
 				);
+			}
+		});
+
+		var RecordRow = React.createClass({
+			getInitialState : function(){
+				return null;
+			},
+			render : function(){
+				return(
+					<tr>
+						<td className="data_id">{this.props.data._id}</td>
+						<td>{this.props.data.method} <span className="protocol protocol_{this.props.data.protocol}" title="https"><i className="iconfont">&#xf00c9;</i></span> </td>
+						<td className="http_status http_status_{this.props.data.statusCode}">{this.props.data.statusCode}</td>
+						<td title="{this.props.data.host}">{this.props.data.host}</td>
+						<td title="{this.props.data.path}">{this.props.data.path}</td>
+						<td>{this.props.data.mime}</td>
+						<td>{this.props.data.startTimeStr}</td>
+					</tr>
+				);
+			}
+		});
+
+		var Panel = React.render(
+			<RecordPanel />,
+			document.getElementById("J_content")
+		);
+
+		eventCenter.on('recordSetUpdated',function(){
+			Panel.setState({
+				list : recordSet
 			});
-			return (
-				<div>
-					<RecordRow />
-					{rowCollection}
-				</div>
-			);
-		}
+		});
+
+
 	});
-
-	var RecordRow = React.createClass({
-		getInitialState : function(){
-			return null;
-		},
-		render : function(){
-			return(
-				<div>
-				aaa
-					<td class="data_id">-- _id --</td>
-					<td>-- method -- <span class="protocol protocol_-- protocol --" title="https"><i class="iconfont">&#xf00c9;</i></span> </td>
-					<td class="http_status http_status_-- statusCode --">-- statusCode --</td>
-					<td title="-- host --">-- host --</td>
-					<td title="-- path --">-- path --</td>
-					<td>-- mime --</td>
-					<td>-- startTimeStr --</td>
-				</div>
-			);
-		}
-	});
-
-	React.render(
-		<RecordPanel />,
-		document.getElementById("J_content")
-	);
-
 
 	</script>
 </body>

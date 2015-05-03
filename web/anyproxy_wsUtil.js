@@ -39,20 +39,20 @@ function anyproxy_wsUtil(config){
 				type    = data.type,
 				content = data.content,
 				reqRef  = data.reqRef;
-
-			if(type == "update"){
-				config.onGetUpdate && config.onGetUpdate.call(self, content);
-
-			}else if(type == "body"){
-				config.onGetBody && config.onGetBody.call(self, content, reqRef);
-
-				if(data.reqRef && self.bodyCbMap[reqRef]){
-					self.bodyCbMap[reqRef].call(self,content);
-				}
-			}
-
 		}catch(e){
 			config.onError && config.onError.call(self, new Error("failed to parse socket data - " + e.toString()) );
+		}
+		
+
+		if(type == "update"){
+			config.onGetUpdate && config.onGetUpdate.call(self, content);
+
+		}else if(type == "body"){
+			config.onGetBody && config.onGetBody.call(self, content, reqRef);
+
+			if(data.reqRef && self.bodyCbMap[reqRef]){
+				self.bodyCbMap[reqRef].call(self,content);
+			}
 		}
 	}
 

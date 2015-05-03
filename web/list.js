@@ -14,8 +14,6 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 
 	var isInApp = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.list;
 
-
-
 	//record detail
 	var DetailView = function(){
 		var self      = this,
@@ -142,9 +140,6 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 		recList.reset();
 	}
 
-	//pause btn
-	var ifPause     = false,
-		indicatorEl = $("#J_indicator");
 	(function(){
 		var statusBtn = $(".J_statusBtn");
 		statusBtn.on("click",function(e){
@@ -166,45 +161,7 @@ seajs.use(['$', 'Underscore', 'Backbone',"Handlebars","Popup","./detail"], funct
 		});
 	})();
 
-	//invoke AnyProxy web socket util
-	(function(){
-		try{
-			var ws = window.ws = new anyproxy_wsUtil({
-				baseUrl     : $("#baseUrl").val(),
-				port        : $("#socketPort").val(),
-				onOpen : function(){
-					indicatorEl.css("visibility","visible");
-				},
-				onGetUpdate : function(content){
-					if(ifPause) return;
 
-					var reqDate = new Date(content.startTime);
-					content.startTimeStr = reqDate.format("hh:mm:ss") + "";
-
-					var previous;
-					if(previous = recList.get(content.id)){
-						previous.set(content);	
-					}else{
-						recList.add(new RecordModel(content),{merge: true});
-					}
-				},
-				onError     : function(e){
-					console.log(e);
-					indicatorEl.css("visibility","hidden");
-					alert("socket err, please refresh");
-				},
-				onClose     : function(e){
-					console.log(e);
-					indicatorEl.css("visibility","hidden");
-					alert("socket closed, please refresh");	
-				}
-			});
-			window.ws = ws;
-			
-		}catch(e){
-			alert("failed to invoking web socket on this browser");
-		}
-	})();
 
 	//draggable panel
 	(function(){
