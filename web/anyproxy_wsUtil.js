@@ -30,7 +30,7 @@ function anyproxy_wsUtil(config){
 
 	var dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
 
-	self.bodyCbMap = {};
+	// self.bodyCbMap = {};
 	dataSocket.onmessage = function(event){
 		config.onGetData && config.onGetData.call(self,event.data);
 
