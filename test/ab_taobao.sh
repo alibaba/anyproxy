@@ -1,0 +1,1 @@
+ab -X 127.0.0.1:8001 -n $1 -c $2 -H "HOST:www.taobao.com"  http://www.taobao.com/

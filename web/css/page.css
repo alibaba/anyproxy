@@ -11,6 +11,10 @@ body{
 	min-width: 1090px;
 }
 
+body, html {
+  height: 100%;
+}
+
 .iconfont{
     font-family:"iconfont" !important;
     font-size:16px;font-style:normal;
@@ -89,7 +93,7 @@ body{
 	border-radius: 2px;
 }
 
-.topHead .topBtn:hover{
+.topHead .topBtn:hover:not(.btn_disable){
 	background: #07D;
 	transition:0.1s;
 	color: #FFF;
@@ -131,7 +135,7 @@ body{
 }
 
 .mainTableWrapper thead{
-	background: #DDD;
+	background: #F4F5F9;
 	border-bottom: 1px solid #777;
 }
 
@@ -215,14 +219,13 @@ body{
 	width: 100%;
 	height: 100%;
 	background: #EEE;
-	opacity: 0.85;
+	opacity: 0.5;
 }
 
 .recordDetailOverlay{
 	z-index: 1;
 	height: 100%;
 	position: fixed;
-	left: 35%;
 	right: 0;
 	background: #FFF;
 	border-left: 1px solid #CCC;
@@ -281,21 +284,21 @@ body{
 	color: #777;
 }
 
-#dragbar{
+.dragbar{
 	position:absolute;
-	left:0px;
+	left:-5px;
 	top:0px;
 	height: 100%;
-	float: left;
-	background-color:#CCC;
-	width: 3px;
+	width: 10px;
 	cursor: col-resize;
 }
-#ghostbar{
+
+.ghostbar{
+    position:fixed;
     width:3px;
+    height: 100vh;
     background-color:#000;
     opacity:0.5;
-    position:absolute;
     cursor: col-resize;
     z-index:999
 }

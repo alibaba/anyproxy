@@ -30,7 +30,7 @@ function anyproxy_wsUtil(config){
 
 	var dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
 
-	// self.bodyCbMap = {};
+	self.bodyCbMap = {};
 	dataSocket.onmessage = function(event){
 		config.onGetData && config.onGetData.call(self,event.data);
 
@@ -42,7 +42,6 @@ function anyproxy_wsUtil(config){
 		}catch(e){
 			config.onError && config.onError.call(self, new Error("failed to parse socket data - " + e.toString()) );
 		}
-		
 
 		if(type == "update"){
 			config.onGetUpdate && config.onGetUpdate.call(self, content);
@@ -90,3 +89,7 @@ anyproxy_wsUtil.prototype.reqBody = function(id,callback){
 	}
 	this.send(payload);
 };
+
+if(typeof module != "undefined"){
+	module.exports = anyproxy_wsUtil;
+}

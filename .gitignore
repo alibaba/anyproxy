@@ -2,6 +2,7 @@ cert/**/*.srl
 cert/**/*.key
 cert/**/*.crt
 cert/**/*.csr
+web/build/.module-cache/
 tmp.txt
 .*.swp
 ._*

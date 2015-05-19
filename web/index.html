@@ -5,28 +5,24 @@
     <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
     <link rel="stylesheet" href="/css/page.css" />
     <link rel="icon" type="image/png" href="/favico.png" />
-    <script charset="utf-8" id="seajsnode" src="http://static.alipayobjects.com/seajs/??seajs/2.2.0/sea.js,seajs-combo/1.0.1/seajs-combo.js,seajs-style/1.0.2/seajs-style.js"></script>
-    <script src="./react.js"></script>
 </head>
 <body>
 	<div class="topHead">
 		<div class="logoWrapper">
 			<h1>Anyproxy</h1>
-			<img class="logo_bottom anim_rotation" id="J_indicator" src="./logo_bottom.png" width="50" height="50" style="visibility:hidden" />
+			<div id="J_indicatorEl"></div>
 		</div>
 
 		<div class="ctrlWrapper">
-			<a href="#" class="J_statusBtn"><span class="topBtn"><i class="uk-icon-stop"></i>Stop</span></a>
-			<a href="#" class="J_statusBtn btn_disable"><span class="topBtn"><i class="uk-icon-play"></i>Resume</span></a>
+			<a href="#"><span class="J_statusBtn topBtn"><i class="uk-icon-stop"></i>Stop</span></a>
+			<a href="#"><span class="J_statusBtn btn_disable topBtn"><i class="uk-icon-play"></i>Resume</span></a>
 			<a href="#" class="J_clearBtn"><span class="topBtn"><i class="uk-icon-eraser"></i>Clear(Ctrl+X)</span></a>
 			<span class="sep">|</span>
 			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>Download rootCA.crt</span></a>
 			<a href="/qr_root" class="J_fetchRootQR" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>QRCode of rootCA.crt</span></a>
-			<!-- <a href="#"><span class="topBtn"><i class="uk-icon-cog"></i>Others</span></a> -->
 
 			<span class="sep">|</span>
 			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-external-link-square"></i>Anyproxy(Github)</span></a>
-
 		</div>
 
 		<div class="ruleDesc">
@@ -38,33 +34,9 @@
 
 	<div class="mainTableWrapper" id="J_content"></div>
 
-	<div class="recordDetailOverlay J_recordDetailOverlay" style="display:none">
-		<div id="dragbar"></div>
-		<span class="escBtn J_escBtn">Close (ESC)</span>
-		<div class="J_recordDetailOverlayContentWrapper">
-			<div class="J_recordDetailOverlayContent"></div>
-		</div>
-	</div>
-
 	<input type="hidden" id="socketPort" value="{{wsPort}}" />
 	<input type="hidden" id="baseUrl" value="{{ipAddress}}" />
-	<input type="hidden" id="customMenu" value="{{menu}}" />
 
-	<script id="main_table_row" type="text/template">
-		<td class="data_id"><%= _id %></td>
-		<td><%= method %> <span class="protocol protocol_<%= protocol %>" title="https"><i class="iconfont">&#xf00c9;</i></span> </td>
-		<td class="http_status http_status_<%= statusCode %>"><%= statusCode %></td>
-		<td title="<%= host %>"><%= host %></td>
-		<td title="<%= path %>"><%= path %></td>
-		<td><%= mime %></td>
-		<td><%= startTimeStr %></td>
-	</script>
-
-	<script src="http://lib.sinaapp.com/js/jquery/1.9.1/jquery-1.9.1.min.js"></script>
-	<script src="/anyproxy_wsUtil.js"></script>
-	<script src="/he.js"></script>
-	<script src="/list.js"></script>
-
-	<script src="/build/index.js"></script>
+    <script src="./page.js"></script>
 </body>
 </html>
