@@ -98,7 +98,7 @@ module.exports = {
     //替换服务器响应的数据
     //replace the response from the server before it's sent to the user
     //you may return either a Buffer or a string
-    //serverResData is a Buffer, you may get its content by calling serverResData.toString()
+    //serverResData is a Buffer. for those non-unicode reponse , serverResData.toString() should not be your first choice.
     replaceServerResDataAsync: function(req,res,serverResData,callback){
         callback(serverResData);
     },
