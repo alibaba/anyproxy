@@ -49,12 +49,7 @@ try{
     if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
         default_rule = require(path.join(process.cwd(),'rule'));
     }
-}catch(e){
-    if(e){
-        logUtil.printLog("error" + e, logUtil.T_ERR);
-        throw e;
-    }
-}
+}catch(e){}
 
 //option
 //option.type     : 'http'(default) or 'https'
