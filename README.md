@@ -116,7 +116,7 @@ var options = {
     webConfigPort : 8088,  // optional, internal port for web config(beta), replace this when it is conflict with your own service
     throttle      : 10,    // optional, speed limit in kb/s
     disableWebInterface : false, //optional, set it when you don't want to use the web interface
-    silent        : false, //optional, do not print anything into terminal. do not set it when you are still debugging.
+    silent        : false //optional, do not print anything into terminal. do not set it when you are still debugging.
 };
 new proxy.proxyServer(options);
 
