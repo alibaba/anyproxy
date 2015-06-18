@@ -1,3 +1,8 @@
+18 June: anyproxy 3.5.1:
+
+    * print a hint when using SNI features in node <0.12 
+    * Ref : https://github.com/alibaba/anyproxy/issues/25
+
 18 June: anyproxy 3.5.0:
 
     * it's a formal release of 3.4.0@beta.

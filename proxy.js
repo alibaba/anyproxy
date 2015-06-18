@@ -93,6 +93,12 @@ function proxyServer(option){
 
     if(!!option.interceptHttps){
         default_rule.setInterceptFlag(true);
+
+        //print a tip when using https features in Node < v0.12
+        var nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
+        if(nodeVersion < 0.12){
+            logUtil.printLog(color.red("node >= v0.12 is required when trying to intercept HTTPS requests :("), logUtil.T_ERR);
+        }
     }
 
     if(option.throttle){
