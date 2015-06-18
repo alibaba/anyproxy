@@ -47,7 +47,7 @@ function init(React){
 			return(
 				<tr className={trClasses} onClick={this.handleClick}>
 					<td className="data_id">{this.props.data._id}</td>
-					<td>{this.props.data.method} <span className={"protocol protocol_" + this.props.data.protocol} title="https"><i className="iconfont">&#xf00c9;</i></span> </td>
+					<td>{this.props.data.method} <span className={"protocol protocol_" + this.props.data.protocol} title="https"><i className="uk-icon-lock"></i></span> </td>
 					<td className={"http_status http_status_" + this.props.data.statusCode}>{this.props.data.statusCode}</td>
 					<td title={this.props.data.host}>{this.props.data.host}</td>
 					<td title={this.props.data.path}>{this.props.data.path}</td>

@@ -47,7 +47,7 @@ function init(React){
 			return(
 				React.createElement("tr", {className: trClasses, onClick: this.handleClick}, 
 					React.createElement("td", {className: "data_id"}, this.props.data._id), 
-					React.createElement("td", null, this.props.data.method, " ", React.createElement("span", {className: "protocol protocol_" + this.props.data.protocol, title: "https"}, React.createElement("i", {className: "iconfont"}, "É")), " "), 
+					React.createElement("td", null, this.props.data.method, " ", React.createElement("span", {className: "protocol protocol_" + this.props.data.protocol, title: "https"}, React.createElement("i", {className: "uk-icon-lock"})), " "), 
 					React.createElement("td", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode), 
 					React.createElement("td", {title: this.props.data.host}, this.props.data.host), 
 					React.createElement("td", {title: this.props.data.path}, this.props.data.path), 
