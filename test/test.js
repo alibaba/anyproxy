@@ -21,7 +21,7 @@ exports.avalibility = function(test){
 	//test web socket
     setTimeout(function(){
     	var ws = new WebSocket('ws://127.0.0.1:' + SOCKET_PORT , {
-    	  protocolVersion: 8
+    	   protocolVersion: 8
     	});
     	 
     	ws.on('open', function open(){});

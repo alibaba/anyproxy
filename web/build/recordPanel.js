@@ -28,7 +28,7 @@ function init(React){
 				React.createElement("table", {className: "uk-table uk-table-condensed uk-table-hover"}, 
 					React.createElement("thead", null, 
 						React.createElement("tr", null, 
-							React.createElement("th", {className: "col_id"}, "id"), 
+							React.createElement("th", {className: "col_id"}, "#"), 
 							React.createElement("th", {className: "col_method"}, "method"), 
 							React.createElement("th", {className: "col_code"}, "code"), 
 							React.createElement("th", {className: "col_host"}, "host"), 

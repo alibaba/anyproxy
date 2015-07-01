@@ -118,7 +118,7 @@ body, html {
 
 .mainTableWrapper thead{
 	background: #F4F5F9;
-	border-bottom: 1px solid #777;
+	border-bottom: 1px solid #AAA;
 }
 
 .mainTableWrapper td,
@@ -127,6 +127,8 @@ body, html {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	font-size: 12px;
+	line-height: 16px;
 }
 
 .mainTableWrapper tbody tr{

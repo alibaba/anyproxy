@@ -28,7 +28,7 @@ function init(React){
 				<table className="uk-table uk-table-condensed uk-table-hover">
 					<thead>
 						<tr>
-							<th className="col_id">id</th>
+							<th className="col_id">#</th>
 							<th className="col_method">method</th>
 							<th className="col_code">code</th>
 							<th className="col_host">host</th>
