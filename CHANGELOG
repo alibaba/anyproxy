@@ -1,3 +1,11 @@
+1 July: anyproxy 3.6.0:
+
+    * add a filter on web ui
+
+1 July: anyproxy 3.5.2:
+
+    * optimize the row height on web ui
+
 18 June: anyproxy 3.5.1:
 
     * print a hint when using SNI features in node <0.12 

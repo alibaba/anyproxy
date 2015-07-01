@@ -101,6 +101,12 @@ var eventCenter = new EventManager();
 			list : recordSet
 		});
 	});
+
+	eventCenter.addListener("filterUpdated",function(newKeyword){
+		Panel.setState({
+			filter: newKeyword
+		});
+	});
 })();
 
 
@@ -137,5 +143,28 @@ var eventCenter = new EventManager();
 		}else{
 			ifPause = false;
 		}
+	});
+
+	function switchFilterWidget(ifToShow){
+		if(ifToShow){
+			$(".J_filterSection").show();
+			$("#J_filterKeyword").focus();
+		}else{
+			$(".J_filterSection").hide();
+			$("#J_filterKeyword").val("");
+		}
+	}
+
+	$(".J_toggleFilterBtn").on("click",function(){
+		switchFilterWidget( $(".J_filterSection").css("display") == "none" );
+	});
+
+	$(".J_filterCloseBtn").on("click",function(){
+		switchFilterWidget(false);
+	});
+
+
+	$("#J_filterKeyword").on("change keyup",function(){
+		eventCenter.dispatchEvent("filterUpdated",this.value);
 	});
 })();

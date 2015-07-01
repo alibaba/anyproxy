@@ -147,6 +147,12 @@
 				list : recordSet
 			});
 		});
+
+		eventCenter.addListener("filterUpdated",function(newKeyword){
+			Panel.setState({
+				filter: newKeyword
+			});
+		});
 	})();
 
 
@@ -183,6 +189,29 @@
 			}else{
 				ifPause = false;
 			}
+		});
+
+		function switchFilterWidget(ifToShow){
+			if(ifToShow){
+				$(".J_filterSection").show();
+				$("#J_filterKeyword").focus();
+			}else{
+				$(".J_filterSection").hide();
+				$("#J_filterKeyword").val("");
+			}
+		}
+
+		$(".J_toggleFilterBtn").on("click",function(){
+			switchFilterWidget( $(".J_filterSection").css("display") == "none" );
+		});
+
+		$(".J_filterCloseBtn").on("click",function(){
+			switchFilterWidget(false);
+		});
+
+
+		$("#J_filterKeyword").on("change keyup",function(){
+			eventCenter.dispatchEvent("filterUpdated",this.value);
 		});
 	})();
 
@@ -395,14 +424,34 @@
 		var RecordPanel = React.createClass({displayName: "RecordPanel",
 			getInitialState : function(){
 				return {
-					list : []
+					list  : [],
+					filter: ""
 				};
 			},
 			render : function(){
-				var rowCollection = [];
+				var rowCollection = [],
+					filterStr     = this.state.filter,
+					filter        = filterStr;
+
+				//regexp
+				if(filterStr[0]=="/" && filterStr[filterStr.length-1]=="/"){
+					try{
+						filter = new RegExp(filterStr.substr(1,filterStr.length-2));
+					}catch(e){}
+				}
+
 				for(var i = this.state.list.length-1 ; i >=0 ; i--){
 					var item = this.state.list[i];
 					if(item){
+						if(filter && item){
+							try{
+								if(typeof filter == "object" && !filter.test(item.url)){
+									continue;
+								}else if(typeof filter == "string" && item.url.indexOf(filter) < 0){
+									continue;
+								}
+							}catch(e){}
+						}
 
 						if(item._justUpdated){
 							item._justUpdated = false;

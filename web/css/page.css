@@ -286,3 +286,30 @@ body, html {
     cursor: col-resize;
     z-index:999
 }
+
+.filterSection{
+	background: #FFF;
+	padding: 15px 10px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	border: 1px solid #333;
+	border-radius: 3px;
+}
+
+.filterSection .filterIcon{
+	font-size: 16px;
+}
+
+.filterSection form{
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.filterSection input{
+	width: 250px;
+}
+
+.filterSection i{
+	cursor: pointer;
+}
