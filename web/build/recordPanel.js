@@ -9,8 +9,9 @@ function init(React){
 			};
 		},
 		render : function(){
-			var rowCollection = [],
-				filterStr     = this.state.filter,
+			var self          = this,
+				rowCollection = [],
+				filterStr     = self.state.filter,
 				filter        = filterStr;
 
 			//regexp
@@ -20,8 +21,8 @@ function init(React){
 				}catch(e){}
 			}
 
-			for(var i = this.state.list.length-1 ; i >=0 ; i--){
-				var item = this.state.list[i];
+			for(var i = self.state.list.length-1 ; i >=0 ; i--){
+				var item = self.state.list[i];
 				if(item){
 					if(filter && item){
 						try{
@@ -40,7 +41,7 @@ function init(React){
 						item._needRender  = false;
 					}
 
-					rowCollection.push(React.createElement(RecordRow, {key: item.id, data: item}));
+					rowCollection.push(React.createElement(RecordRow, {key: item.id, data: item, onSelect: self.props.onSelect.bind(self,item)}));
 				}
 			}
 

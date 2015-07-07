@@ -1,10 +1,15 @@
-require("../lib/zepto");
+window.$ = window.jQuery = require("../lib/jquery");
+
 var EventManager    = require('../lib/event'),
 	Anyproxy_wsUtil = require("../lib/anyproxy_wsUtil"),
 	React           = require("../lib/react");
 
 var WsIndicator = require("./wsIndicator").init(React),
-	RecordPanel = require("./recordPanel").init(React);
+	RecordPanel = require("./recordPanel").init(React),
+	MapPanel    = require("./mapPanel").init(React),
+	Detail      = require("./detailPanel").init(React),
+	Popup       = require("./popup").init(React),
+	Filter      = require("./filter").init(React);
 
 var ifPause     = false,
     recordSet   = [];
@@ -14,6 +19,7 @@ var ifPause     = false,
 //Event : wsOpen
 //Event : wsEnd
 var eventCenter = new EventManager();
+
 
 //invoke AnyProxy web socket util
 (function(){
@@ -63,7 +69,19 @@ var eventCenter = new EventManager();
 })();
 
 
-//record panel
+//init popup
+var pop;
+(function(){
+	$("body").append('<div id="J_popOuter"></div>');
+	pop = React.render(
+		<Popup />,
+		document.getElementById("J_popOuter")
+	);
+})();
+
+
+//init record panel
+var recorder;
 (function(){
 	//merge : right --> left
 	function util_merge(left,right){
@@ -89,29 +107,40 @@ var eventCenter = new EventManager();
 			// React.addons.Perf.stop();
 		}
 	}
+
+	function showDetail(data){
+		pop.setState({
+			show: true,
+			content : <Detail data={data}/>,
+			left:"35%"
+		});
+	}
+
 	eventCenter.addListener("wsGetUpdate",updateRecordSet);
 
-	var Panel = React.render(
-		<RecordPanel />,
-		document.getElementById("J_content")
-	);
-
 	eventCenter.addListener('recordSetUpdated',function(){
-		Panel.setState({
+		recorder.setState({
 			list : recordSet
 		});
 	});
 
 	eventCenter.addListener("filterUpdated",function(newKeyword){
-		Panel.setState({
+		recorder.setState({
 			filter: newKeyword
 		});
 	});
+
+	//init recorder panel
+	recorder = React.render(
+		<RecordPanel onSelect={showDetail}/>,
+		document.getElementById("J_content")
+	);
 })();
 
 
 //action bar
 (function(){
+	//clear log
 	function clearLogs(){
 		recordSet = [];
 		eventCenter.dispatchEvent("recordSetUpdated");
@@ -130,6 +159,7 @@ var eventCenter = new EventManager();
 		clearLogs();
 	});
 
+	//start , pause
 	var statusBtn = $(".J_statusBtn");
 	statusBtn.on("click",function(e){
 		e.stopPropagation();
@@ -145,26 +175,41 @@ var eventCenter = new EventManager();
 		}
 	});
 
-	function switchFilterWidget(ifToShow){
-		if(ifToShow){
-			$(".J_filterSection").show();
-			$("#J_filterKeyword").focus();
-		}else{
-			$(".J_filterSection").hide();
-			$("#J_filterKeyword").val("");
+	//filter
+	(function (){
+		function updateKeyword(key){
+			eventCenter.dispatchEvent("filterUpdated",key);
 		}
-	}
 
-	$(".J_toggleFilterBtn").on("click",function(){
-		switchFilterWidget( $(".J_filterSection").css("display") == "none" );
-	});
+		var filter = (<Filter onChangeKeyword={updateKeyword} />);
+		function showFilter(){
+			pop.setState({
+				show    : true,
+				content : filter,
+				left:"70%"
+			});
+		}
 
-	$(".J_filterCloseBtn").on("click",function(){
-		switchFilterWidget(false);
-	});
+		$(".J_showFilter").on("click",function(){
+			showFilter();
+		});
+	})();
 
+	//map local
+	(function(){
+		var mapPanel = (<MapPanel />);
+		function showMap(){
+			pop.setState({
+				show : true,
+				content : mapPanel,
+				left:"70%"
 
-	$("#J_filterKeyword").on("change keyup",function(){
-		eventCenter.dispatchEvent("filterUpdated",this.value);
-	});
+			})
+		}
+
+		$(".J_showMapPanel").on("click",function(){
+			showMap();
+		});
+	})();
+
 })();

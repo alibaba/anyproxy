@@ -1,12 +1,4 @@
 function init(React){
-	var DetailPanel = require("./detailPanel").init(React);
-
-	$("body").append('<div id="J_detailPanel"></div>');
-	var detail = React.render(
-		<DetailPanel />,
-		document.getElementById("J_detailPanel")
-	);
-
 	function dateFormat(date,fmt) {
 	    var o = {
 	        "M+": date.getMonth() + 1, //月份 
@@ -26,12 +18,6 @@ function init(React){
 		getInitialState : function(){
 			return null;
 		},
-		handleClick:function(e){
-			detail.setState({
-				data : this.props.data,
-				show : true
-			});
-		},
 		render : function(){
 			var trClassesArr = [],
 				trClasses;
@@ -45,7 +31,7 @@ function init(React){
 			var dateStr = dateFormat(new Date(this.props.data.startTime),"hh:mm:ss");
 
 			return(
-				<tr className={trClasses} onClick={this.handleClick}>
+				<tr className={trClasses} onClick={this.props.onSelect}>
 					<td className="data_id">{this.props.data._id}</td>
 					<td>{this.props.data.method} <span className={"protocol protocol_" + this.props.data.protocol} title="https"><i className="uk-icon-lock"></i></span> </td>
 					<td className={"http_status http_status_" + this.props.data.statusCode}>{this.props.data.statusCode}</td>
@@ -64,7 +50,6 @@ function init(React){
 	});
 
 	return RecordRow;
-
 }
 
 module.exports.init = init;

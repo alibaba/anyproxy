@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Anyproxy</title>
+    <title>AnyProxy</title>
     <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
     <link rel="stylesheet" href="/css/page.css" />
+	<link rel="stylesheet" type="text/css" href="/css/jstree_style/style.min.css">
+
     <link rel="icon" type="image/png" href="/favico.png" />
 </head>
 <body>
 	<div class="topHead">
 		<div class="logoWrapper">
-			<h1>Anyproxy</h1>
+			<h1>AnyProxy</h1>
 			<div id="J_indicatorEl"></div>
 		</div>
 
 		<div class="ctrlWrapper">
 			<a href="#"><span class="topBtn J_statusBtn"><i class="uk-icon-stop"></i>Stop</span></a>
 			<a href="#"><span class="topBtn J_statusBtn btn_disable"><i class="uk-icon-play"></i>Resume</span></a>
-			<a href="#"><span class="topBtn J_toggleFilterBtn"><i class="uk-icon-filter"></i>Filter</span></a>
 			<a href="#"><span class="topBtn J_clearBtn"><i class="uk-icon-eraser"></i>Clear(Ctrl+X)</span></a>
 
 			<span class="sep">|</span>
@@ -24,20 +25,14 @@
 			<a href="/qr_root" class="J_fetchRootQR" target="_blank"><span class="topBtn"><i class="uk-icon-qrcode"></i>QRCode of rootCA.crt</span></a>
 
 			<span class="sep">|</span>
-			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-external-link-square"></i>Github</span></a>
+			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-github"></i>Github</span></a>
 		</div>
 
 		<div class="ruleDesc">
+			<a href="#"><span class="topBtn J_showFilter"><i class="uk-icon-filter"></i>Filter</span></a>
+			<a href="#"><span class="topBtn J_showMapPanel"><i class="uk-icon-level-down"></i>Map Local</span></a>
 			<span><i class="uk-icon-chain"></i>Rule : {{rule}}</span>
 		</div>
-
-		<div class="filterSection J_filterSection" style="display:none">
-			<form class="uk-form">
-				<input  class="uk-form-large" type="text" id="J_filterKeyword" placeholder="type keywords or /^regExp$/" width="200"/>
-			</form>
-			<i class="uk-icon-times J_filterCloseBtn"></i>
-		</div>
-
 
 		<div style="clear:both"></div>
 	</div>

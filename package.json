@@ -9,6 +9,7 @@
   "dependencies": {
     "async": "~0.9.0",
     "async-task-mgr": ">=1.1.0",
+    "body-parser": "^1.13.1",
     "colorful": "^2.1.0",
     "commander": "~2.3.0",
     "compression": "^1.4.4",

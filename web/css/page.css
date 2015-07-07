@@ -287,15 +287,7 @@ body, html {
     z-index:999
 }
 
-.filterSection{
-	background: #FFF;
-	padding: 15px 10px;
-	position: absolute;
-	left: 0;
-	top: 0;
-	border: 1px solid #333;
-	border-radius: 3px;
-}
+
 
 .filterSection .filterIcon{
 	font-size: 16px;
@@ -310,6 +302,31 @@ body, html {
 	width: 250px;
 }
 
-.filterSection i{
-	cursor: pointer;
+
+/*map panel*/
+
+.jstree-icon.folder{
+	background: url(http://img.alicdn.com/bao/uploaded/TB1TqJjIpXXXXcYXFXXSutbFXXX.jpg_q90.jpg) no-repeat !important;
+	background-size: 100% 100%;
 }
+
+.mapWrapper form{
+	margin-top: 20px;
+}
+
+.mapWrapper ul{
+	list-style: none;
+	padding-left: 10px;
+}
+
+.mapWrapper li{
+	margin: 10px 0;
+}
+
+.mapWrapper .removeBtn{
+	display: inline-block;
+	margin-left: 5px;
+}
+
+/*map panel end*/
+

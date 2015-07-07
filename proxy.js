@@ -157,7 +157,7 @@ function proxyServer(option){
                     var config = {
                         port         : proxyWebPort,
                         wsPort       : socketPort,
-                        ruleSummary  : requestHandler.getRuleSummary(),
+                        userRule     : proxyRules,
                         ip           : ip.address()
                     };
 
