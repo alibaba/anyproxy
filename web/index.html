@@ -21,16 +21,20 @@
 			<a href="#"><span class="topBtn J_clearBtn"><i class="uk-icon-eraser"></i>Clear(Ctrl+X)</span></a>
 
 			<span class="sep">|</span>
-			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-certificate"></i>Download rootCA.crt</span></a>
+			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-download"></i>Download rootCA.crt</span></a>
 			<a href="/qr_root" class="J_fetchRootQR" target="_blank"><span class="topBtn"><i class="uk-icon-qrcode"></i>QRCode of rootCA.crt</span></a>
 
 			<span class="sep">|</span>
 			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-github"></i>Github</span></a>
 		</div>
 
-		<div class="ruleDesc">
-			<a href="#"><span class="topBtn J_showFilter"><i class="uk-icon-filter"></i>Filter</span></a>
-			<a href="#"><span class="topBtn J_showMapPanel"><i class="uk-icon-level-down"></i>Map Local</span></a>
+		<div class="ctrlWrapper">
+			<span class="J_filterSection" style="display:none">
+				<a href="#"><span class="topBtn J_showFilter"><i class="uk-icon-filter"></i>Filter</span></a>
+				<a href="#"><span class="topBtn J_showMapPanel"><i class="uk-icon-shield"></i>Map Local</span></a>
+
+				<span class="sep">|</span>
+			</span>
 			<span><i class="uk-icon-chain"></i>Rule : {{rule}}</span>
 		</div>
 

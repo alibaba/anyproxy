@@ -78,7 +78,7 @@ function init(React){
 					<div className="overlay_mask" onClick={this.setHide}></div>
 					<div className="recordDetailOverlay" ref="mainOverlay" style={{left: this.state.left}}>
 						<div className="dragbar" onMouseDown={this.dealDrag}></div>
-						<span className="escBtn" onClick={this.setHide}>Close (ESC)</span>
+						<span className="escBtn" onClick={this.setHide}><i className="uk-icon-times"></i></span>
 						<div>
 							{this.state.content}
 						</div>

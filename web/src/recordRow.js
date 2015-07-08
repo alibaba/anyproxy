@@ -20,24 +20,34 @@ function init(React){
 		},
 		render : function(){
 			var trClassesArr = [],
-				trClasses;
-			if(this.props.data.statusCode){
+				trClasses,
+				data = this.props.data || {};
+			if(data.statusCode){
 				trClassesArr.push("record_status_done");
 			}
 
-			trClassesArr.push( ((Math.floor(this.props.data._id /2) - this.props.data._id /2) == 0)? "row_even" : "row_odd" );
+			trClassesArr.push( ((Math.floor(data._id /2) - data._id /2) == 0)? "row_even" : "row_odd" );
 			trClasses = trClassesArr.join(" ");
 
-			var dateStr = dateFormat(new Date(this.props.data.startTime),"hh:mm:ss");
+			var dateStr = dateFormat(new Date(data.startTime),"hh:mm:ss");
+
+			var rowIcon = [];
+			if(data.protocol == "https"){
+				rowIcon.push(<span className="icon_record" title="https"><i className="uk-icon-lock"></i></span>);
+			}
+
+			if(data.ext && data.ext.map){
+				rowIcon.push(<span className="icon_record" title="mapped to local file"><i className="uk-icon-shield"></i></span>);
+			}
 
 			return(
 				<tr className={trClasses} onClick={this.props.onSelect}>
-					<td className="data_id">{this.props.data._id}</td>
-					<td>{this.props.data.method} <span className={"protocol protocol_" + this.props.data.protocol} title="https"><i className="uk-icon-lock"></i></span> </td>
-					<td className={"http_status http_status_" + this.props.data.statusCode}>{this.props.data.statusCode}</td>
-					<td title={this.props.data.host}>{this.props.data.host}</td>
-					<td title={this.props.data.path}>{this.props.data.path}</td>
-					<td>{this.props.data.mime}</td>
+					<td className="data_id">{data._id}</td>
+					<td>{data.method} {rowIcon} </td>
+					<td className={"http_status http_status_" + data.statusCode}>{data.statusCode}</td>
+					<td title={data.host}>{data.host}</td>
+					<td title={data.path}>{data.path}</td>
+					<td>{data.mime}</td>
 					<td>{dateStr}</td>
 				</tr>
 			);

@@ -78,7 +78,7 @@ function init(React){
 					React.createElement("div", {className: "overlay_mask", onClick: this.setHide}), 
 					React.createElement("div", {className: "recordDetailOverlay", ref: "mainOverlay", style: {left: this.state.left}}, 
 						React.createElement("div", {className: "dragbar", onMouseDown: this.dealDrag}), 
-						React.createElement("span", {className: "escBtn", onClick: this.setHide}, "Close (ESC)"), 
+						React.createElement("span", {className: "escBtn", onClick: this.setHide}, React.createElement("i", {className: "uk-icon-times"})), 
 						React.createElement("div", null, 
 							this.state.content
 						)

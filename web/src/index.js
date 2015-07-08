@@ -140,6 +140,12 @@ var recorder;
 
 //action bar
 (function(){
+
+	//detect whether to show the filter and map btn
+	$.get("/filetree?root=/",function(){
+		$(".J_filterSection").show();
+	});
+
 	//clear log
 	function clearLogs(){
 		recordSet = [];

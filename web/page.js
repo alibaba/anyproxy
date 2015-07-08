@@ -186,6 +186,12 @@
 
 	//action bar
 	(function(){
+
+		//detect whether to show the filter and map btn
+		$.get("/filetree?root=/",function(){
+			$(".J_filterSection").show();
+		});
+
 		//clear log
 		function clearLogs(){
 			recordSet = [];
@@ -20355,7 +20361,7 @@
 						React.createElement("div", {className: "overlay_mask", onClick: this.setHide}), 
 						React.createElement("div", {className: "recordDetailOverlay", ref: "mainOverlay", style: {left: this.state.left}}, 
 							React.createElement("div", {className: "dragbar", onMouseDown: this.dealDrag}), 
-							React.createElement("span", {className: "escBtn", onClick: this.setHide}, "Close (ESC)"), 
+							React.createElement("span", {className: "escBtn", onClick: this.setHide}, React.createElement("i", {className: "uk-icon-times"})), 
 							React.createElement("div", null, 
 								this.state.content
 							)
@@ -20449,24 +20455,34 @@
 			},
 			render : function(){
 				var trClassesArr = [],
-					trClasses;
-				if(this.props.data.statusCode){
+					trClasses,
+					data = this.props.data || {};
+				if(data.statusCode){
 					trClassesArr.push("record_status_done");
 				}
 
-				trClassesArr.push( ((Math.floor(this.props.data._id /2) - this.props.data._id /2) == 0)? "row_even" : "row_odd" );
+				trClassesArr.push( ((Math.floor(data._id /2) - data._id /2) == 0)? "row_even" : "row_odd" );
 				trClasses = trClassesArr.join(" ");
 
-				var dateStr = dateFormat(new Date(this.props.data.startTime),"hh:mm:ss");
+				var dateStr = dateFormat(new Date(data.startTime),"hh:mm:ss");
+
+				var rowIcon = [];
+				if(data.protocol == "https"){
+					rowIcon.push(React.createElement("span", {className: "icon_record", title: "https"}, React.createElement("i", {className: "uk-icon-lock"})));
+				}
+
+				if(data.ext && data.ext.map){
+					rowIcon.push(React.createElement("span", {className: "icon_record", title: "mapped to local file"}, React.createElement("i", {className: "uk-icon-shield"})));
+				}
 
 				return(
 					React.createElement("tr", {className: trClasses, onClick: this.props.onSelect}, 
-						React.createElement("td", {className: "data_id"}, this.props.data._id), 
-						React.createElement("td", null, this.props.data.method, " ", React.createElement("span", {className: "protocol protocol_" + this.props.data.protocol, title: "https"}, React.createElement("i", {className: "uk-icon-lock"})), " "), 
-						React.createElement("td", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode), 
-						React.createElement("td", {title: this.props.data.host}, this.props.data.host), 
-						React.createElement("td", {title: this.props.data.path}, this.props.data.path), 
-						React.createElement("td", null, this.props.data.mime), 
+						React.createElement("td", {className: "data_id"}, data._id), 
+						React.createElement("td", null, data.method, " ", rowIcon, " "), 
+						React.createElement("td", {className: "http_status http_status_" + data.statusCode}, data.statusCode), 
+						React.createElement("td", {title: data.host}, data.host), 
+						React.createElement("td", {title: data.path}, data.path), 
+						React.createElement("td", null, data.mime), 
 						React.createElement("td", null, dateStr)
 					)
 				);
