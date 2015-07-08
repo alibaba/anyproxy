@@ -19,11 +19,20 @@ function init(React){
 			var self = this;
 
 			return (
-				React.createElement("div", {className: "filterSection"}, 
+				React.createElement("div", null, 
 					React.createElement("h4", {className: "subTitle"}, "Log Filter"), 
 
-					React.createElement("form", {className: "uk-form"}, 
-						React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "type keywords or /^regExp$/", width: "300"})
+					React.createElement("div", {className: "filterSection"}, 
+						React.createElement("form", {className: "uk-form"}, 
+							React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
+						)
+					), 
+					React.createElement("dl", {class: "uk-description-list-horizontal"}, 
+					    React.createElement("dt", null, "wrap your RegExp between two slashes"), 
+					    React.createElement("dd", null, 
+						    "e.g. ", React.createElement("br", null), 
+						    "type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
+					    )
 					)
 				)
 			);

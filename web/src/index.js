@@ -186,7 +186,7 @@ var recorder;
 			pop.setState({
 				show    : true,
 				content : filter,
-				left:"70%"
+				left:"50%"
 			});
 		}
 
@@ -202,7 +202,7 @@ var recorder;
 			pop.setState({
 				show : true,
 				content : mapPanel,
-				left:"70%"
+				left:"40%"
 
 			})
 		}

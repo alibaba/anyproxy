@@ -232,7 +232,7 @@
 				pop.setState({
 					show    : true,
 					content : filter,
-					left:"70%"
+					left:"50%"
 				});
 			}
 
@@ -248,7 +248,7 @@
 				pop.setState({
 					show : true,
 					content : mapPanel,
-					left:"70%"
+					left:"40%"
 
 				})
 			}
@@ -20182,7 +20182,7 @@
 						React.createElement("h4", {className: "subTitle"}, "Current Config"), 
 						React.createElement(MapList, {ref: "list"}), 
 						
-						React.createElement("h4", {className: "subTitle"}, "Map Local"), 
+						React.createElement("h4", {className: "subTitle"}, "Add Map Rule"), 
 						React.createElement(MapForm, {onSubmit: self.appendRecord})
 					)
 				);
@@ -20395,11 +20395,20 @@
 				var self = this;
 
 				return (
-					React.createElement("div", {className: "filterSection"}, 
+					React.createElement("div", null, 
 						React.createElement("h4", {className: "subTitle"}, "Log Filter"), 
 
-						React.createElement("form", {className: "uk-form"}, 
-							React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "type keywords or /^regExp$/", width: "300"})
+						React.createElement("div", {className: "filterSection"}, 
+							React.createElement("form", {className: "uk-form"}, 
+								React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
+							)
+						), 
+						React.createElement("dl", {class: "uk-description-list-horizontal"}, 
+						    React.createElement("dt", null, "wrap your RegExp between two slashes"), 
+						    React.createElement("dd", null, 
+							    "e.g. ", React.createElement("br", null), 
+							    "type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
+						    )
 						)
 					)
 				);
@@ -27959,29 +27968,30 @@
 				var self = this;
 				return (
 					React.createElement("div", null, 
-						React.createElement("form", {className: "uk-form uk-form-stacked"}, 
+						React.createElement("form", {className: "uk-form uk-form-stacked mapAddNewForm"}, 
 						    React.createElement("fieldset", null, 
-						        React.createElement("legend", null, "add rule"), 
-
 						        React.createElement("div", {className: "uk-form-row"}, 
 					                React.createElement("label", {className: "uk-form-label", htmlFor: "map_keywordInput"}, "keyword"), 
 					                React.createElement("div", {className: "uk-form-controls"}, 
-					                    React.createElement("input", {type: "text", id: "map_keywordInput", ref: "keywordInput", placeholder: "keyword"})
+					                    React.createElement("input", {className: "mapConfigInputs", type: "text", id: "map_keywordInput", ref: "keywordInput", placeholder: "keyword"})
 					                )
 					            ), 
 
 						        React.createElement("div", {className: "uk-form-row"}, 
 					                React.createElement("label", {className: "uk-form-label", htmlFor: "map_localFilePath"}, "local file"), 
 					                React.createElement("div", {className: "uk-form-controls"}, 
-					                    React.createElement("input", {type: "text", id: "map_localFilePath", ref: "localFilePath", placeholder: "keyword"})
-					                )
-					            )
+					                    React.createElement("input", {className: "mapConfigInputs pathInput", type: "text", id: "map_localFilePath", ref: "localFilePath", placeholder: "local file path"})
+					                ), 
+			            	        React.createElement("div", {ref: "treeWrapper", className: "treeWrapper"})
+					            ), 
+
+		            	        React.createElement("div", {className: "uk-form-row"}, 
+			            	        React.createElement("button", {type: "button", className: "uk-button", onClick: self.submitData}, "Add")
+		                        )
 
 						    )
-						), 
+						)
 
-						React.createElement("div", {ref: "treeWrapper"}), 
-						React.createElement("button", {className: "uk-button", onClick: self.submitData}, "Add")
 					)
 				);
 			},

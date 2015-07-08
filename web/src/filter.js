@@ -19,12 +19,21 @@ function init(React){
 			var self = this;
 
 			return (
-				<div className="filterSection">
+				<div>
 					<h4 className="subTitle">Log Filter</h4>
 
-					<form className="uk-form">
-						<input className="uk-form-large" ref="keywordInput" onChange={self.dealChange} type="text" placeholder="type keywords or /^regExp$/" width="300"/>
-					</form>
+					<div className="filterSection">
+						<form className="uk-form">
+							<input className="uk-form-large" ref="keywordInput" onChange={self.dealChange} type="text" placeholder="keywords or /^regExp$/" width="300"/>
+						</form>
+					</div>
+					<dl class="uk-description-list-horizontal">
+					    <dt>wrap your RegExp between two slashes</dt>
+					    <dd>
+						    e.g. <br />
+						    type <strong>/id=\d{3}/</strong> will give you all the logs containing <strong>id=123</strong>
+					    </dd>
+					</dl>
 				</div>
 			);
 		},

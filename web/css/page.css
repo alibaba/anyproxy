@@ -287,20 +287,21 @@ body, html {
     z-index:999
 }
 
+/*filter*/
 
-
-.filterSection .filterIcon{
-	font-size: 16px;
+.filterSection{
+	margin: 50px auto 0;
 }
 
 .filterSection form{
-	display: inline-block;
-	margin-right: 5px;
+	text-align: center;
 }
 
 .filterSection input{
 	width: 250px;
 }
+
+/*filter end*/
 
 
 /*map panel*/
@@ -327,6 +328,28 @@ body, html {
 	display: inline-block;
 	margin-left: 5px;
 }
+
+.mapWrapper .mapConfigInputs{
+	width: 400px;
+}
+
+.mapWrapper .mapConfigInputs.pathInput{
+	border-radius: 4px 4px 0 0 ;
+}
+
+.mapWrapper .treeWrapper{
+	width: 398px;
+	height: 350px;
+	overflow: scroll;
+	border: 1px solid #ddd;
+	border-top: none;
+}
+
+.mapWrapper .mapAddNewForm{
+	margin-left: 10px;
+}
+
+
 
 /*map panel end*/
 

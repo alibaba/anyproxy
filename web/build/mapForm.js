@@ -54,29 +54,30 @@ function init(React){
 			var self = this;
 			return (
 				React.createElement("div", null, 
-					React.createElement("form", {className: "uk-form uk-form-stacked"}, 
+					React.createElement("form", {className: "uk-form uk-form-stacked mapAddNewForm"}, 
 					    React.createElement("fieldset", null, 
-					        React.createElement("legend", null, "add rule"), 
-
 					        React.createElement("div", {className: "uk-form-row"}, 
 				                React.createElement("label", {className: "uk-form-label", htmlFor: "map_keywordInput"}, "keyword"), 
 				                React.createElement("div", {className: "uk-form-controls"}, 
-				                    React.createElement("input", {type: "text", id: "map_keywordInput", ref: "keywordInput", placeholder: "keyword"})
+				                    React.createElement("input", {className: "mapConfigInputs", type: "text", id: "map_keywordInput", ref: "keywordInput", placeholder: "keyword"})
 				                )
 				            ), 
 
 					        React.createElement("div", {className: "uk-form-row"}, 
 				                React.createElement("label", {className: "uk-form-label", htmlFor: "map_localFilePath"}, "local file"), 
 				                React.createElement("div", {className: "uk-form-controls"}, 
-				                    React.createElement("input", {type: "text", id: "map_localFilePath", ref: "localFilePath", placeholder: "keyword"})
-				                )
-				            )
+				                    React.createElement("input", {className: "mapConfigInputs pathInput", type: "text", id: "map_localFilePath", ref: "localFilePath", placeholder: "local file path"})
+				                ), 
+		            	        React.createElement("div", {ref: "treeWrapper", className: "treeWrapper"})
+				            ), 
+
+	            	        React.createElement("div", {className: "uk-form-row"}, 
+		            	        React.createElement("button", {type: "button", className: "uk-button", onClick: self.submitData}, "Add")
+	                        )
 
 					    )
-					), 
+					)
 
-					React.createElement("div", {ref: "treeWrapper"}), 
-					React.createElement("button", {className: "uk-button", onClick: self.submitData}, "Add")
 				)
 			);
 		},

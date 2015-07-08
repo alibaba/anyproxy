@@ -19,7 +19,7 @@ function init(React){
 					<h4 className="subTitle">Current Config</h4>
 					<MapList ref="list"/>
 					
-					<h4 className="subTitle">Map Local</h4>
+					<h4 className="subTitle">Add Map Rule</h4>
 					<MapForm onSubmit={self.appendRecord}/>
 				</div>
 			);

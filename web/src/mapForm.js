@@ -54,29 +54,30 @@ function init(React){
 			var self = this;
 			return (
 				<div>
-					<form className="uk-form uk-form-stacked">
+					<form className="uk-form uk-form-stacked mapAddNewForm">
 					    <fieldset>
-					        <legend>add rule</legend>
-
 					        <div className="uk-form-row">
 				                <label className="uk-form-label" htmlFor="map_keywordInput">keyword</label>
 				                <div className="uk-form-controls">
-				                    <input type="text" id="map_keywordInput" ref="keywordInput" placeholder="keyword" />
+				                    <input className="mapConfigInputs" type="text" id="map_keywordInput" ref="keywordInput" placeholder="keyword" />
 				                </div>
 				            </div>
 
 					        <div className="uk-form-row">
 				                <label className="uk-form-label" htmlFor="map_localFilePath">local file</label>
 				                <div className="uk-form-controls">
-				                    <input type="text" id="map_localFilePath" ref="localFilePath" placeholder="keyword" />
+				                    <input className="mapConfigInputs pathInput" type="text" id="map_localFilePath" ref="localFilePath" placeholder="local file path" />
 				                </div>
+		            	        <div ref="treeWrapper" className="treeWrapper"></div>
 				            </div>
+
+	            	        <div className="uk-form-row">
+		            	        <button type="button" className="uk-button" onClick={self.submitData}>Add</button>
+	                        </div>
 
 					    </fieldset>
 					</form>
 
-					<div ref="treeWrapper"></div>
-					<button className="uk-button" onClick={self.submitData}>Add</button>
 				</div>
 			);
 		},

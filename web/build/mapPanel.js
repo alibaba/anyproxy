@@ -19,7 +19,7 @@ function init(React){
 					React.createElement("h4", {className: "subTitle"}, "Current Config"), 
 					React.createElement(MapList, {ref: "list"}), 
 					
-					React.createElement("h4", {className: "subTitle"}, "Map Local"), 
+					React.createElement("h4", {className: "subTitle"}, "Add Map Rule"), 
 					React.createElement(MapForm, {onSubmit: self.appendRecord})
 				)
 			);
