@@ -300,12 +300,12 @@ body, html {
 	margin-top: 20px;
 }
 
-.mapWrapper ul{
+.mapWrapper .mapRuleList ul{
 	list-style: none;
 	padding-left: 10px;
 }
 
-.mapWrapper li{
+.mapWrapper .mapRuleList li{
 	margin: 10px 0;
 }
 

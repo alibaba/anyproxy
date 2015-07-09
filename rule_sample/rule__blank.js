@@ -9,7 +9,7 @@ module.exports = {
     致中文用户：中文注释都是只摘要，必要时请参阅英文文档。欢迎提出修改建议。
 	*/
     summary:function(){
-        return "this is a blank rule for anyproxy";
+        return "this is a blank rule for AnyProxy";
     },
 
 
