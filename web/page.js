@@ -52,10 +52,13 @@
 
 	var WsIndicator = __webpack_require__(6).init(React),
 		RecordPanel = __webpack_require__(8).init(React),
-		MapPanel    = __webpack_require__(7).init(React),
-		Detail      = __webpack_require__(1).init(React),
-		Popup       = __webpack_require__(9).init(React),
-		Filter      = __webpack_require__(10).init(React);
+		Popup       = __webpack_require__(9).init(React);
+
+	var PopupContent = {
+		map    : __webpack_require__(7).init(React),
+		detail : __webpack_require__(1).init(React),
+		filter : __webpack_require__(10).init(React)
+	};
 
 	var ifPause     = false,
 	    recordSet   = [];
@@ -66,6 +69,13 @@
 	//Event : wsEnd
 	var eventCenter = new EventManager();
 
+	//merge : right --> left
+	function util_merge(left,right){
+	    for(var key in right){
+	        left[key] = right[key];
+	    }
+	    return left;
+	}
 
 	//invoke AnyProxy web socket util
 	(function(){
@@ -116,27 +126,31 @@
 
 
 	//init popup
-	var pop;
+	var showPop;
 	(function(){
 		$("body").append('<div id="J_popOuter"></div>');
-		pop = React.render(
+		var pop = React.render(
 			React.createElement(Popup, null),
 			document.getElementById("J_popOuter")
 		);
-	})();
 
+		showPop = function(tag,props,popArg){
+			var tagEl = PopupContent[tag];
+			if(!tagEl) throw new Error("element not found, please make sure your panel has been pluged");
+
+			var contentEl = React.createElement(tagEl, props);
+			var defaultPopPara = {
+				show    : true,
+				content : contentEl
+			};
+
+			pop.setState(util_merge(defaultPopPara,popArg));
+		}
+	})();
 
 	//init record panel
 	var recorder;
 	(function(){
-		//merge : right --> left
-		function util_merge(left,right){
-		    for(var key in right){
-		        left[key] = right[key];
-		    }
-		    return left;
-		}
-
 		function updateRecordSet(newRecord){
 			if(ifPause) return;
 
@@ -154,14 +168,6 @@
 			}
 		}
 
-		function showDetail(data){
-			pop.setState({
-				show: true,
-				content : React.createElement(Detail, {data: data}),
-				left:"35%"
-			});
-		}
-
 		eventCenter.addListener("wsGetUpdate",updateRecordSet);
 
 		eventCenter.addListener('recordSetUpdated',function(){
@@ -175,6 +181,10 @@
 				filter: newKeyword
 			});
 		});
+
+		function showDetail(data){
+			showPop("detail", {data:data}, {left:"35%"});
+		}
 
 		//init recorder panel
 		recorder = React.render(
@@ -233,34 +243,15 @@
 				eventCenter.dispatchEvent("filterUpdated",key);
 			}
 
-			var filter = (React.createElement(Filter, {onChangeKeyword: updateKeyword}));
-			function showFilter(){
-				pop.setState({
-					show    : true,
-					content : filter,
-					left:"50%"
-				});
-			}
-
 			$(".J_showFilter").on("click",function(){
-				showFilter();
+				showPop("filter", {onChangeKeyword : updateKeyword}, { left : "50%"});
 			});
 		})();
 
 		//map local
 		(function(){
-			var mapPanel = (React.createElement(MapPanel, null));
-			function showMap(){
-				pop.setState({
-					show : true,
-					content : mapPanel,
-					left:"40%"
-
-				})
-			}
-
 			$(".J_showMapPanel").on("click",function(){
-				showMap();
+				showPop("map", {}, {left : "40%"});
 			});
 		})();
 
@@ -20409,7 +20400,7 @@
 								React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
 							)
 						), 
-						React.createElement("dl", {class: "uk-description-list-horizontal"}, 
+						React.createElement("dl", {className: "uk-description-list-horizontal"}, 
 						    React.createElement("dt", null, "wrap your RegExp between two slashes"), 
 						    React.createElement("dd", null, 
 							    "e.g. ", React.createElement("br", null), 

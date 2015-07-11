@@ -27,7 +27,7 @@ function init(React){
 							React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
 						)
 					), 
-					React.createElement("dl", {class: "uk-description-list-horizontal"}, 
+					React.createElement("dl", {className: "uk-description-list-horizontal"}, 
 					    React.createElement("dt", null, "wrap your RegExp between two slashes"), 
 					    React.createElement("dd", null, 
 						    "e.g. ", React.createElement("br", null), 

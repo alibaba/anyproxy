@@ -6,10 +6,13 @@ var EventManager    = require('../lib/event'),
 
 var WsIndicator = require("./wsIndicator").init(React),
 	RecordPanel = require("./recordPanel").init(React),
-	MapPanel    = require("./mapPanel").init(React),
-	Detail      = require("./detailPanel").init(React),
-	Popup       = require("./popup").init(React),
-	Filter      = require("./filter").init(React);
+	Popup       = require("./popup").init(React);
+
+var PopupContent = {
+	map    : require("./mapPanel").init(React),
+	detail : require("./detailPanel").init(React),
+	filter : require("./filter").init(React)
+};
 
 var ifPause     = false,
     recordSet   = [];
@@ -20,6 +23,13 @@ var ifPause     = false,
 //Event : wsEnd
 var eventCenter = new EventManager();
 
+//merge : right --> left
+function util_merge(left,right){
+    for(var key in right){
+        left[key] = right[key];
+    }
+    return left;
+}
 
 //invoke AnyProxy web socket util
 (function(){
@@ -70,27 +80,31 @@ var eventCenter = new EventManager();
 
 
 //init popup
-var pop;
+var showPop;
 (function(){
 	$("body").append('<div id="J_popOuter"></div>');
-	pop = React.render(
+	var pop = React.render(
 		<Popup />,
 		document.getElementById("J_popOuter")
 	);
-})();
 
+	showPop = function(tag,props,popArg){
+		var tagEl = PopupContent[tag];
+		if(!tagEl) throw new Error("element not found, please make sure your panel has been pluged");
+
+		var contentEl = React.createElement(tagEl, props);
+		var defaultPopPara = {
+			show    : true,
+			content : contentEl
+		};
+
+		pop.setState(util_merge(defaultPopPara,popArg));
+	}
+})();
 
 //init record panel
 var recorder;
 (function(){
-	//merge : right --> left
-	function util_merge(left,right){
-	    for(var key in right){
-	        left[key] = right[key];
-	    }
-	    return left;
-	}
-
 	function updateRecordSet(newRecord){
 		if(ifPause) return;
 
@@ -108,14 +122,6 @@ var recorder;
 		}
 	}
 
-	function showDetail(data){
-		pop.setState({
-			show: true,
-			content : <Detail data={data}/>,
-			left:"35%"
-		});
-	}
-
 	eventCenter.addListener("wsGetUpdate",updateRecordSet);
 
 	eventCenter.addListener('recordSetUpdated',function(){
@@ -129,6 +135,10 @@ var recorder;
 			filter: newKeyword
 		});
 	});
+
+	function showDetail(data){
+		showPop("detail", {data:data}, {left:"35%"});
+	}
 
 	//init recorder panel
 	recorder = React.render(
@@ -187,34 +197,15 @@ var recorder;
 			eventCenter.dispatchEvent("filterUpdated",key);
 		}
 
-		var filter = (<Filter onChangeKeyword={updateKeyword} />);
-		function showFilter(){
-			pop.setState({
-				show    : true,
-				content : filter,
-				left:"50%"
-			});
-		}
-
 		$(".J_showFilter").on("click",function(){
-			showFilter();
+			showPop("filter", {onChangeKeyword : updateKeyword}, { left : "50%"});
 		});
 	})();
 
 	//map local
 	(function(){
-		var mapPanel = (<MapPanel />);
-		function showMap(){
-			pop.setState({
-				show : true,
-				content : mapPanel,
-				left:"40%"
-
-			})
-		}
-
 		$(".J_showMapPanel").on("click",function(){
-			showMap();
+			showPop("map", {}, {left : "40%"});
 		});
 	})();
 

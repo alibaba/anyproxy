@@ -27,7 +27,7 @@ function init(React){
 							<input className="uk-form-large" ref="keywordInput" onChange={self.dealChange} type="text" placeholder="keywords or /^regExp$/" width="300"/>
 						</form>
 					</div>
-					<dl class="uk-description-list-horizontal">
+					<dl className="uk-description-list-horizontal">
 					    <dt>wrap your RegExp between two slashes</dt>
 					    <dd>
 						    e.g. <br />
