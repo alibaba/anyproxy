@@ -39,14 +39,19 @@ function init(React){
 			var self   = this,
 				result = {};
 
-			var	filePath = React.findDOMNode(self.refs.localFilePath).value,
-				keyword  = React.findDOMNode(self.refs.keywordInput).value;
+			var	filePathInput = React.findDOMNode(self.refs.localFilePath),
+			   	filePath      = filePathInput.value,
+				keywordInput  = React.findDOMNode(self.refs.keywordInput),
+				keyword       = keywordInput.value;
 
 			if(filePath && keyword){
 				self.props.onSubmit.call(null,{
 					keyword : keyword,
 					local   : filePath
 				});
+
+				filePathInput.value = "";
+				keywordInput.value = "";
 			}
 		},
 		
