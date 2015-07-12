@@ -52,11 +52,11 @@
 
 	var WsIndicator = __webpack_require__(6).init(React),
 		RecordPanel = __webpack_require__(8).init(React),
-		Popup       = __webpack_require__(9).init(React);
+		Popup       = __webpack_require__(7).init(React);
 
 	var PopupContent = {
-		map    : __webpack_require__(7).init(React),
-		detail : __webpack_require__(1).init(React),
+		map    : __webpack_require__(1).init(React),
+		detail : __webpack_require__(9).init(React),
 		filter : __webpack_require__(10).init(React)
 	};
 
@@ -134,18 +134,10 @@
 			document.getElementById("J_popOuter")
 		);
 
-		showPop = function(tag,props,popArg){
-			var tagEl = PopupContent[tag];
-			if(!tagEl) throw new Error("element not found, please make sure your panel has been pluged");
-
-			var contentEl = React.createElement(tagEl, props);
-			var defaultPopPara = {
-				show    : true,
-				content : contentEl
-			};
-
-			pop.setState(util_merge(defaultPopPara,popArg));
-		}
+		showPop = function(popArg){
+			var stateArg = util_merge({show : true },popArg);
+			pop.setState(stateArg);
+		};
 	})();
 
 	//init record panel
@@ -183,7 +175,7 @@
 		});
 
 		function showDetail(data){
-			showPop("detail", {data:data}, {left:"35%"});
+			showPop({left:"35%",content:React.createElement(PopupContent["detail"], {data:data})});
 		}
 
 		//init recorder panel
@@ -244,14 +236,29 @@
 			}
 
 			$(".J_showFilter").on("click",function(){
-				showPop("filter", {onChangeKeyword : updateKeyword}, { left : "50%"});
+				showPop({ left:"50%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
 			});
 		})();
 
 		//map local
 		(function(){
 			$(".J_showMapPanel").on("click",function(){
-				showPop("map", {}, {left : "40%"});
+				showPop({left:"40%", content:React.createElement(PopupContent["map"],null)});
+			});
+		})();
+
+		//other button
+		(function(){
+			$(".J_customButton").on("click",function(){
+				var thisEl = $(this),
+					iframeUrl = thisEl.attr("iframeUrl");
+
+				if(!iframeUrl){
+					throw new Error("cannot find the url assigned for this button");
+				}
+
+				var iframeEl = React.createElement("iframe",{src:iframeUrl,frameBorder:0});
+				showPop({left:"35%", content: iframeEl });
 			});
 		})();
 
@@ -261,107 +268,35 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(12);
+
 	function init(React){
+		var MapForm = __webpack_require__(13).init(React),
+			MapList = __webpack_require__(14).init(React);
 
-		var DetailPanel = React.createClass({displayName: "DetailPanel",
-			getInitialState : function(){
-				return {
-					body : {id : -1, content : null},
-					left : "35%"
-				};
+		var MapPanel = React.createClass({displayName: "MapPanel",
+			appendRecord : function(data){
+				var self          = this,
+					listComponent = self.refs.list;
+				
+				listComponent.appendRecord(data);
 			},
-			loadBody:function(){
-				var self = this,
-				    id   = self.props.data.id;
-				if(!id) return;
-
-				ws.reqBody(id,function(content){
-					if(content.id == self.props.data.id){
-						self.setState({
-							body : content
-						});
-					}
-				});
-			},
-			render : function(){
-				var reqHeaderSection = [],
-					resHeaderSection = [],
-					summarySection,
-					detailSection,
-					bodyContent;
-
-				if(this.props.data.reqHeader){
-					for(var key in this.props.data.reqHeader){
-						reqHeaderSection.push(React.createElement("li", {key: "reqHeader_" + key}, React.createElement("strong", null, key), " : ", this.props.data.reqHeader[key]))
-					}
-				}
-
-				summarySection = (
-					React.createElement("div", null, 
-						React.createElement("section", {className: "req"}, 
-							React.createElement("h4", {className: "subTitle"}, "request"), 
-							React.createElement("div", {className: "detail"}, 
-								React.createElement("ul", {className: "uk-list"}, 
-								    React.createElement("li", null, this.props.data.method, " ", React.createElement("span", {title: "{this.props.data.path}"}, this.props.data.path), " HTTP/1.1"), 
-								    reqHeaderSection
-								)
-							)
-						), 
-						
-						React.createElement("section", {className: "reqBody"}, 
-							React.createElement("h4", {className: "subTitle"}, "request body"), 
-							React.createElement("div", {className: "detail"}, 
-								React.createElement("p", null, this.props.data.reqBody)
-							)
-						)
-					)
-				);
-
-				if(this.props.data.statusCode){
-
-					if(this.state.body.id == this.props.data.id){
-						bodyContent = (React.createElement("pre", {className: "resBodyContent"}, this.state.body.body));
-					}else{
-						bodyContent = null;
-						this.loadBody();
-					}
-
-					if(this.props.data.resHeader){
-						for(var key in this.props.data.resHeader){
-							resHeaderSection.push(React.createElement("li", {key: "resHeader_" + key}, React.createElement("strong", null, key), " : ", this.props.data.resHeader[key]))
-						}
-					}
-
-					detailSection = (
-						React.createElement("div", null, 
-							React.createElement("section", {className: "resHeader"}, 
-								React.createElement("h4", {className: "subTitle"}, "response header"), 
-								React.createElement("div", {className: "detail"}, 
-									React.createElement("ul", {className: "uk-list"}, 
-									    React.createElement("li", null, "HTTP/1.1 ", React.createElement("span", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode)), 
-									    resHeaderSection
-									)
-								)
-							), 
-							
-							React.createElement("section", {className: "resBody"}, 
-								React.createElement("h4", {className: "subTitle"}, "response body"), 
-								React.createElement("div", {className: "detail"}, bodyContent)
-							)
-						)
-					);
-				}
-
+			
+			render:function(){
+				var self = this;
 				return (
-					React.createElement("div", null, 
-						summarySection, 
-						detailSection
+					React.createElement("div", {className: "mapWrapper"}, 
+						React.createElement("h4", {className: "subTitle"}, "Current Config"), 
+						React.createElement(MapList, {ref: "list"}), 
+						
+						React.createElement("h4", {className: "subTitle"}, "Add Map Rule"), 
+						React.createElement(MapForm, {onSubmit: self.appendRecord})
 					)
 				);
 			}
 		});
 
-		return DetailPanel;	
+		return MapPanel;
 	}
 
 	module.exports.init = init;
@@ -20158,120 +20093,6 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(12);
-
-	function init(React){
-		var MapForm = __webpack_require__(13).init(React),
-			MapList = __webpack_require__(14).init(React);
-
-		var MapPanel = React.createClass({displayName: "MapPanel",
-			appendRecord : function(data){
-				var self          = this,
-					listComponent = self.refs.list;
-				
-				listComponent.appendRecord(data);
-			},
-			
-			render:function(){
-				var self = this;
-				return (
-					React.createElement("div", {className: "mapWrapper"}, 
-						React.createElement("h4", {className: "subTitle"}, "Current Config"), 
-						React.createElement(MapList, {ref: "list"}), 
-						
-						React.createElement("h4", {className: "subTitle"}, "Add Map Rule"), 
-						React.createElement(MapForm, {onSubmit: self.appendRecord})
-					)
-				);
-			}
-		});
-
-		return MapPanel;
-	}
-
-	module.exports.init = init;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	function init(React){
-		var RecordRow   = __webpack_require__(11).init(React);
-
-		var RecordPanel = React.createClass({displayName: "RecordPanel",
-			getInitialState : function(){
-				return {
-					list  : [],
-					filter: ""
-				};
-			},
-			render : function(){
-				var self          = this,
-					rowCollection = [],
-					filterStr     = self.state.filter,
-					filter        = filterStr;
-
-				//regexp
-				if(filterStr[0]=="/" && filterStr[filterStr.length-1]=="/"){
-					try{
-						filter = new RegExp(filterStr.substr(1,filterStr.length-2));
-					}catch(e){}
-				}
-
-				for(var i = self.state.list.length-1 ; i >=0 ; i--){
-					var item = self.state.list[i];
-					if(item){
-						if(filter && item){
-							try{
-								if(typeof filter == "object" && !filter.test(item.url)){
-									continue;
-								}else if(typeof filter == "string" && item.url.indexOf(filter) < 0){
-									continue;
-								}
-							}catch(e){}
-						}
-
-						if(item._justUpdated){
-							item._justUpdated = false;
-							item._needRender  = true;
-						}else{
-							item._needRender  = false;
-						}
-
-						rowCollection.push(React.createElement(RecordRow, {key: item.id, data: item, onSelect: self.props.onSelect.bind(self,item)}));
-					}
-				}
-
-				return (
-					React.createElement("table", {className: "uk-table uk-table-condensed uk-table-hover"}, 
-						React.createElement("thead", null, 
-							React.createElement("tr", null, 
-								React.createElement("th", {className: "col_id"}, "#"), 
-								React.createElement("th", {className: "col_method"}, "method"), 
-								React.createElement("th", {className: "col_code"}, "code"), 
-								React.createElement("th", {className: "col_host"}, "host"), 
-								React.createElement("th", {className: "col_path"}, "path"), 
-								React.createElement("th", {className: "col_mime"}, "mime type"), 
-								React.createElement("th", {className: "col_time"}, "time")
-							)
-						), 
-						React.createElement("tbody", null, 
-							rowCollection
-						)
-					)
-				);
-			}
-		});
-
-		return RecordPanel;
-	}
-
-	module.exports.init = init;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
 	function init(React){
 
 		function dragableBar(initX,cb){
@@ -20368,6 +20189,192 @@
 	module.exports.init = init;
 
 /***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function init(React){
+		var RecordRow   = __webpack_require__(11).init(React);
+
+		var RecordPanel = React.createClass({displayName: "RecordPanel",
+			getInitialState : function(){
+				return {
+					list  : [],
+					filter: ""
+				};
+			},
+			render : function(){
+				var self          = this,
+					rowCollection = [],
+					filterStr     = self.state.filter,
+					filter        = filterStr;
+
+				//regexp
+				if(filterStr[0]=="/" && filterStr[filterStr.length-1]=="/"){
+					try{
+						filter = new RegExp(filterStr.substr(1,filterStr.length-2));
+					}catch(e){}
+				}
+
+				for(var i = self.state.list.length-1 ; i >=0 ; i--){
+					var item = self.state.list[i];
+					if(item){
+						if(filter && item){
+							try{
+								if(typeof filter == "object" && !filter.test(item.url)){
+									continue;
+								}else if(typeof filter == "string" && item.url.indexOf(filter) < 0){
+									continue;
+								}
+							}catch(e){}
+						}
+
+						if(item._justUpdated){
+							item._justUpdated = false;
+							item._needRender  = true;
+						}else{
+							item._needRender  = false;
+						}
+
+						rowCollection.push(React.createElement(RecordRow, {key: item.id, data: item, onSelect: self.props.onSelect.bind(self,item)}));
+					}
+				}
+
+				return (
+					React.createElement("table", {className: "uk-table uk-table-condensed uk-table-hover"}, 
+						React.createElement("thead", null, 
+							React.createElement("tr", null, 
+								React.createElement("th", {className: "col_id"}, "#"), 
+								React.createElement("th", {className: "col_method"}, "method"), 
+								React.createElement("th", {className: "col_code"}, "code"), 
+								React.createElement("th", {className: "col_host"}, "host"), 
+								React.createElement("th", {className: "col_path"}, "path"), 
+								React.createElement("th", {className: "col_mime"}, "mime type"), 
+								React.createElement("th", {className: "col_time"}, "time")
+							)
+						), 
+						React.createElement("tbody", null, 
+							rowCollection
+						)
+					)
+				);
+			}
+		});
+
+		return RecordPanel;
+	}
+
+	module.exports.init = init;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function init(React){
+
+		var DetailPanel = React.createClass({displayName: "DetailPanel",
+			getInitialState : function(){
+				return {
+					body : {id : -1, content : null},
+					left : "35%"
+				};
+			},
+			loadBody:function(){
+				var self = this,
+				    id   = self.props.data.id;
+				if(!id) return;
+
+				ws.reqBody(id,function(content){
+					if(content.id == self.props.data.id){
+						self.setState({
+							body : content
+						});
+					}
+				});
+			},
+			render : function(){
+				var reqHeaderSection = [],
+					resHeaderSection = [],
+					summarySection,
+					detailSection,
+					bodyContent;
+
+				if(this.props.data.reqHeader){
+					for(var key in this.props.data.reqHeader){
+						reqHeaderSection.push(React.createElement("li", {key: "reqHeader_" + key}, React.createElement("strong", null, key), " : ", this.props.data.reqHeader[key]))
+					}
+				}
+
+				summarySection = (
+					React.createElement("div", null, 
+						React.createElement("section", {className: "req"}, 
+							React.createElement("h4", {className: "subTitle"}, "request"), 
+							React.createElement("div", {className: "detail"}, 
+								React.createElement("ul", {className: "uk-list"}, 
+								    React.createElement("li", null, this.props.data.method, " ", React.createElement("span", {title: "{this.props.data.path}"}, this.props.data.path), " HTTP/1.1"), 
+								    reqHeaderSection
+								)
+							)
+						), 
+						
+						React.createElement("section", {className: "reqBody"}, 
+							React.createElement("h4", {className: "subTitle"}, "request body"), 
+							React.createElement("div", {className: "detail"}, 
+								React.createElement("p", null, this.props.data.reqBody)
+							)
+						)
+					)
+				);
+
+				if(this.props.data.statusCode){
+
+					if(this.state.body.id == this.props.data.id){
+						bodyContent = (React.createElement("pre", {className: "resBodyContent"}, this.state.body.body));
+					}else{
+						bodyContent = null;
+						this.loadBody();
+					}
+
+					if(this.props.data.resHeader){
+						for(var key in this.props.data.resHeader){
+							resHeaderSection.push(React.createElement("li", {key: "resHeader_" + key}, React.createElement("strong", null, key), " : ", this.props.data.resHeader[key]))
+						}
+					}
+
+					detailSection = (
+						React.createElement("div", null, 
+							React.createElement("section", {className: "resHeader"}, 
+								React.createElement("h4", {className: "subTitle"}, "response header"), 
+								React.createElement("div", {className: "detail"}, 
+									React.createElement("ul", {className: "uk-list"}, 
+									    React.createElement("li", null, "HTTP/1.1 ", React.createElement("span", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode)), 
+									    resHeaderSection
+									)
+								)
+							), 
+							
+							React.createElement("section", {className: "resBody"}, 
+								React.createElement("h4", {className: "subTitle"}, "response body"), 
+								React.createElement("div", {className: "detail"}, bodyContent)
+							)
+						)
+					);
+				}
+
+				return (
+					React.createElement("div", null, 
+						summarySection, 
+						detailSection
+					)
+				);
+			}
+		});
+
+		return DetailPanel;	
+	}
+
+	module.exports.init = init;
+
+/***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -20394,19 +20401,14 @@
 				return (
 					React.createElement("div", null, 
 						React.createElement("h4", {className: "subTitle"}, "Log Filter"), 
-
 						React.createElement("div", {className: "filterSection"}, 
 							React.createElement("form", {className: "uk-form"}, 
 								React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
 							)
 						), 
-						React.createElement("dl", {className: "uk-description-list-horizontal"}, 
-						    React.createElement("dt", null, "wrap your RegExp between two slashes"), 
-						    React.createElement("dd", null, 
-							    "e.g. ", React.createElement("br", null), 
-							    "type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
-						    )
-						)
+					    React.createElement("p", null, 
+						    React.createElement("i", {className: "uk-icon-gift"}), "  type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
+					    )
 					)
 				);
 			},

@@ -88,18 +88,10 @@ var showPop;
 		document.getElementById("J_popOuter")
 	);
 
-	showPop = function(tag,props,popArg){
-		var tagEl = PopupContent[tag];
-		if(!tagEl) throw new Error("element not found, please make sure your panel has been pluged");
-
-		var contentEl = React.createElement(tagEl, props);
-		var defaultPopPara = {
-			show    : true,
-			content : contentEl
-		};
-
-		pop.setState(util_merge(defaultPopPara,popArg));
-	}
+	showPop = function(popArg){
+		var stateArg = util_merge({show : true },popArg);
+		pop.setState(stateArg);
+	};
 })();
 
 //init record panel
@@ -137,7 +129,7 @@ var recorder;
 	});
 
 	function showDetail(data){
-		showPop("detail", {data:data}, {left:"35%"});
+		showPop({left:"35%",content:React.createElement(PopupContent["detail"], {data:data})});
 	}
 
 	//init recorder panel
@@ -198,14 +190,29 @@ var recorder;
 		}
 
 		$(".J_showFilter").on("click",function(){
-			showPop("filter", {onChangeKeyword : updateKeyword}, { left : "50%"});
+			showPop({ left:"50%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
 		});
 	})();
 
 	//map local
 	(function(){
 		$(".J_showMapPanel").on("click",function(){
-			showPop("map", {}, {left : "40%"});
+			showPop({left:"40%", content:React.createElement(PopupContent["map"],null)});
+		});
+	})();
+
+	//other button
+	(function(){
+		$(".J_customButton").on("click",function(){
+			var thisEl = $(this),
+				iframeUrl = thisEl.attr("iframeUrl");
+
+			if(!iframeUrl){
+				throw new Error("cannot find the url assigned for this button");
+			}
+
+			var iframeEl = React.createElement("iframe",{src:iframeUrl,frameBorder:0});
+			showPop({left:"35%", content: iframeEl });
 		});
 	})();
 

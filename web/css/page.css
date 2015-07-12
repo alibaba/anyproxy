@@ -205,7 +205,7 @@ body, html {
 	border-left: 1px solid #CCC;
 	top: 0;
 	padding: 10px 20px 10px 10px;
-	overflow-y:scroll;
+	overflow-y:auto;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -223,6 +223,12 @@ body, html {
 .recordDetailOverlay li{
 	white-space: nowrap;
 	word-wrap: break-word;
+}
+
+.recordDetailOverlay iframe{
+	position: relative;
+	height: 92vh;
+	width: 100%; 
 }
 
 .data_id{

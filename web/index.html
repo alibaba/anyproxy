@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>AnyProxy</title>
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
     <link rel="stylesheet" href="/css/page.css" />
 	<link rel="stylesheet" type="text/css" href="/css/jstree_style/style.min.css">
@@ -35,7 +36,15 @@
 
 				<span class="sep">|</span>
 			</span>
-			<span><i class="uk-icon-chain"></i>Rule : {{rule}}</span>
+
+			{@if customMenu.length}
+				{@each customMenu as item}
+					<a href="#"><span class="topBtn J_customButton" iframeUrl="${item.url}"><i class="${item.icon}"></i>${item.name}</span></a>
+				{@/each}
+				<span class="sep">|</span>
+			{@/if}
+
+			<span><i class="uk-icon-chain"></i>Rule : ${rule}</span>
 		</div>
 
 		<div style="clear:both"></div>
@@ -43,8 +52,8 @@
 
 	<div class="mainTableWrapper" id="J_content"></div>
 
-	<input type="hidden" id="socketPort" value="{{wsPort}}" />
-	<input type="hidden" id="baseUrl" value="{{ipAddress}}" />
+	<input type="hidden" id="socketPort" value="${wsPort}" />
+	<input type="hidden" id="baseUrl" value="${ipAddress}" />
 
     <script src="./page.js"></script>
 </body>
