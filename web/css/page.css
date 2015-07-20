@@ -62,8 +62,11 @@ body, html {
 }
 
 .topHead .ctrlWrapper{
-	height: 26px;
-	line-height: 26px;
+	height        : 26px;
+	line-height   : 26px;
+	overflow      : hidden;
+	text-overflow : ellipsis;
+	white-space   : nowrap;
 }
 
 .topHead .ctrlWrapper .sep{
