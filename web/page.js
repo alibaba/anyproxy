@@ -236,14 +236,14 @@
 			}
 
 			$(".J_showFilter").on("click",function(){
-				showPop({ left:"50%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
+				showPop({ left:"60%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
 			});
 		})();
 
 		//map local
 		(function(){
 			$(".J_showMapPanel").on("click",function(){
-				showPop({left:"40%", content:React.createElement(PopupContent["map"],null)});
+				showPop({left:"60%", content:React.createElement(PopupContent["map"],null)});
 			});
 		})();
 
@@ -20407,7 +20407,7 @@
 							)
 						), 
 					    React.createElement("p", null, 
-						    React.createElement("i", {className: "uk-icon-gift"}), "  type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
+						    React.createElement("i", {className: "uk-icon-magic"}), "  type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
 					    )
 					)
 				);

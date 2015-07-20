@@ -27,7 +27,7 @@ function init(React){
 						</form>
 					</div>
 				    <p>
-					    <i className="uk-icon-gift"></i>&nbsp;&nbsp;type <strong>/id=\d{3}/</strong> will give you all the logs containing <strong>id=123</strong>
+					    <i className="uk-icon-magic"></i>&nbsp;&nbsp;type <strong>/id=\d{3}/</strong> will give you all the logs containing <strong>id=123</strong>
 				    </p>
 				</div>
 			);

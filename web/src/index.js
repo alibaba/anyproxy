@@ -190,14 +190,14 @@ var recorder;
 		}
 
 		$(".J_showFilter").on("click",function(){
-			showPop({ left:"50%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
+			showPop({ left:"60%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
 		});
 	})();
 
 	//map local
 	(function(){
 		$(".J_showMapPanel").on("click",function(){
-			showPop({left:"40%", content:React.createElement(PopupContent["map"],null)});
+			showPop({left:"60%", content:React.createElement(PopupContent["map"],null)});
 		});
 	})();
 

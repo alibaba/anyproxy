@@ -27,7 +27,7 @@ function init(React){
 						)
 					), 
 				    React.createElement("p", null, 
-					    React.createElement("i", {className: "uk-icon-gift"}), "  type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
+					    React.createElement("i", {className: "uk-icon-magic"}), "  type ", React.createElement("strong", null, "/id=\\d", 3, "/"), " will give you all the logs containing ", React.createElement("strong", null, "id=123")
 				    )
 				)
 			);
