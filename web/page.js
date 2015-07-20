@@ -190,7 +190,7 @@
 	(function(){
 
 		//detect whether to show the filter and map btn
-		$.get("/filetree?root=/",function(){
+		$.get("/filetree",function(){
 			$(".J_filterSection").show();
 		});
 
