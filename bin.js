@@ -6,6 +6,7 @@ var program     = require('commander'),
     path        = require("path"),
     npm         = require("npm"),
     packageInfo = require("./package.json"),
+    util        = require("./lib/util"),
     logUtil     = require("./lib/log");
 
 program
@@ -65,6 +66,20 @@ if(program.clear){
         }catch(e){
             logUtil.printLog("failed to load rule file :" + e.toString(), logUtil.T_ERR);
         }
+    }else{
+        //a feature for donghua.yan 
+        //read rule file from a specific position
+        (function(){
+            try{
+                var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
+                if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
+                    ruleModule = require(path.join(anyproxyHome,"rule_default"));
+                }
+                if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
+                    ruleModule = require(path.join(process.cwd(),'rule'));
+                }
+            }catch(e){}
+        })();
     }
 
     new proxy.proxyServer({

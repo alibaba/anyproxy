@@ -27,7 +27,6 @@ var http = require('http'),
     iconv           = require('iconv-lite'),
     Buffer          = require('buffer').Buffer;
 
-
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
     DEFAULT_PORT           = 8001,
@@ -38,20 +37,6 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
 var default_rule = require('./lib/rule_default');
-
-//may be unreliable in windows
-try{
-    var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
-    if(!fs.existsSync(anyproxyHome)){
-        fs.mkdirSync(anyproxyHome);
-    }
-    if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
-        default_rule = require(path.join(anyproxyHome,"rule_default"));
-    }
-    if(fs.existsSync(path.join(process.cwd(),'rule.js'))){
-        default_rule = require(path.join(process.cwd(),'rule'));
-    }
-}catch(e){}
 
 //option
 //option.type     : 'http'(default) or 'https'
@@ -169,7 +154,6 @@ function proxyServer(option){
             //server status manager
             function(callback){
 
-                //kill web server when father process exits
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
                     process.exit();
@@ -211,3 +195,4 @@ function proxyServer(option){
 module.exports.proxyServer        = proxyServer;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
+module.exports.setRules           = requestHandler.setRules;
