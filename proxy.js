@@ -160,7 +160,7 @@ function proxyServer(option){
                 });
 
                 process.on("uncaughtException",function(err){
-                    logUtil.printLog('Caught exception: ' + err, logUtil.T_ERR);
+                    logUtil.printLog('Caught exception: ' + (err.stack || err), logUtil.T_ERR);
                     process.exit();
                 });
 
