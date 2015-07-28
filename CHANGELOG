@@ -1,3 +1,7 @@
+28 July: AnyProxy 3.7.1:
+
+    * fix a bug about deflate compression
+
 20 July: AnyProxy 3.7.0:
 
     * add a map-local panel on web ui, now you can easily map some request to your local files

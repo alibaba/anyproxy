@@ -1,6 +1,6 @@
 {
   "name": "anyproxy",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.",
   "main": "proxy.js",
   "bin": {
