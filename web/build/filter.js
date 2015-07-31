@@ -22,7 +22,7 @@ function init(React){
 				React.createElement("div", null, 
 					React.createElement("h4", {className: "subTitle"}, "Log Filter"), 
 					React.createElement("div", {className: "filterSection"}, 
-						React.createElement("form", {className: "uk-form"}, 
+						React.createElement("div", {className: "uk-form"}, 
 							React.createElement("input", {className: "uk-form-large", ref: "keywordInput", onChange: self.dealChange, type: "text", placeholder: "keywords or /^regExp$/", width: "300"})
 						)
 					), 

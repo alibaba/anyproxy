@@ -1,3 +1,7 @@
+31 July: AnyProxy 3.7.2:
+
+    * bugfix for issue #29
+
 28 July: AnyProxy 3.7.1:
 
     * fix a bug about deflate compression

@@ -287,7 +287,7 @@ body, html {
 	margin: 50px auto 0;
 }
 
-.filterSection form{
+.filterSection .uk-form{
 	text-align: center;
 }
 
@@ -305,7 +305,7 @@ body, html {
 	background-size: 100% 100%;
 }
 
-.mapWrapper form{
+.mapWrapper .form{
 	margin-top: 20px;
 }
 

@@ -22,9 +22,9 @@ function init(React){
 				<div>
 					<h4 className="subTitle">Log Filter</h4>
 					<div className="filterSection">
-						<form className="uk-form">
+						<div className="uk-form">
 							<input className="uk-form-large" ref="keywordInput" onChange={self.dealChange} type="text" placeholder="keywords or /^regExp$/" width="300"/>
-						</form>
+						</div>
 					</div>
 				    <p>
 					    <i className="uk-icon-magic"></i>&nbsp;&nbsp;type <strong>/id=\d{3}/</strong> will give you all the logs containing <strong>id=123</strong>

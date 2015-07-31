@@ -40,8 +40,8 @@ function util_merge(left,right){
 			onOpen : function(){
 				eventCenter.dispatchEvent("wsOpen");
 			},
-			onGetUpdate : function(content){
-				eventCenter.dispatchEvent("wsGetUpdate",content);
+			onGetUpdate : function(record){
+				eventCenter.dispatchEvent("wsGetUpdate",record);
 			},
 			onError     : function(e){
 				eventCenter.dispatchEvent("wsEnd");
