@@ -77,31 +77,9 @@
 
 			<div class="sampleContent">
 				<h4 class="subtitle">规则文件(rule)样例</h4>
-				<div class="item">
-					<h5 class="itemTitle">去除请求头的if-modified-since字段</h5>
-					<pre>
-<code class="javascript">
-//remove cache related header
-//file : rule_remove_cache_header.js
-//rule : anyproxy --rule rule_remove_cache_header.js
-module.exports = {
-    replaceRequestOption : function(req,option){
-        var newOption = option;
-        delete newOption.headers['if-modified-since'];
-
-        return newOption;
-    }
-};
-</code>
-					</pre>
-					<span class="figure">
-						<img src="https://t.alipayobjects.com/images/rmsweb/T1ecFhXjxcXXXXXXXX.png" width="350"/>
-					</span>
-					<hr />
-				</div>
 
 				<div class="item">
-					<h5 class="itemTitle">在HTML响应末尾加上一句hello world</h5>
+					<h5 class="itemTitle">在HTML响应末尾加上"hello world"</h5>
 					<pre>
 <code class="javascript">
 //append "hello world" to all web pages
@@ -121,6 +99,28 @@ module.exports = {
 					</pre>
 					<span class="figure">
 						<img src="https://t.alipayobjects.com/images/rmsweb/T1LcphXf0eXXXXXXXX.png" width="350"/>
+					</span>
+					<hr />
+				</div>				
+				<div class="item">
+					<h5 class="itemTitle">去除请求头的if-modified-since字段</h5>
+					<pre>
+<code class="javascript">
+//remove cache related header
+//file : rule_remove_cache_header.js
+//run  : anyproxy --rule rule_remove_cache_header.js
+module.exports = {
+    replaceRequestOption : function(req,option){
+        var newOption = option;
+        delete newOption.headers['if-modified-since'];
+
+        return newOption;
+    }
+};
+</code>
+					</pre>
+					<span class="figure">
+						<img src="https://t.alipayobjects.com/images/rmsweb/T1ecFhXjxcXXXXXXXX.png" width="350"/>
 					</span>
 					<hr />
 				</div>
