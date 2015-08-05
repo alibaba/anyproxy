@@ -30,14 +30,17 @@ body {
 .wrapper a {
   font-size: 16px;
   color: #00aaee;
-  line-height: 40px;
 }
 .wrapper h4.subTitle {
   font-size: 30px;
   margin: 0;
-  padding: 30px 0;
+  padding: 50px 0 10px 0;
   width: 100%;
   text-align: center;
+  color: #5a5a5a;
+}
+.wrapper h4.subTitle.white {
+  color: #FFF;
 }
 .wrapper code {
   display: inline-block;
@@ -64,10 +67,12 @@ body {
   background: #326eeb;
   color: #f9f9f9;
 }
+.wrapper > div {
+  width: 100%;
+  min-width: 890px;
+}
 .brief {
   height: 300px;
-  width: 100%;
-  min-width: 1200px;
   text-align: center;
   padding: 100px 0;
   position: relative;
@@ -75,51 +80,53 @@ body {
 }
 .brief .slogan {
   font-size: 16px;
-  color: #636373;
+  color: #5a5a5a;
 }
 .feature {
   background: #dedede;
-  width: 100%;
-  min-width: 1200px;
 }
 .feature .featureContent {
   width: 1200px;
   margin: 0 auto;
 }
 .feature .featureContent .item {
+  padding: 30px 0 20px;
   width: 280px;
-  height: 190px;
   /*border: 1px solid #AAA;*/
   margin: 0 10px;
   float: left;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   font-size: 30px;
+  text-align: center;
 }
 .feature .featureContent .iconWrapper {
-  float: left;
   display: inline-block;
-  height: 190px;
-  line-height: 190px;
+  line-height: 40px;
   width: 70px;
   text-align: center;
   font-size: 40px;
-  color: #636373;
+  color: #5a5a5a;
+}
+.feature .featureContent .iconWrapper .bigger {
+  font-size: 44px;
 }
 .feature .featureContent h4 {
-  color: #636373;
-  margin: 60px 0 15px 0;
+  color: #5a5a5a;
+  margin: 12px auto 8px;
   font-size: 20px;
 }
 .feature .featureContent h5 {
   color: #777777;
   margin: 0;
+}
+.feature .featureContent h5,
+.feature .featureContent a {
   font-size: 14px;
+  line-height: 20px;
 }
 .quickstart {
   background: #f9f9f9;
-  width: 100%;
-  min-width: 1200px;
 }
 .quickstart .quickstartContent {
   position: relative;
@@ -136,29 +143,31 @@ body {
   padding: 0;
 }
 .listSection .listContent {
-  width: 1200px;
+  width: 890px;
   margin: 0 auto;
 }
 .listSection ul {
-  margin: 0 200px;
+  margin: 0 auto;
 }
 .listSection li {
-  color: #636373;
+  color: #5a5a5a;
   font-size: 16px;
   line-height: 40px;
 }
 .sample {
   background: #f9f9f9;
-  width: 100%;
-  min-width: 1200px;
 }
 .sample .sampleContent {
-  width: 1200px;
+  width: 890px;
   margin: 0 auto;
 }
 .sample .item {
-  width: 1000px;
-  margin: 20px auto 0;
+  margin: 10px;
+}
+.sample .itemTitle {
+  font-size: 16px;
+  margin: 0px 10px;
+  color: #5a5a5a;
 }
 .sample .figure {
   vertical-align: top;
@@ -169,10 +178,17 @@ body {
   vertical-align: top;
 }
 .sample code {
-  width: 530px;
+  width: 495px;
 }
-.sample .readmore {
-  /*text-align: center;*/
+.sample hr {
+  border: none;
+  border-top: 1px solid #777777;
+  width: 80%;
+  margin: 0 auto;
+  padding: 15px 0;
+}
+.sample .readmoreBtn {
+  margin-left: 10px;
   padding-bottom: 20px;
 }
 .readMore {
@@ -180,18 +196,15 @@ body {
   padding-bottom: 50px;
 }
 .learnMore {
-  width: 100%;
-  min-width: 1200px;
-  height: 300px;
   background: #326eeb;
   text-align: center;
   position: relative;
+  padding: 120px 0;
+}
+.learnMore h4.subtitle {
+  padding: 0;
+  margin-bottom: 30px;
 }
 .learnMore .btnWrapper {
-  width: 100%;
   text-align: center;
-  height: 60px;
-  margin-top: -30px;
-  position: absolute;
-  top: 50%;
 }

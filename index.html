@@ -34,11 +34,11 @@
 						<i class="iconfont">&#xe601;</i>
 					</span>
 					<h4>支持Https</h4>
-					<h5>用AnyProxy自制根证书，明文解析Https请求数据 <a href="https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B" target="_blank">如何配置&gt;&gt;</a></h5>
+					<h5>明文解析Https请求数据 <a href="https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B" target="_blank"><br>如何配置&gt;&gt;</a></h5>
 				</div>
 				<div class="item">
 					<span class="iconWrapper">
-						<i class="iconfont">&#xe600;</i>
+						<i class="iconfont bigger">&#xe600;</i>
 					</span>
 					<h4>Web界面</h4>
 					<h5>多终端共享，可视化观察每个请求</h5>
@@ -48,7 +48,7 @@
 						<i class="iconfont">&#xe604;</i>
 					</span>
 					<h4>规则逻辑（Rule）</h4>
-					<h5>随心所欲编写处理规则，定制我的专属调试工具</h5>
+					<h5>编写个性化处理规则，定制专属调试工具</h5>
 				</div>
 				<div style="clear:both"></div>
 			</div>
@@ -78,50 +78,55 @@
 			<div class="sampleContent">
 				<h4 class="subtitle">规则文件(rule)样例</h4>
 				<div class="item">
+					<h5 class="itemTitle">去除请求头的if-modified-since字段</h5>
 					<pre>
 <code class="javascript">
 //remove cache related header
 //file : rule_remove_cache_header.js
 //rule : anyproxy --rule rule_remove_cache_header.js
 module.exports = {
-	replaceRequestOption : function(req,option){
-	    var newOption = option;
-	    delete newOption.headers['if-modified-since'];
+    replaceRequestOption : function(req,option){
+        var newOption = option;
+        delete newOption.headers['if-modified-since'];
 
-	    return newOption;
-	}
+        return newOption;
+    }
 };
 </code>
 					</pre>
 					<span class="figure">
-						<img src="https://t.alipayobjects.com/images/rmsweb/T1ecFhXjxcXXXXXXXX.png" width="360"/>
+						<img src="https://t.alipayobjects.com/images/rmsweb/T1ecFhXjxcXXXXXXXX.png" width="350"/>
 					</span>
+					<hr />
 				</div>
 
 				<div class="item">
+					<h5 class="itemTitle">在HTML响应末尾加上一句hello world</h5>
 					<pre>
 <code class="javascript">
 //append "hello world" to all web pages
 //file : rule_replace_response_data.js
 //run  : anyproxy --rule rule_replace_response_data.js
 module.exports = {
-    replaceServerResDataAsync: function(req,res,serverRes,callback){
+    replaceServerResDataAsync: function(req,res,serverRes,cb){
 
         if(/html/i.test(res.headers['content-type'])){
             var newDataStr = serverRes.toString();
             newDataStr += "hello world!";
-            callback(newDataStr);
+            cb(newDataStr);
         }
     }
 };
 </code>
 					</pre>
 					<span class="figure">
-						<img src="https://t.alipayobjects.com/images/rmsweb/T1LcphXf0eXXXXXXXX.png" width="360"/>
+						<img src="https://t.alipayobjects.com/images/rmsweb/T1LcphXf0eXXXXXXXX.png" width="350"/>
 					</span>
+					<hr />
 				</div>
 
 				<div class="item">
+					<h5 class="itemTitle">为某个请求指定目标IP地址</h5>
 					<pre>
 <code class="javascript">
 //assign a specific IP adress for some request
@@ -141,11 +146,13 @@ module.exports = {
 </code>
 					</pre>
 					<span class="figure">
-						<img src="https://t.alipayobjects.com/images/rmsweb/T1hsxhXeddXXXXXXXX.png" width="360"/>
+						<img src="https://t.alipayobjects.com/images/rmsweb/T1hsxhXeddXXXXXXXX.png" width="350"/>
 					</span>
+					<hr />
 				</div>
 
 				<div class="item">
+					<h5 class="itemTitle">把所有图片响应替换成本地图片</h5>
 					<pre>
 <code class="javascript">
 //replace all the images with local one
@@ -173,13 +180,14 @@ module.exports = {
 </code>
 					</pre>
 					<span class="figure">
-						<img src="https://t.alipayobjects.com/images/rmsweb/T1Zr4hXeXhXXXXXXXX.png" width="360"/>
+						<img src="https://t.alipayobjects.com/images/rmsweb/T1Zr4hXeXhXXXXXXXX.png" width="350"/>
 					</span>
 				</div>
 
-				<div class="item readmore">
-					<a href="https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy#%E5%BC%80%E6%94%BE%E5%BC%8F%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E8%AE%A1" target="_blank">&gt;&gt;&nbsp;规则文件（Rule）API</a>
+				<div class="readmoreBtn">
+					<a href="https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy#%E5%BC%80%E6%94%BE%E5%BC%8F%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E8%AE%A1" target="_blank">&gt;&gt;&nbsp;阅读：规则文件（Rule）API</a>
 				</div>
+
 			</div>
 		</div>
 
@@ -189,7 +197,7 @@ module.exports = {
 				<ul>
 					<li>Map Local，Log Filter等常规功能</li>
 					<li><a href="https://github.com/alibaba/anyproxy#throttling">低网速网速模拟</a>，调试应用在2G/3G下的表现</li>
-					<li><a href="https://github.com/alibaba/anyproxy#work-as-a-module-for-nodejs" target="_blank">把AnyProxy作为npm模块做二次开发</a></li>
+					<li><a href="https://github.com/alibaba/anyproxy#work-as-a-module-for-nodejs" target="_blank">把AnyProxy作为npm模块</a>，基于它做二次开发</li>
 				</ul>
 				<h4 class="subtitle">相关阅读</h4>
 				<ul>
@@ -201,7 +209,8 @@ module.exports = {
 
 		<div class="learnMore listSection">
 			<div class="btnWrapper">
-				<a class="actionBtn actionBtnWhite" href="https://github.com/alibaba/anyproxy" target="_blank">Read More ：AnyProxy@Github</a>
+				<h4 class="subtitle white">Read More</h4>
+				<a class="actionBtn actionBtnWhite" href="https://github.com/alibaba/anyproxy" target="_blank">https://github.com/alibaba/anyproxy</a>
 			</div>
 		</div>
 

@@ -2,18 +2,19 @@
 @dark : #326EEB;
 @gray : #F9F9F9;
 @darkGray : #DEDEDE;
-@textDark : #636373;
+@textDark : #5A5A5A;
 @textLight: #777;
 
 @wideContent : 1200px;
+@normalContent : 890px;
 
 @font-face {
-  font-family: 'iconfont';
-  src: url('//at.alicdn.com/t/font_1438330832_106274.eot'); /* IE9*/
-  src: url('//at.alicdn.com/t/font_1438330832_106274.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('//at.alicdn.com/t/font_1438330832_106274.woff') format('woff'), /* chrome、firefox */
-  url('//at.alicdn.com/t/font_1438330832_106274.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-  url('//at.alicdn.com/t/font_1438330832_106274.svg#iconfont') format('svg'); /* iOS 4.1- */
+	font-family: 'iconfont';
+	src: url('//at.alicdn.com/t/font_1438330832_106274.eot'); /* IE9*/
+	src: url('//at.alicdn.com/t/font_1438330832_106274.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	url('//at.alicdn.com/t/font_1438330832_106274.woff') format('woff'), /* chrome、firefox */
+	url('//at.alicdn.com/t/font_1438330832_106274.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	url('//at.alicdn.com/t/font_1438330832_106274.svg#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 i.iconfont{
@@ -45,15 +46,19 @@ body{
 	a{
 		font-size: 16px;
 		color: @main;
-		line-height: 40px;
 	}
 
 	h4.subTitle{
 		font-size: 30px;
 		margin: 0;
-		padding: 30px 0;
+		padding: 50px 0 10px 0;
 		width: 100%;
 		text-align: center;
+		color: @textDark;
+	}
+
+	h4.subTitle.white{
+		color: #FFF;
 	}
 
 	code{
@@ -88,10 +93,13 @@ body{
 	}
 }
 
+.wrapper>div{
+	width: 100%;
+	min-width: @normalContent;
+}
+
 .brief{
 	height: 300px;
-	width: 100%;
-	min-width: @wideContent;
 	text-align: center;
 	padding: 100px 0;
 	position: relative;
@@ -105,54 +113,56 @@ body{
 
 .feature{
 	background: @darkGray; 
-	width: 100%;
-	min-width: @wideContent;
 
 	.featureContent{
 		width: @wideContent;
 		margin: 0 auto;
 
-		@itemheight : 190px;
 		.item{
+			padding: 30px 0 20px;
 			width: 280px;
-			height: @itemheight;
 			/*border: 1px solid #AAA;*/
 			margin: 0 10px;
 			float: left;
 			box-sizing:border-box;
 			-webkit-box-sizing:border-box;
 			font-size: 30px;
+			text-align: center;
 		}
 
 		.iconWrapper{
-			float: left;
 			display: inline-block;
-			height: @itemheight;
-			line-height: @itemheight;
+			line-height: 40px;
 			width: 70px;
 			text-align: center;
 			font-size: 40px;
 			color: @textDark;
 		}
+		.iconWrapper .bigger{
+			font-size: 44px;
+		}
 
 		h4{
 			color: @textDark;
-			margin: 60px 0 15px 0;
+			margin: 12px auto 8px;
 			font-size: 20px;
 		}
 
 		h5{
 			color: @textLight;
 			margin: 0;
+		}
+
+		h5,
+		a{
 			font-size: 14px;
+			line-height: 20px;
 		}
 	}
 }
 
 .quickstart{
 	background: @gray;
-	width: 100%;
-	min-width: @wideContent;
 
 	.quickstartContent{
 		position: relative;
@@ -174,13 +184,12 @@ body{
 
 .listSection{
 	.listContent{
-		width: @wideContent;
+		width: @normalContent;
 		margin: 0 auto;
 	}
 
-
 	ul{
-		margin: 0 200px;
+		margin: 0 auto;
 	}
 
 	li{
@@ -192,18 +201,20 @@ body{
 
 .sample{
 	background: @gray;
-	width: 100%;
-	min-width: @wideContent;
-
-
 	.sampleContent{
-		width: @wideContent;
+		width: @normalContent;
 		margin: 0 auto;
 	}
 
+
 	.item{
-		width: 1000px;
-		margin: 20px auto 0;
+		margin: 10px;
+	}
+
+	.itemTitle{
+		font-size: 16px;
+		margin: 0px 10px;
+		color: @textDark;
 	}
 
 	.figure{
@@ -217,11 +228,19 @@ body{
 	}
 
 	code{
-		width: 530px;
+		width: 495px;
 	}
 
-	.readmore{
-		/*text-align: center;*/
+	hr{
+		border: none;
+		border-top: 1px solid @textLight;
+		width: 80%;
+		margin: 0 auto;
+		padding: 15px 0;
+	}
+
+	.readmoreBtn{
+		margin-left: 10px;
 		padding-bottom: 20px;
 	}
 }
@@ -232,20 +251,18 @@ body{
 }
 
 .learnMore{
-	width: 100%;
-	min-width: @wideContent;
-	height: 300px;
 	background: @dark;
 	text-align: center;
 	position: relative;
+	padding: 120px 0;
+
+	h4.subtitle{
+		padding: 0;
+		margin-bottom: 30px;
+	}
 
 	.btnWrapper{
-		width: 100%;
 		text-align: center;
-		height: 60px;
-		margin-top: -30px;
-		position: absolute;
-		top:50%;
 	}
 }
 
