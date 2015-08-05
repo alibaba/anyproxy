@@ -1,0 +1,243 @@
+@main : #00AAEE;
+@dark : #326EEB;
+@gray : #F9F9F9;
+@darkGray : #DEDEDE;
+@textDark : #636373;
+@textLight: #777;
+
+@wideContent : 1200px;
+
+@font-face {
+  font-family: 'iconfont';
+  src: url('//at.alicdn.com/t/font_1438330832_106274.eot'); /* IE9*/
+  src: url('//at.alicdn.com/t/font_1438330832_106274.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//at.alicdn.com/t/font_1438330832_106274.woff') format('woff'), /* chrome、firefox */
+  url('//at.alicdn.com/t/font_1438330832_106274.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/font_1438330832_106274.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+i.iconfont{
+	font-family: "iconfont";
+	font-style: normal;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.wrapper{
+	.cornerBtn{
+		position : absolute;
+		right    : 10px;
+		top      : 10px;
+	}
+
+	a,
+	a:hover{
+		text-decoration: none;
+	}	
+
+	a{
+		font-size: 16px;
+		color: @main;
+		line-height: 40px;
+	}
+
+	h4.subTitle{
+		font-size: 30px;
+		margin: 0;
+		padding: 30px 0;
+		width: 100%;
+		text-align: center;
+	}
+
+	code{
+		display: inline-block;
+	}
+
+	.actionBtn.actionBtnWhite{
+		color: #FFF;
+		border: 1px solid #FFF;
+
+	}
+
+	.actionBtn.actionBtnWhite:hover{
+		background: @gray;
+		color: @dark;
+	}
+
+	.actionBtn{
+		color: @dark;
+		border: 1px solid @dark;
+		line-height: 30px;
+		font-size: 30px;
+		padding: 20px 45px;
+		border-radius: 30px;
+		display: inline-block;
+		transition:0.3s;
+	}
+
+	.actionBtn:hover{
+		background: @dark;
+		color: @gray;
+	}
+}
+
+.brief{
+	height: 300px;
+	width: 100%;
+	text-align: center;
+	padding: 100px 0;
+	position: relative;
+
+	.slogan{
+		font-size: 16px;
+		color: @textDark;
+	}
+}
+
+.feature{
+	background: @darkGray; 
+	width: 100%;
+
+	.featureContent{
+		width: @wideContent;
+		margin: 0 auto;
+
+		@itemheight : 190px;
+		.item{
+			width: 280px;
+			height: @itemheight;
+			/*border: 1px solid #AAA;*/
+			margin: 0 10px;
+			float: left;
+			box-sizing:border-box;
+			-webkit-box-sizing:border-box;
+			font-size: 30px;
+		}
+
+		.iconWrapper{
+			float: left;
+			display: inline-block;
+			height: @itemheight;
+			line-height: @itemheight;
+			width: 70px;
+			text-align: center;
+			font-size: 40px;
+			color: @textDark;
+		}
+
+		h4{
+			color: @textDark;
+			margin: 60px 0 15px 0;
+			font-size: 20px;
+		}
+
+		h5{
+			color: @textLight;
+			margin: 0;
+			font-size: 14px;
+		}
+	}
+}
+
+.quickstart{
+	background: @gray;
+	width: 100%;
+
+	.quickstartContent{
+		position: relative;
+	}
+
+	.screenshot{
+		position: absolute;
+		right: 0;
+		bottom: 0;
+	}
+
+	code.simpleBash{
+	    font-family: monospace;
+	    font-weight: bold;
+	    color: #333;
+	    padding: 0;
+	}
+}
+
+.listSection{
+	.listContent{
+		width: @wideContent;
+		margin: 0 auto;
+	}
+
+
+	ul{
+		margin: 0 200px;
+	}
+
+	li{
+		color: @textDark;
+		font-size: 16px;
+		line-height: 40px;
+	}
+}
+
+.sample{
+	background: @gray;
+
+
+	.sampleContent{
+		width: @wideContent;
+		margin: 0 auto;
+	}
+
+	.item{
+		width: 1000px;
+		margin: 20px auto 0;
+	}
+
+	.figure{
+		vertical-align: top;
+	}
+
+	pre{
+		margin: 0;
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	code{
+		width: 530px;
+	}
+
+	.readmore{
+		/*text-align: center;*/
+		padding-bottom: 20px;
+	}
+}
+
+.readMore{
+	background: @gray;
+	padding-bottom: 50px;
+}
+
+.learnMore{
+	width: 100%;
+	height: 300px;
+	background: @dark;
+	text-align: center;
+	position: relative;
+
+	.btnWrapper{
+		width: 100%;
+		text-align: center;
+		height: 60px;
+		margin-top: -30px;
+		position: absolute;
+		top:50%;
+	}
+}
+
