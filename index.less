@@ -34,6 +34,7 @@ body{
 		position : absolute;
 		right    : 10px;
 		top      : 10px;
+		z-index  : 1; 
 	}
 
 	a,
@@ -90,6 +91,7 @@ body{
 .brief{
 	height: 300px;
 	width: 100%;
+	min-width: @wideContent;
 	text-align: center;
 	padding: 100px 0;
 	position: relative;
@@ -104,6 +106,7 @@ body{
 .feature{
 	background: @darkGray; 
 	width: 100%;
+	min-width: @wideContent;
 
 	.featureContent{
 		width: @wideContent;
@@ -149,6 +152,7 @@ body{
 .quickstart{
 	background: @gray;
 	width: 100%;
+	min-width: @wideContent;
 
 	.quickstartContent{
 		position: relative;
@@ -188,6 +192,8 @@ body{
 
 .sample{
 	background: @gray;
+	width: 100%;
+	min-width: @wideContent;
 
 
 	.sampleContent{
@@ -227,6 +233,7 @@ body{
 
 .learnMore{
 	width: 100%;
+	min-width: @wideContent;
 	height: 300px;
 	background: @dark;
 	text-align: center;

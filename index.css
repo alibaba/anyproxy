@@ -21,6 +21,7 @@ body {
   position: absolute;
   right: 10px;
   top: 10px;
+  z-index: 1;
 }
 .wrapper a,
 .wrapper a:hover {
@@ -66,9 +67,11 @@ body {
 .brief {
   height: 300px;
   width: 100%;
+  min-width: 1200px;
   text-align: center;
   padding: 100px 0;
   position: relative;
+  margin-top: 20px;
 }
 .brief .slogan {
   font-size: 16px;
@@ -77,6 +80,7 @@ body {
 .feature {
   background: #dedede;
   width: 100%;
+  min-width: 1200px;
 }
 .feature .featureContent {
   width: 1200px;
@@ -115,6 +119,7 @@ body {
 .quickstart {
   background: #f9f9f9;
   width: 100%;
+  min-width: 1200px;
 }
 .quickstart .quickstartContent {
   position: relative;
@@ -144,6 +149,8 @@ body {
 }
 .sample {
   background: #f9f9f9;
+  width: 100%;
+  min-width: 1200px;
 }
 .sample .sampleContent {
   width: 1200px;
@@ -174,6 +181,7 @@ body {
 }
 .learnMore {
   width: 100%;
+  min-width: 1200px;
   height: 300px;
   background: #326eeb;
   text-align: center;
