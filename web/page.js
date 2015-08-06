@@ -160,6 +160,15 @@
 			}
 		}
 
+		function initRecordSet(){
+			$.getJSON("/lastestLog",function(res){
+				if(typeof res == "object"){
+					recordSet = res;
+					eventCenter.dispatchEvent("recordSetUpdated");
+				}
+			});
+		}
+
 		eventCenter.addListener("wsGetUpdate",updateRecordSet);
 
 		eventCenter.addListener('recordSetUpdated',function(){
@@ -183,6 +192,8 @@
 			React.createElement(RecordPanel, {onSelect: showDetail}),
 			document.getElementById("J_content")
 		);
+
+		initRecordSet();
 	})();
 
 
