@@ -8,6 +8,9 @@
 @wideContent : 1200px;
 @normalContent : 890px;
 
+@wideContentMobile : 100%;
+@normalContentMobile : 100%;
+
 @font-face {
 	font-family: 'iconfont';
 	src: url('//at.alicdn.com/t/font_1438330832_106274.eot'); /* IE9*/
@@ -85,6 +88,14 @@ body{
 		border-radius: 30px;
 		display: inline-block;
 		transition:0.3s;
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			font-size:20px;
+			padding: 10px 20px;
+		}
 	}
 
 	.actionBtn:hover{
@@ -96,7 +107,16 @@ body{
 .wrapper>div{
 	width: 100%;
 	min-width: @normalContent;
+
+	@media only screen 
+	and (min-device-width: 320px) 
+	and (max-device-width: 480px)
+	and (-webkit-min-device-pixel-ratio: 2){
+		min-width: @normalContentMobile;
+	}
 }
+
+
 
 .brief{
 	height: 300px;
@@ -108,6 +128,7 @@ body{
 	.slogan{
 		font-size: 16px;
 		color: @textDark;
+		padding: 0 20px;
 	}
 }
 
@@ -115,6 +136,13 @@ body{
 	background: @darkGray; 
 
 	.featureContent{
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			width: @wideContentMobile;
+		}
+
 		width: @wideContent;
 		margin: 0 auto;
 
@@ -158,6 +186,34 @@ body{
 			font-size: 14px;
 			line-height: 20px;
 		}
+
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			.item{
+				padding: 20px 0;
+				float     :none;
+				margin    : 0 auto;
+				font-size : 24px;
+			}
+
+			.iconWrapper{
+				font-size: 25px;
+				line-height: 25px;
+			}	
+
+			.iconWrapper .bigger{
+				font-size: 30px;
+			}
+
+			h4{
+				font-size: 16px;
+				margin: 4px;
+			}
+
+		}
 	}
 }
 
@@ -172,6 +228,13 @@ body{
 		position: absolute;
 		right: 0;
 		bottom: 0;
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			display : none;
+		}
 	}
 
 	code.simpleBash{
@@ -184,12 +247,27 @@ body{
 
 .listSection{
 	.listContent{
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			width: @normalContentMobile;
+		}
+
 		width: @normalContent;
 		margin: 0 auto;
 	}
 
 	ul{
 		margin: 0 auto;
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			padding: 0 20px 0 30px;
+		}
 	}
 
 	li{
@@ -202,6 +280,14 @@ body{
 .sample{
 	background: @gray;
 	.sampleContent{
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			width: @normalContentMobile;
+		}
+
 		width: @normalContent;
 		margin: 0 auto;
 	}
@@ -215,6 +301,13 @@ body{
 		font-size: 16px;
 		margin: 0px 10px;
 		color: @textDark;
+
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			margin :0;
+		}
 	}
 
 	.figure{
@@ -225,10 +318,25 @@ body{
 		margin: 0;
 		display: inline-block;
 		vertical-align: top;
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			width: 100%;
+		}
 	}
 
 	code{
 		width: 495px;
+		@media only screen 
+		and (min-device-width: 320px) 
+		and (max-device-width: 480px)
+		and (-webkit-min-device-pixel-ratio: 2){
+			width:100%;
+			margin: 0 auto;
+		    word-wrap: break-word;
+		    padding: 0;
+		}
 	}
 
 	hr{
@@ -255,6 +363,12 @@ body{
 	text-align: center;
 	position: relative;
 	padding: 120px 0;
+	@media only screen 
+	and (min-device-width: 320px) 
+	and (max-device-width: 480px)
+	and (-webkit-min-device-pixel-ratio: 2){
+		padding: 70px 0;
+	}
 
 	h4.subtitle{
 		padding: 0;
