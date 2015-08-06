@@ -22,7 +22,7 @@ program
     .option('-i, --intercept', 'intercept(decrypt) https requests when root CA exists')
     .option('-s, --silent', 'do not print anything into terminal')
     .option('-c, --clear', 'clear all the tmp certificates')
-    .option('install', 'install node modules')
+    .option('install', '[alpha] install node modules')
     .parse(process.argv);
 
 if(program.clear){
@@ -71,7 +71,7 @@ if(program.clear){
         //read rule file from a specific position
         (function(){
             try{
-                var anyproxyHome = path.join(util.getUserHome(),"/.anyproxy/");
+                var anyproxyHome = path.join(util.getAnyProxyHome());
                 if(fs.existsSync(path.join(anyproxyHome,"rule_default.js"))){
                     ruleModule = require(path.join(anyproxyHome,"rule_default"));
                 }
