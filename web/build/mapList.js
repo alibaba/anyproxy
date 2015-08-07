@@ -1,3 +1,7 @@
+function fetchConfig(cb){
+	return $.getJSON("/getMapConfig",cb);
+}
+
 function init(React){
 	var MapList = React.createClass({displayName: "MapList",
 		getInitialState:function(){
@@ -19,7 +23,6 @@ function init(React){
 					ruleList: newState
 				});
 		    }
-
 		},
 
 		removeRecord:function(index){
@@ -52,7 +55,7 @@ function init(React){
 		},
 		componentDidMount :function(){
 			var self = this;
-			$.getJSON("/getMapConfig",function(data){
+			fetchConfig(function(data){
 				self.setState({
 					ruleList : data
 				});
@@ -60,8 +63,8 @@ function init(React){
 		},
 		componentDidUpdate:function(){
 			var self = this;
-			//sync config
 
+			//upload config to server
 			var currentList = self.state.ruleList;
 			$.ajax({
 				method      : "POST",
@@ -71,6 +74,8 @@ function init(React){
 				dataType    : "json",
 				success     :function(res){}
 			});
+
+			self.props.onChange && self.props.onChange(self.state.ruleList);
 		}
 	});
 
@@ -78,3 +83,4 @@ function init(React){
 }
 
 module.exports.init = init;
+module.exports.fetchConfig = fetchConfig;

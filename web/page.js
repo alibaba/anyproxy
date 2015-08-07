@@ -200,11 +200,6 @@
 	//action bar
 	(function(){
 
-		//detect whether to show the filter and map btn
-		$.get("/filetree",function(){
-			$(".J_filterSection").show();
-		});
-
 		//clear log
 		function clearLogs(){
 			recordSet = [];
@@ -240,22 +235,66 @@
 			}
 		});
 
-		//filter
+		//preset button
 		(function (){
+			var TopBtn = React.createClass({displayName: "TopBtn",
+				getInitialState: function(){
+					return {
+						inUse : false
+					};
+				},
+				render: function(){
+					var self = this,
+						iconClass = self.state.inUse ? "uk-icon-check"      : self.props.icon,
+						btnClass  = self.state.inUse ? "topBtn topBtnInUse" : "topBtn";
+
+					return React.createElement("a", {href: "#"}, React.createElement("span", {className: btnClass, onClick: self.props.onClick}, React.createElement("i", {className: iconClass}), self.props.title))
+				}
+			});
+
+			// filter
+			var filterBtn,
+			    FilterPanel = PopupContent["filter"],
+				filterPanelEl;
+
+			filterBtn = React.render(React.createElement(TopBtn, {icon: "uk-icon-filter", title: "Filter", onClick: filterBtnClick}), document.getElementById("J_filterBtnContainer"));
+			filterPanelEl = (React.createElement(FilterPanel, {onChangeKeyword: updateKeyword}) );
+
 			function updateKeyword(key){
 				eventCenter.dispatchEvent("filterUpdated",key);
+				filterBtn.setState({inUse : !!key});
+			}
+			function filterBtnClick(){
+				showPop({ left:"60%", content:filterPanelEl });
 			}
 
-			$(".J_showFilter").on("click",function(){
-				showPop({ left:"60%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
-			});
-		})();
+			// map local
+			var mapBtn,
+				mapPanelEl;
+			function onChangeMapConfig(cfg){
+				mapBtn.setState({inUse : cfg && cfg.length});
+			}
 
-		//map local
-		(function(){
-			$(".J_showMapPanel").on("click",function(){
-				showPop({left:"60%", content:React.createElement(PopupContent["map"],null)});
+			function mapBtnClick(){
+				showPop({left:"60%", content:mapPanelEl });
+			}
+
+			//detect whether to show the map btn
+			__webpack_require__(1).fetchConfig(function(initConfig){
+				var MapPanel = PopupContent["map"];
+				mapBtn     = React.render(React.createElement(TopBtn, {icon: "uk-icon-shield", title: "Map Local", onClick: mapBtnClick}),document.getElementById("J_filterContainer"));
+				mapPanelEl = (React.createElement(MapPanel, {onChange: onChangeMapConfig}));
+				onChangeMapConfig(initConfig);
 			});
+
+			var t = true;
+			setInterval(function(){
+				t = !t;
+				// mapBtn && mapBtn.setState({inUse : t})
+			},300);
+
+
+
 		})();
 
 		//other button
@@ -298,7 +337,7 @@
 				return (
 					React.createElement("div", {className: "mapWrapper"}, 
 						React.createElement("h4", {className: "subTitle"}, "Current Config"), 
-						React.createElement(MapList, {ref: "list"}), 
+						React.createElement(MapList, {ref: "list", onChange: self.props.onChange}), 
 						
 						React.createElement("h4", {className: "subTitle"}, "Add Map Rule"), 
 						React.createElement(MapForm, {onSubmit: self.appendRecord})
@@ -311,6 +350,7 @@
 	}
 
 	module.exports.init = init;
+	module.exports.fetchConfig = __webpack_require__(14).fetchConfig;
 
 /***/ },
 /* 2 */
@@ -28057,6 +28097,10 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
+	function fetchConfig(cb){
+		return $.getJSON("/getMapConfig",cb);
+	}
+
 	function init(React){
 		var MapList = React.createClass({displayName: "MapList",
 			getInitialState:function(){
@@ -28078,7 +28122,6 @@
 						ruleList: newState
 					});
 			    }
-
 			},
 
 			removeRecord:function(index){
@@ -28111,7 +28154,7 @@
 			},
 			componentDidMount :function(){
 				var self = this;
-				$.getJSON("/getMapConfig",function(data){
+				fetchConfig(function(data){
 					self.setState({
 						ruleList : data
 					});
@@ -28119,8 +28162,8 @@
 			},
 			componentDidUpdate:function(){
 				var self = this;
-				//sync config
 
+				//upload config to server
 				var currentList = self.state.ruleList;
 				$.ajax({
 					method      : "POST",
@@ -28130,6 +28173,8 @@
 					dataType    : "json",
 					success     :function(res){}
 				});
+
+				self.props.onChange && self.props.onChange(self.state.ruleList);
 			}
 		});
 
@@ -28137,6 +28182,7 @@
 	}
 
 	module.exports.init = init;
+	module.exports.fetchConfig = fetchConfig;
 
 /***/ },
 /* 15 */

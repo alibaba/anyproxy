@@ -7,7 +7,7 @@ body, html {
 }
 
 .topHead{
-	height: 55px;
+	height: 53px;
 	position: relative;
 	border-bottom: 1px solid #333;
 }
@@ -15,14 +15,14 @@ body, html {
 .topHead .logoWrapper{
 	float: left;
 	width: 220px;
-	height: 55px;
+	height: 53px;
 	overflow: hidden;
 	position: relative;
 }
 
 .topHead .logoWrapper h1{
 	color: #333;
-	line-height: 55px;
+	line-height: 53px;
 	text-align: center;
 	margin: 0;
 }
@@ -63,10 +63,11 @@ body, html {
 
 .topHead .ctrlWrapper{
 	height        : 26px;
-	line-height   : 26px;
+	line-height   : 16px;
 	overflow      : hidden;
 	text-overflow : ellipsis;
 	white-space   : nowrap;
+	margin-top    : 1px;
 }
 
 .topHead .ctrlWrapper .sep{
@@ -76,10 +77,16 @@ body, html {
 }
 
 .topHead .topBtn{
-	margin-right: 8px;
+	margin-right: 4px;
 	transition:0.08s;
 	padding: 4px;
 	border-radius: 2px;
+	min-width: 50px;
+	display: inline-block;
+}
+
+.topHead .topBtn.topBtnInUse{
+	color: #30B630;
 }
 
 .topHead .topBtn:hover:not(.btn_disable){
@@ -94,6 +101,7 @@ body, html {
 
 .topHead i{
 	margin-right: 3px;
+	width: 12px;
 }
 
 .topHead .btn_disable{

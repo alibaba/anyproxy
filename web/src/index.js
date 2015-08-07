@@ -154,11 +154,6 @@ var recorder;
 //action bar
 (function(){
 
-	//detect whether to show the filter and map btn
-	$.get("/filetree",function(){
-		$(".J_filterSection").show();
-	});
-
 	//clear log
 	function clearLogs(){
 		recordSet = [];
@@ -194,22 +189,66 @@ var recorder;
 		}
 	});
 
-	//filter
+	//preset button
 	(function (){
+		var TopBtn = React.createClass({
+			getInitialState: function(){
+				return {
+					inUse : false
+				};
+			},
+			render: function(){
+				var self = this,
+					iconClass = self.state.inUse ? "uk-icon-check"      : self.props.icon,
+					btnClass  = self.state.inUse ? "topBtn topBtnInUse" : "topBtn";
+
+				return <a href="#"><span className={btnClass} onClick={self.props.onClick}><i className={iconClass}></i>{self.props.title}</span></a>
+			}
+		});
+
+		// filter
+		var filterBtn,
+		    FilterPanel = PopupContent["filter"],
+			filterPanelEl;
+
+		filterBtn = React.render(<TopBtn icon="uk-icon-filter" title="Filter" onClick={filterBtnClick}/>, document.getElementById("J_filterBtnContainer"));
+		filterPanelEl = (<FilterPanel onChangeKeyword={updateKeyword} /> );
+
 		function updateKeyword(key){
 			eventCenter.dispatchEvent("filterUpdated",key);
+			filterBtn.setState({inUse : !!key});
+		}
+		function filterBtnClick(){
+			showPop({ left:"60%", content:filterPanelEl });
 		}
 
-		$(".J_showFilter").on("click",function(){
-			showPop({ left:"60%", content:React.createElement(PopupContent["filter"], {onChangeKeyword : updateKeyword})});
-		});
-	})();
+		// map local
+		var mapBtn,
+			mapPanelEl;
+		function onChangeMapConfig(cfg){
+			mapBtn.setState({inUse : cfg && cfg.length});
+		}
 
-	//map local
-	(function(){
-		$(".J_showMapPanel").on("click",function(){
-			showPop({left:"60%", content:React.createElement(PopupContent["map"],null)});
+		function mapBtnClick(){
+			showPop({left:"60%", content:mapPanelEl });
+		}
+
+		//detect whether to show the map btn
+		require("./mapPanel").fetchConfig(function(initConfig){
+			var MapPanel = PopupContent["map"];
+			mapBtn     = React.render(<TopBtn icon="uk-icon-shield" title="Map Local" onClick={mapBtnClick} />,document.getElementById("J_filterContainer"));
+			mapPanelEl = (<MapPanel onChange={onChangeMapConfig} />);
+			onChangeMapConfig(initConfig);
 		});
+
+		var t = true;
+		setInterval(function(){
+			t = !t;
+			// mapBtn && mapBtn.setState({inUse : t})
+		},300);
+
+
+
 	})();
 
 	//other button

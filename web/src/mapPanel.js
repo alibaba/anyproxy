@@ -17,7 +17,7 @@ function init(React){
 			return (
 				<div className="mapWrapper">
 					<h4 className="subTitle">Current Config</h4>
-					<MapList ref="list"/>
+					<MapList ref="list" onChange={self.props.onChange}/>
 					
 					<h4 className="subTitle">Add Map Rule</h4>
 					<MapForm onSubmit={self.appendRecord}/>
@@ -30,3 +30,4 @@ function init(React){
 }
 
 module.exports.init = init;
+module.exports.fetchConfig = require("./mapList").fetchConfig;
