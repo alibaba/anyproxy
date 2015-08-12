@@ -1,3 +1,9 @@
+31 July: AnyProxy 3.7.3:
+
+    * show lastest 100 records when visit the web ui
+    * save map-local config file to local file
+    * show an indicator when filter or map-local is in use
+
 31 July: AnyProxy 3.7.2:
 
     * bugfix for issue #29

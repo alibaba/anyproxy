@@ -64,7 +64,8 @@ function proxyServer(option){
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
         disableWebInterface = !!option.disableWebInterface,
         ifSilent            = !!option.silent,
-        webServerInstance;
+        webServerInstance,
+        ws;
 
     if(ifSilent){
         logUtil.setPrintStatus(false);
@@ -130,7 +131,7 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                var ws = new wsServer({port : socketPort});
+                ws = new wsServer({port : socketPort});
                 callback(null)
             },
 

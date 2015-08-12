@@ -35,8 +35,8 @@ function util_merge(left,right){
 (function(){
 	try{
 		var ws = window.ws = new Anyproxy_wsUtil({
-			baseUrl     : document.getElementById("baseUrl").value,
-			port        : document.getElementById("socketPort").value,
+			baseUrl       : document.getElementById("baseUrl").value,
+			port          : document.getElementById("socketPort").value,
 			onOpen : function(){
 				eventCenter.dispatchEvent("wsOpen");
 			},

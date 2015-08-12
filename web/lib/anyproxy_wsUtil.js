@@ -26,46 +26,50 @@ function anyproxy_wsUtil(config){
 
 	var self = this;
 	var baseUrl    = config.baseUrl || "127.0.0.1",
-		socketPort = config.port || 8003;
+		socketPort = config.port || 8003,
+		dataSocket;
 
-	var dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
+	function initSocket(){
+		self.bodyCbMap = {};
+		dataSocket = new WebSocket("ws://" + baseUrl + ":" + socketPort);
+		dataSocket.onmessage = function(event){
+			config.onGetData && config.onGetData.call(self,event.data);
 
-	self.bodyCbMap = {};
-	dataSocket.onmessage = function(event){
-		config.onGetData && config.onGetData.call(self,event.data);
+			try{
+				var data    = JSON.parse(event.data),
+					type    = data.type,
+					content = data.content,
+					reqRef  = data.reqRef;
+			}catch(e){
+				config.onError && config.onError.call(self, new Error("failed to parse socket data - " + e.toString()) );
+			}
 
-		try{
-			var data    = JSON.parse(event.data),
-				type    = data.type,
-				content = data.content,
-				reqRef  = data.reqRef;
-		}catch(e){
-			config.onError && config.onError.call(self, new Error("failed to parse socket data - " + e.toString()) );
-		}
+			if(type == "update"){
+				config.onGetUpdate && config.onGetUpdate.call(self, content);
 
-		if(type == "update"){
-			config.onGetUpdate && config.onGetUpdate.call(self, content);
+			}else if(type == "body"){
+				config.onGetBody && config.onGetBody.call(self, content, reqRef);
 
-		}else if(type == "body"){
-			config.onGetBody && config.onGetBody.call(self, content, reqRef);
-
-			if(data.reqRef && self.bodyCbMap[reqRef]){
-				self.bodyCbMap[reqRef].call(self,content);
+				if(data.reqRef && self.bodyCbMap[reqRef]){
+					self.bodyCbMap[reqRef].call(self,content);
+				}
 			}
 		}
+
+		dataSocket.onopen = function(e){
+			config.onOpen && config.onOpen.call(self,e);
+		}
+		dataSocket.onclose = function(e){
+			config.onClose && config.onClose.call(self,e);
+		}
+		dataSocket.onerror = function(e){
+			config.onError && config.onError.call(self,e);
+		}
+
+		self.dataSocket = dataSocket;
 	}
 
-	dataSocket.onopen = function(e){
-		config.onOpen && config.onOpen.call(self,e);
-	}
-	dataSocket.onclose = function(e){
-		config.onClose && config.onClose.call(self,e);
-	}
-	dataSocket.onerror = function(e){
-		config.onError && config.onError.call(self,e);
-	}
-
-	self.dataSocket = dataSocket;
+	initSocket();
 };
 
 anyproxy_wsUtil.prototype.send = function(data){
