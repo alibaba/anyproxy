@@ -117,7 +117,11 @@ var recorder;
 	function initRecordSet(){
 		$.getJSON("/lastestLog",function(res){
 			if(typeof res == "object"){
-				recordSet = res;
+				res.map(function(item){
+					if(item.id){
+						recordSet[item.id] = item;
+					}
+				});
 				eventCenter.dispatchEvent("recordSetUpdated");
 			}
 		});
