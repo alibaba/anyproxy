@@ -1,3 +1,7 @@
+19 Aug: AnyProxy 3.7.4:
+
+    * bugfix for intercepting urls like http://a.com?url=http://b.com
+
 31 July: AnyProxy 3.7.3:
 
     * show lastest 100 records when visit the web ui
