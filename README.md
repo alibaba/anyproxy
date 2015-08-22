@@ -14,7 +14,7 @@ AnyProxy
 
 A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
 
-Home page : [http://AnyProxy.io](http://anyproxy.io)
+Home page : [AnyProxy.io](http://anyproxy.io)
 
 (Chinese in this doc is nothing but translation of some key points. Be relax if you dont understand.)
 
