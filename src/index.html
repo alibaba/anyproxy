@@ -30,7 +30,7 @@
             <div class="logo">
                 <img src="http://gtms04.alicdn.com/tps/i4/TB1XfxDHpXXXXXpapXX20ySQVXX-512-512.png" width="250" height="250" alt="anyproxy logo" />
             </div>
-            <h2 class="slogan">AnyProxy is a fully configurable http/https proxy in NodeJS, which offers you the ablity to handle http traffic as you wish.</h2>
+            <h2 class="slogan">${summary}</h2>
             <div class="action">
                 <iframe src="https://ghbtns.com/github-btn.html?user=alibaba&repo=anyproxy&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>&nbsp;&nbsp;&nbsp;
                 <iframe src="https://ghbtns.com/github-btn.html?user=alibaba&repo=anyproxy&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
@@ -43,29 +43,29 @@
                     <span class="iconWrapper">
                         <i class="iconfont">&#xe602;</i>
                     </span>
-                    <h4>Based on Node.js</h4>
-                    <h5>It's all javascript and easy to learn.</h5>
+                    <h4>${featureA}</h4>
+                    <h5>${featureADesc}</h5>
                 </div>
                 <div class="item">
                     <span class="iconWrapper">
                         <i class="iconfont">&#xe601;</i>
                     </span>
-                    <h4>HTTPS supported</h4>
-                    <h5>help to decrypted HTTPS data<a href="https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B" target="_blank"><br>How to config&nbsp;&gt;&gt;</a></h5>
+                    <h4>${featureB}</h4>
+                    <h5>${featureBDesc}<a href="https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B" target="_blank"><br>${featureBHowTo}&nbsp;&gt;&gt;</a></h5>
                 </div>
                 <div class="item">
                     <span class="iconWrapper">
                         <i class="iconfont bigger">&#xe600;</i>
                     </span>
-                    <h4>Web UI</h4>
-                    <h5>Web based interface to view requests</h5>
+                    <h4>${featureC}</h4>
+                    <h5>${featureCDesc}</h5>
                 </div>
                 <div class="item">
                     <span class="iconWrapper">
                         <i class="iconfont">&#xe604;</i>
                     </span>
-                    <h4>Customed Rule File</h4>
-                    <h5>Make your own debugging tool by writing rule files</h5>
+                    <h4>${featureD}</h4>
+                    <h5>${featureDDesc}</h5>
                 </div>
                 <div style="clear:both"></div>
             </div>
@@ -73,18 +73,18 @@
 
         <div class="quickstart listSection">
             <div class="quickstartContent listContent">
-                <h4 class="subtitle" id="install">Installation</h4>
+                <h4 class="subtitle" id="install">${installationTitle}</h4>
                 <ul>
-                    <li>install <a href="http://nodejs.org/" target="_blank">Node.js</a> &gt;= v0.12</li>
-                    <li><code class="simpleBash">npm install -g anyproxy</code>, may require<code class="simpleBash">sudo</code></li>
+                    <li>${installationStepA} <a href="http://nodejs.org/" target="_blank">Node.js</a> &gt;= v0.12</li>
+                    <li><code class="simpleBash">npm install -g anyproxy</code>, ${installationStepB}<code class="simpleBash">sudo</code></li>
                     <li><a href="https://github.com/alibaba/anyproxy#quick-start" target="_blank">More&gt;&gt;</a></li>
                 </ul>
-                <h4 class="subtitle" id="quickstart">Quick Start</h4>
+                <h4 class="subtitle" id="quickstart">${quickStartTitle}</h4>
                 <ul>
-                    <li>run&nbsp;&nbsp;<code class="simpleBash">anyproxy</code></li>
-                    <li>set proxy to 127.0.0.1:8001 on your browser or device</li>
-                    <li>view web interface at http://127.0.0.1:8002</li>
-                    <li><a href="https://github.com/alibaba/anyproxy#quick-start" target="_blank">More Usage&nbsp;&gt;&gt;</a></li>
+                    <li>${quickStartStepA}&nbsp;&nbsp;<code class="simpleBash">anyproxy</code></li>
+                    <li>${quickStartStepB}</li>
+                    <li>${quickStartStepC}</li>
+                    <li><a href="https://github.com/alibaba/anyproxy#quick-start" target="_blank">${quickStartMoreUsage}&nbsp;&gt;&gt;</a></li>
                 </ul>
                 <a href="https://github.com/alibaba/anyproxy#step-4---launch-web-interface" target="_blank"><img class="screenshot" src="http://gtms01.alicdn.com/tps/i1/TB1IdgqGXXXXXa9apXXLExM2pXX-854-480.gif" width="350"/></a>
             </div>
@@ -93,10 +93,10 @@
         <div class="sample">
 
             <div class="sampleContent">
-                <h4 class="subtitle" id="sample ">Sample of Rule Files</h4>
+                <h4 class="subtitle" id="sample ">${sampleRuleTitle}</h4>
 
                 <div class="item">
-                    <h5 class="itemTitle">Append &quot;hello world&quot; on HTML response</h5>
+                    <h5 class="itemTitle">${sampleATitle}</h5>
                     <pre>
 <code class="javascript">
 //append "hello world" to all web pages
@@ -120,7 +120,7 @@ module.exports = {
                     <hr />
                 </div>              
                 <div class="item">
-                    <h5 class="itemTitle">remove if-modified-since from http request header</h5>
+                    <h5 class="itemTitle">${sampleBTitle}</h5>
                     <pre>
 <code class="javascript">
 //remove cache related header
@@ -143,7 +143,7 @@ module.exports = {
                 </div>
 
                 <div class="item">
-                    <h5 class="itemTitle">assign a specified ip address for some requests</h5>
+                    <h5 class="itemTitle">${sampleCTitle}</h5>
                     <pre>
 <code class="javascript">
 //assign a specific IP adress for some request
@@ -169,7 +169,7 @@ module.exports = {
                 </div>
 
                 <div class="item">
-                    <h5 class="itemTitle">replace all image response by local one</h5>
+                    <h5 class="itemTitle">${sampleDTitle}</h5>
                     <pre>
 <code class="javascript">
 //replace all the images with local one
@@ -202,7 +202,7 @@ module.exports = {
                 </div>
 
                 <div class="readmoreBtn">
-                    <a href="https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one" target="_blank">&gt;&gt;&nbsp;Ref : Guide of Rule file</a>
+                    <a href="${ruleGuideLink}" target="_blank">&gt;&gt;&nbsp;${ruleGuideText}</a>
                 </div>
 
             </div>
@@ -210,12 +210,19 @@ module.exports = {
 
         <div class="readMore listSection">
             <div class="listContent">
-                <h4 class="subtitle" id="otherfeature">Other Features</h4>
+                <h4 class="subtitle" id="otherfeature">${otherFeaturesTitle}</h4>
                 <ul>
-                    <li>Map file to local , filter your logs</li>
-                    <li><a href="https://github.com/alibaba/anyproxy#throttling">Simulate a low-speed network</a> , help to test the performance of your app on poor network</li>
-                    <li><a href="https://github.com/alibaba/anyproxy#work-as-a-module-for-nodejs" target="_blank">Using AnyProxy as an npm module</a> , to deploy your own debugging tools</li>
+                    <li>${otherFeatureA}</li>
+                    <li><a href="https://github.com/alibaba/anyproxy#throttling">${otherFeatureB}</a>${otherFeatureBDesc}</li>
+                    <li><a href="https://github.com/alibaba/anyproxy#work-as-a-module-for-nodejs" target="_blank">${otherFeatureC}</a>${otherFeatureCDesc}</li>
                 </ul>
+                {@if language == "cn"}
+                <h4 class="subtitle" id="ref">相关阅读</h4>
+                <ul>
+                    <li><a href="https://github.com/alibaba/anyproxy/wiki/%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%96%B0%E8%BD%AE%E5%AD%90%EF%BC%9Aanyproxy" target="_blank">代理服务器的新轮子</a>，介绍AnyProxy的设计初衷，以及它的开放式设计可以解决什么问题。</li>
+                    <li><a href="http://www.infoq.com/cn/presentations/alipay-hybrid-application-quality-assurance-practice" target="_blank">QCon - 《支付宝hybrid应用质量保证实践》</a>，涉及到AnyProxy在测试工程中的应用(By 陈晔)</li>
+                </ul>
+                {@/if}
             </div>
         </div>
 
