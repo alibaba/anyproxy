@@ -232,14 +232,13 @@ body, html {
 }
 
 .recordDetailOverlay li{
-	white-space: nowrap;
 	word-wrap: break-word;
 }
 
 .recordDetailOverlay iframe{
 	position: relative;
 	height: 92vh;
-	width: 100%; 
+	width: 100%;
 }
 
 .data_id{
@@ -354,4 +353,3 @@ body, html {
 
 
 /*map panel end*/
-
