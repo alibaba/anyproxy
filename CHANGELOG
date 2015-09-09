@@ -1,3 +1,7 @@
+9 Sep: AnyProxy 3.7.6:
+
+    * optimize detail panel, ref #35
+
 3 Sep: AnyProxy 3.7.5:
 
     * bugfix for intercepting urls like http://a.com?url=http://b.com
