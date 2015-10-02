@@ -63,9 +63,7 @@ function proxyServer(option){
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
         disableWebInterface = !!option.disableWebInterface,
-        ifSilent            = !!option.silent,
-        webServerInstance,
-        ws;
+        ifSilent            = !!option.silent;
 
     if(ifSilent){
         logUtil.setPrintStatus(false);
@@ -131,8 +129,8 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                ws = new wsServer({port : socketPort});
-                callback(null)
+                self.ws = new wsServer({port : socketPort});
+                callback(null);
             },
 
             //start web interface
@@ -147,7 +145,7 @@ function proxyServer(option){
                         ip           : ip.address()
                     };
 
-                    webServerInstance = new webInterface(config);
+                    self.webServerInstance = new webInterface(config);
                 }
                 callback(null);
             },
@@ -189,7 +187,9 @@ function proxyServer(option){
 
     self.close = function(){
         self.httpProxyServer && self.httpProxyServer.close();
-        logUtil.printLog(color.green("server closed :" + proxyHost + ":" + proxyPort));
+        self.ws && self.ws.closeAll();
+        self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
+        logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
     }
 }
 

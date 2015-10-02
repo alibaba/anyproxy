@@ -1,3 +1,7 @@
+2 Oct: AnyProxy 3.7.7:
+
+    * bugfix for proxy.close() ref #36
+
 9 Sep: AnyProxy 3.7.6:
 
     * optimize detail panel, ref #35
