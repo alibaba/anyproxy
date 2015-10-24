@@ -44,7 +44,13 @@ exports.avalibility = function(test){
 
     //test the basic availibility of proxy server
     setTimeout(function(){
-    	proxyTester.test({proxy : 'http://127.0.0.1:8995',reqTimeout:4500} ,function(results){
+        var testParam = {
+            proxy         : 'http://127.0.0.1:8995',
+            reqTimeout    : 4500,
+            httpsPostUrl  : "http://www.sample.com/"
+            httpsPostBody : "123"
+        };
+    	proxyTester.test(testParam ,function(results){
     		var successCount = 0;
     		results.map(function(item){
     			item.success && ++successCount;

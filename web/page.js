@@ -20342,11 +20342,23 @@
 				    id   = self.props.data.id;
 				if(!id) return;
 
-				ws.reqBody(id,function(content){
-					if(content.id == self.props.data.id){
-						self.setState({
-							body : content
-						});
+				jQuery.get("/fetchBody?id=" + id ,function(resObj){
+					if(resObj && resObj.id){
+						if(resObj.type && resObj.type == "image" && resObj.ref){
+							self.setState({
+								body : {
+									img : resObj.ref,
+									id  : resObj.id
+								}
+							});
+						}else if(resObj.content){
+							self.setState({
+								body : {
+									body : resObj.content,
+									id   : resObj.id
+								}
+							});
+						}
 					}
 				});
 			},
@@ -20385,9 +20397,13 @@
 				);
 
 				if(this.props.data.statusCode){
-
 					if(this.state.body.id == this.props.data.id){
-						bodyContent = (React.createElement("pre", {className: "resBodyContent"}, this.state.body.body));
+						if(this.state.body.img){
+							var imgEl = { __html : '<img src="'+ this.state.body.img +'" />'};
+							bodyContent = (React.createElement("div", {dangerouslySetInnerHTML: imgEl}));
+						}else{
+							bodyContent = (React.createElement("pre", {className: "resBodyContent"}, this.state.body.body));
+						}
 					}else{
 						bodyContent = null;
 						this.loadBody();

@@ -69,11 +69,7 @@ function proxyServer(option){
         logUtil.setPrintStatus(false);
     }
 
-    if(option.dbFile){
-        GLOBAL.recorder = new Recorder({filename: option.dbFile});
-    }else{
-        GLOBAL.recorder = new Recorder();
-    }
+
 
     if(!!option.interceptHttps){
         default_rule.setInterceptFlag(true);
@@ -95,6 +91,18 @@ function proxyServer(option){
 
     async.series(
         [
+            //clear cache dir, prepare recorder
+            function(callback){
+                util.clearCacheDir(function(){
+                    if(option.dbFile){
+                        GLOBAL.recorder = new Recorder({filename: option.dbFile});
+                    }else{
+                        GLOBAL.recorder = new Recorder();
+                    }
+                    callback();
+                });
+            },
+
             //creat proxy server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){

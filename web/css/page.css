@@ -186,6 +186,11 @@ body, html {
 	word-wrap:break-word;
 }
 
+.resBody .resBodyContent img{
+	max-width: 500px;
+	max-height: 500px;
+}
+
 .subTitle{
 	padding-left: 6px;
 	border-left: 3px solid #1FA2D6;
