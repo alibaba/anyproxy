@@ -1,3 +1,7 @@
+19 Nov: AnyProxy 3.8.1:
+
+    * bugfix for image content in web GUI
+
 16 Nov: AnyProxy 3.8.0:
 
     * optimize the memory strategy
