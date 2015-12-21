@@ -16,4 +16,5 @@ dora-anyproxy
 
 - 删除 web GUI
 - 配合 dora-plugin-proxy 整理日志信息，[dora-plugin-proxy#3](https://github.com/dora-js/dora-plugin-proxy/issues/3)
-- 生成证书时不退出
+- 添加检查是否已经信任证书 API (暂时只限 mac 系统)
+- 提示输入 sudo 密码后，自动信任证书 (暂时只限 mac 系统)

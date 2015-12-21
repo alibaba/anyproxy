@@ -13,11 +13,14 @@
     "commander": "~2.3.0",
     "compression": "^1.4.4",
     "iconv-lite": "^0.4.6",
+    "inpath": "^1.0.2",
     "ip": "^0.3.2",
     "nedb": "^0.11.0",
     "npm": "^2.7.0",
+    "pidof": "^1.0.2",
     "promise": "^7.0.4",
     "qrcode-npm": "0.0.3",
+    "read": "^1.0.7",
     "stream-throttle": "^0.1.3"
   },
   "devDependencies": {

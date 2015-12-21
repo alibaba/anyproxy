@@ -169,6 +169,8 @@ function proxyServer(option){
 require('util').inherits(proxyServer, require('events'));
 
 module.exports.proxyServer        = proxyServer;
+module.exports.trustRootCA        = certMgr.trustRootCA;
+module.exports.isRootCATrusted    = certMgr.isRootCATrusted;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
 module.exports.setRules           = requestHandler.setRules;
