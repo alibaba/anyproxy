@@ -7,25 +7,16 @@ var http = require('http'),
     fs              = require('fs'),
     async           = require("async"),
     url             = require('url'),
-    program         = require('commander'),
     color           = require('colorful'),
     certMgr         = require("./lib/certMgr"),
-    getPort         = require("./lib/getPort"),
     requestHandler  = require("./lib/requestHandler"),
     Recorder        = require("./lib/recorder"),
     logUtil         = require("./lib/log"),
-    wsServer        = require("./lib/wsServer"),
-    webInterface    = require("./lib/webInterface"),
-    inherits        = require("util").inherits,
     util            = require("./lib/util"),
     path            = require("path"),
-    juicer          = require('juicer'),
     events          = require("events"),
-    express         = require("express"),
     ip              = require("ip"),
-    ThrottleGroup   = require("stream-throttle").ThrottleGroup,
-    iconv           = require('iconv-lite'),
-    Buffer          = require('buffer').Buffer;
+    ThrottleGroup   = require("stream-throttle").ThrottleGroup;
 
 var T_TYPE_HTTP            = 0,
     T_TYPE_HTTPS           = 1,
@@ -135,29 +126,6 @@ function proxyServer(option){
                 callback(null);
             },
 
-            //start web socket service
-            function(callback){
-                self.ws = new wsServer({port : socketPort});
-                callback(null);
-            },
-
-            //start web interface
-            function(callback){
-                if(disableWebInterface){
-                    logUtil.printLog('web interface is disabled');
-                }else{
-                    var config = {
-                        port         : proxyWebPort,
-                        wsPort       : socketPort,
-                        userRule     : proxyRules,
-                        ip           : ip.address()
-                    };
-
-                    self.webServerInstance = new webInterface(config);
-                }
-                callback(null);
-            },
-
             //server status manager
             function(callback){
 
@@ -177,31 +145,32 @@ function proxyServer(option){
 
         //final callback
         function(err,result){
-            if(!err){
-                var webTip,webUrl;
-                webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                webTip = "GUI interface started at : " + webUrl;
-                logUtil.printLog(color.green(webTip));
+            //if(!err){
+            //    var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
+            //    logUtil.printLog(color.green(tipText));
+            //}else{
+            //    var tipText = "err when start proxy server :(";
+            //    logUtil.printLog(color.red(tipText), logUtil.T_ERR);
+            //    logUtil.printLog(err, logUtil.T_ERR);
+            //}
 
-                var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
-                logUtil.printLog(color.green(tipText));
-            }else{
-                var tipText = "err when start proxy server :(";
-                logUtil.printLog(color.red(tipText), logUtil.T_ERR);
-                logUtil.printLog(err, logUtil.T_ERR);
-            }
+            self.emit('finish', err, {
+                isHTTP: proxyType === T_TYPE_HTTP,
+            });
         }
     );
 
     self.close = function(){
         self.httpProxyServer && self.httpProxyServer.close();
-        self.ws && self.ws.closeAll();
-        self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
         logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
     }
 }
 
+require('util').inherits(proxyServer, require('events'));
+
 module.exports.proxyServer        = proxyServer;
+module.exports.trustRootCA        = certMgr.trustRootCA;
+module.exports.isRootCATrusted    = certMgr.isRootCATrusted;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
 module.exports.setRules           = requestHandler.setRules;
