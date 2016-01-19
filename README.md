@@ -121,6 +121,7 @@ var options = {
     throttle      : 10,    // optional, speed limit in kb/s
     disableWebInterface : false, //optional, set it when you don't want to use the web interface
     silent        : false //optional, do not print anything into terminal. do not set it when you are still debugging.
+    rootCaDir     : __dirname + "/anyproxy/rootCa" //optional, your CA file dir.
 };
 new proxy.proxyServer(options);
 

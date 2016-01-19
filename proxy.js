@@ -51,6 +51,7 @@ var default_rule = require('./lib/rule_default');
 //option.disableWebInterface
 //option.silent        : false(default)
 //option.interceptHttps ,internal param for https
+//option.rootCaDir     : rootCaDir
 function proxyServer(option){
     option = option || {};
 
@@ -70,8 +71,12 @@ function proxyServer(option){
     }
 
 
-
     if(!!option.interceptHttps){
+        //create cert when you want to use https features
+        //please manually trust this rootCA when it is the first time you run it
+        certMgr.initRootCaDir(option.rootCaDir);
+        !certMgr.isRootCAFileExists() && certMgr.generateRootCA();
+
         default_rule.setInterceptFlag(true);
 
         //print a tip when using https features in Node < v0.12
