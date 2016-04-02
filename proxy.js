@@ -158,11 +158,30 @@ function proxyServer(option){
                 callback(null);
             },
 
+
+            function(callback) {
+
+                if (option.globalProxy) {
+                    var result = require('./lib/proxyManager').enableGlobalProxy(ip.address(), proxyPort);
+
+                    if (result.status) {
+                        console.log(color.red(result.stdout));
+                    }
+                }
+
+            },
+
             //server status manager
             function(callback){
 
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
+                    var result = require('./lib/proxyManager').disableGlobalProxy();
+
+                    if (result.status) {
+                        console.log(color.red(result.stdout));
+                    }
+
                     process.exit();
                 });
 
