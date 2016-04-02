@@ -165,9 +165,15 @@ function proxyServer(option){
                     var result = require('./lib/proxyManager').enableGlobalProxy(ip.address(), proxyPort);
 
                     if (result.status) {
-                        console.log(color.red(result.stdout));
+                        callback(result.stdout);
+                    } else {
+                        callback(null);
                     }
+
+                } else {
+                    callback(null);
                 }
+
 
             },
 
@@ -182,6 +188,11 @@ function proxyServer(option){
                         console.log(color.red(result.stdout));
                     }
 
+                    process.exit();
+                });
+
+                //exit cause ctrl+c
+                process.on("SIGINT", function() {
                     process.exit();
                 });
 
