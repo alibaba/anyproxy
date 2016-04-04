@@ -182,10 +182,14 @@ function proxyServer(option){
 
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
-                    var result = require('./lib/proxyManager').disableGlobalProxy();
 
-                    if (result.status) {
-                        console.log(color.red(result.stdout));
+                    if (option.globalProxy) {
+                        var result = require('./lib/proxyManager').disableGlobalProxy();
+
+                        //error occur
+                        if (result.status) {
+                            console.log(color.red(result.stdout));
+                        }
                     }
 
                     process.exit();
