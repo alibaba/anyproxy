@@ -16,6 +16,7 @@ var http = require('http'),
     logUtil         = require("./lib/log"),
     wsServer        = require("./lib/wsServer"),
     webInterface    = require("./lib/webInterface"),
+    SystemProxyMgr  = require('./lib/systemProxyMgr'),
     inherits        = require("util").inherits,
     util            = require("./lib/util"),
     path            = require("path"),
@@ -68,8 +69,6 @@ function proxyServer(option){
     if(ifSilent){
         logUtil.setPrintStatus(false);
     }
-
-
 
     if(!!option.interceptHttps){
         default_rule.setInterceptFlag(true);
@@ -158,11 +157,50 @@ function proxyServer(option){
                 callback(null);
             },
 
+            //set global proxy
+            function(callback) {
+                if (option.setAsGlobalProxy) {
+                    console.log('setting global proxy for you...');
+                    if(!/^win/.test(process.platform) && !process.env.SUDO_UID){
+                        console.log('sudo password may be required.');
+                    }
+                    var result = SystemProxyMgr.enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+                    if (result.status) {
+                        callback(result.stdout);
+                    } else {
+                        if(/^win/.test(process.platform)){
+                            console.log('AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.');
+                        } else{
+                            console.log('AnyProxy is now the default proxy for your system.');
+                        }
+                        callback(null);
+                    }
+                } else {
+                    callback(null);
+                }
+            },
+
             //server status manager
             function(callback){
-
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
+
+                    if (option.setAsGlobalProxy) {
+                        console.log('resigning global proxy...');
+                        var result = SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
+
+                        if (result.status) {
+                            console.log(color.red(result.stdout));
+                        } else{
+                            console.log('global proxy resigned.');
+                        }
+                    }
+
+                    process.exit();
+                });
+
+                //exit cause ctrl+c
+                process.on("SIGINT", function() {
                     process.exit();
                 });
 

@@ -22,6 +22,7 @@ program
     .option('-i, --intercept', 'intercept(decrypt) https requests when root CA exists')
     .option('-s, --silent', 'do not print anything into terminal')
     .option('-c, --clear', 'clear all the tmp certificates')
+    .option('-o, --global', 'set as global proxy for system')
     .option('install', '[alpha] install node modules')
     .parse(process.argv);
 
@@ -67,7 +68,7 @@ if(program.clear){
             logUtil.printLog("failed to load rule file :" + e.toString(), logUtil.T_ERR);
         }
     }else{
-        //a feature for donghua.yan 
+        //a feature for donghua.yan
         //read rule file from a specific position
         (function(){
             try{
@@ -91,6 +92,7 @@ if(program.clear){
         webPort             : program.web,
         rule                : ruleModule,
         disableWebInterface : false,
+        setAsGlobalProxy    : program.global,
         interceptHttps      : program.intercept,
         silent              : program.silent
     });
