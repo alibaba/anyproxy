@@ -162,7 +162,7 @@ function proxyServer(option){
             function(callback) {
 
                 if (option.globalProxy) {
-                    var result = require('./lib/proxyManager').enableGlobalProxy(ip.address(), proxyPort);
+                    var result = require('./lib/proxyManager').enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
 
                     if (result.status) {
                         callback(result.stdout);
@@ -184,7 +184,7 @@ function proxyServer(option){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
 
                     if (option.globalProxy) {
-                        var result = require('./lib/proxyManager').disableGlobalProxy();
+                        var result = require('./lib/proxyManager').disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
 
                         //error occur
                         if (result.status) {
