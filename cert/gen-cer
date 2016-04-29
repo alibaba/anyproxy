@@ -38,11 +38,11 @@ openssl rsa -in $outputPath$domain.key -passin pass:$password -out $outputPath$d
  
 #Create the request
 echo "Creating CSR"
-openssl req -new -key $outputPath$domain.key -out $outputPath$domain.csr -passin pass:$password \
+openssl req -sha256 -new -key $outputPath$domain.key -out $outputPath$domain.csr -passin pass:$password \
     -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
  
 #Generating a Self-Signed Certificate
-openssl x509 -req -days 365 -in $outputPath$domain.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out $outputPath$domain.crt
+openssl x509 -req -sha256 -days 365 -in $outputPath$domain.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out $outputPath$domain.crt
 # -signkey $outputPath$domain.key
 #openssl x509 -req -in host.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out host.crt -days 365
 echo "Finished"
