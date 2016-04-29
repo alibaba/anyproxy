@@ -1,10 +1,10 @@
 #!/bin/bash
- 
+
 #Required
 domain=$1
 outputPath=$2
 commonname=$domain
- 
+
 #Change to your company details
 country=ZH
 state=Shanghai
@@ -12,20 +12,20 @@ locality=Shanghai
 organization=a.com
 organizationalunit=IT
 email=a@b.com
- 
+
 #Optional
 password=a
- 
+
 if [ -z "$domain" ]
 then
     echo "Argument not present."
     echo "Useage $0 [domain] [outputPath]"
- 	
+
     exit 99
 fi
- 
+
 echo "Generating key request for $outputPath$domain"
- 
+
 #Generate a key
 # openssl genrsa -out host.key 2048
 # openssl genrsa -des3 -out $outputPath$domain.key 2048 -noout
@@ -35,14 +35,14 @@ openssl genrsa -passout pass:$password -out $outputPath$domain.key 2048
 #Remove passphrase from the key. Comment the line out to keep the passphrase
 echo "Removing passphrase from key"
 openssl rsa -in $outputPath$domain.key -passin pass:$password -out $outputPath$domain.key
- 
+
 #Create the request
 echo "Creating CSR"
 openssl req -sha256 -new -key $outputPath$domain.key -out $outputPath$domain.csr -passin pass:$password \
     -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email"
- 
+
 #Generating a Self-Signed Certificate
-openssl x509 -req -sha256 -days 365 -in $outputPath$domain.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out $outputPath$domain.crt
+openssl x509 -req -sha256 -days 3650 -in $outputPath$domain.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out $outputPath$domain.crt
 # -signkey $outputPath$domain.key
 #openssl x509 -req -in host.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out host.crt -days 365
 echo "Finished"
