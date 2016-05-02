@@ -1,63 +1,71 @@
-19 Nov: AnyProxy 3.8.1:
+29 Apr 2016: AnyProxy 3.9.1:
+
+    * update SHA1 to SHA256 for openssl certificates
+
+19 Nov 2015: AnyProxy 3.8.1:
 
     * bugfix for image content in web GUI
 
-16 Nov: AnyProxy 3.8.0:
+19 Nov 2015: AnyProxy 3.8.1:
+
+    * bugfix for image content in web GUI
+
+16 Nov 2015: AnyProxy 3.8.0:
 
     * optimize the memory strategy
 
-2 Oct: AnyProxy 3.7.7:
+2 Oct 2015: AnyProxy 3.7.7:
 
     * bugfix for proxy.close() ref #36
 
-9 Sep: AnyProxy 3.7.6:
+9 Sep 2015: AnyProxy 3.7.6:
 
     * optimize detail panel, ref #35
 
-3 Sep: AnyProxy 3.7.5:
+3 Sep 2015: AnyProxy 3.7.5:
 
     * bugfix for intercepting urls like http://a.com?url=http://b.com
 
-19 Aug: AnyProxy 3.7.4:
+19 Aug 2015: AnyProxy 3.7.4:
 
     * bugfix for intercepting urls like http://a.com?url=http://b.com
 
-31 July: AnyProxy 3.7.3:
+31 July 2015: AnyProxy 3.7.3:
 
     * show lastest 100 records when visit the web ui
     * save map-local config file to local file
     * show an indicator when filter or map-local is in use
 
-31 July: AnyProxy 3.7.2:
+31 July 2015: AnyProxy 3.7.2:
 
     * bugfix for issue #29
 
-28 July: AnyProxy 3.7.1:
+28 July 2015: AnyProxy 3.7.1:
 
     * fix a bug about deflate compression
 
-20 July: AnyProxy 3.7.0:
+20 July 2015: AnyProxy 3.7.0:
 
     * add a map-local panel on web ui, now you can easily map some request to your local files
 
-1 July: AnyProxy 3.6.0:
+1 July 2015: AnyProxy 3.6.0:
 
     * add a filter on web ui
 
-1 July: AnyProxy 3.5.2:
+1 July 2015: AnyProxy 3.5.2:
 
     * optimize the row height on web ui
 
-18 June: AnyProxy 3.5.1:
+18 June 2015: AnyProxy 3.5.1:
 
-    * print a hint when using SNI features in node <0.12 
+    * print a hint when using SNI features in node <0.12
     * Ref : https://github.com/alibaba/anyproxy/issues/25
 
-18 June: AnyProxy 3.5.0:
+18 June 2015: AnyProxy 3.5.0:
 
     * it's a formal release of 3.4.0@beta.
 
-27 Apr: AnyProxy 3.4.0@beta:
+27 Apr 2015: AnyProxy 3.4.0@beta:
 
     * optimize web server and web socket interface
 
@@ -72,7 +80,7 @@
 
 20 Mar 2015: AnyProxy 3.2.5:
 
-    * bugfix for internal https server 
+    * bugfix for internal https server
 
 19 Mar 2015: AnyProxy 3.2.4:
 
@@ -81,7 +89,7 @@
 23 Feb 2015: AnyProxy 3.2.2:
 
     * [bugfix for relative rule path](https://github.com/alibaba/anyproxy/pull/18)
-    
+
 10 Feb 2015: AnyProxy 3.2.1:
 
     * bugfix for 3.2.0
