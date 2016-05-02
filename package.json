@@ -18,6 +18,7 @@
     "ip": "^0.3.2",
     "juicer": "^0.6.6-stable",
     "nedb": "^0.11.0",
+    "node-forge": "^0.6.39",
     "npm": "^2.7.0",
     "promise": "^7.0.4",
     "qrcode-npm": "0.0.3",
