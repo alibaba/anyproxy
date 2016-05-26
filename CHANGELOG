@@ -1,3 +1,7 @@
+29 Apr 2016: AnyProxy 3.10.0:
+
+    * using node-forge to generate HTTPS certificates instead of openssl
+
 29 Apr 2016: AnyProxy 3.9.1:
 
     * update SHA1 to SHA256 for openssl certificates
