@@ -2,4 +2,4 @@
 
 echo "nodeunit is required to run these test cases"
 node -v
-nodeunit test.js
+nodeunit test/test.js
