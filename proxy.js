@@ -1,5 +1,5 @@
 try{
-    GLOBAL.util = require('./lib/util');
+    global.util = require('./lib/util');
 }catch(e){}
 
 var http = require('http'),
@@ -100,7 +100,7 @@ function proxyServer(option){
             logUtil.printLog(color.red('Invalid throttle rate value, should be positive integer\n'), logUtil.T_ERR);
             process.exit(0);
         }
-        GLOBAL._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
+        global._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
     }
 
     self.httpProxyServer = null;
@@ -111,9 +111,9 @@ function proxyServer(option){
             function(callback){
                 util.clearCacheDir(function(){
                     if(option.dbFile){
-                        GLOBAL.recorder = new Recorder({filename: option.dbFile});
+                        global.recorder = new Recorder({filename: option.dbFile});
                     }else{
-                        GLOBAL.recorder = new Recorder();
+                        global.recorder = new Recorder();
                     }
                     callback();
                 });
