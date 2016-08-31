@@ -11,7 +11,6 @@ var http = require('http'),
     color           = require('colorful'),
     certMgr         = require("./lib/certMgr"),
     getPort         = require("./lib/getPort"),
-    requestHandler  = require("./lib/requestHandler"),
     Recorder        = require("./lib/recorder"),
     logUtil         = require("./lib/log"),
     wsServer        = require("./lib/wsServer"),
@@ -37,7 +36,8 @@ var T_TYPE_HTTP            = 0,
     DEFAULT_HOST           = "localhost",
     DEFAULT_TYPE           = T_TYPE_HTTP;
 
-var default_rule = require('./lib/rule_default');
+var default_rule = util.freshRequire('./rule_default');
+var requestHandler = util.freshRequire('./requestHandler');
 
 //option
 //option.type     : 'http'(default) or 'https'
@@ -70,22 +70,39 @@ function proxyServer(option){
         logUtil.setPrintStatus(false);
     }
 
+    // copy the rule to keep the original proxyRules independent
+    proxyRules = Object.assign({}, proxyRules);
+
+    var currentRule = requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
+
     if(!!option.interceptHttps){
-        default_rule.setInterceptFlag(true);
+        if (!certMgr.isRootCAFileExists()) {
+            util.showRootInstallTip();
+            process.exit(0);
+            return;
+        }
+
+        currentRule.setInterceptFlag(true);
 
         //print a tip when using https features in Node < v0.12
         var nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
         if(nodeVersion < 0.12){
             logUtil.printLog(color.red("node >= v0.12 is required when trying to intercept HTTPS requests :("), logUtil.T_ERR);
         }
+
+        logUtil.printLog(color.blue("The WebSocket will not work properly in the https intercept mode :("), logUtil.T_TIP);
     }
 
     if(option.throttle){
         logUtil.printLog("throttle :" + option.throttle + "kb/s");
-        GLOBAL._throttle = new ThrottleGroup({rate: 1024 * parseInt(option.throttle) }); // rate - byte/sec
+        const rate = parseInt(option.throttle);
+        if (rate < 1) {
+            logUtil.printLog(color.red('Invalid throttle rate value, should be positive integer\n'), logUtil.T_ERR);
+            process.exit(0);
+        }
+        GLOBAL._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
     }
 
-    requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
     self.httpProxyServer = null;
 
     async.series(
