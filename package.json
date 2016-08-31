@@ -10,6 +10,7 @@
     "async": "~0.9.0",
     "async-task-mgr": ">=1.1.0",
     "body-parser": "^1.13.1",
+    "change-case": "^3.0.0",
     "colorful": "^2.1.0",
     "commander": "~2.3.0",
     "compression": "^1.4.4",
@@ -17,19 +18,35 @@
     "iconv-lite": "^0.4.6",
     "ip": "^0.3.2",
     "juicer": "^0.6.6-stable",
+    "mime-types": "2.1.11",
     "nedb": "^0.11.0",
+    "node-easy-cert": "^1.0.0",
     "node-forge": "^0.6.39",
     "npm": "^2.7.0",
     "promise": "^7.0.4",
     "qrcode-npm": "0.0.3",
     "stream-throttle": "^0.1.3",
-    "ws": "^0.4.32"
+    "ws": "^1.1.0"
   },
   "devDependencies": {
-    "proxy-eval": ">=1.1.2"
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.11.6",
+    "https-proxy-agent": "^1.0.0",
+    "jasmine": "^2.4.1",
+    "koa": "^1.2.1",
+    "koa-body": "^1.4.0",
+    "koa-router": "^5.4.0",
+    "koa-send": "^3.2.0",
+    "koa-websocket": "^2.0.0",
+    "nodeunit": "^0.9.1",
+    "request": "^2.74.0",
+    "stream-equal": "0.1.8"
   },
   "scripts": {
-    "test": "sh test.sh"
+    "test": "sh test/test.sh",
+    "testserver": "node test/server/startServer.js"
   },
   "optionalDependencies": {},
   "repository": {
