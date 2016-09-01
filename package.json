@@ -48,7 +48,6 @@
     "test": "sh test/test.sh",
     "testserver": "node test/server/startServer.js"
   },
-  "optionalDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/alibaba/anyproxy"
