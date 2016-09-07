@@ -50,6 +50,7 @@ module.exports = {
     "module": true,
     "exports": true,
     "__dirname": true,
+    "global": true,
     "process": true
   },
 
