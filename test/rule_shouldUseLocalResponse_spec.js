@@ -50,6 +50,8 @@ function testWrapper(protocol, ) {
                 }, error => {
                     console.log('error happened in proxy get for shouldUseLocal: ',error);
                     done.fail('error happened when test shouldUseLocal rule');
+                }).catch((e) => {
+                    console.error(e);
                 });
 
         });

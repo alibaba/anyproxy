@@ -2,12 +2,14 @@
 * Rule defination for shouldUseLocalResponse
 *
 */
-
+const Q = require('q');
 const dealLocalBody = 'handled_in_local_response';
 
 module.exports = {
     shouldUseLocalResponse: function (req, reqBody) {
-        return req.url.indexOf('uselocal') > -1;
+        const d = Q.defer();
+        d.resolve(req.url.indexOf('uselocal') > -1);
+        return d.promise;
     },
     shouldInterceptHttpsReq: function () {
         return true;
@@ -17,6 +19,14 @@ module.exports = {
             'Via-Proxy-Local': 'true'
         };
 
-        callback(200, header, dealLocalBody);
+        const d = Q.defer();
+
+        d.resolve({
+            code: 200,
+            header: header,
+            body: dealLocalBody
+        });
+
+        return d.promise;
     }
 };
