@@ -27,7 +27,7 @@ function KoaServer() {
      */
     this.logRequest = function* (next) {
         const headers = this.request.headers;
-        let key = this.request.host + this.request.url;
+        let key = this.request.protocol + '://' + this.request.host + this.request.url;
 
         // take proxy data with 'proxy-' + url
         if (headers['via-proxy'] === 'true') {
@@ -64,7 +64,7 @@ KoaServer.prototype.constructRouter = function() {
     router.get('/test/uselocal', this.logRequest, function*(next) {
         printLog('request in get local:' + JSON.stringify(this.request));
         this.response.body = 'something should be in local';
-        this.response.__req = this.request;
+        // this.response.__req = this.request;
         printLog('response in get:' + JSON.stringify(this.response));
     });
 
@@ -164,6 +164,18 @@ KoaServer.prototype.constructRouter = function() {
     //     printLog('requesting connect /test/connect');
     //     this.response.body = 'connect_established_body';
     // });
+
+    router.get('/test/should_not_replace_option', this.logRequest, function * (next) {
+        this.response.body = 'the_option_that_not_be_replaced';
+    });
+
+    router.get('/test/should_replace_option', this.logRequest, function * (next) {
+        this.response.body = "the_request_that_has_not_be_replaced";
+    });
+
+    router.get('/test/new_replace_option', this.logRequest, function* (next) {
+        this.response.body= 'the_new_replaced_option_page_content';
+    });
 
     return router;
 };

@@ -108,9 +108,9 @@ function doRequest (method = 'GET', url, params, headers = {}, isProxy) {
             function (error, response, body) {
                 if (error) {
                     reject(error);
-                    return;
+                } else {
+                    resolve(response);
                 }
-                resolve(response);
             }
         );
     });

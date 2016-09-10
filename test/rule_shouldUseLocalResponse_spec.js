@@ -8,7 +8,7 @@ const { proxyGet, generateUrl } = require('./util/HttpUtil.js');
 const Server = require('./server/server.js');
 const { printLog } = require('./util/CommonUtil.js');
 
-const rule = require('./test_rules/shouldUseLocalResponseRule.js');
+const rule = require('./test_rules/test_rule_should_use_local_response.js');
 const expectedLocalBody = 'handled_in_local_response';
 
 

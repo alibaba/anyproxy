@@ -91,7 +91,6 @@ function isCommonResHeaderEqual (directHeaders, proxyHeaders, requestUrl) {
 */
 function isCommonReqEqual(url, serverInstance) {
     try{
-        url = url.replace('https://', '').replace('http://', ''); // only the remained path is required
         let isEqual = true;
 
         const directReqObj = serverInstance.getRequestRecord(url);
