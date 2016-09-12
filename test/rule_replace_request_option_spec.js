@@ -15,13 +15,13 @@ const expectedLocalBody = 'handled_in_local_response';
 testWrapper('http');
 testWrapper('https');
 
-function testWrapper(protocol, ) {
+function testWrapper(protocol) {
     describe('Rule replaceRequestOption should be working in :' + protocol, () => {
         let proxyServer ;
         let serverInstance ;
 
         beforeAll((done) => {
-            jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000000;
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
             printLog('Start server for test_rule_replace_request_option_spec');
 
             serverInstance = new Server();
@@ -63,18 +63,12 @@ function testWrapper(protocol, ) {
                             expect(directRequestObj.headers['token']).toEqual(directToken);
 
                             done();
-                        }, error => {
+                        }).catch((error) => {
                             console.error('error happened in direct get for replaceOption rule: ',error);
-                            done.fail('error happened when direct test replaceOption rule');
-                        } ).catch((e) => {
-                            console.error(e);
                             done.fail('error happened when direct test replaceOption rule ');
                         });
-                }, error => {
+                }).catch((error) => {
                     console.error('error happened in proxy get for replaceOption rule: ', error);
-                    done.fail('error happened when proxy test replaceOption rule');
-                }).catch((e) => {
-                    console.error(e);
                     done.fail('error happened when proxy test replaceOption rule ');
                 });
 

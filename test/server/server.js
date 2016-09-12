@@ -34,6 +34,7 @@ function KoaServer() {
             key = PROXY_KEY_PREFIX + key;
         }
 
+        printLog('log request with key :' + key);
         let body = this.request.body;
         body = typeof body === 'object' ? JSON.stringify(body) : body;
         self.requestRecordMap[key] = {
@@ -177,6 +178,16 @@ KoaServer.prototype.constructRouter = function() {
         this.response.body= 'the_new_replaced_option_page_content';
     });
 
+    router.get('/test/normal_request1', this.logRequest, koaBody(),  function*(next) {
+        printLog('requesting get /test/normal_request1');
+        this.response.body = 'body_normal_request1';
+    });
+
+    router.get('/test/normal_request2', this.logRequest, koaBody(),  function*(next) {
+        printLog('requesting get /test/normal_request2');
+        this.response.body = 'body_normal_request2';
+    });
+
     return router;
 };
 
@@ -202,12 +213,12 @@ KoaServer.prototype.constructWsRouter = function() {
 };
 
 KoaServer.prototype.getRequestRecord = function (key) {
-    return this.requestRecordMap[key] || {};
+    return this.requestRecordMap[key] || null;
 };
 
 KoaServer.prototype.getProxyRequestRecord = function (key) {
     key = PROXY_KEY_PREFIX + key;
-    return this.requestRecordMap[key] || {};
+    return this.requestRecordMap[key] || null;
 };
 
 KoaServer.prototype.handleRecievedMessage = function(ws, message) {

@@ -11,10 +11,9 @@ module.exports = {
         d.resolve(req.url.indexOf('uselocal') > -1);
         return d.promise;
     },
-    shouldInterceptHttpsReq: function () {
-        return true;
-    },
     dealLocalResponse: function (req, reqBody, callback) {
+
+        console.info('=============deal with local response');
         const header = {
             'Via-Proxy-Local': 'true'
         };
