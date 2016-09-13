@@ -1,26 +1,50 @@
 //rule scheme :
 // Ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+const Q = require('q');
 
 module.exports = {
-    shouldUseLocalResponse : function(req,reqBody){
-        //intercept all options request
-        if(req.method == "OPTIONS"){
-            return true;
-        }else{
-            return false;
-        }
+    summary: function () {
+        return 'allow CORS request';
     },
 
-    dealLocalResponse : function(req,reqBody,callback){
+    shouldUseLocalResponse : function(req,reqBody){
+        const d = Q.defer();
+        //intercept all options request
         if(req.method == "OPTIONS"){
-            callback(200,mergeCORSHeader(req.headers),"");
+            d.resolve(true);
+        }else{
+            d.resolve(false);
         }
+
+        return d.promise;
+    },
+
+    dealLocalResponse : function(req,reqBody){
+        const d = Q.defer();
+
+        if(req.method == "OPTIONS"){
+            d.resolve({
+                code: 200,
+                header: mergeCORSHeader(req.headers),
+                body: ''
+            });
+        } else {
+            d.resolve({
+                code: 200,
+                header: {},
+                body: ''
+            });
+        }
+
+        return d.promise;
     },
 
     replaceResponseHeader: function(req,res,header){
-        return mergeCORSHeader(req.headers, header);
+        const d = Q.defer();
+        d.resolve(mergeCORSHeader(req.headers, header));
+        return d.promise;
     }
-    
+
 };
 
 function mergeCORSHeader(reqHeader,originHeader){

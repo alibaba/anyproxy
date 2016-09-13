@@ -74,6 +74,10 @@ Rule module
 
 * An entire scheme of rule file could be found at [./rule_sample/rule__blank.js](https://github.com/alibaba/anyproxy/blob/master/rule_sample/rule__blank.js). Besides, there are some samples at [./rule_sample](https://github.com/alibaba/anyproxy/tree/master/rule_sample). That may help you a lot when writing your own rule files.
 
+Rule Lifecyle API
+------------------
+We also maintain an API doc for rule module, you can find it [here](/doc/rule_api_md)
+
 
 Https features
 ----------------
@@ -119,6 +123,7 @@ var options = {
     webPort       : 8002,  // optional, port for web interface
     socketPort    : 8003,  // optional, internal port for web socket, replace this when it is conflict with your own service
     throttle      : 10,    // optional, speed limit in kb/s
+    interceptHttps: false, // optional, intercept https or not
     disableWebInterface : false, //optional, set it when you don't want to use the web interface
     setAsGlobalProxy : false, //set anyproxy as your system proxy
     silent        : false //optional, do not print anything into terminal. do not set it when you are still debugging.
