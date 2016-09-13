@@ -1,19 +1,9 @@
-//rule scheme : remove the cache header in request and response
+//rule scheme : remove the cache headers in response headers
 const Q = require('q');
 
 module.exports = {
     summary: function () {
-        return 'The rule to disable cache';
-    },
-
-    replaceRequestOption : function(req,option){
-        const d = Q.defer();
-
-        option = Object.assign({}, option);
-        delete option.headers['if-none-match'];
-        delete option.headers['if-modified-since'];
-        d.resolve(option);
-        return d.promise;
+        return 'The rule to remove the cache headers in response';
     },
 
     replaceResponseHeader: function(req,res,header){

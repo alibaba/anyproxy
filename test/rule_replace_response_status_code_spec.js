@@ -1,5 +1,5 @@
 /*
-* test for rule replaceRequestData rule
+* test for rule replaceResponseStatus rule
 *
 */
 const ProxyServerUtil = require('./util/ProxyServerUtil.js');
