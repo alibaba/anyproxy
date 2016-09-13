@@ -11,6 +11,8 @@ module.exports = {
         const d = Q.defer();
         if (req.path.indexOf('/authtoken.json') >= 0) {
             // the data is a Buffer object
+            // for those non-unicode response , serverResData.toString() should not be your first choice.
+            // refer to the issue for more details: https://github.com/alibaba/anyproxy/issues/20
             let requestStr = data.toString();
             const requestObj = JSON.parse(requestStr);
             if(!requestObj.authToken) {

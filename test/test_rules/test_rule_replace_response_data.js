@@ -5,14 +5,11 @@ const Q = require('q');
 module.exports = {
 
     replaceServerResData: function(req,res,serverResData){
-        //append "hello world" to all web pages
 
         const d = Q.defer();
-        //for those non-unicode response , serverResData.toString() should not be your first choice.
-        //refer to the issue for more detail: https://github.com/alibaba/anyproxy/issues/20
-        if(/html/i.test(res.headers['content-type'])){
+        if(req.url.indexOf('/test/normal_request1') > -1){
             var newDataStr = serverResData.toString();
-            newDataStr += "hello world!";
+            newDataStr += "_hello_world!";
             d.resolve(Buffer.from(newDataStr));
         }else{
             d.resolve(serverResData);
