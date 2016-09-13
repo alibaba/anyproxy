@@ -94,6 +94,7 @@ function doRequest (method = 'GET', url, params, headers = {}, isProxy) {
         form: params,
         url: url,
         headers: headers,
+        followRedirect: false,
         rejectUnauthorized: false
     };
 

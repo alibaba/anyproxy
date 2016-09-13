@@ -9,8 +9,6 @@ const Server = require('./server/server.js');
 const { printLog } = require('./util/CommonUtil.js');
 
 const rule = require('./test_rules/test_rule_replace_request_protocol.js');
-const expectedLocalBody = 'handled_in_local_response';
-
 
 testWrapper();
 

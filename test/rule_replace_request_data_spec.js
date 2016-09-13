@@ -13,7 +13,7 @@ testWrapper('http');
 testWrapper('https');
 
 function testWrapper(protocol) {
-    describe('Rule replaceRequestOption should be working in :' + protocol, () => {
+    describe('Rule replaceRequestData should be working in :' + protocol, () => {
         let proxyServer ;
         let serverInstance ;
 

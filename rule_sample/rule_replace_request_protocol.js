@@ -2,9 +2,6 @@
 const fs      = require("fs");
 const Q = require('q');
 
-const LOCAL_IMAGE = "/Users/path/to/image.png";
-
-
 module.exports = {
 
     summary:function(){
