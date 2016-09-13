@@ -142,11 +142,25 @@ function printError(content) {
     console.log(color.red('==ERROR==: ' + content));
 }
 
+function parseUrlQuery (string = '') {
+    const parameterArray = string.split('&');
+    const parsedObj = {};
+    parameterArray.forEach((parameter) => {
+        // 获取等号的位置
+        const indexOfEqual = parameter.indexOf('=');
+        const name = parameter.substr(0, indexOfEqual);
+        const value = parameter.substr(indexOfEqual +1);
+        parsedObj[name] = value;
+    });
+    return parsedObj;
+}
+
 module.exports = {
     isObjectEqual,
     isCommonResHeaderEqual,
     printLog,
     printWarn,
     printError,
-    isCommonReqEqual
+    isCommonReqEqual,
+    parseUrlQuery
 };

@@ -41,6 +41,7 @@ function KoaServer() {
             headers: headers,
             body: body
         };
+
         yield next;
     };
 
@@ -49,10 +50,10 @@ function KoaServer() {
 
 KoaServer.prototype.constructRouter = function() {
     const router = KoaRouter();
-    router.post('/test/getuser', this.logRequest, koaBody(),  function*(next) {
+    router.post('/test/getuser', koaBody(), this.logRequest, function*(next) {
         printLog('requesting post /test/getuser');
         this.response.set('reqbody', JSON.stringify(this.request.body));
-        this.response.body = 'something in post';
+        this.response.body = 'body_post_getuser';
     });
 
     router.get('/test', this.logRequest, function*(next) {
@@ -186,6 +187,11 @@ KoaServer.prototype.constructRouter = function() {
     router.get('/test/normal_request2', this.logRequest, koaBody(),  function*(next) {
         printLog('requesting get /test/normal_request2');
         this.response.body = 'body_normal_request2';
+    });
+
+    router.post('/test/normal_post_request1', koaBody(), this.logRequest, function*(next) {
+        printLog('requesting post /test/normal_post_request1');
+        this.response.body = 'body_normal_post_request1';
     });
 
     return router;
