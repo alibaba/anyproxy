@@ -76,7 +76,7 @@ Rule module
 
 Rule Lifecyle API
 ------------------
-We also maintain an API doc for rule module, you can find it [here](/doc/rule_api_md)
+We also maintain an API doc for rule module, you can find it [here](/doc/rule_api.md)
 
 
 Https features
