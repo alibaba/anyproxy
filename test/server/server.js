@@ -296,7 +296,7 @@ KoaServer.prototype.close = function() {
 
 
 function printLog(content) {
-    console.log(color.cyan('===SERVER LOG===' + content));
+    console.log(color.cyan('[SERVER LOG]: ' + content));
 }
 
 
