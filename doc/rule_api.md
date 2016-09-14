@@ -4,7 +4,7 @@ AnyProxy exports certain lifecycle APIs for customize use, so you can reinforce 
 
  All APIs, except the `summary()`, are **async**. When you implement those lifecycle methods, you should return a **Promise** , and pass the data through the `resolve()` method.
 
-> **TIPS**:  Put all the data you want to pass out through the `resolve()` method. The `reject()` should only be triggered if there are unhandled exceptoins, or in situations you believe it should be failed.
+> **TIPS**: AnyProxy only accept the data passed in the `resolve(data)`. If your promise is `rejected` or, there are uncacthed exceptions throwed up, AnyProxy will drop the original request, and a `502 Proxy Inner Error` will be returned. *(for HTTPS, chrome will treate the `502` as ::ERR_TUNNER_CONNECTION_FAILED)*
 
 
 ## summary()
