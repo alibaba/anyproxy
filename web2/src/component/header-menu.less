@@ -1,0 +1,49 @@
+@import '../style/constant.less';
+
+.topLogoDiv {
+  padding-left: 30px;
+  float: left;
+}
+
+.logo {
+  position: absolute;
+  left: -25px;
+  top: 0px;
+}
+
+.brand {
+  font-size: 30px;
+  font-weight: 400;
+  color: @default-color;
+  opacity: 0.87;
+  margin-top: 5px;
+}
+
+.menuList {
+  overflow: hidden;
+  padding-left: 50px;
+}
+
+.menuItem {
+  color: @primary-color;
+  font-size: @font-size-reg;
+  margin-right: 20px;
+  float: left;
+  cursor: pointer;
+  padding: 0 5px;
+  i {
+    padding-right: 3px;
+  }
+
+  &:hover {
+    background-color: @primary-color;
+    color: #fff;
+  }
+
+  &.disabled {
+    color: @tip-color;
+  }
+}
+
+
+
