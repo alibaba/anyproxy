@@ -41,7 +41,6 @@ class App extends React.Component{
             <div>
                 <HeaderMenu />
                 <TablePanel data={this.props.requestList} />
-                <div> <Button type="primary">something</Button></div>
             </div>
         );
     }

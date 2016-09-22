@@ -17,7 +17,7 @@ export function getJSON(url, data) {
     return d.promise;
 }
 
-function postJSON(url, data) {
+export function postJSON(url, data) {
     const d = PromiseUtil.defer();
     fetch(url, {
         method: 'POST',

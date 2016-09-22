@@ -1,0 +1,31 @@
+@import '../style/constant.less';
+
+.tableWrapper {
+  clear: both;
+  margin-top: 30px;
+  :global {
+    th {
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+      background: @background-color !important;
+      border-top: 1px solid @hint-color;
+      border-bottom: 1px solid @hint-color;
+    }
+  }
+}
+.row {
+  cursor: pointer;
+  font-size: @font-size-sm;
+  td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+}
+
+.lightBackgroundColor {
+  background: @light-background-color;
+}
+
+.okStatus {
+  color: @ok-color;
+}
