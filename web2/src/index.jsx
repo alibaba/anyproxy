@@ -6,11 +6,12 @@ import { Button } from 'antd';
 import createSagaMiddleware from 'redux-saga';
 import { fetchRequestLog } from 'action/requestAction';
 
-import rootSaga from './saga/requestSaga';
+import rootSaga from 'saga/requestSaga';
 
-import reducer from './reducer';
-import HeaderMenu from './component/header-menu';
-import TablePanel from './component/table-panel';
+import reducer from 'reducer';
+import HeaderMenu from 'component/header-menu';
+import RecordPanel from 'component/record-panel';
+import WsListener from 'component/ws-listener';
 import Style from './index.less';
 
 require('./lib/font-awesome/css/font-awesome.css');
@@ -40,7 +41,9 @@ class App extends React.Component{
         return (
             <div>
                 <HeaderMenu />
-                <TablePanel data={this.props.requestList} />
+                <RecordPanel data={this.props.requestList} />
+
+                <WsListener />
             </div>
         );
     }

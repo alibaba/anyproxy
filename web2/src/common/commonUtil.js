@@ -14,20 +14,20 @@ export function formatDate(date, formatter) {
     const transform = function(value) {
         return value < 10 ? '0' + value : value;
     };
-    return formatter.replace(/^yyyy|MM|dd|hh|mm|ss/g, function(match) {
+    return formatter.replace(/^YYYY|MM|DD|hh|mm|ss/g, function(match) {
         switch (match) {
-        case 'yyyy':
-            return transform(date.getFullYear());
-        case 'MM':
-            return transform(date.getMonth() + 1);
-        case 'mm':
-            return transform(date.getMinutes());
-        case 'dd':
-            return transform(date.getDate());
-        case 'hh':
-            return transform(date.getHours());
-        case 'ss':
-            return transform(date.getSeconds());
+            case 'YYYY':
+                return transform(date.getFullYear());
+            case 'MM':
+                return transform(date.getMonth() + 1);
+            case 'mm':
+                return transform(date.getMinutes());
+            case 'DD':
+                return transform(date.getDate());
+            case 'hh':
+                return transform(date.getHours());
+            case 'ss':
+                return transform(date.getSeconds());
         }
     });
 }

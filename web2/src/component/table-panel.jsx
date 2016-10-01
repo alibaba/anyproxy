@@ -1,5 +1,5 @@
 /*
-* 页面顶部菜单的组件
+* A copoment for the request log table
 */
 
 import React, { PropTypes } from 'react';
@@ -32,7 +32,7 @@ class TablePanel extends React.Component {
         const columns = [
             {
                 title: '#',
-                width: '50',
+                width: 50,
                 dataIndex: 'id'
             },
             {
@@ -71,7 +71,7 @@ class TablePanel extends React.Component {
                 width: 100,
                 dataIndex: 'startTime',
                 render (text) {
-                    const timeStr = formatDate(text, 'hh:MM:ss');
+                    const timeStr = formatDate(text, 'hh:mm:ss');
                     return <span>{timeStr}</span>;
                 }
             }

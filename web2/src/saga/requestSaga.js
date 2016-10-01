@@ -9,11 +9,9 @@ import * as RequestAction from 'action/requestAction';
 import ApiUtil, { getJSON } from 'common/ApiUtil';
 
 function* doFetchRequestList() {
-    console.info('get json is undefined?', getJSON);
     const data = yield call(getJSON, '/lastestLog');
     yield put(RequestAction.updateWholeRequest(data));
 }
-
 
 function* fetchRequestSaga() {
     while (true) {

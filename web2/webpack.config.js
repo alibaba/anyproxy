@@ -8,6 +8,13 @@ const extractCss = new ExtractTextPlugin('[name].css', {
     allChunks: true
 });
 
+// a plugin to set the environment
+const defineProperty = new webpack.DefinePlugin({
+    'process.env': {
+        'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'test')
+    }
+});
+
 module.exports = {
     entry: ['whatwg-fetch', 'babel-polyfill', path.join(__dirname, './src/index.jsx')],
     output: {
@@ -77,6 +84,7 @@ module.exports = {
         return [autoprefixer];
     },
     plugins: [
-        extractCss
+        extractCss,
+        defineProperty
     ]
 };

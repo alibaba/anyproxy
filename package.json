@@ -7,7 +7,7 @@
     "anyproxy": "bin.js"
   },
   "dependencies": {
-    "antd": "^1.11.1",
+    "antd": "^2.0.1",
     "async": "~0.9.0",
     "async-task-mgr": ">=1.1.0",
     "babel-polyfill": "^6.13.0",
@@ -27,6 +27,7 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "mime-types": "2.1.11",
+    "moment": "^2.15.1",
     "nedb": "^0.11.0",
     "node-easy-cert": "^1.0.0",
     "node-forge": "^0.6.39",
@@ -77,8 +78,8 @@
   "scripts": {
     "test": "sh test/test.sh",
     "testserver": "node test/server/startServer.js",
-    "buildweb": "webpack --config web2/webpack.config.js --process --colors",
-    "webserver": "webpack --config web2/webpack.config.js --process --colors --watch"
+    "buildweb": "NODE_ENV=production webpack --config web2/webpack.config.js --process --colors",
+    "webserver": "NODE_ENV=test webpack --config web2/webpack.config.js --process --colors --watch"
   },
   "repository": {
     "type": "git",

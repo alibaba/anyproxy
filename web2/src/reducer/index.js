@@ -1,4 +1,4 @@
-import requestListReducer from './requestListReducer';
+import requestRecordReducer from './requestRecordReducer';
 
 const defaultState = {
     requestList: []
@@ -6,6 +6,6 @@ const defaultState = {
 
 export default function(state = defaultState, action) {
     return {
-        requestList: requestListReducer(state.requestList, action)
+        requestList: requestRecordReducer(state.requestList, action)
     };
 }
