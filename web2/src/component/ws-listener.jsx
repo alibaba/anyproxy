@@ -18,7 +18,8 @@ class WsListener extends React.Component {
     }
 
     static propTypes = {
-        dispatch: PropTypes.func
+        dispatch: PropTypes.func,
+        globalStatus: PropTypes.object
     }
 
     onWsMessage (event) {
@@ -27,7 +28,11 @@ class WsListener extends React.Component {
             switch (data.type) {
                 case 'update': {
                     const record = data.content;
-                    this.props.dispatch(updateRecord(record));
+
+                    // stop update the record when it's turned off
+                    if (this.props.globalStatus.recording) {
+                        this.props.dispatch(updateRecord(record));
+                    }
                 }
             }
         } catch(error) {
@@ -67,4 +72,10 @@ class WsListener extends React.Component {
     }
 }
 
-export default connect()(WsListener);
+function select (state) {
+    return {
+        globalStatus: state.globalStatus
+    };
+}
+
+export default connect(select)(WsListener);

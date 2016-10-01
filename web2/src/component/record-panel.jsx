@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import { Table } from 'antd';
 import { formatDate } from 'common/CommonUtil';
 import RecordRow from 'component/record-row';
-import Style from './table-panel.less';
+import Style from './record-panel.less';
 import ClassBind from 'classnames/bind';
 import CommonStyle from '../style/common.less';
 
@@ -23,7 +23,10 @@ class RecordPanel extends React.Component {
 
     getTrs () {
         const trs = this.props.data.map((item, index) => {
-            const tableRow = StyleBind('row', { 'lightBackgroundColor': index % 2 === 1 });
+            const tableRow = StyleBind('row', {
+                'lightBackgroundColor': index % 2 === 1,
+                'lightColor': item.statusCode === ''
+            });
             return <RecordRow data={item} className={tableRow} key={item.id} />;
         });
 

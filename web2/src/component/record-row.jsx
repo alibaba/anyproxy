@@ -29,13 +29,13 @@ class RecordRow extends React.Component {
     }
 
     getCodeDiv (item) {
-        const className = StyleBind({ 'okStatus': item.code === '200' });
-        return <span className={className} >{item.code}</span>;
+        const className = StyleBind({ 'okStatus': item.statusCode === '200' });
+        return <span className={className} >{item.statusCode}</span>;
     }
 
     shouldComponentUpdate (nextProps) {
-        if (nextProps._shouldRender) {
-            nextProps._shouldRender = false;
+        if (nextProps._render) {
+            nextProps._render = false;
             return true;
         } else {
             return false;

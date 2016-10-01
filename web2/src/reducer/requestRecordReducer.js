@@ -21,6 +21,8 @@ function requestListReducer (state = defaultList, action) {
             });
 
             if (index >= 0) {
+                // set the mark to ensure the item get re-rendered
+                record._render = true;
                 list[index] = record;
             } else {
                 list.unshift(record);
