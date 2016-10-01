@@ -37,11 +37,8 @@ function testWrapper() {
 
         it('Should replace the header in proxy if assertion is true', done => {
             const url = 'https://localhost:3001/test';
-            const headers = {
-                interceptHttps: true
-            };
 
-            proxyGet(url, {}, headers)
+            proxyGet(url)
                 .then(proxyRes => {
 
                     directGet(url)
@@ -65,7 +62,7 @@ function testWrapper() {
         });
 
         it('Should not replace the header in proxy if assertion is false', done => {
-            const url = 'https://www.alipay.com';
+            const url = 'https://localhost:3002/test';
             proxyGet(url)
                 .then(proxyRes => {
                     expect(proxyRes.statusCode).toEqual(200);
@@ -73,7 +70,7 @@ function testWrapper() {
                     directGet(url)
                         .then(directRes => {
                             expect(directRes.statusCode).toEqual(200);
-                            expect(directRes.body).toEqual(proxyRes.body);
+                            expect(directRes.body.replace(/\s/g, '')).toEqual(proxyRes.body.replace(/\s/g, ''));
                             done();
                         })
                         .catch(error => {

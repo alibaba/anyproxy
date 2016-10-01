@@ -10,11 +10,33 @@ const websocket = require('koa-websocket');
 const wsRouter = require('koa-router')();
 const color = require('colorful');
 const WebSocketServer = require('ws').Server;
+const tls = require('tls');
+const crypto = require('crypto');
+
+var createSecureContext = tls.createSecureContext || crypto.createSecureContext;
 
 const DEFAULT_PORT = 3000;
 const HTTPS_PORT = 3001;
+const HTTPS_PORT2 = 3002; // start multiple https server
 const UPLOAD_DIR = './test/temp';
 const PROXY_KEY_PREFIX = 'proxy-';
+
+
+function SNICertCallback (serverName, SNICallback) {
+    console.info('SNI called with server name: ', serverName);
+    certMgr.getCertificate(serverName,function(err,key,crt){
+        if(err) {
+            console.error('error happend in sni callback', err);
+            return;
+        }
+        const ctx = createSecureContext({
+            key: key,
+            cert: crt
+        });
+
+        SNICallback(null, ctx);
+    });
+}
 
 function KoaServer() {
     this.httpServer = null;
@@ -254,6 +276,7 @@ KoaServer.prototype.start = function() {
             console.error('failed to create https server:', error);
         } else {
             self.httpsServer = https.createServer({
+                SNICallback: SNICertCallback,
                 key: keyContent,
                 cert: crtContent
             }, app.callback());
@@ -277,6 +300,13 @@ KoaServer.prototype.start = function() {
 
             self.httpsServer.listen(HTTPS_PORT);
 
+            self.httpsServer2 = https.createServer({
+                key: keyContent,
+                cert: crtContent
+            }, app.callback());
+
+            self.httpsServer2.listen(HTTPS_PORT2);
+
             printLog('HTTPS is now listening on port :' + HTTPS_PORT);
 
             printLog('Server started successfully');
@@ -290,6 +320,7 @@ KoaServer.prototype.close = function() {
     printLog('Closing server now...');
     this.httpServer && this.httpServer.close();
     this.httpsServer && this.httpsServer.close();
+    this.httpsServer2 && this.httpsServer2.close();
     this.requestRecordMap = {};
     printLog('Server closed successfully');
 };
