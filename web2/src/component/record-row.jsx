@@ -34,8 +34,8 @@ class RecordRow extends React.Component {
     }
 
     shouldComponentUpdate (nextProps) {
-        if (nextProps._render) {
-            nextProps._render = false;
+        if (nextProps.data._render) {
+            nextProps.data._render = false;
             return true;
         } else {
             return false;
