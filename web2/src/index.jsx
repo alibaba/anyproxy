@@ -11,6 +11,7 @@ import rootSaga from 'saga/requestSaga';
 import reducer from 'reducer';
 import HeaderMenu from 'component/header-menu';
 import RecordPanel from 'component/record-panel';
+import RecordFilter from 'component/record-filter';
 import WsListener from 'component/ws-listener';
 import Style from './index.less';
 
@@ -39,11 +40,11 @@ class App extends React.Component{
 
     render () {
         return (
-            <div>
+            <div className={Style.indexWrapper} >
                 <HeaderMenu />
                 <RecordPanel data={this.props.requestList} />
-
                 <WsListener />
+                <RecordFilter />
             </div>
         );
     }

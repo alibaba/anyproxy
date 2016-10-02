@@ -1,0 +1,48 @@
+@import '../style/constant.less';
+.wrapper {
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: @opacity-background-color
+}
+
+.relativeWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.contentWrapper {
+  z-index: 1500;
+  left: 60%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  color: @default-color;
+  will-change: left;
+  position: absolute;
+}
+
+.dragBar {
+  position: absolute;
+  left: 60%;
+  bottom: 0;
+  top: 0;
+  width: 1px;
+  will-change: left;
+  background-color: @hint-color;
+  z-index: 2000;
+  cursor: col-resize;
+}
+
+.content {
+  background: #fff;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}

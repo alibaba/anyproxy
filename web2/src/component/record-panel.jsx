@@ -4,7 +4,8 @@
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Table } from 'antd';
+import { Table, message } from 'antd';
+import { connect } from 'react-redux';
 import { formatDate } from 'common/CommonUtil';
 import RecordRow from 'component/record-row';
 import Style from './record-panel.less';
@@ -16,18 +17,64 @@ const StyleBind = ClassBind.bind(Style);
 class RecordPanel extends React.Component {
     constructor () {
         super();
+
+        this.getFilterReg = this.getFilterReg.bind(this);
     }
     static propTypes = {
-        data: PropTypes.array
+        data: PropTypes.array,
+        globalStatus: PropTypes.object
+    }
+
+    getFilterReg () {
+        let filterReg = null;
+        const { filterStr } = this.props.globalStatus;
+        if (filterStr) {
+            let regFilterStr = filterStr
+                .replace(/\r\n/g, '\n')
+                .replace(/\n\n/g, '\n');
+
+            if(regFilterStr[0] === '/' && regFilterStr[regFilterStr.length -1] === '/') {
+                regFilterStr = regFilterStr.substring(1, regFilterStr.length - 2);
+            }
+
+            regFilterStr = regFilterStr.replace(/((.+)\n|(.+)$)/g, (matchStr, $1, $2) => {
+                if ($2) {
+                    return `(${$2})|`;
+                } else {
+                    return `(${$1})`;
+                }
+            });
+
+            try {
+                filterReg = new RegExp(regFilterStr);
+            } catch(e) {
+                console.error(e);
+                message.error('failed to parse the filter string: ', this.globalStatus.filter);
+            }
+        }
+
+        return filterReg;
     }
 
     getTrs () {
-        const trs = this.props.data.map((item, index) => {
+        const trs = [];
+
+        const filterReg = this.getFilterReg();
+
+        this.props.data.forEach((item, index) => {
             const tableRow = StyleBind('row', {
                 'lightBackgroundColor': index % 2 === 1,
                 'lightColor': item.statusCode === ''
             });
-            return <RecordRow data={item} className={tableRow} key={item.id} />;
+
+            if (filterReg) {
+                if (filterReg.test(item.url)) {
+                    trs.push(<RecordRow data={item} className={tableRow} key={item.id} />);
+                }
+
+            } else {
+                trs.push(<RecordRow data={item} className={tableRow} key={item.id} />);
+            }
         });
 
         return trs;
@@ -77,4 +124,9 @@ class RecordPanel extends React.Component {
     }
 }
 
-export default RecordPanel;
+function select (state) {
+    return {
+        globalStatus: state.globalStatus
+    };
+}
+export default connect(select)(RecordPanel);

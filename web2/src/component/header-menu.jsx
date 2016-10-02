@@ -6,8 +6,10 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { resumeRecording, stopRecording } from 'action/globalStatusAction';
+import { message } from 'antd';
+import { resumeRecording, stopRecording, showFilter } from 'action/globalStatusAction';
 import { clearAllRecord } from 'action/requestAction';
+import { getJSON } from 'common/ApiUtil';
 
 import Style from './header-menu.less';
 import CommonStyle from '../style/common.less';
@@ -18,13 +20,15 @@ class HeaderMenu extends React.Component {
     constructor () {
         super();
         this.state = {
-            active: true
+            ruleSummary: ''
         };
 
         this.stopRecording = this.stopRecording.bind(this);
         this.resumeRecording = this.resumeRecording.bind(this);
         this.clearAllRecord = this.clearAllRecord.bind(this);
+        this.showFilter = this.showFilter.bind(this);
         this.initEvent = this.initEvent.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
 
     static propTypes = {
@@ -45,6 +49,10 @@ class HeaderMenu extends React.Component {
         this.props.dispatch(clearAllRecord());
     }
 
+    showFilter () {
+        this.props.dispatch(showFilter());
+    }
+
     initEvent () {
         document.addEventListener('keyup', (e) => {
             if (e.keyCode == 88 && e.ctrlKey) {
@@ -53,7 +61,21 @@ class HeaderMenu extends React.Component {
         });
     }
 
+    fetchData () {
+        getJSON('/ruleSummary')
+            .then((resposne) => {
+                this.setState({
+                    ruleSummary: resposne.result
+                });
+            })
+            .catch((error) => {
+                console.error;
+                message.error('Failed to get rule summary');
+            });
+    }
+
     componentDidMount () {
+        this.fetchData();
         this.initEvent();
     }
 
@@ -140,6 +162,7 @@ class HeaderMenu extends React.Component {
                         <a
                             className={Style.menuItem}
                             href="javascript:void(0)"
+                            onClick={this.showFilter}
                         >
                             <i className="fa fa-filter" />
                             <span>Filter</span>
@@ -154,7 +177,10 @@ class HeaderMenu extends React.Component {
                         </a>
 
                         <span className={Style.menuItem + ' ' + Style.disabled} >|</span>
-                        <span className={Style.ruleTip} ><i className="fa paper-plane-o" />Rule:</span>
+                        <span className={Style.ruleTip} >
+                            <i className="fa fa-tasks" />
+                            <span>Rule: {this.state.ruleSummary}</span>
+                        </span>
                     </div>
                 </div>
           </div>
