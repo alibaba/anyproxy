@@ -1,7 +1,8 @@
 const defaultList = [];
 import {
     UPDATE_WHOLE_REQUEST,
-    UPDATE_SINGLE_RECORD
+    UPDATE_SINGLE_RECORD,
+    CLEAR_ALL_LOCAL_RECORD
 } from 'action/requestAction';
 
 function requestListReducer (state = defaultList, action) {
@@ -28,6 +29,11 @@ function requestListReducer (state = defaultList, action) {
                 list.unshift(record);
             }
             return list;
+        }
+
+        case CLEAR_ALL_LOCAL_RECORD: {
+            console.info('clear local reducer');
+            return [];
         }
 
         default: {

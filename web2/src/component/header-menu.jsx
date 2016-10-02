@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { resumeRecording, stopRecording } from 'action/globalStatusAction';
+import { clearAllRecord } from 'action/requestAction';
 
 import Style from './header-menu.less';
 import CommonStyle from '../style/common.less';
@@ -22,6 +23,8 @@ class HeaderMenu extends React.Component {
 
         this.stopRecording = this.stopRecording.bind(this);
         this.resumeRecording = this.resumeRecording.bind(this);
+        this.clearAllRecord = this.clearAllRecord.bind(this);
+        this.initEvent = this.initEvent.bind(this);
     }
 
     static propTypes = {
@@ -36,6 +39,22 @@ class HeaderMenu extends React.Component {
     resumeRecording () {
         console.info('resuming');
         this.props.dispatch(resumeRecording());
+    }
+
+    clearAllRecord () {
+        this.props.dispatch(clearAllRecord());
+    }
+
+    initEvent () {
+        document.addEventListener('keyup', (e) => {
+            if (e.keyCode == 88 && e.ctrlKey) {
+                this.clearAllRecord();
+            }
+        });
+    }
+
+    componentDidMount () {
+        this.initEvent();
     }
 
     render () {
@@ -78,6 +97,7 @@ class HeaderMenu extends React.Component {
                         <a
                             className={Style.menuItem}
                             href="javascript:void(0)"
+                            onClick={this.clearAllRecord}
                         >
                             <i className="fa fa-eraser" />
                             <span>Clear(Ctrl+X)</span>
@@ -87,7 +107,9 @@ class HeaderMenu extends React.Component {
 
                         <a
                             className={Style.menuItem}
-                            href="javascript:void(0)"
+                            href="/fetchCrtFile"
+                            target="_blank"
+                            rel="noreferrer noopener"
                         >
                             <i className="fa fa-download" />
                             <span>Download rootCA.crt</span>
@@ -95,21 +117,23 @@ class HeaderMenu extends React.Component {
 
                         <a
                             className={Style.menuItem}
-                            href="javascript:void(0)"
+                            href="/qr_root"
+                            target="_blank"
+                            rel="noreferrer noopener"
                         >
                             <i className="fa fa-qrcode" />
-                            <span>QRCode of rootCA.crt</span>
+                            <span>Install CA To Phone</span>
                         </a>
 
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
                         <a
                             className={Style.menuItem}
-                            href=""
+                            href="https://github.com/alibaba/anyproxy"
                             target="_blank"
                             rel="noreferrer noopener"
                         >
                             <i className="fa fa-github" />
-                            <span>github</span>
+                            <span>Github</span>
                         </a>
                     </div>
                     <div className={Style.menuList} >
