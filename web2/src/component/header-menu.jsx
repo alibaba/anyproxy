@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { message } from 'antd';
-import { resumeRecording, stopRecording, showFilter } from 'action/globalStatusAction';
+import { resumeRecording, stopRecording, showFilter, showMapLocal } from 'action/globalStatusAction';
 import { clearAllRecord } from 'action/requestAction';
 import { getJSON } from 'common/ApiUtil';
 
@@ -27,6 +27,7 @@ class HeaderMenu extends React.Component {
         this.resumeRecording = this.resumeRecording.bind(this);
         this.clearAllRecord = this.clearAllRecord.bind(this);
         this.showFilter = this.showFilter.bind(this);
+        this.showMapLocal = this.showMapLocal.bind(this);
         this.initEvent = this.initEvent.bind(this);
         this.fetchData = this.fetchData.bind(this);
     }
@@ -51,6 +52,10 @@ class HeaderMenu extends React.Component {
 
     showFilter () {
         this.props.dispatch(showFilter());
+    }
+
+    showMapLocal () {
+        this.props.dispatch(showMapLocal());
     }
 
     initEvent () {
@@ -83,6 +88,9 @@ class HeaderMenu extends React.Component {
 
         const stopMenuStyle = StyleBind('menuItem', { 'disabled': this.props.globalStatus.recording !== true });
         const resumeMenuStyle = StyleBind('menuItem', { 'disabled': this.props.globalStatus.recording === true });
+
+        const mappedConfig = this.props.globalStatus.mappedConfig || [];
+        const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
         return (
           <div>
                 <div className={Style.topWrapper} >
@@ -169,8 +177,9 @@ class HeaderMenu extends React.Component {
                         </a>
 
                         <a
-                            className={Style.menuItem}
+                            className={mapLocalMenuStyle}
                             href="javascript:void(0)"
+                            onClick={this.showMapLocal}
                         >
                             <i className="fa fa-exchange" />
                             <span>Map Local</span>

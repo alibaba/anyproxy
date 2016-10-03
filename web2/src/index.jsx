@@ -6,12 +6,13 @@ import { Button } from 'antd';
 import createSagaMiddleware from 'redux-saga';
 import { fetchRequestLog } from 'action/requestAction';
 
-import rootSaga from 'saga/requestSaga';
+import rootSaga from 'saga/rootSaga';
 
 import reducer from 'reducer';
 import HeaderMenu from 'component/header-menu';
 import RecordPanel from 'component/record-panel';
 import RecordFilter from 'component/record-filter';
+import MapLocal from 'component/map-local';
 import WsListener from 'component/ws-listener';
 import Style from './index.less';
 
@@ -45,6 +46,7 @@ class App extends React.Component{
                 <RecordPanel data={this.props.requestList} />
                 <WsListener />
                 <RecordFilter />
+                <MapLocal />
             </div>
         );
     }

@@ -1,7 +1,7 @@
 @import '../style/constant.less';
 .wrapper {
   display: block;
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   top: 0;
   bottom: 0;
@@ -23,17 +23,15 @@
   bottom: 0;
   right: 0;
   color: @default-color;
-  will-change: left;
-  position: absolute;
+  position: fixed;
 }
 
 .dragBar {
-  position: absolute;
+  position: fixed;
   left: 60%;
   bottom: 0;
   top: 0;
   width: 1px;
-  will-change: left;
   background-color: @hint-color;
   z-index: 2000;
   cursor: col-resize;
@@ -41,7 +39,7 @@
 
 .content {
   background: #fff;
-  overflow: hidden;
+  overflow: auto;
   width: 100%;
   height: 100%;
   position: relative;

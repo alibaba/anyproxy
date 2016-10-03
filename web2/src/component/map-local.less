@@ -1,0 +1,41 @@
+@import '../style/constant.less';
+@panel-width: 400px;
+.mapLocalWrapper {
+    padding: 30px 15px
+}
+
+.treeWrapper {
+      height: 350px;
+      width: @panel-width;
+      overflow: auto;
+      border: 1px solid @light-border-color;
+      border-radius: 4px;
+}
+
+.form {
+    width: @panel-width;
+    label {
+      font-weight: 600;
+    }
+}
+
+.mappedKeyDiv {
+  a {
+    padding-left: 5px;
+  }
+}
+
+.mappedList {
+    padding-left: 25px;
+    padding-bottom: 15px;
+    li {
+        list-style-type: disc;
+    }
+}
+
+.operations {
+    margin-top: 10px;
+    button {
+        width: @panel-width;
+    }
+}

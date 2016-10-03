@@ -4,7 +4,6 @@
 import PromiseUtil from './PromiseUtil';
 
 export function getJSON(url, data) {
-    console.info('GET JSON calling');
     const d = PromiseUtil.defer();
     fetch(url + serializeQuery(data))
         .then((data) => {
@@ -21,6 +20,10 @@ export function postJSON(url, data) {
     const d = PromiseUtil.defer();
     fetch(url, {
         method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(data)
     })
         .then((data) => {
