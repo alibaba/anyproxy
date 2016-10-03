@@ -6,8 +6,10 @@ const defaultState = {
 import {
     UPDATE_WHOLE_REQUEST,
     UPDATE_SINGLE_RECORD,
-    CLEAR_ALL_LOCAL_RECORD
-} from 'action/requestAction';
+    CLEAR_ALL_LOCAL_RECORD,
+    SHOW_RECORD_DETAIL,
+    HIDE_RECORD_DETAIL
+} from 'action/recordAction';
 
 function requestListReducer (state = defaultState, action) {
     switch (action.type) {
@@ -42,9 +44,21 @@ function requestListReducer (state = defaultState, action) {
         }
 
         case CLEAR_ALL_LOCAL_RECORD: {
-            console.info('clear local reducer');
-            const newState = Object.assign({}, defaultState);
+            const newState = Object.assign({}, state);
             newState.recordList = [];
+            return newState;
+        }
+
+        case SHOW_RECORD_DETAIL: {
+            const newState = Object.assign({}, state);
+            newState.recordDetail = action.data;
+            console.info('showing detail',action);
+            return newState;
+        }
+
+        case HIDE_RECORD_DETAIL: {
+            const newState = Object.assign({}, state);
+            newState.recordDetail = null;
             return newState;
         }
 

@@ -7,7 +7,8 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { message } from 'antd';
-import { updateRecord } from 'action/requestAction';
+import { initWs } from 'common/WsUtil';
+import { updateRecord } from 'action/recordAction';
 
 class WsListener extends React.Component {
     constructor () {
@@ -42,25 +43,8 @@ class WsListener extends React.Component {
     }
 
     initWs () {
-        if(!WebSocket){
-            throw (new Error("WebSocket is not supportted on this browser"));
-        }
-
-        const wsClient = new WebSocket('ws://localhost:8003');
-
+        const wsClient = initWs();
         wsClient.onmessage = this.onWsMessage;
-        wsClient.onerror = (error) => {
-            console.error(error);
-            message.error('error happened when setup websocket');
-        };
-
-        wsClient.onopen = (e) => {
-            console.info('websocket opened: ', e);
-        };
-
-        wsClient.onclose = (e) => {
-            console.info('websocket closed: ', e);
-        };
     }
 
     componentDidMount () {

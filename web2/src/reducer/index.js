@@ -3,8 +3,8 @@ import globalStatusReducer from './globalStatusReducer';
 
 const defaultState = {
     requestRecord: {
-        requestList: [],
-        requestDetail: {}
+        recordList: [],
+        recordDetail: null
     }
 };
 

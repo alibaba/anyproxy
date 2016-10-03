@@ -20,6 +20,7 @@ class RecordRow extends React.Component {
 
     static propTypes = {
         data: PropTypes.object,
+        detailHanlder: PropTypes.func,
         className: PropTypes.string
     }
 
@@ -50,7 +51,7 @@ class RecordRow extends React.Component {
         }
 
         return (
-            <tr className={this.props.className} >
+            <tr className={this.props.className} onClick={this.props.detailHandler.bind(this, data)} >
                 <td className={Style.id} >{data.id}</td>
                 <td className={Style.method} >{this.getMethodDiv(data)}</td>
                 <td className={Style.code} >{this.getCodeDiv(data)}</td>

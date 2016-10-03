@@ -2,7 +2,6 @@
 * AJAX操作工具类
 */
 import PromiseUtil from './PromiseUtil';
-
 export function getJSON(url, data) {
     const d = PromiseUtil.defer();
     fetch(url + serializeQuery(data))
@@ -37,11 +36,8 @@ export function postJSON(url, data) {
     return d.promise;
 }
 
-function serializeQuery (data) {
-    if (!data) {
-        return '';
-    }
-
+function serializeQuery (data = {}) {
+    data['__t'] = Date.now();// disable the cache
     const queryArray = [];
 
     for (let key in data) {

@@ -4,7 +4,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { Button } from 'antd';
 import createSagaMiddleware from 'redux-saga';
-import { fetchRequestLog } from 'action/requestAction';
+import { fetchRequestLog } from 'action/recordAction';
 
 import rootSaga from 'saga/rootSaga';
 
@@ -14,6 +14,7 @@ import RecordPanel from 'component/record-panel';
 import RecordFilter from 'component/record-filter';
 import MapLocal from 'component/map-local';
 import WsListener from 'component/ws-listener';
+import RecordDetail from 'component/record-detail';
 import Style from './index.less';
 
 require('./lib/font-awesome/css/font-awesome.css');
@@ -47,6 +48,7 @@ class App extends React.Component{
                 <WsListener />
                 <RecordFilter />
                 <MapLocal />
+                <RecordDetail />
             </div>
         );
     }

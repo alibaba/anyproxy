@@ -8,9 +8,11 @@ import {
 import {
     FETCH_REQUEST_LOG,
     CLEAR_ALL_RECORD,
+    FETCH_RECORD_DETAIL,
     clearAllLocalRecord,
     updateWholeRequest,
-} from 'action/requestAction';
+    showRecordDetail
+} from 'action/recordAction';
 
 import {
     FETCH_DIRECTORY,
@@ -35,6 +37,13 @@ function* doFetchDirectory (path = '') {
 function* doFetchMappedConfig () {
     const config = yield call(getJSON, '/getMapConfig');
     yield put(updateLocalMappedConfig(config));
+}
+
+function* doFetchRecordBody (record) {
+    record = Object.assign({}, record);
+    const body = yield call(getJSON, '/fetchBody', { id: record.id });
+    record.resBody = body.content;
+    yield put(showRecordDetail(record));
 }
 
 function* doUpdateRemoteMappedConfig (config) {
@@ -78,10 +87,18 @@ function * updateRemoteMappedConfigSaga () {
     }
 }
 
+function * fetchRecordBodySaga () {
+    while (true) {
+        const action = yield take(FETCH_RECORD_DETAIL);
+        yield fork(doFetchRecordBody, action.data);
+    }
+}
+
 export default function* root() {
     yield fork(fetchRequestSaga);
     yield fork(clearRequestRecordSaga);
     yield fork(fetchDirectorySaga);
     yield fork(fetchMappedConfigSaga);
     yield fork(updateRemoteMappedConfigSaga);
+    yield fork(fetchRecordBodySaga);
 }

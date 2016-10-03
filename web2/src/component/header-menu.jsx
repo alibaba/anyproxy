@@ -8,7 +8,7 @@ import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { message } from 'antd';
 import { resumeRecording, stopRecording, showFilter, showMapLocal } from 'action/globalStatusAction';
-import { clearAllRecord } from 'action/requestAction';
+import { clearAllRecord } from 'action/recordAction';
 import { getJSON } from 'common/ApiUtil';
 
 import Style from './header-menu.less';

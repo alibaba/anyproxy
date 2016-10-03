@@ -11,6 +11,7 @@ import RecordRow from 'component/record-row';
 import Style from './record-panel.less';
 import ClassBind from 'classnames/bind';
 import CommonStyle from '../style/common.less';
+import { fetchRecordDetail } from 'action/recordAction';
 
 const StyleBind = ClassBind.bind(Style);
 
@@ -18,11 +19,20 @@ class RecordPanel extends React.Component {
     constructor () {
         super();
 
+        this.wsClient = null;
+
         this.getFilterReg = this.getFilterReg.bind(this);
+        this.getRecordDetail = this.getRecordDetail.bind(this);
     }
+
     static propTypes = {
+        dispatch: PropTypes.func,
         data: PropTypes.array,
         globalStatus: PropTypes.object
+    }
+
+    getRecordDetail (id) {
+        this.props.dispatch(fetchRecordDetail(id));
     }
 
     getFilterReg () {
@@ -69,11 +79,21 @@ class RecordPanel extends React.Component {
 
             if (filterReg) {
                 if (filterReg.test(item.url)) {
-                    trs.push(<RecordRow data={item} className={tableRow} key={item.id} />);
+                    trs.push(<RecordRow
+                        data={item}
+                        detailHandler={this.getRecordDetail}
+                        className={tableRow}
+                        key={item.id}
+                    />);
                 }
 
             } else {
-                trs.push(<RecordRow data={item} className={tableRow} key={item.id} />);
+                trs.push(<RecordRow
+                    data={item}
+                    className={tableRow}
+                    detailHandler={this.getRecordDetail}
+                    key={item.id}
+                />);
             }
         });
 
