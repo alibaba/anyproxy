@@ -1,19 +1,27 @@
-const defaultList = [];
+const defaultState = {
+    recordList: [],
+    recordDetail: null
+};
+
 import {
     UPDATE_WHOLE_REQUEST,
     UPDATE_SINGLE_RECORD,
     CLEAR_ALL_LOCAL_RECORD
 } from 'action/requestAction';
 
-function requestListReducer (state = defaultList, action) {
+function requestListReducer (state = defaultState, action) {
     switch (action.type) {
         case UPDATE_WHOLE_REQUEST: {
             console.info('update whole data', action);
-            return action.data;
+            const newState = Object.assign({}, state);
+            newState.recordList = action.data;
+            return newState;
         }
 
         case UPDATE_SINGLE_RECORD: {
-            const list = state.slice();
+            const newState = Object.assign({}, state);
+
+            const list = newState.recordList.slice();
 
             const record = action.data;
 
@@ -28,12 +36,16 @@ function requestListReducer (state = defaultList, action) {
             } else {
                 list.unshift(record);
             }
-            return list;
+
+            newState.recordList = list;
+            return newState;
         }
 
         case CLEAR_ALL_LOCAL_RECORD: {
             console.info('clear local reducer');
-            return [];
+            const newState = Object.assign({}, defaultState);
+            newState.recordList = [];
+            return newState;
         }
 
         default: {

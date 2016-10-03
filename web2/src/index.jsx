@@ -32,7 +32,7 @@ class App extends React.Component{
 
     static propTypes = {
         dispatch: PropTypes.func,
-        requestList: PropTypes.array
+        requestRecord: PropTypes.object
     }
 
     componentDidMount () {
@@ -43,7 +43,7 @@ class App extends React.Component{
         return (
             <div className={Style.indexWrapper} >
                 <HeaderMenu />
-                <RecordPanel data={this.props.requestList} />
+                <RecordPanel data={this.props.requestRecord.recordList} />
                 <WsListener />
                 <RecordFilter />
                 <MapLocal />
@@ -55,7 +55,7 @@ class App extends React.Component{
 
 function select (state) {
     return {
-        requestList: state.requestList
+        requestRecord: state.requestRecord
     };
 }
 

@@ -27,7 +27,8 @@ class ModalPanel extends React.Component {
     static propTypes = {
         children: PropTypes.element,
         onClose: PropTypes.func,
-        visible: PropTypes.bool
+        visible: PropTypes.bool,
+        left: PropTypes.string
     }
 
     onDragbarMove (event) {
@@ -63,8 +64,9 @@ class ModalPanel extends React.Component {
         }
 
         const { dragBarLeft, contentLeft } = this.state;
-        const dragBarStyle = dragBarLeft ? { 'left': dragBarLeft } : null;
-        const contentStyle = contentLeft ? { 'left': contentLeft } : null;
+        const propsLeft = this.props.left;
+        const dragBarStyle = dragBarLeft || propsLeft ? { 'left': dragBarLeft || propsLeft } : null;
+        const contentStyle = contentLeft || propsLeft ? { 'left': contentLeft || propsLeft } : null;
 
         return (
             <div className={Style.wrapper} onClick={this.onClose} >
