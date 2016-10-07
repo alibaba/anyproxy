@@ -90,7 +90,10 @@ class HeaderMenu extends React.Component {
         const resumeMenuStyle = StyleBind('menuItem', { 'disabled': this.props.globalStatus.recording === true });
 
         const mappedConfig = this.props.globalStatus.mappedConfig || [];
+        const filterStr = this.props.globalStatus.filterStr;
+
         const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
+        const filterMenuStyle = StyleBind('menuItem', { 'active': filterStr.length > 0 });
         return (
           <div className={Style.topWrapper} >
                 <div className={Style.fixedWrapper} >
@@ -168,7 +171,7 @@ class HeaderMenu extends React.Component {
                     </div>
                     <div className={Style.menuList} >
                         <a
-                            className={Style.menuItem}
+                            className={filterMenuStyle}
                             href="javascript:void(0)"
                             onClick={this.showFilter}
                         >

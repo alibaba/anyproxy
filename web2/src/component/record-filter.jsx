@@ -37,9 +37,10 @@ class RecordFilter extends React.Component {
     render() {
         const description = (
             <ul className={Style.tipList} >
-                <li>1. Multiple filters supported, write them in a single line.</li>
-                <li>2. Each line will be treaded as a Reg expression.</li>
-                <li>3. All the filters will be tested against the URL.</li>
+                <li>Multiple filters supported, write them in a single line.</li>
+                <li>Each line will be treaded as a Reg expression.</li>
+                <li>The result will be an 'OR' of the filters.</li>
+                <li>All the filters will be tested against the URL.</li>
             </ul>
         );
 
