@@ -52,7 +52,6 @@ function requestListReducer (state = defaultState, action) {
         case SHOW_RECORD_DETAIL: {
             const newState = Object.assign({}, state);
             newState.recordDetail = action.data;
-            console.info('showing detail',action);
             return newState;
         }
 

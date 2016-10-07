@@ -72,9 +72,10 @@ class RecordPanel extends React.Component {
         const filterReg = this.getFilterReg();
 
         this.props.data.forEach((item, index) => {
-            const tableRow = StyleBind('row', {
+            const tableRowStyle = StyleBind('row', {
                 'lightBackgroundColor': index % 2 === 1,
-                'lightColor': item.statusCode === ''
+                'lightColor': item.statusCode === '',
+                'activeRow': this.props.globalStatus.activeRecordId === item.id
             });
 
             if (filterReg) {
@@ -82,7 +83,7 @@ class RecordPanel extends React.Component {
                     trs.push(<RecordRow
                         data={item}
                         detailHandler={this.getRecordDetail}
-                        className={tableRow}
+                        className={tableRowStyle}
                         key={item.id}
                     />);
                 }
@@ -90,7 +91,7 @@ class RecordPanel extends React.Component {
             } else {
                 trs.push(<RecordRow
                     data={item}
-                    className={tableRow}
+                    className={tableRowStyle}
                     detailHandler={this.getRecordDetail}
                     key={item.id}
                 />);

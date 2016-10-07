@@ -4,6 +4,7 @@ const defaultStatus = {
     showMapLocal: false,
     filterStr: '',
     directory: [],
+    activeRecordId: '',
     mappedConfig:[] // configured map config
 };
 
@@ -16,7 +17,8 @@ import {
     UPDATE_LOCAL_DIRECTORY,
     SHOW_MAP_LOCAL,
     HIDE_MAP_LOCAL,
-    UPDATE_LOCAL_MAPPED_CONFIG
+    UPDATE_LOCAL_MAPPED_CONFIG,
+    UPDATE_ACTIVE_RECORD_ITEM
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -109,6 +111,13 @@ function requestListReducer (state = defaultStatus, action) {
             const newState = Object.assign({}, state);
             newState.mappedConfig = action.data;
 
+            return newState;
+        }
+
+        case UPDATE_ACTIVE_RECORD_ITEM: {
+            const newState = Object.assign({}, state);
+            newState.activeRecordId = action.data;
+            console.info('global active:', action);
             return newState;
         }
 

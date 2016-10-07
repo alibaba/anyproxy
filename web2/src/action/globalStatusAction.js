@@ -10,6 +10,7 @@ export const UPDATE_LOCAL_DIRECTORY = 'UPDATE_LOCAL_DIRECTORY';
 export const FETCH_MAPPED_CONFIG = 'FETCH_MAPPED_CONFIG';
 export const UPDATE_LOCAL_MAPPED_CONFIG = 'UPDATE_LOCAL_MAPPED_CONFIG';
 export const UPDATE_REMOTE_MAPPED_CONFIG = 'UPDATE_REMOTE_MAPPED_CONFIG';
+export const UPDATE_ACTIVE_RECORD_ITEM = 'UPDATE_ACTIVE_RECORD_ITEM';
 
 export function stopRecording() {
     return {
@@ -90,3 +91,12 @@ export function updateRemoteMappedConfig (config) {
         data: config
     };
 }
+
+export function updateActiveRecordItem (id) {
+
+    return  {
+        type: UPDATE_ACTIVE_RECORD_ITEM,
+        data: id
+    };
+}
+

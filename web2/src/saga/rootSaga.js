@@ -19,7 +19,8 @@ import {
     FETCH_MAPPED_CONFIG,
     UPDATE_REMOTE_MAPPED_CONFIG,
     updateLocalDirectory,
-    updateLocalMappedConfig
+    updateLocalMappedConfig,
+    updateActiveRecordItem
 } from 'action/globalStatusAction';
 
 import ApiUtil, { getJSON, postJSON } from 'common/ApiUtil';
@@ -90,6 +91,10 @@ function * updateRemoteMappedConfigSaga () {
 function * fetchRecordBodySaga () {
     while (true) {
         const action = yield take(FETCH_RECORD_DETAIL);
+        // update the global recordItem index
+        // ** postponed, as it will not trigger the shoudComponentUpdate
+        // yield put(updateActiveRecordItem(action.data.id));
+
         yield fork(doFetchRecordBody, action.data);
     }
 }
