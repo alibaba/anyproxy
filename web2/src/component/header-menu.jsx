@@ -92,8 +92,8 @@ class HeaderMenu extends React.Component {
         const mappedConfig = this.props.globalStatus.mappedConfig || [];
         const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
         return (
-          <div>
-                <div className={Style.topWrapper} >
+          <div className={Style.topWrapper} >
+                <div className={Style.fixedWrapper} >
                     <div className={Style.topLogoDiv} >
                         <img
                             className={CommonStyle.rotation + ' ' + Style.logo}

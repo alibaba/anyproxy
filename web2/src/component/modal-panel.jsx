@@ -60,7 +60,12 @@ class ModalPanel extends React.Component {
 
     render () {
         if (!this.props.visible) {
+            // stop the body from scrolling
+            document.body.style.overflow = 'auto';
             return null;
+        } else {
+            // stop the body from scrolling
+            document.body.style.overflow = 'hidden';
         }
 
         const { dragBarLeft, contentLeft } = this.state;

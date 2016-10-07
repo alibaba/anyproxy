@@ -1,5 +1,23 @@
 @import '../style/constant.less';
 
+@menu-height: 70px;
+
+.topWrapper {
+    width: 100%;
+    height: @menu-height;
+}
+
+.fixedWrapper {
+    position: fixed;
+    z-index: 900;
+    background-color: #fff;
+    top: 0;
+    height: @menu-height;
+    left: 0;
+    right: 0;
+    border: 1px solid @hint-color;
+    opacity: 0.95;
+}
 .topLogoDiv {
   padding-left: 30px;
   float: left;

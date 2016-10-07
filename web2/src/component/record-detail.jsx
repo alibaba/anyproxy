@@ -68,7 +68,6 @@ class RecordDetail extends React.Component {
     render() {
 
         const recordDetail = this.props.requestRecord.recordDetail;
-        console.info('record detail:', recordDetail);
         if (!recordDetail) {
             return null;
         }
