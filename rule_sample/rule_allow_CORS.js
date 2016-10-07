@@ -1,6 +1,5 @@
 //rule scheme :
 // Ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
-const Q = require('q');
 
 module.exports = {
     summary: function () {
@@ -8,41 +7,40 @@ module.exports = {
     },
 
     shouldUseLocalResponse : function(req,reqBody){
-        const d = Q.defer();
-        //intercept all options request
-        if(req.method == "OPTIONS"){
-            d.resolve(true);
-        }else{
-            d.resolve(false);
-        }
-
-        return d.promise;
+        return new Promise((resolve, reject) => {
+            //intercept all options request
+            if(req.method == "OPTIONS"){
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+        });
     },
 
     dealLocalResponse : function(req,reqBody){
-        const d = Q.defer();
+        return new Promise((resolve, reject) => {
+            if(req.method == "OPTIONS"){
+                resolve({
+                    code: 200,
+                    header: mergeCORSHeader(req.headers),
+                    body: ''
+                });
+            } else {
+                resolve({
+                    code: 200,
+                    header: {},
+                    body: ''
+                });
+            }
 
-        if(req.method == "OPTIONS"){
-            d.resolve({
-                code: 200,
-                header: mergeCORSHeader(req.headers),
-                body: ''
-            });
-        } else {
-            d.resolve({
-                code: 200,
-                header: {},
-                body: ''
-            });
-        }
+        });
 
-        return d.promise;
     },
 
     replaceResponseHeader: function(req,res,header){
-        const d = Q.defer();
-        d.resolve(mergeCORSHeader(req.headers, header));
-        return d.promise;
+        return new Promise((resolve, reject) => {
+            resolve(mergeCORSHeader(req.headers, header));
+        });
     }
 
 };
