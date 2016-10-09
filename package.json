@@ -31,6 +31,7 @@
     "node-easy-cert": "^1.0.0",
     "node-forge": "^0.6.39",
     "npm": "^2.7.0",
+    "pug": "^2.0.0-beta6",
     "q": "^1.4.1",
     "qrcode-npm": "0.0.3",
     "react": "^15.3.1",
