@@ -65,8 +65,7 @@ class RecordDetail extends React.Component {
         );
     }
 
-    render() {
-
+    getRecordDetailDiv () {
         const recordDetail = this.props.requestRecord.recordDetail;
         if (!recordDetail) {
             return null;
@@ -89,52 +88,57 @@ class RecordDetail extends React.Component {
         );
 
         return (
-            <ModalPanel onClose={this.onClose} visible left="40%">
-                <div className={Style.detailWrapper} >
-                    <div className={Style.section} >
-                        <div >
-                            <span className={CommonStyle.sectionTitle}>Request Header</span>
-                        </div>
-                        <div className={CommonStyle.whiteSpace10} />
-                        <ul>
-                            <li>
-                               <Alert type="success" message={reqSummary} />
-                            </li>
-                            {this.getLiDivs(recordDetail.reqHeader)}
-                        </ul>
+            <div className={Style.detailWrapper} >
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Request Header</span>
                     </div>
-
-                    <div className={Style.section} >
-                        <div >
-                            <span className={CommonStyle.sectionTitle}>Request Body</span>
-                        </div>
-                        <div className={CommonStyle.whiteSpace10} />
-                        {this.getReqBodyDiv()}
-                    </div>
-
-                    <div className={Style.section} >
-                        <div >
-                            <span className={CommonStyle.sectionTitle}>Response Header</span>
-                        </div>
-                        <div className={CommonStyle.whiteSpace10} />
-                        <ul>
-                            <li >
-                               <Alert type="success" message={resSummary} />
-                            </li>
-                            {this.getLiDivs(recordDetail.resHeader)}
-                        </ul>
-                    </div>
-
-                    <div className={Style.section} >
-                        <div >
-                            <span className={CommonStyle.sectionTitle}>Response Body</span>
-                        </div>
-                        <div className={CommonStyle.whiteSpace10} />
-                        {this.getResBodyDiv()}
-                    </div>
-
+                    <div className={CommonStyle.whiteSpace10} />
+                    <ul>
+                        <li>
+                           <Alert type="success" message={reqSummary} />
+                        </li>
+                        {this.getLiDivs(recordDetail.reqHeader)}
+                    </ul>
                 </div>
 
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Request Body</span>
+                    </div>
+                    <div className={CommonStyle.whiteSpace10} />
+                    {this.getReqBodyDiv()}
+                </div>
+
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Response Header</span>
+                    </div>
+                    <div className={CommonStyle.whiteSpace10} />
+                    <ul>
+                        <li >
+                           <Alert type="success" message={resSummary} />
+                        </li>
+                        {this.getLiDivs(recordDetail.resHeader)}
+                    </ul>
+                </div>
+
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Response Body</span>
+                    </div>
+                    <div className={CommonStyle.whiteSpace10} />
+                    {this.getResBodyDiv()}
+                </div>
+
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <ModalPanel onClose={this.onClose} visible={this.props.requestRecord.recordDetail !== null } left="40%">
+                {this.getRecordDetailDiv()}
             </ModalPanel>
         );
     }
