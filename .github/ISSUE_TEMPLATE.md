@@ -14,3 +14,6 @@ Plese fill the template when you reporting a new issue, thanks!
 
 #### The actual behavior of AnyProxy
 <!-- AnyProxy实际处理的结果是怎样的 -->
+
+#### The log of the error
+<!-- 有请求的AnyProxy日志信息，还请附上 -->
