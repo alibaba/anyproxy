@@ -4,7 +4,7 @@ AnyProxy exports certain lifecycle APIs for customize use, so you can reinforce 
 
  All APIs, except the `summary()`, are **async**. When you implement those lifecycle methods, you should return a **Promise** , and pass the data through the `resolve()` method.
 
-> **TIPS**: AnyProxy only accept the data passed in the `resolve(data)`. If your promise is `rejected` or, there are uncacthed exceptions throwed up, AnyProxy will drop the original request, and a `502 Proxy Inner Error` will be returned. *(for HTTPS, chrome will treate the `502` as ::ERR_TUNNER_CONNECTION_FAILED)*
+> **TIPS**: AnyProxy only accepts the data passed in the `resolve(data)`. If your promise is `rejected` or, there are uncacthed exceptions throwed up, AnyProxy will drop the original request, and a `502 Proxy Inner Error` will be returned. *(for HTTPS, chrome will treate the `502` as ::ERR_TUNNER_CONNECTION_FAILED)*
 
 
 ## summary()
@@ -67,14 +67,16 @@ AnyProxy exports certain lifecycle APIs for customize use, so you can reinforce 
 ## replaceRequestOption(req, options)
 - **Arguments:**
   - `{Object} req`
-  - `{Object} options` *Refer to the [HTTP Options][node_http_options]*
+  - `{Object} options` *Refer to the [HTTP Options][https://nodejs.org/api/http.html#http_http_request_options_callback]*
 
 - **Returned Promise:**
   - `{Object} options` *AnyProxy will request with the whole new returned options.*
 
 - **Description:**
   - Triggered before the request is sent out
-    - Replace the option, the returned options should be a complete one.
+  - The options usually contains the target host / path / request headers ,etc.
+  - Replace the options, the returned options should be a complete one.
+  - You may use `require('http').request('options')` to debug your options.
 
 - **Sample:**
   -  [rule_replace_request_option.js](/rule_sample/rule_replace_request_option.js)
@@ -92,7 +94,7 @@ AnyProxy exports certain lifecycle APIs for customize use, so you can reinforce 
 
 - **Description:**
   - Triggered before the request is sent out
-  - Replace the request data
+  - Replace the request data, usually the post body.
 
 - **Sample:**
   -  [rule_replace_request_data.js](/rule_sample/rule_replace_request_data.js)
@@ -158,7 +160,8 @@ AnyProxy exports certain lifecycle APIs for customize use, so you can reinforce 
 
 - **Description:**
   - Triggered when we are in https request, before the request sent out.
-  - If returned true, the request will be intercepted.
+  - If returned true, AnyProxy will use its self-issued certificate to hack the request. Otherwise, you could not get any further information about this request.
+  - Proxy users will get a warning about security if they don't trust the certificates issued by AnyProxy.
   - Default to the initial option when initialize the proxy server with `proxy.porxyServer(option)`
 
 - **Sample:**
