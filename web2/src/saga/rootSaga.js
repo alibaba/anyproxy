@@ -44,6 +44,8 @@ function* doFetchRecordBody (record) {
     record = Object.assign({}, record);
     const body = yield call(getJSON, '/fetchBody', { id: record.id });
     record.resBody = body.content;
+    record.type = body.type; // the type which has been dealed by backend
+    record.ref = body.ref; // the ref is set by backend when it's a image type
     yield put(showRecordDetail(record));
 }
 

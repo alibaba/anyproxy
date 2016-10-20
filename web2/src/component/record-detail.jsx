@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Input, Alert } from 'antd';
+import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
 
@@ -46,6 +47,14 @@ class RecordDetail extends React.Component {
         return liDom;
     }
 
+    getImageBody (recordDetail) {
+        return <img src={recordDetail.ref} className={Style.imageBody} />;
+    }
+
+    getJsonBody (recordDetail) {
+        return <JsonViewer data={recordDetail.resBody} />;
+    }
+
     getReqBodyDiv () {
         const { recordDetail } = this.props.requestRecord;
         return (
@@ -58,9 +67,28 @@ class RecordDetail extends React.Component {
     getResBodyDiv () {
         const { recordDetail } = this.props.requestRecord;
 
+        const self = this;
+
+        let reqBodyDiv = <Alert type="info" message={recordDetail.resBody} />;
+
+        switch (recordDetail.type) {
+            case 'image': {
+                reqBodyDiv = <Alert type="info" message={self.getImageBody(recordDetail)} />;
+                break;
+            }
+            case 'json': {
+                reqBodyDiv = self.getJsonBody(recordDetail);
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
+
         return (
             <div className={Style.resBody} >
-                <Alert type="info" message={recordDetail.resBody} />
+                {reqBodyDiv}
             </div>
         );
     }
@@ -75,7 +103,7 @@ class RecordDetail extends React.Component {
         const reqSummary = (
             <span>
                 <span>{recordDetail.method}</span>
-                <span title={recordDetail.path}> {recordDetail.path}</span>
+                <strong title={recordDetail.host + recordDetail.path}> {recordDetail.host + recordDetail.path}</strong>
                 <span> HTTP/1.1</span>
             </span>
         );
