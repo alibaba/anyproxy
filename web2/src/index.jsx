@@ -2,13 +2,14 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { Button } from 'antd';
+import { Button, LocaleProvider } from 'antd';
+import enUS from 'antd/lib/locale-provider/en_US';
 import createSagaMiddleware from 'redux-saga';
 import { fetchRequestLog } from 'action/recordAction';
 
 import rootSaga from 'saga/rootSaga';
 
-import reducer from 'reducer';
+import reducer from 'reducer/rootReducer';
 import HeaderMenu from 'component/header-menu';
 import RecordPanel from 'component/record-panel';
 import RecordFilter from 'component/record-filter';
@@ -63,4 +64,4 @@ function select (state) {
 
 const ReduxApp = connect(select)(App);
 
-ReactDOM.render(<Provider store={store} ><ReduxApp /></Provider>, document.getElementById('root'));
+ReactDOM.render(<LocaleProvider locale={enUS}><Provider store={store} ><ReduxApp /></Provider></LocaleProvider>, document.getElementById('root'));

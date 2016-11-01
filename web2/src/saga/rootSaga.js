@@ -18,9 +18,11 @@ import {
     FETCH_DIRECTORY,
     FETCH_MAPPED_CONFIG,
     UPDATE_REMOTE_MAPPED_CONFIG,
+    TOGGLE_REMOTE_INTERCEPT_HTTPS,
     updateLocalDirectory,
     updateLocalMappedConfig,
-    updateActiveRecordItem
+    updateActiveRecordItem,
+    updateLocalInterceptHttpsFlag
 } from 'action/globalStatusAction';
 
 import ApiUtil, { getJSON, postJSON } from 'common/ApiUtil';
@@ -52,6 +54,12 @@ function* doFetchRecordBody (record) {
 function* doUpdateRemoteMappedConfig (config) {
     const newConfig = yield call(postJSON, '/setMapConfig', config);
     yield put(updateLocalMappedConfig(newConfig));
+}
+
+
+function * doToggleRemoteInterceptHttps (flag) {
+    yield call(postJSON, '/api/toggleInterceptHttps', { flag: flag } );
+    yield put(updateLocalInterceptHttpsFlag(flag));
 }
 
 function * fetchRequestSaga() {
@@ -101,6 +109,13 @@ function * fetchRecordBodySaga () {
     }
 }
 
+function * updateRemoteInterceptHttpsSaga () {
+    while (true) {
+        const action = yield take(TOGGLE_REMOTE_INTERCEPT_HTTPS);
+        yield fork(doToggleRemoteInterceptHttps, action.data);
+    }
+}
+
 export default function* root() {
     yield fork(fetchRequestSaga);
     yield fork(clearRequestRecordSaga);
@@ -108,4 +123,5 @@ export default function* root() {
     yield fork(fetchMappedConfigSaga);
     yield fork(updateRemoteMappedConfigSaga);
     yield fork(fetchRecordBodySaga);
+    yield fork(updateRemoteInterceptHttpsSaga);
 }

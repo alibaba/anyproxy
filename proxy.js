@@ -153,7 +153,7 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                self.ws = new wsServer({port : socketPort});
+                self.ws = new wsServer({ port : socketPort });
                 callback(null);
             },
 
@@ -166,6 +166,7 @@ function proxyServer(option){
                         port         : proxyWebPort,
                         wsPort       : socketPort,
                         userRule     : proxyRules,
+                        proxyInstance: self,
                         ip           : ip.address()
                     };
 
@@ -253,10 +254,19 @@ function proxyServer(option){
         self.ws && self.ws.closeAll();
         self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
         logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
-    }
+    };
+
+    self.setIntercept = function (flag) {
+        currentRule.setInterceptFlag(flag);
+    };
+
+    self.getInterceptFlag = function () {
+        return currentRule.getInterceptFlag();
+    };
 }
 
 module.exports.proxyServer        = proxyServer;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
 module.exports.setRules           = requestHandler.setRules;
+

@@ -6,8 +6,16 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { message } from 'antd';
-import { resumeRecording, stopRecording, showFilter, showMapLocal } from 'action/globalStatusAction';
+import { message, Modal } from 'antd';
+import {
+    resumeRecording,
+    stopRecording,
+    showFilter,
+    showMapLocal,
+    updateLocalInterceptHttpsFlag,
+    toggleRemoteInterceptHttpsFlag
+} from 'action/globalStatusAction';
+
 import { clearAllRecord } from 'action/recordAction';
 import { getJSON } from 'common/ApiUtil';
 
@@ -30,6 +38,7 @@ class HeaderMenu extends React.Component {
         this.showMapLocal = this.showMapLocal.bind(this);
         this.initEvent = this.initEvent.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.togglerHttpsIntercept = this.togglerHttpsIntercept.bind(this);
     }
 
     static propTypes = {
@@ -42,7 +51,7 @@ class HeaderMenu extends React.Component {
     }
 
     resumeRecording () {
-        console.info('resuming');
+        console.info('Resuming...');
         this.props.dispatch(resumeRecording());
     }
 
@@ -52,6 +61,36 @@ class HeaderMenu extends React.Component {
 
     showFilter () {
         this.props.dispatch(showFilter());
+    }
+
+    togglerHttpsIntercept () {
+        const self = this;
+        // if no rootCA exists, inform the user about trust the root
+        if (!this.state.rootCAExists) {
+            Modal.info({
+                title: 'AnyProxy is about to generate the root CA for you',
+                content: (
+                    <div>
+                        <span>Trust the root CA before AnyProxy can do HTTPS proxy for you.</span>
+                        <span>They will be located in
+                            <a href="javascript:void(0)">{' ' + this.state.rootCADirPath}</a>
+                        </span>
+                    </div>
+                ),
+                width: 500,
+                onOk () {
+                    doToggleRemoteIntercept();
+                }
+            });
+        } else {
+            doToggleRemoteIntercept();
+        }
+
+        function doToggleRemoteIntercept () {
+            const currentHttpsFlag = self.props.globalStatus.interceptHttpsFlag;
+            self.props.dispatch(toggleRemoteInterceptHttpsFlag(!currentHttpsFlag));
+        }
+
     }
 
     showMapLocal () {
@@ -67,11 +106,14 @@ class HeaderMenu extends React.Component {
     }
 
     fetchData () {
-        getJSON('/ruleSummary')
+        getJSON('/api/getInitData')
             .then((resposne) => {
                 this.setState({
-                    ruleSummary: resposne.result
+                    ruleSummary: resposne.ruleSummary,
+                    rootCAExists: resposne.rootCAExists,
+                    rootCADirPath: resposne.rootCADirPath
                 });
+                this.props.dispatch(updateLocalInterceptHttpsFlag(resposne.currentInterceptFlag));
             })
             .catch((error) => {
                 console.error;
@@ -85,15 +127,18 @@ class HeaderMenu extends React.Component {
     }
 
     render () {
+        const { globalStatus } = this.props;
 
-        const stopMenuStyle = StyleBind('menuItem', { 'disabled': this.props.globalStatus.recording !== true });
-        const resumeMenuStyle = StyleBind('menuItem', { 'disabled': this.props.globalStatus.recording === true });
+        const stopMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording !== true });
+        const resumeMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording === true });
 
-        const mappedConfig = this.props.globalStatus.mappedConfig || [];
-        const filterStr = this.props.globalStatus.filterStr;
+        const mappedConfig = globalStatus.mappedConfig || [];
+        const filterStr = globalStatus.filterStr;
 
         const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
         const filterMenuStyle = StyleBind('menuItem', { 'active': filterStr.length > 0 });
+        const interceptHttpsStyle = StyleBind('menuItem', { 'active': globalStatus.interceptHttpsFlag });
+
         return (
           <div className={Style.topWrapper} >
                 <div className={Style.fixedWrapper} >
@@ -137,6 +182,15 @@ class HeaderMenu extends React.Component {
                         </a>
 
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
+
+                        <a
+                            className={interceptHttpsStyle}
+                            href="javascript:void(0)"
+                            onClick={this.togglerHttpsIntercept}
+                        >
+                            <i className="fa fa-crosshairs" />
+                            <span>Inercept HTTPS</span>
+                        </a>
 
                         <a
                             className={Style.menuItem}

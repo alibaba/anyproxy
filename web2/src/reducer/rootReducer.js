@@ -2,10 +2,7 @@ import requestRecordReducer from './requestRecordReducer';
 import globalStatusReducer from './globalStatusReducer';
 
 const defaultState = {
-    requestRecord: {
-        recordList: [],
-        recordDetail: null
-    }
+
 };
 
 export default function(state = defaultState, action) {

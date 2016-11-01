@@ -2,6 +2,7 @@ const defaultStatus = {
     recording: true,
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
+    interceptHttpsFlag: false,
     filterStr: '',
     directory: [],
     activeRecordId: '',
@@ -18,7 +19,8 @@ import {
     SHOW_MAP_LOCAL,
     HIDE_MAP_LOCAL,
     UPDATE_LOCAL_MAPPED_CONFIG,
-    UPDATE_ACTIVE_RECORD_ITEM
+    UPDATE_ACTIVE_RECORD_ITEM,
+    UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -117,8 +119,14 @@ function requestListReducer (state = defaultStatus, action) {
         case UPDATE_ACTIVE_RECORD_ITEM: {
             const newState = Object.assign({}, state);
             newState.activeRecordId = action.data;
-            console.info('global active:', action);
             return newState;
+        }
+
+        case UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG: {
+            const newState = Object.assign({}, state);
+            newState.interceptHttpsFlag = action.data;
+            return newState;
+
         }
 
         default: {

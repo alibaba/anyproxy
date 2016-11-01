@@ -12,6 +12,9 @@ export const UPDATE_LOCAL_MAPPED_CONFIG = 'UPDATE_LOCAL_MAPPED_CONFIG';
 export const UPDATE_REMOTE_MAPPED_CONFIG = 'UPDATE_REMOTE_MAPPED_CONFIG';
 export const UPDATE_ACTIVE_RECORD_ITEM = 'UPDATE_ACTIVE_RECORD_ITEM';
 
+export const TOGGLE_REMOTE_INTERCEPT_HTTPS = 'TOGGLE_REMOTE_INTERCEPT_HTTPS';
+export const UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG = 'UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG';
+
 export function stopRecording() {
     return {
         type: STOP_RECORDING
@@ -97,6 +100,20 @@ export function updateActiveRecordItem (id) {
     return  {
         type: UPDATE_ACTIVE_RECORD_ITEM,
         data: id
+    };
+}
+
+export function updateLocalInterceptHttpsFlag (flag) {
+    return {
+        type: UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG,
+        data: flag
+    };
+}
+
+export function toggleRemoteInterceptHttpsFlag (flag) {
+    return  {
+        type: TOGGLE_REMOTE_INTERCEPT_HTTPS,
+        data: flag
     };
 }
 
