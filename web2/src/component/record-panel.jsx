@@ -70,13 +70,18 @@ class RecordPanel extends React.Component {
         const trs = [];
 
         const filterReg = this.getFilterReg();
+        const { lastActiveRecordId, currentActiveRecordId } = this.props.globalStatus;
 
         this.props.data.forEach((item, index) => {
             const tableRowStyle = StyleBind('row', {
-                'lightBackgroundColor': index % 2 === 1,
+                'lightBackgroundColor': item.id % 2 === 1,
                 'lightColor': item.statusCode === '',
-                'activeRow': this.props.globalStatus.activeRecordId === item.id
+                'activeRow': currentActiveRecordId === item.id
             });
+
+            if (currentActiveRecordId === item.id || lastActiveRecordId === item.id) {
+                item._render = true;
+            }
 
             if (filterReg) {
                 if (filterReg.test(item.url)) {

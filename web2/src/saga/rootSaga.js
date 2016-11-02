@@ -102,8 +102,7 @@ function * fetchRecordBodySaga () {
     while (true) {
         const action = yield take(FETCH_RECORD_DETAIL);
         // update the global recordItem index
-        // ** postponed, as it will not trigger the shoudComponentUpdate
-        // yield put(updateActiveRecordItem(action.data.id));
+        yield put(updateActiveRecordItem(action.data.id));
 
         yield fork(doFetchRecordBody, action.data);
     }

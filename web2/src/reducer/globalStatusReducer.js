@@ -5,7 +5,8 @@ const defaultStatus = {
     interceptHttpsFlag: false,
     filterStr: '',
     directory: [],
-    activeRecordId: '',
+    lastActiveRecordId: '',
+    currentActiveRecordId: '',
     mappedConfig:[] // configured map config
 };
 
@@ -118,7 +119,8 @@ function requestListReducer (state = defaultStatus, action) {
 
         case UPDATE_ACTIVE_RECORD_ITEM: {
             const newState = Object.assign({}, state);
-            newState.activeRecordId = action.data;
+            newState.lastActiveRecordId = state.currentActiveRecordId;
+            newState.currentActiveRecordId = action.data;
             return newState;
         }
 
