@@ -7,11 +7,11 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { Input, Alert, Menu } from 'antd';
+import { Input, Alert, Menu, Table } from 'antd';
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
-import { selectText } from 'common/commonUtil';
+import { selectText } from 'common/CommonUtil';
 
 
 import Style from './record-detail.less';
@@ -75,6 +75,53 @@ class RecordDetail extends React.Component {
         return <JsonViewer data={recordDetail.resBody} />;
     }
 
+    getCookieDiv (cookies) {
+        let cookieArray = [];
+        if (cookies) {
+            const cookieStringArray = cookies.split(';');
+            cookieArray = cookieStringArray.map((cookieString) => {
+                const cookie = cookieString.split('=');
+                return {
+                    name: cookie[0],
+                    value: cookie[1]
+                };
+            });
+        }
+        const columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                width: 300
+            },
+            {
+                title: 'Value',
+                dataIndex: 'value'
+            }
+        ];
+
+        const rowClassFunc = function (record, index) {
+            return index % 2 === 0 ? null : Style.odd;
+        };
+
+        const locale = {
+            emptyText: 'No Cookies'
+        };
+
+        return (
+            <div className={Style.cookieWrapper} >
+                <Table
+                    columns={columns}
+                    dataSource={cookieArray}
+                    pagination={false}
+                    size="middle"
+                    rowClassName={rowClassFunc}
+                    bordered
+                    locale={locale}
+                />
+            </div>
+        );
+    }
+
     getReqBodyDiv () {
         const { recordDetail } = this.props.requestRecord;
         return (
@@ -117,10 +164,19 @@ class RecordDetail extends React.Component {
         const reqSummary = (
             <span>
                 <span>{recordDetail.method}</span>
-                <strong title={recordDetail.host + recordDetail.path} onClick={this.onSelectText}> {recordDetail.host + recordDetail.path}</strong>
+                <strong
+                    title={recordDetail.host + recordDetail.path}
+                    onClick={this.onSelectText}
+                >
+                    {recordDetail.host + recordDetail.path}
+                </strong>
                 <span> HTTP/1.1</span>
             </span>
         );
+
+        const reqHeader = Object.assign({}, recordDetail.reqHeader);
+        const cookieString = reqHeader.cookie;
+        delete reqHeader.cookie; // cookie will be displayed seperately
 
         return (
             <div>
@@ -133,7 +189,7 @@ class RecordDetail extends React.Component {
                         <li>
                            <Alert type="success" message={reqSummary} />
                         </li>
-                        {this.getLiDivs(recordDetail.reqHeader)}
+                        {this.getLiDivs(reqHeader)}
                     </ul>
                 </div>
 
@@ -144,6 +200,14 @@ class RecordDetail extends React.Component {
                     <div className={CommonStyle.whiteSpace10} />
                     {this.getReqBodyDiv()}
                 </div>
+
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Cookie</span>
+                    </div>
+                    {this.getCookieDiv(cookieString)}
+                </div>
+
             </div>
         );
     }
