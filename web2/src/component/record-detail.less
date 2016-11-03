@@ -11,7 +11,11 @@
 
 .section {
   padding: 10px 0;
-  font-size: 13px;
+  font-size: @font-size-xs;
+  border-bottom: 1px solid @border-color-base;
+  &.noBorder {
+    border: none;
+  }
 }
 
 .okStatus {
@@ -27,11 +31,16 @@
   max-height: 400px;
 }
 
+.ulItem {
+  padding-left: 15px;
+}
+
 .liItem {
   strong {
     float: left;
-    min-width: 125px;
-    text-align: right;
+    // min-width: 125px;
+    // text-align: right;
+    opacity: 0.8;
   }
   span {
     display: block;
@@ -43,6 +52,12 @@
 
 .cookieWrapper {
   padding-top: 15px;
+  :global {
+    .ant-table-middle .ant-table-thead > tr > th,
+    .ant-table-middle .ant-table-tbody > tr > td {
+      padding: 5px 8px;
+    }
+  }
 }
 
 .odd {

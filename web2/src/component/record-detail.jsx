@@ -126,7 +126,7 @@ class RecordDetail extends React.Component {
         const { recordDetail } = this.props.requestRecord;
         return (
             <div className={Style.reqBody} >
-                <Alert type="info" message={recordDetail.reqBody} />
+                {recordDetail.reqBody}
             </div>
         );
     }
@@ -161,34 +161,40 @@ class RecordDetail extends React.Component {
     }
 
     getRequestDiv (recordDetail) {
-        const reqSummary = (
-            <span>
-                <span>{recordDetail.method}</span>
-                <strong
-                    title={recordDetail.host + recordDetail.path}
-                    onClick={this.onSelectText}
-                >
-                    {recordDetail.host + recordDetail.path}
-                </strong>
-                <span> HTTP/1.1</span>
-            </span>
-        );
 
         const reqHeader = Object.assign({}, recordDetail.reqHeader);
         const cookieString = reqHeader.cookie;
         delete reqHeader.cookie; // cookie will be displayed seperately
 
+        const { protocol, host, path } = recordDetail;
         return (
             <div>
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>General</span>
+                    </div>
+                    <div className={CommonStyle.whiteSpace10} />
+                    <ul className={Style.ulItem} >
+                        <li className={Style.liItem} >
+                            <strong>Method:</strong>
+                            <span>{recordDetail.method} </span>
+                        </li>
+                        <li className={Style.liItem} >
+                            <strong>URL:</strong>
+                            <span onClick={this.onSelectText} >{`${protocol}://${host}${path}`} </span>
+                        </li>
+                        <li className={Style.liItem} >
+                            <strong>Protocol:</strong>
+                            <span >HTTP/1.1</span>
+                        </li>
+                    </ul>
+                </div>
                 <div className={Style.section} >
                     <div >
                         <span className={CommonStyle.sectionTitle}>Header</span>
                     </div>
                     <div className={CommonStyle.whiteSpace10} />
-                    <ul>
-                        <li>
-                           <Alert type="success" message={reqSummary} />
-                        </li>
+                    <ul className={Style.ulItem} >
                         {this.getLiDivs(reqHeader)}
                     </ul>
                 </div>
@@ -201,9 +207,9 @@ class RecordDetail extends React.Component {
                     {this.getReqBodyDiv()}
                 </div>
 
-                <div className={Style.section} >
+                <div className={Style.section + ' ' + Style.noBorder} >
                     <div >
-                        <span className={CommonStyle.sectionTitle}>Cookie</span>
+                        <span className={CommonStyle.sectionTitle}>Cookies</span>
                     </div>
                     {this.getCookieDiv(cookieString)}
                 </div>
@@ -216,24 +222,26 @@ class RecordDetail extends React.Component {
 
         const statusStyle = StyleBind({ 'okStatus': recordDetail.statusCode === 200 });
 
-        const resSummary =(
-            <span>
-                <span>HTTP/1.1 </span>
-                <span className={statusStyle} > {recordDetail.statusCode} </span>
-            </span>
-        );
-
         return (
             <div>
+                <div className={Style.section} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>General</span>
+                    </div>
+                    <div className={CommonStyle.whiteSpace10} />
+                    <ul className={Style.ulItem} >
+                        <li className={Style.liItem} >
+                            <strong>Status Code:</strong>
+                            <span className={statusStyle} > {recordDetail.statusCode} </span>
+                        </li>
+                    </ul>
+                </div>
                 <div className={Style.section} >
                     <div >
                         <span className={CommonStyle.sectionTitle}>Header</span>
                     </div>
                     <div className={CommonStyle.whiteSpace10} />
-                    <ul>
-                        <li >
-                           <Alert type="success" message={resSummary} />
-                        </li>
+                    <ul className={Style.ulItem} >
                         {this.getLiDivs(recordDetail.resHeader)}
                     </ul>
                 </div>
@@ -261,7 +269,7 @@ class RecordDetail extends React.Component {
             <div className={Style.wrapper} >
                 <Menu onClick={this.onMenuChange} mode="horizontal" selectedKeys={[this.state.pageIndex]} >
                     <Menu.Item key={PageIndexMap.REQUEST_INDEX}>Request</Menu.Item>
-                    <Menu.Item key={PageIndexMap.RESPONSE_INDEX}>Preview</Menu.Item>
+                    <Menu.Item key={PageIndexMap.RESPONSE_INDEX}>Response</Menu.Item>
                 </Menu>
                 <div className={Style.detailWrapper} >
                     {menuBody}

@@ -16,7 +16,7 @@
     left: 0;
     right: 0;
     border: 1px solid @hint-color;
-    opacity: 0.95;
+    opacity: 0.98;
 }
 .topLogoDiv {
   padding-left: 30px;
@@ -44,19 +44,19 @@
 }
 
 .menuItem {
-  color: @primary-color;
-  font-size: @font-size-reg;
+  color: @default-color;
+  font-size: @font-size-sm;
   margin-right: 20px;
   float: left;
   cursor: pointer;
   padding: 0 5px;
+  opacity: 0.87;
   i {
     padding-right: 3px;
   }
 
   &:hover {
-    background-color: @primary-color;
-    color: #fff;
+    color: @primary-color;
   }
 
   &.disabled {
@@ -64,7 +64,7 @@
   }
 
   &.active {
-    color: @success-color
+    color: @primary-color
   }
 }
 

@@ -184,22 +184,14 @@ class HeaderMenu extends React.Component {
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
 
                         <a
-                            className={interceptHttpsStyle}
-                            href="javascript:void(0)"
-                            onClick={this.togglerHttpsIntercept}
-                        >
-                            <i className="fa fa-crosshairs" />
-                            <span>Inercept HTTPS</span>
-                        </a>
-
-                        <a
                             className={Style.menuItem}
                             href="/fetchCrtFile"
                             target="_blank"
                             rel="noreferrer noopener"
+                            title="Download the RootCA of this computer"
                         >
                             <i className="fa fa-download" />
-                            <span>Download rootCA.crt</span>
+                            <span>RootCA.crt</span>
                         </a>
 
                         <a
@@ -207,27 +199,24 @@ class HeaderMenu extends React.Component {
                             href="/qr_root"
                             target="_blank"
                             rel="noreferrer noopener"
+                            title="Scan the QR code with your phone"
                         >
                             <i className="fa fa-qrcode" />
                             <span>Install CA To Phone</span>
                         </a>
 
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
-                        <a
-                            className={Style.menuItem}
-                            href="https://github.com/alibaba/anyproxy"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                        >
-                            <i className="fa fa-github" />
-                            <span>Github</span>
-                        </a>
+                        <span className={Style.ruleTip} >
+                            <i className="fa fa-tasks" />
+                            <span>Rule: {this.state.ruleSummary}</span>
+                        </span>
                     </div>
                     <div className={Style.menuList} >
                         <a
                             className={filterMenuStyle}
                             href="javascript:void(0)"
                             onClick={this.showFilter}
+                            title="Only show the filtered result"
                         >
                             <i className="fa fa-filter" />
                             <span>Filter</span>
@@ -237,16 +226,21 @@ class HeaderMenu extends React.Component {
                             className={mapLocalMenuStyle}
                             href="javascript:void(0)"
                             onClick={this.showMapLocal}
+                            title="Remap the request to a locale file"
                         >
-                            <i className="fa fa-exchange" />
+                            <i className="fa fa-retweet" />
                             <span>Map Local</span>
                         </a>
 
-                        <span className={Style.menuItem + ' ' + Style.disabled} >|</span>
-                        <span className={Style.ruleTip} >
-                            <i className="fa fa-tasks" />
-                            <span>Rule: {this.state.ruleSummary}</span>
-                        </span>
+                        <a
+                            className={interceptHttpsStyle}
+                            href="javascript:void(0)"
+                            onClick={this.togglerHttpsIntercept}
+                            title="Enable or Disable the HTTPS intercept"
+                        >
+                            <i className="fa fa-eye-slash" />
+                            <span>Inercept HTTPS</span>
+                        </a>
                     </div>
                 </div>
           </div>
