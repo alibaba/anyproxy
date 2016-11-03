@@ -42,13 +42,17 @@ function* doFetchMappedConfig () {
     yield put(updateLocalMappedConfig(config));
 }
 
-function* doFetchRecordBody (record) {
-    record = Object.assign({}, record);
-    const body = yield call(getJSON, '/fetchBody', { id: record.id });
-    record.resBody = body.content;
-    record.type = body.type; // the type which has been dealed by backend
-    record.ref = body.ref; // the ref is set by backend when it's a image type
-    yield put(showRecordDetail(record));
+function* doFetchRecordBody (recordId) {
+    const recordBody = { id: recordId };
+    const body = yield call(getJSON, '/fetchBody', { id: recordId });
+
+    recordBody.resBody = body.content;
+    recordBody.type = body.type; // the type which has been dealed by backend
+    recordBody.ref = body.ref; // the ref is set by backend when it's a image type
+
+    // update the global recordItem index
+    yield put(updateActiveRecordItem(recordId));
+    yield put(showRecordDetail(recordBody));
 }
 
 function* doUpdateRemoteMappedConfig (config) {
@@ -101,8 +105,6 @@ function * updateRemoteMappedConfigSaga () {
 function * fetchRecordBodySaga () {
     while (true) {
         const action = yield take(FETCH_RECORD_DETAIL);
-        // update the global recordItem index
-        yield put(updateActiveRecordItem(action.data.id));
 
         yield fork(doFetchRecordBody, action.data);
     }

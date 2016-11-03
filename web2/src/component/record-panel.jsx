@@ -23,6 +23,8 @@ class RecordPanel extends React.Component {
 
         this.getFilterReg = this.getFilterReg.bind(this);
         this.getRecordDetail = this.getRecordDetail.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
+        this.addKeyEvent = this.addKeyEvent.bind(this);
     }
 
     static propTypes = {
@@ -33,6 +35,30 @@ class RecordPanel extends React.Component {
 
     getRecordDetail (id) {
         this.props.dispatch(fetchRecordDetail(id));
+    }
+
+    // get next detail with cursor, to go previous and next
+    getNextDetail (cursor) {
+        const currentId = this.props.globalStatus.currentActiveRecordId;
+        this.props.dispatch(fetchRecordDetail(currentId + cursor));
+    }
+
+    onKeyUp (e) {
+        if (typeof this.props.globalStatus.currentActiveRecordId === 'number') {
+            // up arrow
+            if (e.keyCode === 38) {
+                this.getNextDetail(1);
+            }
+
+            // down arrow
+            if (e.keyCode === 40) {
+                this.getNextDetail(-1);
+            }
+        }
+    }
+
+    addKeyEvent () {
+        document.addEventListener('keyup', this.onKeyUp);
     }
 
     getFilterReg () {
@@ -104,6 +130,10 @@ class RecordPanel extends React.Component {
         });
 
         return trs;
+    }
+
+    componentDidMount () {
+        this.addKeyEvent();
     }
 
     render () {

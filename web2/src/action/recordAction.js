@@ -39,10 +39,10 @@ export function clearAllLocalRecord () {
     };
 }
 
-export function fetchRecordDetail (record) {
+export function fetchRecordDetail (recordId) {
     return {
         type: FETCH_RECORD_DETAIL,
-        data: record
+        data: recordId
     };
 }
 

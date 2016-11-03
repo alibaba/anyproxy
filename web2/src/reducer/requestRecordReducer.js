@@ -11,6 +11,16 @@ import {
     HIDE_RECORD_DETAIL
 } from 'action/recordAction';
 
+const getRecordInList = function (recordId, recordList) {
+    const newRecordList = recordList.slice();
+    for (let i = 0; i< newRecordList.length ; i++) {
+        const record = newRecordList[i];
+        if (record.id === recordId) {
+            return record;
+        }
+    }
+};
+
 function requestListReducer (state = defaultState, action) {
     switch (action.type) {
         case UPDATE_WHOLE_REQUEST: {
@@ -51,7 +61,15 @@ function requestListReducer (state = defaultState, action) {
 
         case SHOW_RECORD_DETAIL: {
             const newState = Object.assign({}, state);
-            newState.recordDetail = action.data;
+            const responseBody = action.data;
+            const originRecord = getRecordInList(responseBody.id, newState.recordList);
+            // 只在id存在的时候，才更新, 否则取消
+            if (originRecord) {
+                newState.recordDetail =  Object.assign(responseBody, originRecord);
+            } else {
+                newState.recordDetail = null;
+            }
+
             return newState;
         }
 
