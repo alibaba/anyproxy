@@ -5,9 +5,21 @@
   z-index: 1000;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 60%;
   right: 0;
   background-color: @opacity-background-color
+}
+
+.closeIcon {
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 15px;
+  i {
+    font-size: @font-size-big;
+  }
 }
 
 .relativeWrapper {
@@ -25,6 +37,9 @@
   color: @default-color;
   position: fixed;
   overflow: hidden;
+  -webkit-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
+  -moz-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
+  box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
 }
 
 .dragBar {

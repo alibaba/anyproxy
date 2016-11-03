@@ -203,7 +203,12 @@ class RecordDetail extends React.Component {
 
     render() {
         return (
-            <ModalPanel onClose={this.onClose} visible={this.props.requestRecord.recordDetail !== null } left="40%">
+            <ModalPanel
+                onClose={this.onClose}
+                hideBackModal
+                visible={this.props.requestRecord.recordDetail !== null }
+                left="40%"
+            >
                 {this.getRecordDetailDiv()}
             </ModalPanel>
         );
