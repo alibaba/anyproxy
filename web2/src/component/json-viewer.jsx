@@ -31,7 +31,7 @@ const theme = {
     base0C: '#3971ED',
     base0D: '#3971ED',
     base0E: '#A36AC7',
-base0F: '#3971ED'
+    base0F: '#3971ED'
 };
 
 class JsonViewer extends React.Component {
@@ -70,7 +70,16 @@ class JsonViewer extends React.Component {
             return null;
         }
 
-        const jsonTreeDiv = <JSONTree data={JSON.parse(this.props.data)} theme={theme} />;
+        let jsonTreeDiv = <div>{this.props.data}</div>;
+
+        try {
+            // In an invalid JSON string returned, handle the exception
+            const jsonObj = JSON.parse(this.props.data);
+            jsonTreeDiv = <JSONTree data={jsonObj} theme={theme} />;
+        } catch (e) {
+            console.warn('Failed to get JSON Tree:', e);
+        }
+
         const jsonStringDiv = <div>{this.props.data}</div>;
         return (
             <div className={Style.wrapper} >
