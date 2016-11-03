@@ -32,8 +32,24 @@ export function formatDate(date, formatter) {
     });
 }
 
+export function selectText(element) {
+    let range, selection;
+
+    if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else if (document.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    }
+}
 const CommonUtil = {
-    formatDate
+    formatDate,
+    selectText
 };
 
 export default CommonUtil;

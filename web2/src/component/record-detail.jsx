@@ -11,6 +11,7 @@ import { Input, Alert, Menu } from 'antd';
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
+import { selectText } from 'common/commonUtil';
 
 
 import Style from './record-detail.less';
@@ -47,6 +48,10 @@ class RecordDetail extends React.Component {
         this.setState({
             pageIndex: e.key,
         });
+    }
+
+    onSelectText (e) {
+        selectText(e.target);
     }
 
     getLiDivs (targetObj) {
@@ -112,7 +117,7 @@ class RecordDetail extends React.Component {
         const reqSummary = (
             <span>
                 <span>{recordDetail.method}</span>
-                <strong title={recordDetail.host + recordDetail.path}> {recordDetail.host + recordDetail.path}</strong>
+                <strong title={recordDetail.host + recordDetail.path} onClick={this.onSelectText}> {recordDetail.host + recordDetail.path}</strong>
                 <span> HTTP/1.1</span>
             </span>
         );
