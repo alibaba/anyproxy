@@ -28,3 +28,4 @@ temp
 releases
 rule_sample
 test
+*.tgz

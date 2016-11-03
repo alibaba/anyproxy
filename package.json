@@ -10,8 +10,6 @@
     "antd": "^2.0.1",
     "async": "~0.9.0",
     "async-task-mgr": ">=1.1.0",
-    "babel-eslint": "^7.0.0",
-    "babel-polyfill": "^6.13.0",
     "body-parser": "^1.13.1",
     "change-case": "^3.0.0",
     "classnames": "^2.2.5",
@@ -49,6 +47,8 @@
     "ws": "^1.1.0"
   },
   "devDependencies": {
+    "babel-eslint": "^7.0.0",
+    "babel-polyfill": "^6.13.0",
     "autoprefixer": "^6.4.1",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
