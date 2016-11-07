@@ -19,6 +19,7 @@ const CommonRequestHeader = {
     'Date': 'Tue, 15 Nov 1994 08:12:31 GMT',
     'Origin': 'http://localhost',
     'Pragma': 'no-cache',
+    'some_thing': 'only_to_test_letter_case',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
 };
 
