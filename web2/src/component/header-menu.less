@@ -76,4 +76,32 @@
   }
 }
 
+.modalInfo {
+   li {
+    font-size: @font-size-reg;
+    overflow: hidden;
+    strong {
+      font-weight: normal;
+      float: left;
+    }
+
+    span {
+      display: block;
+      overflow: hidden;
+      padding-left: 10px;
+      color: @tip-color;
+    }
+  }
+
+  :global {
+    .ant-modal-title {
+      color: @default-color;
+      font-weight: 400;
+    }
+    .ant-btn {
+      font-weight: normal;
+    }
+  }
+}
+
 

@@ -28,7 +28,8 @@ class HeaderMenu extends React.Component {
     constructor () {
         super();
         this.state = {
-            ruleSummary: ''
+            ruleSummary: '',
+            runningDetailVisible: false
         };
 
         this.stopRecording = this.stopRecording.bind(this);
@@ -39,6 +40,8 @@ class HeaderMenu extends React.Component {
         this.initEvent = this.initEvent.bind(this);
         this.fetchData = this.fetchData.bind(this);
         this.togglerHttpsIntercept = this.togglerHttpsIntercept.bind(this);
+        this.showRunningInfo = this.showRunningInfo.bind(this);
+        this.hideRunningDetailInfo = this.hideRunningDetailInfo.bind(this);
     }
 
     static propTypes = {
@@ -61,6 +64,17 @@ class HeaderMenu extends React.Component {
 
     showFilter () {
         this.props.dispatch(showFilter());
+    }
+
+    hideRunningDetailInfo () {
+        this.setState({
+            runningDetailVisible: false
+        });
+    }
+    showRunningInfo () {
+        this.setState({
+            runningDetailVisible: true
+        });
     }
 
     togglerHttpsIntercept () {
@@ -111,7 +125,9 @@ class HeaderMenu extends React.Component {
                 this.setState({
                     ruleSummary: resposne.ruleSummary,
                     rootCAExists: resposne.rootCAExists,
-                    rootCADirPath: resposne.rootCADirPath
+                    rootCADirPath: resposne.rootCADirPath,
+                    ipAddress: resposne.ipAddress,
+                    port: resposne.port
                 });
                 this.props.dispatch(updateLocalInterceptHttpsFlag(resposne.currentInterceptFlag));
             })
@@ -138,6 +154,29 @@ class HeaderMenu extends React.Component {
         const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
         const filterMenuStyle = StyleBind('menuItem', { 'active': filterStr.length > 0 });
         const interceptHttpsStyle = StyleBind('menuItem', { 'active': globalStatus.interceptHttpsFlag });
+
+        const runningInfoDiv = (
+            <div >
+                <ul>
+                    <li>
+                        <strong>Active Rule:</strong>
+                        <span>{this.state.ruleSummary}</span>
+                    </li>
+                    <li>
+                        <strong>Host Address:</strong>
+                        <span>{this.state.ipAddress}</span>
+                    </li>
+                    <li>
+                        <strong>Listening on:</strong>
+                        <span>{this.state.port}</span>
+                    </li>
+                    <li>
+                        <strong>Proxy Protocol:</strong>
+                        <span>HTTP</span>
+                    </li>
+                </ul>
+            </div>
+        );
 
         return (
           <div className={Style.topWrapper} >
@@ -206,10 +245,15 @@ class HeaderMenu extends React.Component {
                         </a>
 
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
-                        <span className={Style.ruleTip} >
-                            <i className="fa fa-tasks" />
-                            <span>Rule: {this.state.ruleSummary}</span>
-                        </span>
+                        <a
+                            className={Style.menuItem}
+                            href="javascript:void(0)"
+                            title="Check the running info about AnyProxy"
+                            onClick={this.showRunningInfo}
+                        >
+                            <i className="fa fa-tachometer" />
+                            <span>AnyProxy Info</span>
+                        </a>
                     </div>
                     <div className={Style.menuList} >
                         <a
@@ -243,6 +287,16 @@ class HeaderMenu extends React.Component {
                         </a>
                     </div>
                 </div>
+
+                <Modal
+                    visible={this.state.runningDetailVisible}
+                    onOk={this.hideRunningDetailInfo}
+                    onCancel={this.hideRunningDetailInfo}
+                    title="AnyProxy Running Info"
+                    wrapClassName={Style.modalInfo}
+                >
+                    {runningInfoDiv}
+                </Modal>
           </div>
         );
     }
