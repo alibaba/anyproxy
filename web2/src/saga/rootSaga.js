@@ -4,6 +4,7 @@ import {
     call,
     fork
 } from 'redux-saga/effects';
+import { message } from 'antd';
 
 import {
     FETCH_REQUEST_LOG,
@@ -19,13 +20,15 @@ import {
     FETCH_MAPPED_CONFIG,
     UPDATE_REMOTE_MAPPED_CONFIG,
     TOGGLE_REMOTE_INTERCEPT_HTTPS,
+    TOGGLE_REMORE_GLOBAL_PROXY_FLAG,
     updateLocalDirectory,
     updateLocalMappedConfig,
     updateActiveRecordItem,
-    updateLocalInterceptHttpsFlag
+    updateLocalInterceptHttpsFlag,
+    updateLocalGlobalProxyFlag
 } from 'action/globalStatusAction';
 
-import ApiUtil, { getJSON, postJSON } from 'common/ApiUtil';
+import ApiUtil, { getJSON, postJSON, isApiSuccess } from 'common/ApiUtil';
 
 function* doFetchRequestList() {
     const data = yield call(getJSON, '/lastestLog');
@@ -64,6 +67,20 @@ function* doUpdateRemoteMappedConfig (config) {
 function * doToggleRemoteInterceptHttps (flag) {
     yield call(postJSON, '/api/toggleInterceptHttps', { flag: flag } );
     yield put(updateLocalInterceptHttpsFlag(flag));
+}
+
+function * doToggleRemoteGlobalProxy (flag) {
+    const result = yield call(postJSON, '/api/toggleGlobalProxy', { flag: flag });
+    const windowsMessage = `AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.`;
+    const linuxMessage = `AnyProxy is now the default proxy for your system.`;
+    const turnDownMessage = `Global proxy has been turned down.`;
+    if (isApiSuccess(result)) {
+        const tipMessage = result.isWindows ? windowsMessage : linuxMessage;
+        message.success(flag ? tipMessage : turnDownMessage, 3);
+        yield put(updateLocalGlobalProxyFlag(flag));
+    } else {
+        message.error(result.errorMsg, 3);
+    }
 }
 
 function * fetchRequestSaga() {
@@ -110,10 +127,17 @@ function * fetchRecordBodySaga () {
     }
 }
 
-function * updateRemoteInterceptHttpsSaga () {
+function * toggleRemoteInterceptHttpsSaga () {
     while (true) {
         const action = yield take(TOGGLE_REMOTE_INTERCEPT_HTTPS);
         yield fork(doToggleRemoteInterceptHttps, action.data);
+    }
+}
+
+function * toggleRemoteGlobalProxySaga () {
+    while (true) {
+        const action = yield take(TOGGLE_REMORE_GLOBAL_PROXY_FLAG);
+        yield fork(doToggleRemoteGlobalProxy, action.data);
     }
 }
 
@@ -124,5 +148,6 @@ export default function* root() {
     yield fork(fetchMappedConfigSaga);
     yield fork(updateRemoteMappedConfigSaga);
     yield fork(fetchRecordBodySaga);
-    yield fork(updateRemoteInterceptHttpsSaga);
+    yield fork(toggleRemoteInterceptHttpsSaga);
+    yield fork(toggleRemoteGlobalProxySaga);
 }

@@ -49,9 +49,14 @@ function serializeQuery (data = {}) {
     return queryStr ? '?' + queryStr : '';
 }
 
+export function isApiSuccess (response) {
+    return response.status === 'success';
+}
+
 const ApiUtil = {
     getJSON,
-    postJSON
+    postJSON,
+    isApiSuccess
 };
 
 export default ApiUtil;

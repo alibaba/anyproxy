@@ -3,6 +3,7 @@ const defaultStatus = {
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
     interceptHttpsFlag: false,
+    globalProxyFlag: false, // is global proxy now
     filterStr: '',
     directory: [],
     lastActiveRecordId: '',
@@ -21,7 +22,8 @@ import {
     HIDE_MAP_LOCAL,
     UPDATE_LOCAL_MAPPED_CONFIG,
     UPDATE_ACTIVE_RECORD_ITEM,
-    UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG
+    UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG,
+    UPDATE_LOCAL_GLOBAL_PROXY_FLAG
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -128,7 +130,12 @@ function requestListReducer (state = defaultStatus, action) {
             const newState = Object.assign({}, state);
             newState.interceptHttpsFlag = action.data;
             return newState;
+        }
 
+        case UPDATE_LOCAL_GLOBAL_PROXY_FLAG: {
+            const newState = Object.assign({}, state);
+            newState.globalProxyFlag = action.data;
+            return newState;
         }
 
         default: {

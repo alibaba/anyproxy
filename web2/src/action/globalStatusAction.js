@@ -15,6 +15,9 @@ export const UPDATE_ACTIVE_RECORD_ITEM = 'UPDATE_ACTIVE_RECORD_ITEM';
 export const TOGGLE_REMOTE_INTERCEPT_HTTPS = 'TOGGLE_REMOTE_INTERCEPT_HTTPS';
 export const UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG = 'UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG';
 
+export const TOGGLE_REMORE_GLOBAL_PROXY_FLAG = 'TOGGLE_REMORE_GLOBAL_PROXY_FLAG';
+export const UPDATE_LOCAL_GLOBAL_PROXY_FLAG = 'UPDATE_LOCAL_GLOBAL_PROXY_FLAG';
+
 export function stopRecording() {
     return {
         type: STOP_RECORDING
@@ -117,3 +120,16 @@ export function toggleRemoteInterceptHttpsFlag (flag) {
     };
 }
 
+export function toggleRemoteGlobalProxyFlag (flag) {
+    return {
+        type: TOGGLE_REMORE_GLOBAL_PROXY_FLAG,
+        data: flag
+    };
+}
+
+export function updateLocalGlobalProxyFlag (flag) {
+    return {
+        type: UPDATE_LOCAL_GLOBAL_PROXY_FLAG,
+        data: flag
+    };
+}

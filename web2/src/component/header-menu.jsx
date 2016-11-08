@@ -13,7 +13,9 @@ import {
     showFilter,
     showMapLocal,
     updateLocalInterceptHttpsFlag,
-    toggleRemoteInterceptHttpsFlag
+    updateLocalGlobalProxyFlag,
+    toggleRemoteInterceptHttpsFlag,
+    toggleRemoteGlobalProxyFlag
 } from 'action/globalStatusAction';
 
 import { clearAllRecord } from 'action/recordAction';
@@ -42,6 +44,7 @@ class HeaderMenu extends React.Component {
         this.togglerHttpsIntercept = this.togglerHttpsIntercept.bind(this);
         this.showRunningInfo = this.showRunningInfo.bind(this);
         this.hideRunningDetailInfo = this.hideRunningDetailInfo.bind(this);
+        this.toggleGlobalProxyFlag = this.toggleGlobalProxyFlag.bind(this);
     }
 
     static propTypes = {
@@ -107,6 +110,11 @@ class HeaderMenu extends React.Component {
 
     }
 
+    toggleGlobalProxyFlag () {
+        const currentGlobalProxyFlag = this.props.globalStatus.globalProxyFlag;
+        this.props.dispatch(toggleRemoteGlobalProxyFlag(!currentGlobalProxyFlag));
+    }
+
     showMapLocal () {
         this.props.dispatch(showMapLocal());
     }
@@ -130,6 +138,7 @@ class HeaderMenu extends React.Component {
                     port: resposne.port
                 });
                 this.props.dispatch(updateLocalInterceptHttpsFlag(resposne.currentInterceptFlag));
+                this.props.dispatch(updateLocalGlobalProxyFlag(resposne.currentGlobalProxyFlag));
             })
             .catch((error) => {
                 console.error;
@@ -154,6 +163,7 @@ class HeaderMenu extends React.Component {
         const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
         const filterMenuStyle = StyleBind('menuItem', { 'active': filterStr.length > 0 });
         const interceptHttpsStyle = StyleBind('menuItem', { 'active': globalStatus.interceptHttpsFlag });
+        const globalProxyStyle = StyleBind('menuItem', { 'active': globalStatus.globalProxyFlag });
 
         const runningInfoDiv = (
             <div >
@@ -284,6 +294,16 @@ class HeaderMenu extends React.Component {
                         >
                             <i className="fa fa-eye-slash" />
                             <span>Inercept HTTPS</span>
+                        </a>
+
+                        <a
+                            className={globalProxyStyle}
+                            href="javascript:void(0)"
+                            onClick={this.toggleGlobalProxyFlag}
+                            title="Enable or Disable the HTTPS intercept"
+                        >
+                            <i className="fa fa-globe" />
+                            <span>Global Proxy</span>
                         </a>
                     </div>
                 </div>

@@ -66,6 +66,9 @@ function proxyServer(option){
         disableWebInterface = !!option.disableWebInterface,
         ifSilent            = !!option.silent;
 
+    self.IS_GLOBAL_PROXY = false; // mark if global proxy is on
+    self.httpProxyServer = null;
+
     if(ifSilent){
         logUtil.setPrintStatus(false);
     }
@@ -102,8 +105,6 @@ function proxyServer(option){
         }
         global._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
     }
-
-    self.httpProxyServer = null;
 
     async.series(
         [
@@ -182,10 +183,11 @@ function proxyServer(option){
                     if(!/^win/.test(process.platform) && !process.env.SUDO_UID){
                         console.log('sudo password may be required.');
                     }
-                    var result = SystemProxyMgr.enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+                    var result = self.enableGlobalProxy();
                     if (result.status) {
                         callback(result.stdout);
                     } else {
+                        self.IS_GLOBAL_PROXY = true;
                         if(/^win/.test(process.platform)){
                             console.log('AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.');
                         } else{
@@ -205,11 +207,12 @@ function proxyServer(option){
 
                     if (option.setAsGlobalProxy) {
                         console.log('resigning global proxy...');
-                        var result = SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
+                        var result = self.disableGlobalProxy();
 
                         if (result.status) {
                             console.log(color.red(result.stdout));
                         } else{
+                            self.IS_GLOBAL_PROXY = false;
                             console.log('global proxy resigned.');
                         }
                     }
@@ -219,11 +222,17 @@ function proxyServer(option){
 
                 //exit cause ctrl+c
                 process.on("SIGINT", function() {
+                    if (self.IS_GLOBAL_PROXY) {
+                        self.disableGlobalProxy();
+                    }
                     process.exit();
                 });
 
                 process.on("uncaughtException",function(err){
                     logUtil.printLog('Caught exception: ' + (err.stack || err), logUtil.T_ERR);
+                    if (self.IS_GLOBAL_PROXY) {
+                        self.disableGlobalProxy();
+                    }
                     process.exit();
                 });
 
@@ -263,6 +272,21 @@ function proxyServer(option){
     self.getInterceptFlag = function () {
         return currentRule.getInterceptFlag();
     };
+
+    self.getGlobalProxyFlag = function () {
+        return self.IS_GLOBAL_PROXY;
+    };
+
+    self.enableGlobalProxy = function () {
+        self.IS_GLOBAL_PROXY = true;
+        return SystemProxyMgr.enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+    };
+
+    self.disableGlobalProxy = function () {
+        self.IS_GLOBAL_PROXY = false;
+        return SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
+    };
+
 }
 
 module.exports.proxyServer        = proxyServer;
