@@ -6,7 +6,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { message, Modal } from 'antd';
+import { message, Modal, Spin, Popover } from 'antd';
 import {
     resumeRecording,
     stopRecording,
@@ -31,6 +31,10 @@ class HeaderMenu extends React.Component {
         super();
         this.state = {
             ruleSummary: '',
+            CAQrCodeImageDom: '',
+            CAUrl: '',
+            loadingCAQr: false,
+            CAQrVisible: false,
             runningDetailVisible: false
         };
 
@@ -141,14 +145,44 @@ class HeaderMenu extends React.Component {
                 this.props.dispatch(updateLocalGlobalProxyFlag(resposne.currentGlobalProxyFlag));
             })
             .catch((error) => {
-                console.error;
+                console.error(error);
                 message.error('Failed to get rule summary');
+            });
+
+        this.setState({
+            loadingCAQr: true
+        });
+
+        getJSON('/api/getQrCode')
+            .then((response) => {
+                this.setState({
+                    loadingCAQr: false,
+                    CAQrCodeImageDom: response.qrImgDom,
+                    url: response.url
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+                message.error(error.errorMsg || 'FAiled to get the QR code of root CA path.');
             });
     }
 
     componentDidMount () {
         this.fetchData();
         this.initEvent();
+    }
+
+    getQrCodeContent () {
+        const imgDomContent = { __html: this.state.CAQrCodeImageDom };
+        const content = (
+            <div className={Style.qrCodeWrapper} >
+                <div dangerouslySetInnerHTML={imgDomContent} />
+                <span>And don't forget to install it.</span>
+            </div>
+        );
+
+        const spin = <Spin />;
+        return this.state.loadingCAQr ? spin : content;
     }
 
     render () {
@@ -243,16 +277,18 @@ class HeaderMenu extends React.Component {
                             <span>RootCA.crt</span>
                         </a>
 
-                        <a
-                            className={Style.menuItem}
-                            href="/qr_root"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            title="Scan the QR code with your phone"
-                        >
-                            <i className="fa fa-qrcode" />
-                            <span>Install CA To Phone</span>
-                        </a>
+                        <Popover content={this.getQrCodeContent()} title="Scan the QR with you phone" >
+                            <a
+                                className={Style.menuItem}
+                                href="javascript:void(0)"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                title="Scan the QR code with your phone"
+                            >
+                                <i className="fa fa-qrcode" />
+                                <span>Install CA To Phone</span>
+                            </a>
+                        </Popover>
 
                         <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
                         <a
