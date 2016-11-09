@@ -44,7 +44,7 @@ class ModalPanel extends React.Component {
     }
 
     onKeyUp (e) {
-        if (e.keyCode == 27 && e.ctrlKey) {
+        if (e.keyCode == 27) {
             this.doClose();
         }
     }
@@ -97,7 +97,7 @@ class ModalPanel extends React.Component {
         const modalStyle = this.props.hideBackModal ? contentStyle : { 'left': 0 };
         return (
             <div className={Style.wrapper} onClick={this.onClose} style={modalStyle} >
-                <div className={Style.closeIcon} title="Close, Ctrl+Esc" onClick={this.doClose} >
+                <div className={Style.closeIcon} title="Close, Esc to trigger" onClick={this.doClose} >
                     <Icon type="close" />
                 </div>
                 <div
