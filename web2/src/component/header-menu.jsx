@@ -339,7 +339,7 @@ class HeaderMenu extends React.Component {
                             title="Enable or Disable the HTTPS intercept"
                         >
                             <i className="fa fa-globe" />
-                            <span>Global Proxy</span>
+                            <span>System Proxy</span>
                         </a>
                     </div>
                 </div>

@@ -71,8 +71,8 @@ function * doToggleRemoteInterceptHttps (flag) {
 
 function * doToggleRemoteGlobalProxy (flag) {
     const result = yield call(postJSON, '/api/toggleGlobalProxy', { flag: flag });
-    const windowsMessage = `AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.`;
-    const linuxMessage = `AnyProxy is now the default proxy for your system.`;
+    const windowsMessage = `Sucessfully turned on, it may take up to 1 min to take effect.`;
+    const linuxMessage = `Sucessfully turned on.`;
     const turnDownMessage = `Global proxy has been turned down.`;
     if (isApiSuccess(result)) {
         const tipMessage = result.isWindows ? windowsMessage : linuxMessage;
