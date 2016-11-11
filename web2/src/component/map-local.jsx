@@ -8,9 +8,10 @@ import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Tree, Form, Input, Button } from 'antd';
-import ModalPanel from 'component/modal-panel';
+import ResizablePanel from 'component/resizable-panel';
 import PromiseUtil from 'common/PromiseUtil';
 import { fetchDirectory, hideMapLocal, fetchMappedConfig, updateRemoteMappedConfig } from 'action/globalStatusAction';
+import { MenuPanelIndex } from 'common/Constant';
 
 import Style from './map-local.less';
 import CommonStyle from '../style/common.less';
@@ -209,9 +210,10 @@ class MapLocal extends React.Component {
     render() {
 
         const treeNodes = this.loopTreeNode(this.props.globalStatus.directory);
+        const panelVisible = this.props.globalStatus.menuPanelIndex === MenuPanelIndex.MAP_LOCAL;
 
         return (
-            <ModalPanel onClose={this.onClose} visible={this.props.globalStatus.showMapLocal} >
+            <ResizablePanel onClose={this.onClose} visible={panelVisible} >
                 <div className={Style.mapLocalWrapper} >
                     {this.getMappedConfigDiv()}
 
@@ -233,7 +235,7 @@ class MapLocal extends React.Component {
                     </div>
                 </div>
 
-            </ModalPanel>
+            </ResizablePanel>
         );
     }
 }

@@ -16,6 +16,7 @@ import RecordFilter from 'component/record-filter';
 import MapLocal from 'component/map-local';
 import WsListener from 'component/ws-listener';
 import RecordDetail from 'component/record-detail';
+import ResizablePanel from 'component/resizable-panel';
 import Style from './index.less';
 
 require('./lib/font-awesome/css/font-awesome.css');
@@ -26,10 +27,20 @@ const store = createStore(reducer, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 
+const middlePanelIndex = {
+    RECORD_FILTER: 'RECORD_FILTER',
+    MAP_LOCAL: 'MAP_LOCAL'
+};
+
 class App extends React.Component{
     constructor () {
         super();
+        this.state = {
+            showResizePanel: false,
+            panelIndex: ''
+        };
 
+        this.onResizePanelClose = this.onResizePanelClose.bind(this);
     }
 
     static propTypes = {
@@ -41,15 +52,28 @@ class App extends React.Component{
         this.props.dispatch(fetchRequestLog());
     }
 
+    onResizePanelClose () {
+        this.setState({
+            showResizePanel: false
+        });
+    }
+
     render () {
+
+
         return (
             <div className={Style.indexWrapper} >
-                <HeaderMenu />
-                <RecordPanel data={this.props.requestRecord.recordList} />
-                <WsListener />
+                <ResizablePanel onClose={this.onResizePanelClose} visible={this.state.showResizePanel} >
+
+                </ResizablePanel>
                 <RecordFilter />
+                <WsListener />
                 <MapLocal />
-                <RecordDetail />
+                <div className={Style.rightPanel} >
+                    <HeaderMenu />
+                    <RecordPanel data={this.props.requestRecord.recordList} />
+                    <RecordDetail />
+                </div>
             </div>
         );
     }

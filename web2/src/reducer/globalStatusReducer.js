@@ -2,6 +2,7 @@ const defaultStatus = {
     recording: true,
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
+    menuPanelIndex: '',
     interceptHttpsFlag: false,
     globalProxyFlag: false, // is global proxy now
     filterStr: '',
@@ -10,6 +11,8 @@ const defaultStatus = {
     currentActiveRecordId: '',
     mappedConfig:[] // configured map config
 };
+
+import { MenuPanelIndex } from 'common/Constant';
 
 import {
     STOP_RECORDING,
@@ -76,13 +79,13 @@ function requestListReducer (state = defaultStatus, action) {
 
         case SHOW_FILTER: {
             const newState = Object.assign({}, state);
-            newState.showFilter = true;
+            newState.menuPanelIndex = MenuPanelIndex.RECORD_FILTER;
             return newState;
         }
 
         case HIDE_FILTER: {
             const newState = Object.assign({}, state);
-            newState.showFilter = false;
+            newState.menuPanelIndex = '';
             return newState;
         }
 
@@ -94,13 +97,13 @@ function requestListReducer (state = defaultStatus, action) {
 
         case SHOW_MAP_LOCAL: {
             const newState = Object.assign({}, state);
-            newState.showMapLocal = true;
+            newState.menuPanelIndex = MenuPanelIndex.MAP_LOCAL;
             return newState;
         }
 
         case HIDE_MAP_LOCAL: {
             const newState = Object.assign({}, state);
-            newState.showMapLocal = false;
+            newState.menuPanelIndex = '';
             return newState;
         }
 

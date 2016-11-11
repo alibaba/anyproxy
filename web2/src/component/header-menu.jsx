@@ -224,125 +224,112 @@ class HeaderMenu extends React.Component {
 
         return (
           <div className={Style.topWrapper} >
-                <div className={Style.fixedWrapper} >
-                    <div className={Style.topLogoDiv} >
-                        <img
-                            className={CommonStyle.rotation + ' ' + Style.logo}
-                            src="https://t.alipayobjects.com/images/rmsweb/T1P_dfXa8oXXXXXXXX.png"
-                            width="50"
-                            height="50"
-                        />
-                        <div className={Style.brand} >
-                            AnyProxy
-                        </div>
-                    </div>
-                    <div className={Style.menuList} >
-                        <a
-                            className={stopMenuStyle}
-                            href="javascript:void(0)"
-                            onClick={this.stopRecording}
-                        >
-                            <i className="fa fa-stop" />
-                            <span>Stop</span>
-                        </a>
+            <div className={Style.menuList} >
+                <a
+                    className={stopMenuStyle}
+                    href="javascript:void(0)"
+                    onClick={this.stopRecording}
+                >
+                    <i className="fa fa-stop" />
+                    <span>Stop</span>
+                </a>
 
-                        <a
-                            className={resumeMenuStyle}
-                            href="javascript:void(0)"
-                            onClick={this.resumeRecording}
-                        >
-                            <i className="fa fa-play" />
-                            <span>Resume</span>
-                        </a>
+                <a
+                    className={resumeMenuStyle}
+                    href="javascript:void(0)"
+                    onClick={this.resumeRecording}
+                >
+                    <i className="fa fa-play" />
+                    <span>Resume</span>
+                </a>
 
-                        <a
-                            className={Style.menuItem}
-                            href="javascript:void(0)"
-                            onClick={this.clearAllRecord}
-                        >
-                            <i className="fa fa-eraser" />
-                            <span>Clear(Ctrl+X)</span>
-                        </a>
+                <a
+                    className={Style.menuItem}
+                    href="javascript:void(0)"
+                    onClick={this.clearAllRecord}
+                >
+                    <i className="fa fa-eraser" />
+                    <span>Clear(Ctrl+X)</span>
+                </a>
 
-                        <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
+                <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
 
-                        <a
-                            className={Style.menuItem}
-                            href="/fetchCrtFile"
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            title="Download the RootCA of this computer"
-                        >
-                            <i className="fa fa-download" />
-                            <span>RootCA.crt</span>
-                        </a>
+                <a
+                    className={Style.menuItem}
+                    href="/fetchCrtFile"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    title="Download the RootCA of this computer"
+                >
+                    <i className="fa fa-download" />
+                    <span>RootCA.crt</span>
+                </a>
 
-                        <Popover content={this.getQrCodeContent()} title="Scan the QR with you phone" >
-                            <a
-                                className={Style.menuItem}
-                                href="javascript:void(0)"
-                                target="_blank"
-                                rel="noreferrer noopener"
-                                title="Scan the QR code with your phone"
-                            >
-                                <i className="fa fa-qrcode" />
-                                <span>Install CA To Phone</span>
-                            </a>
-                        </Popover>
+                <Popover content={this.getQrCodeContent()} title="Scan the QR with you phone" >
+                    <a
+                        className={Style.menuItem}
+                        href="javascript:void(0)"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        title="Scan the QR code with your phone"
+                    >
+                        <i className="fa fa-qrcode" />
+                        <span>Install CA To Phone</span>
+                    </a>
+                </Popover>
 
-                        <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
-                        <a
-                            className={Style.menuItem}
-                            href="javascript:void(0)"
-                            title="Check the running info about AnyProxy"
-                            onClick={this.showRunningInfo}
-                        >
-                            <i className="fa fa-tachometer" />
-                            <span>AnyProxy Info</span>
-                        </a>
-                    </div>
-                    <div className={Style.menuList} >
-                        <a
-                            className={filterMenuStyle}
-                            href="javascript:void(0)"
-                            onClick={this.showFilter}
-                            title="Only show the filtered result"
-                        >
-                            <i className="fa fa-filter" />
-                            <span>Filter</span>
-                        </a>
+                <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
+                <a
+                    className={Style.menuItem}
+                    href="javascript:void(0)"
+                    title="Check the running info about AnyProxy"
+                    onClick={this.showRunningInfo}
+                >
+                    <i className="fa fa-tachometer" />
+                    <span>AnyProxy Info</span>
+                </a>
+            </div>
+            <div className={Style.menuList} >
+                <a
+                    className={filterMenuStyle}
+                    href="javascript:void(0)"
+                    onClick={this.showFilter}
+                    title="Only show the filtered result"
+                >
+                    <i className="fa fa-filter" />
+                    <span>Filter</span>
+                </a>
 
-                        <a
-                            className={mapLocalMenuStyle}
-                            href="javascript:void(0)"
-                            onClick={this.showMapLocal}
-                            title="Remap the request to a locale file"
-                        >
-                            <i className="fa fa-retweet" />
-                            <span>Map Local</span>
-                        </a>
+                <a
+                    className={mapLocalMenuStyle}
+                    href="javascript:void(0)"
+                    onClick={this.showMapLocal}
+                    title="Remap the request to a locale file"
+                >
+                    <i className="fa fa-retweet" />
+                    <span>Map Local</span>
+                </a>
 
-                        <a
-                            className={interceptHttpsStyle}
-                            href="javascript:void(0)"
-                            onClick={this.togglerHttpsIntercept}
-                            title="Enable or Disable the HTTPS intercept"
-                        >
-                            <i className="fa fa-eye-slash" />
-                            <span>Inercept HTTPS</span>
-                        </a>
+                <a
+                    className={interceptHttpsStyle}
+                    href="javascript:void(0)"
+                    onClick={this.togglerHttpsIntercept}
+                    title="Enable or Disable the HTTPS intercept"
+                >
+                    <i className="fa fa-eye-slash" />
+                    <span>Inercept HTTPS</span>
+                </a>
 
-                        <a
-                            className={globalProxyStyle}
-                            href="javascript:void(0)"
-                            onClick={this.toggleGlobalProxyFlag}
-                            title="Enable or Disable the HTTPS intercept"
-                        >
-                            <i className="fa fa-globe" />
-                            <span>System Proxy</span>
-                        </a>
-                    </div>
-                </div>
+                <a
+                    className={globalProxyStyle}
+                    href="javascript:void(0)"
+                    onClick={this.toggleGlobalProxyFlag}
+                    title="Enable or Disable the HTTPS intercept"
+                >
+                    <i className="fa fa-globe" />
+                    <span>System Proxy</span>
+                </a>
+            </div>
 
                 <Modal
                     visible={this.state.runningDetailVisible}

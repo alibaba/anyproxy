@@ -8,11 +8,13 @@ import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Input, Alert } from 'antd';
-import ModalPanel from 'component/modal-panel';
+import ResizablePanel from 'component/resizable-panel';
 import { hideFilter, updateFilter } from 'action/globalStatusAction';
+import { MenuPanelIndex } from 'common/Constant';
 
 import Style from './record-filter.less';
 import CommonStyle from '../style/common.less';
+
 
 class RecordFilter extends React.Component {
     constructor () {
@@ -44,8 +46,10 @@ class RecordFilter extends React.Component {
             </ul>
         );
 
+        const panelVisible = this.props.globalStatus.menuPanelIndex === MenuPanelIndex.RECORD_FILTER;
+
         return (
-            <ModalPanel onClose={this.onClose} visible={this.props.globalStatus.showFilter} >
+            <ResizablePanel onClose={this.onClose} visible={panelVisible} >
                 <div className={Style.filterWrapper} >
                     <div >
                         <span className={CommonStyle.sectionTitle}>Filter</span>
@@ -70,7 +74,7 @@ class RecordFilter extends React.Component {
                     </div>
                 </div>
 
-            </ModalPanel>
+            </ResizablePanel>
         );
     }
 }

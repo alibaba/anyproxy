@@ -1,17 +1,17 @@
 /*
-* A copoment to display content in the a modal
+* A copoment to display content in the a resizable panel
 */
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Icon } from 'antd';
 
-import Style from './modal-panel.less';
+import Style from './resizable-panel.less';
 import ClassBind from 'classnames/bind';
 
 const StyleBind = ClassBind.bind(Style);
 
-class ModalPanel extends React.Component {
+class ResizablePanel extends React.Component {
     constructor () {
         super();
 
@@ -22,7 +22,6 @@ class ModalPanel extends React.Component {
         this.onDragbarMoveUp = this.onDragbarMoveUp.bind(this);
         this.onDragbarMove = this.onDragbarMove.bind(this);
         this.onDragbarMoveDown = this.onDragbarMoveDown.bind(this);
-        this.onClose = this.onClose.bind(this);
         this.doClose = this.doClose.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.addKeyEvent = this.addKeyEvent.bind(this);
@@ -32,9 +31,7 @@ class ModalPanel extends React.Component {
     static propTypes = {
         children: PropTypes.element,
         onClose: PropTypes.func,
-        visible: PropTypes.bool,
-        hideBackModal: PropTypes.bool,
-        left: PropTypes.string
+        visible: PropTypes.bool
     }
 
     onDragbarMove (event) {
@@ -72,12 +69,6 @@ class ModalPanel extends React.Component {
         document.addEventListener('mouseup', this.onDragbarMoveUp);
     }
 
-    onClose (event) {
-        if (event.target === event.currentTarget) {
-            this.props.onClose && this.props.onClose();
-        }
-    }
-
     doClose () {
         this.props.onClose && this.props.onClose();
     }
@@ -97,22 +88,22 @@ class ModalPanel extends React.Component {
         const modalStyle = this.props.hideBackModal ? contentStyle : { 'left': 0 };
         return (
             <div className={Style.wrapper} onClick={this.onClose} style={modalStyle} >
-                <div className={Style.closeIcon} title="Close, Esc" onClick={this.doClose} >
-                    <Icon type="close" />
+                <div className={Style.contentWrapper} style={contentStyle} >
+                    <div className={Style.content} >
+                        {this.props.children}
+                    </div>
                 </div>
                 <div
                     className={Style.dragBar}
                     style={dragBarStyle}
                     onMouseDown={this.onDragbarMoveDown}
                 />
-                <div className={Style.contentWrapper} style={contentStyle} >
-                    <div className={Style.content} >
-                        {this.props.children}
-                    </div>
+                <div className={Style.closeIcon} title="Close, Esc" onClick={this.doClose} >
+                    <Icon type="close" />
                 </div>
             </div>
         );
     }
 }
 
-export default ModalPanel;
+export default ResizablePanel;

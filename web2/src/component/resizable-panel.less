@@ -1,0 +1,33 @@
+@import '../style/constant.less';
+.wrapper {
+  display: block;
+  background-color: #fff;
+  position: relative;
+  width: 400px;
+  height: 100%;
+  float: left;
+  -webkit-box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.28);
+  -moz-box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.28);
+  box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.28);
+}
+
+.dragBar {
+  width: 1px;
+  background-color: @hint-color;
+  z-index: 2000;
+  cursor: col-resize;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 15px;
+  i {
+    font-size: @font-size-big;
+  }
+  &:hover {
+    color: @primary-color;
+  }
+}
