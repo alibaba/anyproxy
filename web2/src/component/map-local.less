@@ -5,7 +5,7 @@
 }
 
 .treeWrapper {
-      height: 350px;
+      height: 310px;
       width: @panel-width;
       overflow: auto;
       border: 1px solid @light-border-color;
@@ -20,8 +20,17 @@
 }
 
 .mappedKeyDiv {
+  position: relative;
+  strong {
+    display: block;
+    width: 230px;
+    word-wrap: break-word;
+  }
   a {
-    padding-left: 5px;
+    overflow: hidden;
+    position: absolute;
+    top: 1px;
+    right: 8px;
   }
 }
 

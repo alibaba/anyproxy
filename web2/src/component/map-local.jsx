@@ -173,17 +173,19 @@ class MapLocal extends React.Component {
         const mappedLiDiv = mappedConfig.map((item, index) => {
             return (
                 <li key={index} >
-                    <div className={Style.mappedKeyDiv} >
-                        <strong>{item.keyword}</strong>
-                        <a
-                            href="javascript:void(0)"
-                            onClick={this.removeMappedConfig.bind(this, index)}
-                        >
-                            Remove
-                        </a>
-                    </div>
-                    <div className={Style.mappedLocal} >
-                        {item.local}
+                    <div>
+                        <div className={Style.mappedKeyDiv} >
+                            <strong>{item.keyword}</strong>
+                            <a
+                                href="javascript:void(0)"
+                                onClick={this.removeMappedConfig.bind(this, index)}
+                            >
+                                Remove
+                            </a>
+                        </div>
+                        <div className={Style.mappedLocal} >
+                            {item.local}
+                        </div>
                     </div>
                 </li>
             );
