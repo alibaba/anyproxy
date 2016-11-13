@@ -11,7 +11,7 @@ import { Tree, Form, Input, Button } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import PromiseUtil from 'common/PromiseUtil';
 import { fetchDirectory, hideMapLocal, fetchMappedConfig, updateRemoteMappedConfig } from 'action/globalStatusAction';
-import { MenuPanelIndex } from 'common/Constant';
+import { MenuKeyMap } from 'common/Constant';
 
 import Style from './map-local.less';
 import CommonStyle from '../style/common.less';
@@ -212,11 +212,14 @@ class MapLocal extends React.Component {
     render() {
 
         const treeNodes = this.loopTreeNode(this.props.globalStatus.directory);
-        const panelVisible = this.props.globalStatus.menuPanelIndex === MenuPanelIndex.MAP_LOCAL;
+        const panelVisible = this.props.globalStatus.activeMenuKey === MenuKeyMap.MAP_LOCAL;
 
         return (
             <ResizablePanel onClose={this.onClose} visible={panelVisible} >
                 <div className={Style.mapLocalWrapper} >
+                    <div className={Style.title} >
+                        Map Local
+                    </div>
                     {this.getMappedConfigDiv()}
 
                     <div >

@@ -18,6 +18,9 @@ export const UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG = 'UPDATE_LOCAL_INTERCEPT_HTTPS_F
 export const TOGGLE_REMORE_GLOBAL_PROXY_FLAG = 'TOGGLE_REMORE_GLOBAL_PROXY_FLAG';
 export const UPDATE_LOCAL_GLOBAL_PROXY_FLAG = 'UPDATE_LOCAL_GLOBAL_PROXY_FLAG';
 
+export const SHOW_ROOT_CA = 'SHOW_ROOT_CA';
+export const HIDE_ROOT_CA = 'HIDE_ROOT_CA';
+
 export function stopRecording() {
     return {
         type: STOP_RECORDING
@@ -131,5 +134,17 @@ export function updateLocalGlobalProxyFlag (flag) {
     return {
         type: UPDATE_LOCAL_GLOBAL_PROXY_FLAG,
         data: flag
+    };
+}
+
+export function showRootCA () {
+    return {
+        type: SHOW_ROOT_CA
+    };
+}
+
+export function hideRootCA () {
+    return {
+        type: HIDE_ROOT_CA
     };
 }

@@ -1,0 +1,33 @@
+@import '../style/constant.less';
+.wrapper {
+    position: relative;
+    background-color: @left-menu-color;
+    width: 100%;
+    height: 100%;
+}
+
+.menuList {
+    display: block;
+    font-size: @left-menu-font-size;
+    font-weight: 200;
+}
+
+.menuItem {
+    color: #fff;
+    float: left;
+    width: 100%;
+    line-height: 43px;
+    padding-left: 14px;
+    &.active {
+        background: #000;
+        border-left: 2px solid @primary-color;
+    }
+
+    &.working {
+        // background: #000;
+    }
+    i {
+        width: 35px;
+        font-size: @font-size-big;
+    }
+}

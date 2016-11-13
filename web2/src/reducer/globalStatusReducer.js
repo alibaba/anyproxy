@@ -2,7 +2,7 @@ const defaultStatus = {
     recording: true,
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
-    menuPanelIndex: '',
+    activeMenuKey: '',
     interceptHttpsFlag: false,
     globalProxyFlag: false, // is global proxy now
     filterStr: '',
@@ -12,7 +12,7 @@ const defaultStatus = {
     mappedConfig:[] // configured map config
 };
 
-import { MenuPanelIndex } from 'common/Constant';
+import { MenuKeyMap } from 'common/Constant';
 
 import {
     STOP_RECORDING,
@@ -26,7 +26,9 @@ import {
     UPDATE_LOCAL_MAPPED_CONFIG,
     UPDATE_ACTIVE_RECORD_ITEM,
     UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG,
-    UPDATE_LOCAL_GLOBAL_PROXY_FLAG
+    UPDATE_LOCAL_GLOBAL_PROXY_FLAG,
+    HIDE_ROOT_CA,
+    SHOW_ROOT_CA
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -79,13 +81,13 @@ function requestListReducer (state = defaultStatus, action) {
 
         case SHOW_FILTER: {
             const newState = Object.assign({}, state);
-            newState.menuPanelIndex = MenuPanelIndex.RECORD_FILTER;
+            newState.activeMenuKey = MenuKeyMap.RECORD_FILTER;
             return newState;
         }
 
         case HIDE_FILTER: {
             const newState = Object.assign({}, state);
-            newState.menuPanelIndex = '';
+            newState.activeMenuKey = '';
             return newState;
         }
 
@@ -97,13 +99,13 @@ function requestListReducer (state = defaultStatus, action) {
 
         case SHOW_MAP_LOCAL: {
             const newState = Object.assign({}, state);
-            newState.menuPanelIndex = MenuPanelIndex.MAP_LOCAL;
+            newState.activeMenuKey = MenuKeyMap.MAP_LOCAL;
             return newState;
         }
 
         case HIDE_MAP_LOCAL: {
             const newState = Object.assign({}, state);
-            newState.menuPanelIndex = '';
+            newState.activeMenuKey = '';
             return newState;
         }
 
@@ -138,6 +140,18 @@ function requestListReducer (state = defaultStatus, action) {
         case UPDATE_LOCAL_GLOBAL_PROXY_FLAG: {
             const newState = Object.assign({}, state);
             newState.globalProxyFlag = action.data;
+            return newState;
+        }
+
+        case SHOW_ROOT_CA: {
+            const newState = Object.assign({}, state);
+            newState.activeMenuKey = MenuKeyMap.ROOT_CA;
+            return newState;
+        }
+
+        case HIDE_ROOT_CA: {
+            const newState = Object.assign({}, state);
+            newState.activeMenuKey = '';
             return newState;
         }
 

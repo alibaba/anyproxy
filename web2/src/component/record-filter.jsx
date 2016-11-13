@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Input, Alert } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import { hideFilter, updateFilter } from 'action/globalStatusAction';
-import { MenuPanelIndex } from 'common/Constant';
+import { MenuKeyMap } from 'common/Constant';
 
 import Style from './record-filter.less';
 import CommonStyle from '../style/common.less';
@@ -46,13 +46,13 @@ class RecordFilter extends React.Component {
             </ul>
         );
 
-        const panelVisible = this.props.globalStatus.menuPanelIndex === MenuPanelIndex.RECORD_FILTER;
+        const panelVisible = this.props.globalStatus.activeMenuKey === MenuKeyMap.RECORD_FILTER;
 
         return (
             <ResizablePanel onClose={this.onClose} visible={panelVisible} >
                 <div className={Style.filterWrapper} >
-                    <div >
-                        <span className={CommonStyle.sectionTitle}>Filter</span>
+                    <div className={Style.title} >
+                        Filter
                     </div>
                     <div className={CommonStyle.whiteSpace30} />
                     <div className={Style.filterInput} >
