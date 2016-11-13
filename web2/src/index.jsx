@@ -19,10 +19,10 @@ import RecordDetail from 'component/record-detail';
 import ResizablePanel from 'component/resizable-panel';
 import LeftMenu from 'component/left-menu';
 import DownloadRootCA from 'component/download-root-ca';
-import Style from './index.less';
 
 require('./lib/font-awesome/css/font-awesome.css');
 require('./style/antd-reset.global.less');
+import Style from './index.less';
 
 const {
     RECORD_FILTER: RECORD_FILTER_MENU_KEY,

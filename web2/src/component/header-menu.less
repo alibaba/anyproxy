@@ -1,62 +1,40 @@
 @import '../style/constant.less';
 
-@menu-height: 70px;
-
 .topWrapper {
     width: 100%;
-    height: @menu-height;
-}
-
-.fixedWrapper {
-    position: fixed;
-    z-index: 900;
-    background-color: #fff;
-    top: 0;
-    height: @menu-height;
-    left: 0;
-    right: 0;
-    border: 1px solid @hint-color;
-    opacity: 0.98;
-}
-.topLogoDiv {
-  padding-left: 30px;
-  float: left;
-}
-
-.logo {
-  position: absolute;
-  left: -25px;
-  top: 0px;
-}
-
-.brand {
-  font-size: 30px;
-  font-weight: 400;
-  color: @default-color;
-  opacity: 0.87;
-  margin-top: 5px;
 }
 
 .menuList {
   overflow: hidden;
-  padding-left: 50px;
-  line-height: 25px;
+  margin-top: 10px;
 }
 
 .menuItem {
   color: @default-color;
-  font-size: @font-size-sm;
-  margin-right: 20px;
+  font-size: @font-size-xs;
   float: left;
   cursor: pointer;
   padding: 0 5px;
   opacity: 0.87;
+  min-width: 60px;
+  padding: 0 35px;
+  text-align: center;
   i {
-    padding-right: 3px;
+    display: block;
+    font-size: @menu-icon-font-size;
+  }
+
+  span {
+    display: block;
+    line-height: 25px;
+    color: @top-menu-span-color;
   }
 
   &:hover {
     color: @primary-color;
+    span {
+      color: @primary-color;
+    }
   }
 
   &.disabled {
@@ -64,8 +42,26 @@
   }
 
   &.active {
-    color: @primary-color
+    color: @primary-color;
+    span {
+      color: @primary-color;
+    }
   }
+
+  &.rightMenuItem {
+    float: right;
+    padding-right: 0;
+    margin-right: 35px;
+  }
+}
+
+.menuItemSpliter {
+  display: block;
+  float: left;
+  width: 1px;
+  background-color: @top-menu-spliter-color;
+  height: 30px;
+  margin-right: 0 20px;
 }
 
 .ruleTip {
@@ -104,14 +100,38 @@
   }
 }
 
-.qrCodeWrapper {
-  text-align: center;
-  img {
-    border: 2px solid @hint-color;
-    border-radius: 3px;
-  }
+.runningInfoDivWrapper {
+  line-height: 1.5;
+  li {
+    overflow: hidden;
+    strong {
+      float: left;
+    }
 
-  span {
-    color: @primary-color
+    span {
+      overflow: hidden;
+      padding-left: 5px;
+      display: block;
+    }
+  }
+  :global {
+    .ant-btn {
+      margin-top: 10px;
+    }
+
+    .ant-popover {
+      font-size: @font-size-reg;
+    }
+
+    .ant-popover-title {
+      color: @default-color;
+      font-weight: bold;
+      padding-left: 20px;
+    }
+
+    .ant-popover-inner-content {
+      padding-bottom: 25px;
+      padding-left: 20px;
+    }
   }
 }

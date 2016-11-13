@@ -6,12 +6,10 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { message, Modal, Spin, Popover } from 'antd';
+import { message, Modal, Spin, Popover, Button, Icon } from 'antd';
 import {
     resumeRecording,
     stopRecording,
-    showFilter,
-    showMapLocal,
     updateLocalInterceptHttpsFlag,
     updateLocalGlobalProxyFlag,
     toggleRemoteInterceptHttpsFlag,
@@ -31,23 +29,17 @@ class HeaderMenu extends React.Component {
         super();
         this.state = {
             ruleSummary: '',
-            CAQrCodeImageDom: '',
-            CAUrl: '',
-            loadingCAQr: false,
-            CAQrVisible: false,
             runningDetailVisible: false
         };
 
         this.stopRecording = this.stopRecording.bind(this);
         this.resumeRecording = this.resumeRecording.bind(this);
         this.clearAllRecord = this.clearAllRecord.bind(this);
-        this.showFilter = this.showFilter.bind(this);
-        this.showMapLocal = this.showMapLocal.bind(this);
         this.initEvent = this.initEvent.bind(this);
         this.fetchData = this.fetchData.bind(this);
         this.togglerHttpsIntercept = this.togglerHttpsIntercept.bind(this);
         this.showRunningInfo = this.showRunningInfo.bind(this);
-        this.hideRunningDetailInfo = this.hideRunningDetailInfo.bind(this);
+        this.handleRuningInfoVisibleChange = this.handleRuningInfoVisibleChange.bind(this);
         this.toggleGlobalProxyFlag = this.toggleGlobalProxyFlag.bind(this);
     }
 
@@ -69,13 +61,9 @@ class HeaderMenu extends React.Component {
         this.props.dispatch(clearAllRecord());
     }
 
-    showFilter () {
-        this.props.dispatch(showFilter());
-    }
-
-    hideRunningDetailInfo () {
+    handleRuningInfoVisibleChange (visible) {
         this.setState({
-            runningDetailVisible: false
+            runningDetailVisible: visible
         });
     }
     showRunningInfo () {
@@ -119,10 +107,6 @@ class HeaderMenu extends React.Component {
         this.props.dispatch(toggleRemoteGlobalProxyFlag(!currentGlobalProxyFlag));
     }
 
-    showMapLocal () {
-        this.props.dispatch(showMapLocal());
-    }
-
     initEvent () {
         document.addEventListener('keyup', (e) => {
             if (e.keyCode == 88 && e.ctrlKey) {
@@ -148,41 +132,11 @@ class HeaderMenu extends React.Component {
                 console.error(error);
                 message.error('Failed to get rule summary');
             });
-
-        this.setState({
-            loadingCAQr: true
-        });
-
-        getJSON('/api/getQrCode')
-            .then((response) => {
-                this.setState({
-                    loadingCAQr: false,
-                    CAQrCodeImageDom: response.qrImgDom,
-                    url: response.url
-                });
-            })
-            .catch((error) => {
-                console.error(error);
-                message.error(error.errorMsg || 'FAiled to get the QR code of root CA path.');
-            });
     }
 
     componentDidMount () {
         this.fetchData();
         this.initEvent();
-    }
-
-    getQrCodeContent () {
-        const imgDomContent = { __html: this.state.CAQrCodeImageDom };
-        const content = (
-            <div className={Style.qrCodeWrapper} >
-                <div dangerouslySetInnerHTML={imgDomContent} />
-                <span>And don't forget to install it.</span>
-            </div>
-        );
-
-        const spin = <Spin />;
-        return this.state.loadingCAQr ? spin : content;
     }
 
     render () {
@@ -191,11 +145,6 @@ class HeaderMenu extends React.Component {
         const stopMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording !== true });
         const resumeMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording === true });
 
-        const mappedConfig = globalStatus.mappedConfig || [];
-        const filterStr = globalStatus.filterStr;
-
-        const mapLocalMenuStyle = StyleBind('menuItem', { 'active': mappedConfig.length > 0 });
-        const filterMenuStyle = StyleBind('menuItem', { 'active': filterStr.length > 0 });
         const interceptHttpsStyle = StyleBind('menuItem', { 'active': globalStatus.interceptHttpsFlag });
         const globalProxyStyle = StyleBind('menuItem', { 'active': globalStatus.globalProxyFlag });
 
@@ -219,96 +168,49 @@ class HeaderMenu extends React.Component {
                         <span>HTTP</span>
                     </li>
                 </ul>
+                <div className={Style.okButton}>
+                    <Button type="primary" onClick={this.handleRuningInfoVisibleChange.bind(this, false)} > OK </Button>
+                </div>
             </div>
+        );
+
+        const stopRecordingMenu = (
+            <a
+                className={stopMenuStyle}
+                href="javascript:void(0)"
+                onClick={this.stopRecording}
+            >
+                <i className="fa fa-stop" />
+                <span>Stop</span>
+            </a>
+        );
+
+        const resumeRecordingMenu = (
+            <a
+                className={resumeMenuStyle}
+                href="javascript:void(0)"
+                onClick={this.resumeRecording}
+            >
+                <i className="fa fa-play" />
+                <span>Resume</span>
+            </a>
         );
 
         return (
           <div className={Style.topWrapper} >
             <div className={Style.menuList} >
-                <a
-                    className={stopMenuStyle}
-                    href="javascript:void(0)"
-                    onClick={this.stopRecording}
-                >
-                    <i className="fa fa-stop" />
-                    <span>Stop</span>
-                </a>
-
-                <a
-                    className={resumeMenuStyle}
-                    href="javascript:void(0)"
-                    onClick={this.resumeRecording}
-                >
-                    <i className="fa fa-play" />
-                    <span>Resume</span>
-                </a>
-
+                {globalStatus.recording ? stopRecordingMenu : resumeRecordingMenu}
                 <a
                     className={Style.menuItem}
                     href="javascript:void(0)"
                     onClick={this.clearAllRecord}
+                    title="Ctrl + X"
                 >
                     <i className="fa fa-eraser" />
-                    <span>Clear(Ctrl+X)</span>
+                    <span>Clear</span>
                 </a>
 
-                <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
-
-                <a
-                    className={Style.menuItem}
-                    href="/fetchCrtFile"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    title="Download the RootCA of this computer"
-                >
-                    <i className="fa fa-download" />
-                    <span>RootCA.crt</span>
-                </a>
-
-                <Popover content={this.getQrCodeContent()} title="Scan the QR with you phone" >
-                    <a
-                        className={Style.menuItem}
-                        href="javascript:void(0)"
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        title="Scan the QR code with your phone"
-                    >
-                        <i className="fa fa-qrcode" />
-                        <span>Install CA To Phone</span>
-                    </a>
-                </Popover>
-
-                <span className={Style.menuItem + ' ' + Style.disabled}>|</span>
-                <a
-                    className={Style.menuItem}
-                    href="javascript:void(0)"
-                    title="Check the running info about AnyProxy"
-                    onClick={this.showRunningInfo}
-                >
-                    <i className="fa fa-tachometer" />
-                    <span>AnyProxy Info</span>
-                </a>
-            </div>
-            <div className={Style.menuList} >
-                <a
-                    className={filterMenuStyle}
-                    href="javascript:void(0)"
-                    onClick={this.showFilter}
-                    title="Only show the filtered result"
-                >
-                    <i className="fa fa-filter" />
-                    <span>Filter</span>
-                </a>
-
-                <a
-                    className={mapLocalMenuStyle}
-                    href="javascript:void(0)"
-                    onClick={this.showMapLocal}
-                    title="Remap the request to a locale file"
-                >
-                    <i className="fa fa-retweet" />
-                    <span>Map Local</span>
-                </a>
+                <span className={Style.menuItemSpliter} />
 
                 <a
                     className={interceptHttpsStyle}
@@ -326,20 +228,28 @@ class HeaderMenu extends React.Component {
                     onClick={this.toggleGlobalProxyFlag}
                     title="Enable or Disable the HTTPS intercept"
                 >
-                    <i className="fa fa-globe" />
+                    <i className="fa fa-tachometer" />
                     <span>System Proxy</span>
                 </a>
-            </div>
 
-                <Modal
-                    visible={this.state.runningDetailVisible}
-                    onOk={this.hideRunningDetailInfo}
-                    onCancel={this.hideRunningDetailInfo}
+                <Popover
+                    content={runningInfoDiv}
+                    trigger="click"
                     title="AnyProxy Running Info"
-                    wrapClassName={Style.modalInfo}
+                    visible={this.state.runningDetailVisible}
+                    onVisibleChange={this.handleRuningInfoVisibleChange}
+                    placement="bottomRight"
+                    overlayClassName={Style.runningInfoDivWrapper}
                 >
-                    {runningInfoDiv}
-                </Modal>
+                    <a
+                        className={Style.menuItem + ' ' + Style.rightMenuItem}
+                        href="javascript:void(0)"
+                    >
+                        <Icon type="info-circle" />
+                        <span>Proxy Info</span>
+                    </a>
+                </Popover>
+            </div>
           </div>
         );
     }
