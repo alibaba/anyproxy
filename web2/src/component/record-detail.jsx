@@ -136,11 +136,11 @@ class RecordDetail extends React.Component {
 
         const self = this;
 
-        let reqBodyDiv = <Alert type="info" message={recordDetail.resBody} />;
+        let reqBodyDiv = <div>message={recordDetail.resBody} </div>;
 
         switch (recordDetail.type) {
             case 'image': {
-                reqBodyDiv = <Alert type="info" message={self.getImageBody(recordDetail)} />;
+                reqBodyDiv = <div > {self.getImageBody(recordDetail)} </div>;
                 break;
             }
             case 'json': {
@@ -163,7 +163,7 @@ class RecordDetail extends React.Component {
     getRequestDiv (recordDetail) {
 
         const reqHeader = Object.assign({}, recordDetail.reqHeader);
-        const cookieString = reqHeader.cookie;
+        const cookieString = reqHeader.cookie || reqHeader.Cookie;
         delete reqHeader.cookie; // cookie will be displayed seperately
 
         const { protocol, host, path } = recordDetail;

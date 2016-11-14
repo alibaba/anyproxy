@@ -30,7 +30,8 @@ class RecordRow extends React.Component {
     }
 
     getCodeDiv (item) {
-        const className = StyleBind({ 'okStatus': item.statusCode === '200' || item.statusCode === 200 });
+        const statusCode = parseInt(item.statusCode);
+        const className = StyleBind({ 'okStatus': statusCode === 200, 'errorStatus': statusCode >= 400 });
         return <span className={className} >{item.statusCode}</span>;
     }
 

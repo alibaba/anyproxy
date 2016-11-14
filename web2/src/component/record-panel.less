@@ -2,15 +2,36 @@
 
 .tableWrapper {
   clear: both;
-  margin-top: 15px;
+  position: absolute;
+  top: 70px;
+  left: 158px;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
   :global {
-    th {
-      padding-top: 5px !important;
-      padding-bottom: 5px !important;
-      background: @background-color !important;
-      border-top: 1px solid @hint-color;
-      border-bottom: 1px solid @hint-color;
+    .ant-table {
+      border-radius: 0;
+      border-bottom: 0;
+      .ant-table-body {
+        height: calc(100% - 114px);
+        overflow: auto;
+      }
     }
+    th {
+      padding-top: 15px !important;
+      padding-bottom: 12px !important;
+      border: none !important;
+      border-bottom: none !important;
+    }
+  }
+
+  .firstRow {
+    padding-left: 20px;
+    text-align: center;
+  }
+
+  .centerRow {
+    text-align: center;
   }
 }
 .row {

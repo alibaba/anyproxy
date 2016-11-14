@@ -144,11 +144,11 @@ class RecordPanel extends React.Component {
 
         return (
             <div className={Style.tableWrapper} >
-                <div className="ant-table ant-table-large ant-table-scroll-position-left">
+                <div className="ant-table ant-table-small ant-table-scroll-position-left">
                     <div className="ant-table-content">
-                        <table className="ant-table-body" >
+                        <table className="ant-table-body">
                             <colgroup>
-                                <col style={{ 'width': '50px', 'minWidth': '50px' }} />
+                                <col style={{ 'width': '70px', 'minWidth': '70px' }} />
                                 <col style={{ 'width': '100px', 'minWidth': '100px' }} />
                                 <col style={{ 'width': '70px', 'minWidth': '70px' }} />
                                 <col style={{ 'width': '200px', 'minWidth': '200px' }} />
@@ -158,9 +158,9 @@ class RecordPanel extends React.Component {
                             </colgroup>
                             <thead className="ant-table-thead">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Method</th>
-                                    <th>Code</th>
+                                    <th className={Style.firstRow} >#</th>
+                                    <th className={Style.centerRow} >Method</th>
+                                    <th className={Style.centerRow} >Code</th>
                                     <th>Host</th>
                                     <th>Path</th>
                                     <th>Mime</th>
