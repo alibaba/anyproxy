@@ -1,15 +1,10 @@
 @import '../style/constant.less';
 
-.tableWrapper {
-  clear: both;
-  position: absolute;
-  top: 70px;
-  left: 158px;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
+.wrapper {
+  position: relative;
   :global {
     .ant-table {
+      border: none;
       border-radius: 0;
       border-bottom: 0;
       .ant-table-body {
@@ -21,7 +16,7 @@
       padding-top: 15px !important;
       padding-bottom: 12px !important;
       border: none !important;
-      border-bottom: none !important;
+      border: none !important;
     }
   }
 
@@ -32,6 +27,10 @@
 
   .centerRow {
     text-align: center;
+  }
+
+  .pathRow {
+    min-width: 300px;
   }
 }
 .row {

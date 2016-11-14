@@ -284,7 +284,7 @@ class RecordDetail extends React.Component {
                 onClose={this.onClose}
                 hideBackModal
                 visible={this.props.requestRecord.recordDetail !== null }
-                left="40%"
+                left="50%"
             >
                 {this.getRecordDetailDiv()}
             </ModalPanel>

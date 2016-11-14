@@ -6,7 +6,8 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Icon,  } from 'antd';
 import { connect } from 'react-redux';
-import TitleBar from 'component/title-bar';
+import InlineSVG from 'svg-inline-react';
+import { getQueryParameter } from 'common/CommonUtil';
 
 import Style from './left-menu.less';
 import ClassBind from 'classnames/bind';
@@ -31,7 +32,7 @@ class LeftMenu extends React.Component {
         super();
 
         this.state = {
-
+            inAppMode: getQueryParameter('in_app_mode')
         };
 
         this.showMapLocal = this.showMapLocal.bind(this);
@@ -74,16 +75,14 @@ class LeftMenu extends React.Component {
             'active': activeMenuKey === ROOT_CA_MENU_KEY
         });
 
+        const wrapperStyle = StyleBind('wrapper', { 'inApp': this.state.inAppMode } );
         return (
-            <div className={Style.wrapper} >
-                <div className={Style.systemTitleButton}>
-                    <TitleBar />
-                </div>
+            <div className={wrapperStyle} >
                 <div className={Style.logo} >
-                    <div className={Style.brand}>
+                    <a className={Style.brand} href="http://anyproxy.io/" target="_blank">
                         <span className={Style.any}>Any</span>
                         <span className={Style.proxy}>Proxy</span>
-                    </div>
+                    </a>
                     <div className={Style.circles} >
                         <span className={Style.circle4} />
                         <span className={Style.circle3} />
@@ -101,7 +100,9 @@ class LeftMenu extends React.Component {
                         onClick={this.showFilter}
                         title="Only show the filtered result"
                     >
-                        <i className="fa fa-filter" />
+                        <span className={Style.filterIcon}>
+                            <InlineSVG src={require("svg-inline!assets/filter.svg")} />
+                        </span>
                         <span>Filter</span>
                     </a>
 
@@ -111,7 +112,9 @@ class LeftMenu extends React.Component {
                         onClick={this.showMapLocal}
                         title="Remap the request to a locale file"
                     >
-                        <i className="fa fa-retweet" />
+                        <span className={Style.retweetIcon}>
+                            <InlineSVG src={require("svg-inline!assets/retweet.svg")} />
+                        </span>
                         <span>Map Local</span>
                     </a>
 
@@ -121,7 +124,9 @@ class LeftMenu extends React.Component {
                         onClick={this.showRootCA}
                         title="Download the root CA to the computer and your phone"
                     >
-                        <i className="fa fa-download" />
+                        <span className={Style.downloadIcon}>
+                            <InlineSVG src={require("svg-inline!assets/download.svg")} />
+                        </span>
                         <span>RootCA</span>
                     </a>
                 </div>

@@ -108,11 +108,15 @@ class App extends React.Component{
                     {this.getMiddlePanel()}
                 </div>
                 <div className={Style.rightPanel} >
-                    <HeaderMenu />
-                    <RecordPanel data={this.props.requestRecord.recordList} />
-                    <RecordDetail />
+                    <div className={Style.headerWrapper} >
+                        <HeaderMenu />
+                    </div>
+                    <div className={Style.tableWrapper} >
+                        <RecordPanel data={this.props.requestRecord.recordList} />
+                    </div>
                 </div>
                 <WsListener />
+                <RecordDetail />
             </div>
         );
     }

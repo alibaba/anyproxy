@@ -6,6 +6,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
+import InlineSVG from 'svg-inline-react';
 import { message, Modal, Spin, Popover, Button, Icon } from 'antd';
 import {
     resumeRecording,
@@ -148,6 +149,8 @@ class HeaderMenu extends React.Component {
         const interceptHttpsStyle = StyleBind('menuItem', { 'active': globalStatus.interceptHttpsFlag });
         const globalProxyStyle = StyleBind('menuItem', { 'active': globalStatus.globalProxyFlag });
 
+        const runningTipStyle = StyleBind('menuItem', 'rightMenuItem', { 'active': this.state.runningDetailVisible });
+
         const runningInfoDiv = (
             <div >
                 <ul>
@@ -180,7 +183,9 @@ class HeaderMenu extends React.Component {
                 href="javascript:void(0)"
                 onClick={this.stopRecording}
             >
-                <i className="fa fa-stop" />
+                <div className={Style.stopIcon}>
+                    <InlineSVG src={require("svg-inline!assets/stop.svg")} />
+                </div>
                 <span>Stop</span>
             </a>
         );
@@ -191,13 +196,15 @@ class HeaderMenu extends React.Component {
                 href="javascript:void(0)"
                 onClick={this.resumeRecording}
             >
-                <i className="fa fa-play" />
+                <div className={Style.stopIcon}>
+                    <InlineSVG src={require("svg-inline!assets/play.svg")} />
+                </div>
                 <span>Resume</span>
             </a>
         );
 
         return (
-          <div className={Style.topWrapper} >
+          <div className={Style.wrapper} >
             <div className={Style.menuList} >
                 {globalStatus.recording ? stopRecordingMenu : resumeRecordingMenu}
                 <a
@@ -206,7 +213,7 @@ class HeaderMenu extends React.Component {
                     onClick={this.clearAllRecord}
                     title="Ctrl + X"
                 >
-                    <i className="fa fa-eraser" />
+                    <InlineSVG src={require("svg-inline!assets/clear.svg")} />
                     <span>Clear</span>
                 </a>
 
@@ -218,7 +225,9 @@ class HeaderMenu extends React.Component {
                     onClick={this.togglerHttpsIntercept}
                     title="Enable or Disable the HTTPS intercept"
                 >
-                    <i className="fa fa-eye-slash" />
+                    <div className={Style.eyeIcon} >
+                        <InlineSVG src={require("svg-inline!assets/view-eye.svg")} />
+                    </div>
                     <span>Inercept HTTPS</span>
                 </a>
 
@@ -228,7 +237,7 @@ class HeaderMenu extends React.Component {
                     onClick={this.toggleGlobalProxyFlag}
                     title="Enable or Disable the HTTPS intercept"
                 >
-                    <i className="fa fa-tachometer" />
+                    <InlineSVG src={require("svg-inline!assets/touchmeter.svg")} />
                     <span>System Proxy</span>
                 </a>
 
@@ -242,10 +251,12 @@ class HeaderMenu extends React.Component {
                     overlayClassName={Style.runningInfoDivWrapper}
                 >
                     <a
-                        className={Style.menuItem + ' ' + Style.rightMenuItem}
+                        className={runningTipStyle}
                         href="javascript:void(0)"
                     >
-                        <Icon type="info-circle" />
+                        <div className={Style.tipIcon} >
+                            <InlineSVG src={require("svg-inline!assets/tip.svg")} />
+                        </div>
                         <span>Proxy Info</span>
                     </a>
                 </Popover>

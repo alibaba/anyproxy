@@ -5,6 +5,9 @@
     width: 100%;
     height: 100%;
     padding-top: 14px;
+    &.inApp {
+        padding-top: 20px;
+    }
 }
 .systemTitleButton {
     overflow: hidden;
@@ -14,7 +17,10 @@
 .logo {
     text-align: center;
     margin-top: 7px;
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
     .brand {
+        -webkit-app-region: no-drag;
         font-size: @logo-font-size;
         font-weight: 100;
         color: #fff;
@@ -59,10 +65,12 @@
 }
 
 .menuList {
+    overflow: hidden;
     margin-top: 50px;
     display: block;
     font-size: @left-menu-font-size;
     font-weight: 200;
+    -webkit-app-region: no-drag;
     a:hover {
         color: #fff;
     }
@@ -75,14 +83,70 @@
     line-height: 47px;
     padding-left: 14px;
     border-left: 2px solid transparent;
+    display: flex;
+    align-items: center;
+
+    .filterIcon, .downloadIcon {
+        width: 35px;
+        display: inline-block;
+        svg {
+            width: 15px;
+        }
+    }
+
+    .retweetIcon {
+        width: 35px;
+        display: inline-block;
+        svg {
+            width: 23px;
+        }
+    }
+
+    svg {
+        width: 23px;
+        height: auto;
+        cursor: pointer;
+        display: block;
+    }
+
     &:hover {
         background-color: #000;
+        color: #fff;
+        svg {
+          polyline {
+            fill: #fff;
+            stroke: #fff;
+          }
+
+          g {
+            fill: #fff;
+            opacity: 1;
+          }
+
+          use {
+            fill: #fff;
+          }
+        }
     }
 
     &.active {
-        background: #000;
-        color: #fff;
         border-color: @primary-color;
+        color: #fff;
+        svg {
+          polyline {
+            fill: #fff;
+            stroke: #fff;
+          }
+
+          g {
+            fill: #fff;
+            opacity: 1;
+          }
+
+          use {
+            fill: #fff;
+          }
+        }
     }
 
     &.working {
@@ -90,6 +154,5 @@
     }
     i {
         width: 35px;
-        font-size: @font-size-big;
     }
 }

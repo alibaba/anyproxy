@@ -76,7 +76,7 @@ module.exports = {
             loader: "url?limit=10000&mimetype=application/octet-stream"
         },
         {
-            test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+            test: /font\.svg(\?v=\d+\.\d+\.\d+)?$/,
             loader: "url?limit=10000&mimetype=image/svg+xml"
         }]
     },

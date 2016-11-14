@@ -31,25 +31,25 @@ class TitleBar extends React.Component {
         // the buttons with normal window size
         const normalButton = (
             <div className={Style.iconButtons} >
-                <span className={Style.close} >
-                    <i className="fa fa-times" aria-hidden="true"></i>
+                <span className={Style.close} id="win-close-btn" >
+                    <Icon type="close" />
                 </span>
-                <span className={Style.minimize} >
-                    <i className="fa fa-minus" aria-hidden="true"></i>
+                <span className={Style.minimize} id="win-min-btn" >
+                    <Icon type="minus" />
                 </span>
                 <span className={Style.maxmize} >
-                    <Icon type="arrows-alt" />
+                    <Icon type="arrows-alt" id="win-max-btn"/>
                 </span>
             </div>
         );
 
         const maxmizeButton = (
             <div className={Style.iconButtons} >
-                <span className={Style.close} >
-                    <i className="fa fa-times" aria-hidden="true"></i>
+                <span className={Style.close} id="win-close-btn" >
+                    <Icon type="close" />
                 </span>
                 <span className={Style.disabled} />
-                <span className={Style.maxmize} >
+                <span className={Style.maxmize} id="win-max-btn" >
                     <Icon type="shrink" />
                 </span>
             </div>

@@ -143,7 +143,7 @@ class RecordPanel extends React.Component {
         }
 
         return (
-            <div className={Style.tableWrapper} >
+            <div className={Style.wrapper} >
                 <div className="ant-table ant-table-small ant-table-scroll-position-left">
                     <div className="ant-table-content">
                         <table className="ant-table-body">
@@ -162,7 +162,7 @@ class RecordPanel extends React.Component {
                                     <th className={Style.centerRow} >Method</th>
                                     <th className={Style.centerRow} >Code</th>
                                     <th>Host</th>
-                                    <th>Path</th>
+                                    <th className={Style.pathRow} >Path</th>
                                     <th>Mime</th>
                                     <th>Start</th>
                                 </tr>
