@@ -1,27 +1,88 @@
 @import '../style/constant.less';
 .wrapper {
     position: relative;
-    background-color: @left-menu-color;
-    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+    background-color: @left-menu-background-color;
     width: 100%;
     height: 100%;
+    padding-top: 14px;
+}
+.systemTitleButton {
+    overflow: hidden;
+    padding-left: 10px;
+}
+
+.logo {
+    text-align: center;
+    margin-top: 7px;
+    .brand {
+        font-size: @logo-font-size;
+        font-weight: 100;
+        color: #fff;
+        letter-spacing: 1px;
+    }
+    .any {
+        font-weight: 500;
+    }
+
+    .proxy {
+        font-weight: 200;
+    }
+
+    .circles {
+        display: inline-block;
+        span {
+            display: block;
+            float: left;
+            width: 3px;
+            height: 3px;
+            background-color: #10A1FF;
+            margin: 0 4.7px;
+            border-radius: 50%;
+        }
+
+        .circle1 {
+            opacity: 1;
+        }
+        .circle2 {
+            opacity: 0.7;
+        }
+
+        .circle3 {
+            opacity: 0.5;
+        }
+
+        .circle4 {
+            opacity: 0.2;
+        }
+    }
+
 }
 
 .menuList {
+    margin-top: 50px;
     display: block;
     font-size: @left-menu-font-size;
     font-weight: 200;
+    a:hover {
+        color: #fff;
+    }
 }
 
 .menuItem {
-    color: #fff;
+    color: @left-menu-color;
     float: left;
     width: 100%;
-    line-height: 43px;
+    line-height: 47px;
     padding-left: 14px;
+    border-left: 2px solid transparent;
+    &:hover {
+        background-color: #000;
+    }
+
     &.active {
         background: #000;
-        border-left: 2px solid @primary-color;
+        color: #fff;
+        border-color: @primary-color;
     }
 
     &.working {

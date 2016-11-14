@@ -47,9 +47,20 @@ export function selectText(element) {
         range.select();
     }
 }
+
+export function getQueryParameter (name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results == null) {
+        return '';
+    } else {
+        return results[1] || '';
+    }
+}
+
 const CommonUtil = {
     formatDate,
-    selectText
+    selectText,
+    getQueryParameter
 };
 
 export default CommonUtil;

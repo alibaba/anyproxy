@@ -6,6 +6,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Icon,  } from 'antd';
 import { connect } from 'react-redux';
+import TitleBar from 'component/title-bar';
 
 import Style from './left-menu.less';
 import ClassBind from 'classnames/bind';
@@ -75,6 +76,24 @@ class LeftMenu extends React.Component {
 
         return (
             <div className={Style.wrapper} >
+                <div className={Style.systemTitleButton}>
+                    <TitleBar />
+                </div>
+                <div className={Style.logo} >
+                    <div className={Style.brand}>
+                        <span className={Style.any}>Any</span>
+                        <span className={Style.proxy}>Proxy</span>
+                    </div>
+                    <div className={Style.circles} >
+                        <span className={Style.circle4} />
+                        <span className={Style.circle3} />
+                        <span className={Style.circle2} />
+                        <span className={Style.circle1} />
+                        <span className={Style.circle2} />
+                        <span className={Style.circle3} />
+                        <span className={Style.circle4} />
+                    </div>
+                </div>
                 <div className={Style.menuList} >
                     <a
                         className={filterMenuStyle}
