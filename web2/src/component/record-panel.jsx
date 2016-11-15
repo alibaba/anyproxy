@@ -69,11 +69,15 @@ class RecordPanel extends React.Component {
                 .replace(/\r\n/g, '\n')
                 .replace(/\n\n/g, '\n');
 
+            // remove the last /\n$/ in case an accidential br
+            regFilterStr = regFilterStr.replace(/\n$/, '');
+
             if(regFilterStr[0] === '/' && regFilterStr[regFilterStr.length -1] === '/') {
                 regFilterStr = regFilterStr.substring(1, regFilterStr.length - 2);
             }
 
             regFilterStr = regFilterStr.replace(/((.+)\n|(.+)$)/g, (matchStr, $1, $2) => {
+                // if there is '\n' in the string
                 if ($2) {
                     return `(${$2})|`;
                 } else {
