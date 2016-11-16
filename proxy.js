@@ -187,7 +187,6 @@ function proxyServer(option){
                     if (result.status) {
                         callback(result.stdout);
                     } else {
-                        self.IS_GLOBAL_PROXY = true;
                         if(/^win/.test(process.platform)){
                             console.log('AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.');
                         } else{
@@ -205,14 +204,13 @@ function proxyServer(option){
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
 
-                    if (option.setAsGlobalProxy) {
+                    if (self.IS_GLOBAL_PROXY) {
                         console.log('resigning global proxy...');
                         var result = self.disableGlobalProxy();
 
                         if (result.status) {
                             console.log(color.red(result.stdout));
                         } else{
-                            self.IS_GLOBAL_PROXY = false;
                             console.log('global proxy resigned.');
                         }
                     }
@@ -262,7 +260,11 @@ function proxyServer(option){
         self.httpProxyServer && self.httpProxyServer.close();
         self.ws && self.ws.closeAll();
         self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
+        if (self.IS_GLOBAL_PROXY) {
+            self.disableGlobalProxy();
+        }
         logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
+
     };
 
     self.setIntercept = function (flag) {
