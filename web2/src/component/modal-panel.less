@@ -50,10 +50,14 @@
   left: 60%;
   bottom: 0;
   top: 0;
-  width: 1px;
+  width: 5px;
   background-color: @hint-color;
+  opacity: 0;
   z-index: 2000;
   cursor: col-resize;
+  &:hover {
+    opacity: 0.87;
+  }
 }
 
 .content {
