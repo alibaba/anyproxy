@@ -287,6 +287,10 @@ function proxyServer(option){
         return SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
     };
 
+    self.getProxyPort = function () {
+        return proxyPort;
+    };
+
 }
 
 module.exports.proxyServer        = proxyServer;

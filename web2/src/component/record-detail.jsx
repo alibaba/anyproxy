@@ -100,7 +100,8 @@ class RecordDetail extends React.Component {
         ];
 
         const rowClassFunc = function (record, index) {
-            return index % 2 === 0 ? null : Style.odd;
+            // return index % 2 === 0 ? null : Style.odd;
+            return null;
         };
 
         const locale = {
@@ -199,19 +200,19 @@ class RecordDetail extends React.Component {
                     </ul>
                 </div>
 
+                <div className={Style.section + ' ' + Style.noBorder} >
+                    <div >
+                        <span className={CommonStyle.sectionTitle}>Cookies</span>
+                    </div>
+                    { this.getCookieDiv(cookieString)}
+                </div>
+
                 <div className={Style.section} >
                     <div >
                         <span className={CommonStyle.sectionTitle}>Body</span>
                     </div>
                     <div className={CommonStyle.whiteSpace10} />
                     {this.getReqBodyDiv()}
-                </div>
-
-                <div className={Style.section + ' ' + Style.noBorder} >
-                    <div >
-                        <span className={CommonStyle.sectionTitle}>Cookies</span>
-                    </div>
-                    {this.getCookieDiv(cookieString)}
                 </div>
 
             </div>
