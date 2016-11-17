@@ -281,7 +281,7 @@ function proxyServer(option){
 
     self.enableGlobalProxy = function () {
         self.IS_GLOBAL_PROXY = true;
-        return SystemProxyMgr.enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+        return SystemProxyMgr.enableGlobalProxy('127.0.0.1', proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
     };
 
     self.disableGlobalProxy = function () {
