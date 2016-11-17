@@ -142,6 +142,7 @@ class HeaderMenu extends React.Component {
 
     render () {
         const { globalStatus } = this.props;
+        const { ipAddress } = this.state;
 
         const stopMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording !== true });
         const resumeMenuStyle = StyleBind('menuItem', { 'disabled': globalStatus.recording === true });
@@ -150,6 +151,11 @@ class HeaderMenu extends React.Component {
         const globalProxyStyle = StyleBind('menuItem', { 'active': globalStatus.globalProxyFlag });
 
         const runningTipStyle = StyleBind('menuItem', 'rightMenuItem', { 'active': this.state.runningDetailVisible });
+
+        const addressDivs = ipAddress ? (
+            this.state.ipAddress.map((singleIpAddress) => {
+                return <div className={Style.ipAddress}>{singleIpAddress}</div>;
+            })) : null;
 
         const runningInfoDiv = (
             <div >
@@ -160,7 +166,7 @@ class HeaderMenu extends React.Component {
                     </li>
                     <li>
                         <strong>Host Address:</strong>
-                        <span>{this.state.ipAddress}</span>
+                        <span>{addressDivs}</span>
                     </li>
                     <li>
                         <strong>Listening on:</strong>
