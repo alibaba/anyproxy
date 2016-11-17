@@ -154,7 +154,7 @@ class HeaderMenu extends React.Component {
 
         const addressDivs = ipAddress ? (
             this.state.ipAddress.map((singleIpAddress) => {
-                return <div className={Style.ipAddress}>{singleIpAddress}</div>;
+                return <div key={singleIpAddress} className={Style.ipAddress}>{singleIpAddress}</div>;
             })) : null;
 
         const runningInfoDiv = (
