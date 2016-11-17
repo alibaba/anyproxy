@@ -25,6 +25,13 @@ class RecordPanel extends React.Component {
         this.getRecordDetail = this.getRecordDetail.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.addKeyEvent = this.addKeyEvent.bind(this);
+
+        // a key to indicate wheter to update
+        this.shouldUpdate = true;
+        setInterval(() => {
+            this.shouldUpdate = true;
+        }, 250);
+
     }
 
     static propTypes = {
@@ -97,6 +104,7 @@ class RecordPanel extends React.Component {
     }
 
     getTrs () {
+
         const trs = [];
 
         const filterReg = this.getFilterReg();
@@ -138,6 +146,15 @@ class RecordPanel extends React.Component {
 
     componentDidMount () {
         this.addKeyEvent();
+    }
+
+    shouldComponentUpdate () {
+        if (this.shouldUpdate) {
+            this.shouldUpdate = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render () {
