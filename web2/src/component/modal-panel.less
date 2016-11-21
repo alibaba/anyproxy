@@ -1,17 +1,28 @@
 @import '../style/constant.less';
 .wrapper {
   display: block;
-  position: fixed;
+  position: absolute;
   z-index: 1000;
   top: 0;
   bottom: 0;
   left: 60%;
   right: 0;
-  background-color: @opacity-background-color
+  background-color: @opacity-background-color;
+  overflow: hidden;
+  -webkit-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
+  -moz-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
+  box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
+  will-change: left;
+}
+
+.relativeWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .closeIcon {
-  position: fixed;
+  position: absolute;
   z-index: 2000;
   top: 0;
   right: 0;
@@ -32,17 +43,11 @@
 }
 
 .contentWrapper {
-  z-index: 1500;
-  left: 60%;
-  top: 0;
-  bottom: 0;
-  right: 0;
   color: @default-color;
-  position: fixed;
+  position: relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  -webkit-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
-  -moz-box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
-  box-shadow: -3px 0px 6px 0px rgba(128,128,128,0.56);
 }
 
 .dragBar {

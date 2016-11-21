@@ -83,33 +83,44 @@ class ModalPanel extends React.Component {
     }
 
     render () {
+        // will not remove the dom but hidden it, so the dom will not be relayouted
+        let renderLeft = '100%';
         if (!this.props.visible) {
             this.removeKeyEvent();
-            return null;
+            // return null;
+        } else {
+            const { dragBarLeft, contentLeft } = this.state;
+            const propsLeft = this.props.left;
+            renderLeft = dragBarLeft || propsLeft;
+            this.addKeyEvent();
         }
-        this.addKeyEvent();
 
-        const { dragBarLeft, contentLeft } = this.state;
-        const propsLeft = this.props.left;
-        const dragBarStyle = dragBarLeft || propsLeft ? { 'left': dragBarLeft || propsLeft } : null;
-        const contentStyle = contentLeft || propsLeft ? { 'left': contentLeft || propsLeft } : null;
 
-        const modalStyle = this.props.hideBackModal ? contentStyle : { 'left': 0 };
+        // const dragBarStyle = dragBarLeft || propsLeft ? { 'left': dragBarLeft || propsLeft } : null;
+        // const contentStyle = contentLeft || propsLeft ? { 'left': contentLeft || propsLeft } : null;
+
+        const dragBarStyle = { 'left': renderLeft };
+        const modalStyle = { 'left': renderLeft };
+
+        // const modalStyle = this.props.hideBackModal ? contentStyle : { 'left': 0 };
         return (
             <div className={Style.wrapper} onClick={this.onClose} style={modalStyle} >
-                <div className={Style.closeIcon} title="Close, Esc" onClick={this.doClose} >
-                    <Icon type="close" />
-                </div>
-                <div
-                    className={Style.dragBar}
-                    style={dragBarStyle}
-                    onMouseDown={this.onDragbarMoveDown}
-                />
-                <div className={Style.contentWrapper} style={contentStyle} >
-                    <div className={Style.content} >
-                        {this.props.children}
+                <div className={Style.relativeWrapper}>
+                    <div className={Style.closeIcon} title="Close, Esc" onClick={this.doClose} >
+                        <Icon type="close" />
+                    </div>
+                    <div
+                        className={Style.dragBar}
+                        style={dragBarStyle}
+                        onMouseDown={this.onDragbarMoveDown}
+                    />
+                    <div className={Style.contentWrapper} >
+                        <div className={Style.content} >
+                            {this.props.children}
+                        </div>
                     </div>
                 </div>
+
             </div>
         );
     }
