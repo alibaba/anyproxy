@@ -97,8 +97,6 @@ class App extends React.Component{
     }
 
     render () {
-
-
         return (
             <div className={Style.indexWrapper} >
                 <div className={Style.leftPanel} >
@@ -112,16 +110,23 @@ class App extends React.Component{
                         <HeaderMenu />
                     </div>
                     <div className={Style.tableWrapper} >
-                        <RecordPanel data={this.props.requestRecord.recordList} />
+                        <RecordPanel
+                            data={this.props.requestRecord.recordList}
+                            globalStatus={this.props.globalStatus}
+                            dispatch={this.props.dispatch}
+                        />
                     </div>
                 </div>
                 <WsListener />
-                <RecordDetail />
+                <RecordDetail
+                    globalStatus={this.props.globalStatus}
+                    requestRecord={this.props.requestRecord}
+                    dispatch={this.props.dispatch}
+                />
             </div>
         );
     }
 }
-
 
 function select (state) {
     return {

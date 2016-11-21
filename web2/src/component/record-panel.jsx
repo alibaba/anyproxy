@@ -4,7 +4,7 @@
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Table, message } from 'antd';
+import { Table, message, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { formatDate } from 'common/CommonUtil';
 import RecordRow from 'component/record-row';
@@ -14,10 +14,17 @@ import CommonStyle from '../style/common.less';
 import { fetchRecordDetail } from 'action/recordAction';
 
 const StyleBind = ClassBind.bind(Style);
+const  DEFAULT_MAX_SIZE = 3000; // the default max size of list to display
 
 class RecordPanel extends React.Component {
     constructor () {
         super();
+
+        this.state = {
+            forceIntervalUpdate: false, // will force the state to update, trigger `shouldUpdateComponent`
+            forceStateUpdate: false, // force the state to update, `shouldUpdateComponent` should honor this
+            maxAllowedRecords: DEFAULT_MAX_SIZE
+        };
 
         this.wsClient = null;
 
@@ -25,11 +32,20 @@ class RecordPanel extends React.Component {
         this.getRecordDetail = this.getRecordDetail.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.addKeyEvent = this.addKeyEvent.bind(this);
+        this.loadMore = this.loadMore.bind(this);
 
         // a key to indicate wheter to update
         this.shouldUpdate = true;
+        // mark if there are records to update, so when the time interval reach, those records can be safely updated
+        this.hasRecordInQueueToUpdate = false;
+
         setInterval(() => {
             this.shouldUpdate = true;
+            if (this.hasRecordInQueueToUpdate) {
+                this.setState({
+                    forceIntervalUpdate: true
+                });
+            }
         }, 250);
 
     }
@@ -66,6 +82,13 @@ class RecordPanel extends React.Component {
 
     addKeyEvent () {
         document.addEventListener('keyup', this.onKeyUp);
+    }
+
+    loadMore () {
+        this.setState({
+            maxAllowedRecords: this.state.maxAllowedRecords + 500,
+            forceUpdate: true
+        });
     }
 
     getFilterReg () {
@@ -109,8 +132,17 @@ class RecordPanel extends React.Component {
 
         const filterReg = this.getFilterReg();
         const { lastActiveRecordId, currentActiveRecordId } = this.props.globalStatus;
+        const { data: recordList } = this.props;
 
-        this.props.data.forEach((item, index) => {
+        const length = recordList.length;
+        for (let i = 0 ; i < length; i++) {
+            // only display records less than max limit
+            if (i >= this.state.maxAllowedRecords) {
+                break;
+            }
+
+            const item = recordList[i];
+
             const tableRowStyle = StyleBind('row', {
                 'lightBackgroundColor': item.id % 2 === 1,
                 'lightColor': item.statusCode === '',
@@ -139,9 +171,21 @@ class RecordPanel extends React.Component {
                     key={item.id}
                 />);
             }
-        });
+        }
 
         return trs;
+    }
+
+    getLoadMoreDiv () {
+        if (!this.props.data || this.props.data.length <= this.state.maxAllowedRecords) {
+            return null;
+        }
+
+        return (
+            <div className={Style.laodMore} onClick={this.loadMore} title="Click to show more records" >
+                <span><Icon type="plus-circle" />More...</span>
+            </div>
+        );
     }
 
     componentDidMount () {
@@ -149,10 +193,13 @@ class RecordPanel extends React.Component {
     }
 
     shouldComponentUpdate () {
-        if (this.shouldUpdate) {
+        if (this.shouldUpdate || this.state.forceStateUpdate) {
             this.shouldUpdate = false;
+            this.hasRecordInQueueToUpdate = false;
+            this.state.forceStateUpdate = false;
             return true;
         } else {
+            this.hasRecordInQueueToUpdate = true;
             return false;
         }
     }
@@ -195,7 +242,7 @@ class RecordPanel extends React.Component {
                     </div>
 
                 </div>
-
+                {this.getLoadMoreDiv()}
             </div>
         );
     }
@@ -206,4 +253,4 @@ function select (state) {
         globalStatus: state.globalStatus
     };
 }
-export default connect(select)(RecordPanel);
+export default RecordPanel;

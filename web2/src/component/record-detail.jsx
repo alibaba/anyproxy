@@ -293,11 +293,4 @@ class RecordDetail extends React.Component {
     }
 }
 
-function select (state) {
-    return {
-        globalStatus: state.globalStatus,
-        requestRecord: state.requestRecord
-    };
-}
-
-export default connect(select)(RecordDetail);
+export default RecordDetail;
