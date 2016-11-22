@@ -54,12 +54,12 @@ class RecordPanel extends React.Component {
         if (typeof this.props.globalStatus.currentActiveRecordId === 'number') {
             // up arrow
             if (e.keyCode === 38) {
-                this.getNextDetail(1);
+                this.getNextDetail(-1);
             }
 
             // down arrow
             if (e.keyCode === 40) {
-                this.getNextDetail(-1);
+                this.getNextDetail(1);
             }
         }
     }

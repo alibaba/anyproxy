@@ -70,7 +70,7 @@ function requestListReducer (state = defaultState, action) {
                     record._render = true;
                     list[index] = record;
                 } else {
-                    list.unshift(record);
+                    list.push(record);
                 }
             });
 
