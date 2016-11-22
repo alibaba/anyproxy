@@ -27,7 +27,7 @@ function requestListReducer (state = defaultState, action) {
         case UPDATE_WHOLE_REQUEST: {
             console.info('update whole data', action);
             const newState = Object.assign({}, state);
-            newState.recordList = action.data;
+            newState.recordList = action.data.slice();
             return newState;
         }
 
@@ -36,6 +36,10 @@ function requestListReducer (state = defaultState, action) {
             const newState = Object.assign({}, state);
 
             const list = newState.recordList.slice();
+
+            list.forEach((item) => {
+                item._render = false;
+            });
 
             const record = action.data;
 
@@ -48,7 +52,7 @@ function requestListReducer (state = defaultState, action) {
                 record._render = true;
                 list[index] = record;
             } else {
-                list.unshift(record);
+                list.push(record);
             }
 
             newState.recordList = list;
@@ -58,6 +62,10 @@ function requestListReducer (state = defaultState, action) {
         case UPDATE_MULTIPLE_RECORDS: {
             const newState = Object.assign({}, state);
             const list = newState.recordList.slice();
+
+            list.forEach((item) => {
+                item._render = false;
+            });
 
             const records = action.data;
             records.forEach((record) => {

@@ -12,26 +12,29 @@ import Style from './record-panel.less';
 import ClassBind from 'classnames/bind';
 import CommonStyle from '../style/common.less';
 import { fetchRecordDetail } from 'action/recordAction';
+const RecordPanelWorkder = require('worker-loader?inline!./record-list-diff-worker.jsx');
 
 const StyleBind = ClassBind.bind(Style);
 const  DEFAULT_MAX_SIZE = 3000; // the default max size of list to display
+
+const myRecordPanelWorder = new RecordPanelWorkder(window.URL.createObjectURL(new Blob(RecordPanelWorkder)));
 
 class RecordPanel extends React.Component {
     constructor () {
         super();
 
         this.state = {
-            maxAllowedRecords: DEFAULT_MAX_SIZE
+            maxAllowedRecords: DEFAULT_MAX_SIZE,
+            innerDiffChange: false,
+            recordList: []
         };
 
         this.wsClient = null;
 
-        this.getFilterReg = this.getFilterReg.bind(this);
         this.getRecordDetail = this.getRecordDetail.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
         this.addKeyEvent = this.addKeyEvent.bind(this);
         this.loadMore = this.loadMore.bind(this);
-
     }
 
     static propTypes = {
@@ -74,48 +77,23 @@ class RecordPanel extends React.Component {
         });
     }
 
-    getFilterReg () {
-        let filterReg = null;
-        const { filterStr } = this.props.globalStatus;
-        if (filterStr) {
-            let regFilterStr = filterStr
-                .replace(/\r\n/g, '\n')
-                .replace(/\n\n/g, '\n');
-
-            // remove the last /\n$/ in case an accidential br
-            regFilterStr = regFilterStr.replace(/\n$/, '');
-
-            if(regFilterStr[0] === '/' && regFilterStr[regFilterStr.length -1] === '/') {
-                regFilterStr = regFilterStr.substring(1, regFilterStr.length - 2);
-            }
-
-            regFilterStr = regFilterStr.replace(/((.+)\n|(.+)$)/g, (matchStr, $1, $2) => {
-                // if there is '\n' in the string
-                if ($2) {
-                    return `(${$2})|`;
-                } else {
-                    return `(${$1})`;
-                }
-            });
-
-            try {
-                filterReg = new RegExp(regFilterStr);
-            } catch(e) {
-                console.error(e);
-                message.error('failed to parse the filter string: ', this.globalStatus.filter);
-            }
-        }
-
-        return filterReg;
+    // with the help of web-worker, diff the data to ensure only when there are changes the component will be rendered
+    innerDiff (currentData, nextData, filterStr, limit) {
+        const message = {
+            limit: limit,
+            filterStr: filterStr,
+            currentData: currentData,
+            nextData: nextData
+        };
+        myRecordPanelWorder.postMessage(JSON.stringify(message));
     }
 
     getTrs () {
 
         const trs = [];
 
-        const filterReg = this.getFilterReg();
         const { lastActiveRecordId, currentActiveRecordId } = this.props.globalStatus;
-        const { data: recordList } = this.props;
+        const { recordList } = this.state;
 
         const length = recordList.length;
         for (let i = 0 ; i < length; i++) {
@@ -136,24 +114,12 @@ class RecordPanel extends React.Component {
                 item._render = true;
             }
 
-            if (filterReg) {
-                if (filterReg.test(item.url)) {
-                    trs.push(<RecordRow
-                        data={item}
-                        detailHandler={this.getRecordDetail}
-                        className={tableRowStyle}
-                        key={item.id}
-                    />);
-                }
-
-            } else {
-                trs.push(<RecordRow
+            trs.push(<RecordRow
                     data={item}
                     className={tableRowStyle}
                     detailHandler={this.getRecordDetail}
                     key={item.id}
                 />);
-            }
         }
 
         return trs;
@@ -171,16 +137,45 @@ class RecordPanel extends React.Component {
         );
     }
 
-    shouldComponentUpdate (nextProps) {
+    shouldComponentUpdate (nextProps, nextState) {
         const { lastActiveRecordId, currentActiveRecordId, filterStr } = this.props.globalStatus;
-        return nextProps.data !== this.props.data
-            || nextProps.globalStatus.lastActiveRecordId !== lastActiveRecordId
-            || nextProps.globalStatus.currentActiveRecordId !== currentActiveRecordId
-            || nextProps.globalStatus.filterStr !== filterStr;
+        const { filterStr: nextPropFilterStr } = nextProps.globalStatus;
+
+        const secondLevelChange = nextProps.data !== this.props.data
+            || nextPropFilterStr !== filterStr
+            || nextState.maxAllowedRecords !== this.state.maxAllowedRecords;
+
+
+        if (nextProps.globalStatus.currentActiveRecordId !== currentActiveRecordId) {
+            return true;
+        }
+
+        if (!secondLevelChange && !nextState.innerDiffChange) {
+            return false;
+        }
+
+        // will decide the diff status before update
+        if (nextState.innerDiffChange) {
+            // reset the mark
+            nextState.innerDiffChange = false;
+            return true;
+        }  else {
+            this.innerDiff(this.state.recordList, nextProps.data, nextProps.filterStr, nextState.maxAllowedRecords);
+            return false;
+        }
     }
 
     componentDidMount () {
         this.addKeyEvent();
+        myRecordPanelWorder.addEventListener('message', (e) => {
+            const data = JSON.parse(e.data);
+            if (data.shouldUpdate) {
+                this.setState({
+                    innerDiffChange: true,
+                    recordList: data.data
+                });
+            }
+        });
     }
 
     render () {
