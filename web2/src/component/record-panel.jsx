@@ -171,6 +171,14 @@ class RecordPanel extends React.Component {
         );
     }
 
+    shouldComponentUpdate (nextProps) {
+        const { lastActiveRecordId, currentActiveRecordId, filterStr } = this.props.globalStatus;
+        return nextProps.data !== this.props.data
+            || nextProps.globalStatus.lastActiveRecordId !== lastActiveRecordId
+            || nextProps.globalStatus.currentActiveRecordId !== currentActiveRecordId
+            || nextProps.globalStatus.filterStr !== filterStr;
+    }
+
     componentDidMount () {
         this.addKeyEvent();
     }
