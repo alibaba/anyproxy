@@ -6,6 +6,7 @@ export const CLEAR_ALL_LOCAL_RECORD = 'CLEAR_ALL_LOCAL_RECORD';
 export const FETCH_RECORD_DETAIL = 'FETCH_RECORD_DETAIL';
 export const SHOW_RECORD_DETAIL = 'SHOW_RECORD_DETAIL';
 export const HIDE_RECORD_DETAIL = 'HIDE_RECORD_DETAIL';
+export const UPDATE_MULTIPLE_RECORDS = 'UPDATE_MULTIPLE_RECORDS';
 
 export function fetchRequestLog() {
     return {
@@ -56,6 +57,13 @@ export function showRecordDetail (record) {
 export function hideRecordDetail () {
     return {
         type: HIDE_RECORD_DETAIL
+    };
+}
+
+export function updateMultipleRecords (records) {
+    return {
+        type: UPDATE_MULTIPLE_RECORDS,
+        data: records
     };
 }
 

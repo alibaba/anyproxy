@@ -7,6 +7,7 @@ import {
     UPDATE_WHOLE_REQUEST,
     UPDATE_SINGLE_RECORD,
     CLEAR_ALL_LOCAL_RECORD,
+    UPDATE_MULTIPLE_RECORDS,
     SHOW_RECORD_DETAIL,
     HIDE_RECORD_DETAIL
 } from 'action/recordAction';
@@ -31,6 +32,7 @@ function requestListReducer (state = defaultState, action) {
         }
 
         case UPDATE_SINGLE_RECORD: {
+
             const newState = Object.assign({}, state);
 
             const list = newState.recordList.slice();
@@ -48,6 +50,29 @@ function requestListReducer (state = defaultState, action) {
             } else {
                 list.unshift(record);
             }
+
+            newState.recordList = list;
+            return newState;
+        }
+
+        case UPDATE_MULTIPLE_RECORDS: {
+            const newState = Object.assign({}, state);
+            const list = newState.recordList.slice();
+
+            const records = action.data;
+            records.forEach((record) => {
+                const index = list.findIndex((item) => {
+                    return item.id === record.id;
+                });
+
+                if (index >= 0) {
+                    // set the mark to ensure the item get re-rendered
+                    record._render = true;
+                    list[index] = record;
+                } else {
+                    list.unshift(record);
+                }
+            });
 
             newState.recordList = list;
             return newState;

@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { message } from 'antd';
 import { initWs } from 'common/WsUtil';
-import { updateRecord } from 'action/recordAction';
+import { updateRecord, updateMultipleRecords } from 'action/recordAction';
 
 class WsListener extends React.Component {
     constructor () {
@@ -34,6 +34,16 @@ class WsListener extends React.Component {
                     if (this.props.globalStatus.recording) {
                         this.props.dispatch(updateRecord(record));
                     }
+                    break;
+                }
+
+                case 'updateMultiple': {
+                    const records = data.content;
+                    // stop update the record when it's turned off
+                    if (this.props.globalStatus.recording) {
+                        this.props.dispatch(updateMultipleRecords(records));
+                    }
+                    break;
                 }
             }
         } catch(error) {

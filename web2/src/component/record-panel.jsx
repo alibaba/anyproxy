@@ -21,8 +21,6 @@ class RecordPanel extends React.Component {
         super();
 
         this.state = {
-            forceIntervalUpdate: false, // will force the state to update, trigger `shouldUpdateComponent`
-            forceStateUpdate: false, // force the state to update, `shouldUpdateComponent` should honor this
             maxAllowedRecords: DEFAULT_MAX_SIZE
         };
 
@@ -33,20 +31,6 @@ class RecordPanel extends React.Component {
         this.onKeyUp = this.onKeyUp.bind(this);
         this.addKeyEvent = this.addKeyEvent.bind(this);
         this.loadMore = this.loadMore.bind(this);
-
-        // a key to indicate wheter to update
-        this.shouldUpdate = true;
-        // mark if there are records to update, so when the time interval reach, those records can be safely updated
-        this.hasRecordInQueueToUpdate = false;
-
-        setInterval(() => {
-            this.shouldUpdate = true;
-            if (this.hasRecordInQueueToUpdate) {
-                this.setState({
-                    forceIntervalUpdate: true
-                });
-            }
-        }, 250);
 
     }
 
@@ -86,8 +70,7 @@ class RecordPanel extends React.Component {
 
     loadMore () {
         this.setState({
-            maxAllowedRecords: this.state.maxAllowedRecords + 500,
-            forceUpdate: true
+            maxAllowedRecords: this.state.maxAllowedRecords + 500
         });
     }
 
@@ -190,18 +173,6 @@ class RecordPanel extends React.Component {
 
     componentDidMount () {
         this.addKeyEvent();
-    }
-
-    shouldComponentUpdate () {
-        if (this.shouldUpdate || this.state.forceStateUpdate) {
-            this.shouldUpdate = false;
-            this.hasRecordInQueueToUpdate = false;
-            this.state.forceStateUpdate = false;
-            return true;
-        } else {
-            this.hasRecordInQueueToUpdate = true;
-            return false;
-        }
     }
 
     render () {
