@@ -25,7 +25,6 @@ const getRecordInList = function (recordId, recordList) {
 function requestListReducer (state = defaultState, action) {
     switch (action.type) {
         case UPDATE_WHOLE_REQUEST: {
-            console.info('update whole data', action);
             const newState = Object.assign({}, state);
             newState.recordList = action.data.slice();
             return newState;

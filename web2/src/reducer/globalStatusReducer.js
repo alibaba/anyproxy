@@ -3,12 +3,15 @@ const defaultStatus = {
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
     activeMenuKey: '',
+    displayRecordLimit: 3000,
+    canLoadMore: false,
     interceptHttpsFlag: false,
     globalProxyFlag: false, // is global proxy now
     filterStr: '',
     directory: [],
-    lastActiveRecordId: '',
-    currentActiveRecordId: '',
+    lastActiveRecordId: -1,
+    currentActiveRecordId: -1,
+    shouldClearAllRecord: false,
     mappedConfig:[] // configured map config
 };
 
@@ -28,7 +31,10 @@ import {
     UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG,
     UPDATE_LOCAL_GLOBAL_PROXY_FLAG,
     HIDE_ROOT_CA,
-    SHOW_ROOT_CA
+    SHOW_ROOT_CA,
+    UPDATE_CAN_LOAD_MORE,
+    INCREASE_DISPLAY_RECORD_LIST,
+    UPDATE_SHOULD_CLEAR_RECORD
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -152,6 +158,24 @@ function requestListReducer (state = defaultStatus, action) {
         case HIDE_ROOT_CA: {
             const newState = Object.assign({}, state);
             newState.activeMenuKey = '';
+            return newState;
+        }
+
+        case UPDATE_CAN_LOAD_MORE: {
+            const newState = Object.assign({}, state);
+            newState.canLoadMore = action.data;
+            return newState;
+        }
+
+        case UPDATE_SHOULD_CLEAR_RECORD: {
+            const newState = Object.assign({}, state);
+            newState.shouldClearAllRecord = action.data;
+            return newState;
+        }
+
+        case INCREASE_DISPLAY_RECORD_LIST: {
+            const newState = Object.assign({}, state);
+            newState.displayRecordLimit+= action.data;
             return newState;
         }
 

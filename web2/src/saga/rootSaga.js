@@ -31,7 +31,7 @@ import {
 import ApiUtil, { getJSON, postJSON, isApiSuccess } from 'common/ApiUtil';
 
 function* doFetchRequestList() {
-    const data = yield call(getJSON, '/lastestLog');
+    const data = yield call(getJSON, '/latestLog');
     yield put(updateWholeRequest(data));
 }
 

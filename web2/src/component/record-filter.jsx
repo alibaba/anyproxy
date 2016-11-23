@@ -21,6 +21,7 @@ class RecordFilter extends React.Component {
         super();
         this.onChange = this.onChange.bind(this);
         this.onClose = this.onClose.bind(this);
+        this.filterTimeoutId = null;
     }
 
     static propTypes = {

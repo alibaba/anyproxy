@@ -21,6 +21,10 @@ export const UPDATE_LOCAL_GLOBAL_PROXY_FLAG = 'UPDATE_LOCAL_GLOBAL_PROXY_FLAG';
 export const SHOW_ROOT_CA = 'SHOW_ROOT_CA';
 export const HIDE_ROOT_CA = 'HIDE_ROOT_CA';
 
+export const UPDATE_CAN_LOAD_MORE = 'UPDATE_CAN_LOAD_MORE';
+export const INCREASE_DISPLAY_RECORD_LIST = 'INCREASE_DISPLAY_RECORD_LIST';
+export const UPDATE_SHOULD_CLEAR_RECORD = 'UPDATE_SHOULD_CLEAR_RECORD';
+
 export function stopRecording() {
     return {
         type: STOP_RECORDING
@@ -146,5 +150,26 @@ export function showRootCA () {
 export function hideRootCA () {
     return {
         type: HIDE_ROOT_CA
+    };
+}
+
+export function updateCanLoadMore (canLoadMore) {
+    return {
+        type: UPDATE_CAN_LOAD_MORE,
+        data: canLoadMore
+    };
+}
+
+export function increaseDisplayRecordLimit (moreToAdd) {
+    return {
+        type: INCREASE_DISPLAY_RECORD_LIST,
+        data: moreToAdd
+    };
+}
+
+export function updateShouldClearRecord (shouldClear) {
+    return {
+        type: UPDATE_SHOULD_CLEAR_RECORD,
+        data: shouldClear
     };
 }

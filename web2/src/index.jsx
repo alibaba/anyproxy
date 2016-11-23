@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { Button, LocaleProvider } from 'antd';
+import { Button, LocaleProvider, Icon } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from 'saga/rootSaga';
@@ -19,6 +19,7 @@ import RecordDetail from 'component/record-detail';
 import ResizablePanel from 'component/resizable-panel';
 import LeftMenu from 'component/left-menu';
 import DownloadRootCA from 'component/download-root-ca';
+import { increaseDisplayRecordLimit } from 'action/globalStatusAction';
 
 require('./lib/font-awesome/css/font-awesome.css');
 require('./style/antd-reset.global.less');
@@ -48,6 +49,7 @@ class App extends React.Component{
         };
 
         this.onResizePanelClose = this.onResizePanelClose.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     static propTypes = {
@@ -56,14 +58,26 @@ class App extends React.Component{
         globalStatus: PropTypes.object
     }
 
-    componentDidMount () {
-        this.props.dispatch(fetchRequestLog());
-    }
-
     onResizePanelClose () {
         this.setState({
             showResizePanel: false
         });
+    }
+
+    loadMore () {
+        this.props.dispatch(increaseDisplayRecordLimit(500));
+    }
+
+    getLoadMoreDiv () {
+        if (!this.props.globalStatus.canLoadMore) {
+            return null;
+        }
+
+        return (
+            <div className={Style.laodMore} onClick={this.loadMore} title="Click to show more records" >
+                <span><Icon type="plus-circle" />More...</span>
+            </div>
+        );
     }
 
     getMiddlePanel () {
@@ -97,6 +111,7 @@ class App extends React.Component{
     }
 
     render () {
+        const { lastActiveRecordId, currentActiveRecordId, filterStr, canLoadMore } = this.props.globalStatus;
         return (
             <div className={Style.indexWrapper} >
                 <div className={Style.leftPanel} >
@@ -112,9 +127,12 @@ class App extends React.Component{
                     <div className={Style.tableWrapper} >
                         <RecordPanel
                             data={this.props.requestRecord.recordList}
-                            globalStatus={this.props.globalStatus}
+                            lastActiveRecordId={lastActiveRecordId}
+                            currentActiveRecordId={currentActiveRecordId}
                             dispatch={this.props.dispatch}
                         />
+                        {this.getLoadMoreDiv()}
+
                     </div>
                 </div>
                 <WsListener />

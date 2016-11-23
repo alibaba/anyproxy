@@ -14,7 +14,8 @@ import {
     updateLocalInterceptHttpsFlag,
     updateLocalGlobalProxyFlag,
     toggleRemoteInterceptHttpsFlag,
-    toggleRemoteGlobalProxyFlag
+    toggleRemoteGlobalProxyFlag,
+    updateShouldClearRecord
 } from 'action/globalStatusAction';
 
 import { clearAllRecord } from 'action/recordAction';
@@ -59,7 +60,7 @@ class HeaderMenu extends React.Component {
     }
 
     clearAllRecord () {
-        this.props.dispatch(clearAllRecord());
+        this.props.dispatch(updateShouldClearRecord(true));
     }
 
     handleRuningInfoVisibleChange (visible) {
