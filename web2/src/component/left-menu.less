@@ -1,4 +1,13 @@
 @import '../style/constant.less';
+
+@keyframes lightBulb{
+    from { opacity: 1 }
+    to { opacity: 0.1 }
+}
+
+@total-duration: 5s;
+@single-duration: 0.7s;
+
 .wrapper {
     position: relative;
     background-color: @left-menu-background-color;
@@ -44,21 +53,51 @@
             background-color: #10A1FF;
             margin: 0 4.7px;
             border-radius: 50%;
-        }
-
-        .circle1 {
-            opacity: 1;
-        }
-        .circle2 {
-            opacity: 0.7;
-        }
-
-        .circle3 {
-            opacity: 0.5;
-        }
-
-        .circle4 {
             opacity: 0.2;
+        }
+
+        &.stop {
+            .circle1, .circle7 {
+                opacity: 0.2;
+            }
+            .circle2, .circle6 {
+                opacity: 0.4;
+            }
+
+            .circle3, .circle5 {
+                opacity: 0.8;
+            }
+
+            .circle4 {
+                opacity: 1;
+            }
+        }
+
+        &.active {
+            span {
+                animation: lightBulb @total-duration infinite;
+            }
+            .circle7 {
+                animation-delay: (1*@single-duration);
+            }
+            .circle6 {
+                animation-delay: (2*@single-duration);
+            }
+            .circle5 {
+                animation-delay: (3*@single-duration);
+            }
+            .circle4 {
+                animation-delay: (4*@single-duration);
+            }
+            .circle3 {
+                animation-delay: (5*@single-duration);
+            }
+            .circle2 {
+                animation-delay: (6*@single-duration);
+            }
+            .circle1 {
+                animation-delay: (7*@single-duration);
+            }
         }
     }
 

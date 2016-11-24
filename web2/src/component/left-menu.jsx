@@ -58,7 +58,7 @@ class LeftMenu extends React.Component {
     }
 
     render () {
-        const { mappedConfig, filterStr, activeMenuKey } = this.props.globalStatus;
+        const { mappedConfig, filterStr, activeMenuKey, recording } = this.props.globalStatus;
         const currentMappedConfig = mappedConfig || [];
 
         const mapLocalMenuStyle = StyleBind('menuItem', {
@@ -76,6 +76,8 @@ class LeftMenu extends React.Component {
         });
 
         const wrapperStyle = StyleBind('wrapper', { 'inApp': this.state.inAppMode } );
+        const circleStyle = StyleBind('circles', { 'active': recording, 'stop': !recording });
+
         return (
             <div className={wrapperStyle} >
                 <div className={Style.logo} >
@@ -83,14 +85,14 @@ class LeftMenu extends React.Component {
                         <span className={Style.any}>Any</span>
                         <span className={Style.proxy}>Proxy</span>
                     </div>
-                    <div className={Style.circles} >
-                        <span className={Style.circle4} />
-                        <span className={Style.circle3} />
-                        <span className={Style.circle2} />
+                    <div className={circleStyle} >
                         <span className={Style.circle1} />
                         <span className={Style.circle2} />
                         <span className={Style.circle3} />
                         <span className={Style.circle4} />
+                        <span className={Style.circle5} />
+                        <span className={Style.circle6} />
+                        <span className={Style.circle7} />
                     </div>
                 </div>
                 <div className={Style.menuList} >
