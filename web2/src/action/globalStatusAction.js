@@ -24,6 +24,7 @@ export const HIDE_ROOT_CA = 'HIDE_ROOT_CA';
 export const UPDATE_CAN_LOAD_MORE = 'UPDATE_CAN_LOAD_MORE';
 export const INCREASE_DISPLAY_RECORD_LIST = 'INCREASE_DISPLAY_RECORD_LIST';
 export const UPDATE_SHOULD_CLEAR_RECORD = 'UPDATE_SHOULD_CLEAR_RECORD';
+export const UPDATE_APP_VERSION = 'UPDATE_APP_VERSION';
 
 export function stopRecording() {
     return {
@@ -171,5 +172,12 @@ export function updateShouldClearRecord (shouldClear) {
     return {
         type: UPDATE_SHOULD_CLEAR_RECORD,
         data: shouldClear
+    };
+}
+
+export function updateLocalAppVersion (version) {
+    return {
+        type: UPDATE_APP_VERSION,
+        data: version
     };
 }

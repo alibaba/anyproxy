@@ -79,10 +79,10 @@ class LeftMenu extends React.Component {
         return (
             <div className={wrapperStyle} >
                 <div className={Style.logo} >
-                    <a className={Style.brand} href="http://anyproxy.io/" target="_blank">
+                    <div className={Style.brand} >
                         <span className={Style.any}>Any</span>
                         <span className={Style.proxy}>Proxy</span>
-                    </a>
+                    </div>
                     <div className={Style.circles} >
                         <span className={Style.circle4} />
                         <span className={Style.circle3} />
@@ -129,6 +129,17 @@ class LeftMenu extends React.Component {
                         </span>
                         <span>RootCA</span>
                     </a>
+                </div>
+                <div className={Style.bottom} >
+                    <a className={Style.bottomItem} href="http://anyproxy.io/" target="_blank">AnyProxy.io</a>
+                    <div className={Style.bottomBorder} >
+                        <span className={Style.bottomBorder1} />
+                        <span className={Style.bottomBorder2} />
+                        <span className={Style.bottomBorder3} />
+                    </div>
+                    <span className={Style.bottomItem}>
+                        Version {this.props.globalStatus.appVersion}
+                    </span>
                 </div>
             </div>
         );

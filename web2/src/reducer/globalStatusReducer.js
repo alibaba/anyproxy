@@ -12,6 +12,7 @@ const defaultStatus = {
     lastActiveRecordId: -1,
     currentActiveRecordId: -1,
     shouldClearAllRecord: false,
+    appVersion: '',
     mappedConfig:[] // configured map config
 };
 
@@ -34,7 +35,8 @@ import {
     SHOW_ROOT_CA,
     UPDATE_CAN_LOAD_MORE,
     INCREASE_DISPLAY_RECORD_LIST,
-    UPDATE_SHOULD_CLEAR_RECORD
+    UPDATE_SHOULD_CLEAR_RECORD,
+    UPDATE_APP_VERSION
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -176,6 +178,12 @@ function requestListReducer (state = defaultStatus, action) {
         case INCREASE_DISPLAY_RECORD_LIST: {
             const newState = Object.assign({}, state);
             newState.displayRecordLimit+= action.data;
+            return newState;
+        }
+
+        case UPDATE_APP_VERSION: {
+            const newState = Object.assign({}, state);
+            newState.appVersion = action.data;
             return newState;
         }
 

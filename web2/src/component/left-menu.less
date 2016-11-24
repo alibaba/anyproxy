@@ -81,22 +81,23 @@
     float: left;
     width: 100%;
     line-height: 47px;
-    padding-left: 14px;
     border-left: 2px solid transparent;
     display: flex;
     align-items: center;
 
     .filterIcon, .downloadIcon {
-        width: 35px;
+        width: 51px;
         display: inline-block;
+        text-align: center;
         svg {
             width: 15px;
         }
     }
 
     .retweetIcon {
-        width: 35px;
+        width: 51px;
         display: inline-block;
+        text-align: center;
         svg {
             width: 23px;
         }
@@ -106,11 +107,11 @@
         width: 23px;
         height: auto;
         cursor: pointer;
-        display: block;
+        display: inline-block;
     }
 
     &:hover {
-        background-color: #000;
+        background-color: #252630;
         color: #fff;
         svg {
           polyline {
@@ -132,7 +133,7 @@
     &.active {
         border-color: @primary-color;
         color: #fff;
-        background: #000;
+        background-color: #252630;
         svg {
           polyline {
             fill: #fff;
@@ -151,9 +152,49 @@
     }
 
     &.working {
-        background: #000;
+        // color: #fff;
     }
     i {
         width: 35px;
+    }
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    font-size: 12px;
+    padding-left: 16px;
+    color: @left-menu-color;
+    .bottomItem {
+        display: inline-block;
+        margin-top: 7px;
+        line-height: 1.5;
+        color: @left-menu-color;
+    }
+    .bottomBorder {
+        overflow: hidden;
+        display: block;
+        position: relative;
+        margin-top: -3.52px;
+    }
+    .bottomBorder1 {
+        float: left;
+        width: 16px;
+        margin-right: 2px;
+        border-top: 1px solid;
+    }
+    .bottomBorder2 {
+        float: left;
+        width: 29px;
+        margin-right: 2px;
+        border-top: 1px solid;
+    }
+    .bottomBorder3 {
+        float: left;
+        width: 16px;
+        border-top: 1px solid;
     }
 }

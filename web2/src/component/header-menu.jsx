@@ -15,7 +15,8 @@ import {
     updateLocalGlobalProxyFlag,
     toggleRemoteInterceptHttpsFlag,
     toggleRemoteGlobalProxyFlag,
-    updateShouldClearRecord
+    updateShouldClearRecord,
+    updateLocalAppVersion
 } from 'action/globalStatusAction';
 
 import { clearAllRecord } from 'action/recordAction';
@@ -129,6 +130,7 @@ class HeaderMenu extends React.Component {
                 });
                 this.props.dispatch(updateLocalInterceptHttpsFlag(resposne.currentInterceptFlag));
                 this.props.dispatch(updateLocalGlobalProxyFlag(resposne.currentGlobalProxyFlag));
+                this.props.dispatch(updateLocalAppVersion(resposne.appVersion));
             })
             .catch((error) => {
                 console.error(error);
