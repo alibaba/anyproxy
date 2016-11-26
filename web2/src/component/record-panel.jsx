@@ -4,7 +4,7 @@
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Table, message } from 'antd';
+import { Table, message, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { formatDate } from 'common/CommonUtil';
 import RecordRow from 'component/record-row';
@@ -12,6 +12,7 @@ import Style from './record-panel.less';
 import ClassBind from 'classnames/bind';
 import CommonStyle from '../style/common.less';
 import { fetchRecordDetail } from 'action/recordAction';
+import { updatePanelRefreshing } from 'action/globalStatusAction';
 
 const StyleBind = ClassBind.bind(Style);
 const DEFAULT_MAX_SIZE = 3000; // the default max size of list to display
@@ -35,11 +36,14 @@ class RecordPanel extends React.Component {
         data: PropTypes.array,
         lastActiveRecordId: PropTypes.number,
         currentActiveRecordId: PropTypes.number,
-        canLoadMore: PropTypes.bool
+        loadingNext: PropTypes.bool,
+        loadingPrev: PropTypes.bool,
+        stopRefresh: PropTypes.func
     }
 
     getRecordDetail (id) {
         this.props.dispatch(fetchRecordDetail(id));
+        this.props.stopRefresh();
     }
 
     // get next detail with cursor, to go previous and next
@@ -103,10 +107,44 @@ class RecordPanel extends React.Component {
         return trs;
     }
 
+    getLoadingPreviousDiv () {
+        if (!this.props.loadingPrev) {
+            return null;
+        }
+
+        return (
+            <tr className={Style.loading}>
+                <td colSpan="7">
+                    <span > <Icon type="loading" />正在加载...</span>
+                </td>
+            </tr>
+        );
+
+        // <div className={Style.loading}> <Icon type="loading" />正在加载...</div>;
+    }
+
+    getLoadingNextDiv () {
+        if (!this.props.loadingNext) {
+            return null;
+        }
+
+        return (
+            <tr className={Style.loading}>
+                <td colSpan="7">
+                    <span > <Icon type="loading" />正在加载...</span>
+                </td>
+            </tr>
+        );
+    }
+
     shouldComponentUpdate (nextProps) {
-        const { lastActiveRecordId, currentActiveRecordId, canLoadMore } = this.props;
+        const { lastActiveRecordId, currentActiveRecordId, loadingNext, loadingPrev } = this.props;
         const shouldUpdate = nextProps.data !== this.props.data
+            || nextProps.loadingNext !== loadingNext
+            || nextProps.loadingPrev !== loadingPrev
             || nextProps.currentActiveRecordId !== currentActiveRecordId;
+
+        // console.info(nextProps.data.length, this.props.data.length, shouldUpdate, Date.now());
 
         return shouldUpdate;
     }
@@ -132,7 +170,7 @@ class RecordPanel extends React.Component {
                                 <col style={{ 'width': '70px', 'minWidth': '70px' }} />
                                 <col style={{ 'width': '200px', 'minWidth': '200px' }} />
                                 <col />
-                                <col style={{ 'width': '150px', 'minWidth': '150px' }} />
+                                <col style={{ 'width': '160px', 'minWidth': '160px' }} />
                                 <col style={{ 'width': '100px', 'minWidth': '100px' }} />
                             </colgroup>
                             <thead className="ant-table-thead">
@@ -146,9 +184,13 @@ class RecordPanel extends React.Component {
                                     <th>Start</th>
                                 </tr>
                             </thead>
+
                             <tbody className="ant-table-tbody" >
+                                {this.getLoadingPreviousDiv()}
                                 {this.getTrs()}
+                                {this.getLoadingNextDiv()}
                             </tbody>
+
                         </table>
                     </div>
 

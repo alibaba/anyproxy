@@ -9,7 +9,10 @@ import { connect } from 'react-redux';
 import { message } from 'antd';
 import { initWs } from 'common/WsUtil';
 import { updateRecord, updateMultipleRecords, updateWholeRequest } from 'action/recordAction';
-import { updateCanLoadMore, updateShouldClearRecord } from 'action/globalStatusAction';
+import {
+    updateCanLoadMore,
+    updateShouldClearRecord
+} from 'action/globalStatusAction';
 const RecordWorkder = require('worker-loader?inline!./record-worker.jsx');
 import ApiUtil, { getJSON, isApiSuccess } from 'common/ApiUtil';
 
@@ -35,12 +38,45 @@ class WsListener extends React.Component {
 
         this.initWs = this.initWs.bind(this);
         this.onWsMessage = this.onWsMessage.bind(this);
+        this.loadNext = this.loadNext.bind(this);
+        this.loadPrevious = this.loadPrevious.bind(this);
+        this.stopPanelRefreshing = this.stopPanelRefreshing.bind(this);
         fetchLatestLog();
     }
 
     static propTypes = {
         dispatch: PropTypes.func,
         globalStatus: PropTypes.object
+    }
+
+    loadPrevious () {
+        this.stopPanelRefreshing();
+        myRecordWorder.postMessage(JSON.stringify({
+            type: 'loadMore',
+            data: -500
+        }));
+    }
+
+    loadNext () {
+        this.stopPanelRefreshing();
+        myRecordWorder.postMessage(JSON.stringify({
+            type: 'loadMore',
+            data: 500
+        }));
+    }
+
+    stopPanelRefreshing () {
+        myRecordWorder.postMessage(JSON.stringify({
+            type: 'updateRefreshing',
+            refreshing: false
+        }));
+    }
+
+    resumeRefreshing () {
+        myRecordWorder.postMessage(JSON.stringify({
+            type: 'updateRefreshing',
+            refreshing: true
+        }));
     }
 
     onWsMessage (event) {
@@ -95,18 +131,16 @@ class WsListener extends React.Component {
             if (data.shouldUpdateRecord) {
                 this.props.dispatch(updateWholeRequest(data.recordList));
             }
-
-            if (data.shouldUpdateLoadMore) {
-                this.props.dispatch(updateCanLoadMore(data.canLoadMore));
-            }
         });
     }
 
     componentWillReceiveProps (nextProps) {
-        const { shouldClearAllRecord } = this.props.globalStatus;
+        const {
+            shouldClearAllRecord:nextShouldClearAllRecord
+        } = nextProps.globalStatus;
 
         // if it's going to clear the record,
-        if (shouldClearAllRecord) {
+        if (nextShouldClearAllRecord) {
             const message ={
                 type: 'clear'
             };
@@ -130,10 +164,4 @@ class WsListener extends React.Component {
     }
 }
 
-function select (state) {
-    return {
-        globalStatus: state.globalStatus
-    };
-}
-
-export default connect(select)(WsListener);
+export default WsListener;

@@ -19,9 +19,11 @@ import RecordDetail from 'component/record-detail';
 import ResizablePanel from 'component/resizable-panel';
 import LeftMenu from 'component/left-menu';
 import DownloadRootCA from 'component/download-root-ca';
-import { increaseDisplayRecordLimit } from 'action/globalStatusAction';
+import {
+    increaseDisplayRecordLimit,
+    updatePanelRefreshing
+} from 'action/globalStatusAction';
 
-require('./lib/font-awesome/css/font-awesome.css');
 require('./style/antd-reset.global.less');
 import Style from './index.less';
 
@@ -50,6 +52,16 @@ class App extends React.Component{
 
         this.onResizePanelClose = this.onResizePanelClose.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.onRecordScroll = this.onRecordScroll.bind(this);
+        this.stopRefresh = this.stopRefresh.bind(this);
+
+        this.recordTableRef = null;
+        this.wsListenerRef = null;
+
+        this.lastScrollTop = 0;
+
+        this.stopRefreshTimout = null;
+        this.stopRefreshTokenScrollTop = -1; // the token used to decide the move distance
     }
 
     static propTypes = {
@@ -58,10 +70,56 @@ class App extends React.Component{
         globalStatus: PropTypes.object
     }
 
+    stopRefresh () {
+        this.wsListenerRef && this.wsListenerRef.stopPanelRefreshing();
+    }
+
     onResizePanelClose () {
         this.setState({
             showResizePanel: false
         });
+    }
+
+    onRecordScroll () {
+
+        if (!this.recordTableRef || !this.wsListenerRef) {
+            return;
+        }
+        const scrollTop = this.recordTableRef.scrollTop;
+
+        if (scrollTop < this.lastScrollTop) {
+            if (!this.stopRefreshTimout) {
+                this.stopRefreshTokenScrollTop = scrollTop;
+            }
+
+            this.stopRefreshTimout = setTimeout(() => {
+                // if the scrollbar is scrolled up more than 30px, stop refreshing
+                if ((this.stopRefreshTokenScrollTop - scrollTop) > 30) {
+                    this.stopRefresh();
+                    this.stopRefreshTokenScrollTop = null;
+                }
+            }, 100);
+
+            // load more previous record when scrolled to top
+            if (scrollTop < 2) {
+                this.setState({
+                    loadingPrev: true
+                });
+                this.wsListenerRef.loadPrevious();
+            }
+        } else if (scrollTop > this.lastScrollTop) {
+            const recordPanelHeight = this.recordTableRef.firstChild.clientHeight;
+            const tableHeight = this.recordTableRef.clientHeight;
+
+            // when close to bottom in less than 30, load more next records
+            if (scrollTop + tableHeight + 30 > recordPanelHeight) {
+                this.setState({
+                    loadingNext: true
+                });
+                this.wsListenerRef.loadNext();
+            }
+        }
+        this.lastScrollTop = scrollTop;
     }
 
     loadMore () {
@@ -110,6 +168,15 @@ class App extends React.Component{
         return middlePanel;
     }
 
+    componentWillReceiveProps (nextProps) {
+        if (nextProps.requestRecord.recordList !== this.props.requestRecord.recordList) {
+            this.setState({
+                loadingNext: false,
+                loadingPrev: false
+            });
+        }
+    }
+
     render () {
         const { lastActiveRecordId, currentActiveRecordId, filterStr, canLoadMore } = this.props.globalStatus;
         return (
@@ -124,18 +191,27 @@ class App extends React.Component{
                     <div className={Style.headerWrapper} >
                         <HeaderMenu />
                     </div>
-                    <div className={Style.tableWrapper} >
+                    <div
+                        className={Style.tableWrapper}
+                        ref={(ref) => {this.recordTableRef = ref;}}
+                        onScroll={this.onRecordScroll}
+                    >
                         <RecordPanel
                             data={this.props.requestRecord.recordList}
                             lastActiveRecordId={lastActiveRecordId}
                             currentActiveRecordId={currentActiveRecordId}
                             dispatch={this.props.dispatch}
+                            loadingNext={this.state.loadingNext}
+                            loadingPrev={this.state.loadingPrev}
+                            stopRefresh={this.stopRefresh}
                         />
-                        {this.getLoadMoreDiv()}
-
                     </div>
                 </div>
-                <WsListener />
+                <WsListener
+                    ref={(ref) => { this.wsListenerRef = ref;}}
+                    dispatch={this.props.dispatch}
+                    globalStatus={this.props.globalStatus}
+                />
                 <RecordDetail
                     globalStatus={this.props.globalStatus}
                     requestRecord={this.props.requestRecord}

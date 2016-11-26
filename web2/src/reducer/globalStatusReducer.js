@@ -1,9 +1,11 @@
+const defaultDisplayRecordLimit = 500;
 const defaultStatus = {
     recording: true,
+    panelRefreshing: true,  // indicate whether the record panel should be refreshing
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
     activeMenuKey: '',
-    displayRecordLimit: 3000,
+    displayRecordLimit: defaultDisplayRecordLimit,
     canLoadMore: false,
     interceptHttpsFlag: false,
     globalProxyFlag: false, // is global proxy now
@@ -13,6 +15,8 @@ const defaultStatus = {
     currentActiveRecordId: -1,
     shouldClearAllRecord: false,
     appVersion: '',
+    panelLoadingNext: false,
+    panelLoadingPrev: false,
     mappedConfig:[] // configured map config
 };
 

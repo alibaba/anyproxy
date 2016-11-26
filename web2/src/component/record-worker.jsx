@@ -8,11 +8,16 @@
 * The App itself will just need to display all the filtered records, the filter and max-limit logic are handled here.
 */
 let recordList = [];
+const defaultLimit = 500;
 self.currentStateData = []; // the data now used by state
 self.filterStr = '';
 self.limit = 0;
 self.canLoadMore = false;
 self.updateQueryTimer = null;
+self.refreshing = true;
+self.beginIndex = 0;
+self.endIndex = self.beginIndex + defaultLimit -1;
+self.inDiff = false; // mark if currently in diff working
 const getFilterReg = function (filterStr) {
     let filterReg = null;
     if (filterStr) {
@@ -21,7 +26,7 @@ const getFilterReg = function (filterStr) {
             .replace(/\n\n/g, '\n');
 
         // remove the last /\n$/ in case an accidential br
-        regFilterStr = regFilterStr.replace(/\n$/, '');
+        regFilterStr = regFilterStr.replace(/\n*$/, '');
 
         if(regFilterStr[0] === '/' && regFilterStr[regFilterStr.length -1] === '/') {
             regFilterStr = regFilterStr.substring(1, regFilterStr.length - 2);
@@ -47,7 +52,12 @@ const getFilterReg = function (filterStr) {
 };
 
 // diff the record
-const diffRecords = function () {
+self.diffRecords = function () {
+    if (self.inDiff) {
+        return;
+    }
+
+    self.inDiff = true;
     const filterReg = getFilterReg(self.filterStr);
     const filterdRecords = [];
     const length = recordList.length;
@@ -57,7 +67,7 @@ const diffRecords = function () {
     let shouldUpdateLoadMore = false;
 
     // filtered out the records
-    for (let i = 0; i < length; i++) {
+    for (let i = 0 ; i < length; i++) {
         const item = recordList[i];
         if (filterReg && filterReg.test(item.url)) {
             filterdRecords.push(item);
@@ -68,13 +78,12 @@ const diffRecords = function () {
         }
     }
 
-    const canLoadMore = filterdRecords.length > self.limit;
-    if (canLoadMore !== self.canLoadMore) {
-        self.canLoadMore = canLoadMore;
-        shouldUpdateLoadMore = true;
+    if (self.refreshing) {
+        self.beginIndex = filterdRecords.length -1 - defaultLimit;
+        self.endIndex = filterdRecords.length -1;
     }
 
-    const newStateRecords = filterdRecords.slice(0, self.limit);
+    const newStateRecords = filterdRecords.slice(self.beginIndex, self.endIndex +1);
     const currentDataLength = self.currentStateData.length;
     const newDataLength = newStateRecords.length;
 
@@ -96,10 +105,9 @@ const diffRecords = function () {
 
     self.postMessage(JSON.stringify({
         shouldUpdateRecord: shouldUpdateRecord,
-        shouldUpdateLoadMore: shouldUpdateLoadMore,
-        recordList: newStateRecords,
-        canLoadMore: self.canLoadMore
+        recordList: newStateRecords
     }));
+    self.inDiff = false;
 };
 
 const updateSingle = function (record) {
@@ -144,7 +152,7 @@ self.addEventListener('message', (e) => {
     const data = JSON.parse(e.data);
     switch (data.type) {
         case 'diff' : {
-            diffRecords();
+            self.diffRecords();
             break;
         }
         case 'updateQuery': {
@@ -154,32 +162,58 @@ self.addEventListener('message', (e) => {
                 self.updateQueryTimer = setTimeout(function () {
                     self.limit = data.limit;
                     self.filterStr = data.filterStr;
-                    diffRecords();
+                    self.diffRecords();
                 }, 150);
             }
             break;
         }
         case 'updateSingle': {
             updateSingle(data.data);
-            diffRecords();
+            if(self.refreshing) {
+                self.diffRecords();
+            }
             break;
         }
 
         case 'updateMultiple': {
             updateMultiple(data.data);
-            diffRecords();
+            if(self.refreshing) {
+                self.diffRecords();
+            }
             break;
         }
         case 'initRecord': {
             recordList = data.data;
-            diffRecords();
+            self.diffRecords();
             break;
         }
 
         case 'clear': {
             recordList = [];
-            diffRecords();
+            self.diffRecords();
             break;
+        }
+
+        case 'loadMore': {
+            if (self.inDiff) {
+                return;
+            }
+            self.refreshing = false;
+            if (data.data > 0) {
+                self.endIndex += data.data;
+            } else {
+                self.beginIndex = Math.max(self.beginIndex + data.data, 0);
+            }
+            self.diffRecords();
+        }
+
+        case 'updateRefreshing': {
+            if (typeof data.refreshing === 'boolean') {
+                self.refreshing = data.refreshing;
+                if (self.refreshing) {
+                    self.diffRecords();
+                }
+            }
         }
     }
 });
