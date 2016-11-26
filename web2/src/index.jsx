@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { Button, LocaleProvider, Icon } from 'antd';
+import { Button, LocaleProvider, Icon, Popover } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from 'saga/rootSaga';
@@ -26,6 +26,7 @@ import {
 
 require('./style/antd-reset.global.less');
 import Style from './index.less';
+import CommonStyle from './style/common.less';
 
 const {
     RECORD_FILTER: RECORD_FILTER_MENU_KEY,
@@ -51,9 +52,9 @@ class App extends React.Component{
         };
 
         this.onResizePanelClose = this.onResizePanelClose.bind(this);
-        this.loadMore = this.loadMore.bind(this);
         this.onRecordScroll = this.onRecordScroll.bind(this);
         this.stopRefresh = this.stopRefresh.bind(this);
+        this.resumeFresh = this.resumeFresh.bind(this);
 
         this.recordTableRef = null;
         this.wsListenerRef = null;
@@ -72,6 +73,10 @@ class App extends React.Component{
 
     stopRefresh () {
         this.wsListenerRef && this.wsListenerRef.stopPanelRefreshing();
+    }
+
+    resumeFresh () {
+        this.wsListenerRef && this.wsListenerRef.resumePanelRefreshing();
     }
 
     onResizePanelClose () {
@@ -122,18 +127,17 @@ class App extends React.Component{
         this.lastScrollTop = scrollTop;
     }
 
-    loadMore () {
-        this.props.dispatch(increaseDisplayRecordLimit(500));
-    }
-
-    getLoadMoreDiv () {
-        if (!this.props.globalStatus.canLoadMore) {
+    getResumeFreshDiv () {
+        if (!this.props.globalStatus.showNewRecordTip) {
             return null;
         }
 
         return (
-            <div className={Style.laodMore} onClick={this.loadMore} title="Click to show more records" >
-                <span><Icon type="plus-circle" />More...</span>
+            <div className={Style.resumeTip} onClick={this.resumeFresh} >
+                <div className={CommonStyle.relativeWrapper}>
+                    <span>New Records Detected.</span>
+                    <span className={Style.arrowDown} />
+                </div>
             </div>
         );
     }
@@ -206,6 +210,7 @@ class App extends React.Component{
                             stopRefresh={this.stopRefresh}
                         />
                     </div>
+                    {this.getResumeFreshDiv()}
                 </div>
                 <WsListener
                     ref={(ref) => { this.wsListenerRef = ref;}}

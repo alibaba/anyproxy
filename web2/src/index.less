@@ -46,19 +46,34 @@
   transform: translateZ(0);
 }
 
-.laodMore {
+.resumeTip {
+  display: block;
+  background-color: @primary-color;
+  color: #fff;
+  position: absolute;
+  right: 30px;
+  bottom: 15px;
+  padding: 10px 10px;
+  opacity: 0.9;
+  border-radius: 4px;
   cursor: pointer;
-  text-align: center;
-  padding: 8px;
-  line-height: 1.5;
-  color: @tip-color;
-  font-size: @font-size-reg;
-  i {
-    padding-right: 4px;
-  }
-
+  -webkit-box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
+  box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
   &:hover {
-    color: @primary-color;
-    background-color: @light-background-color;
+    opacity: 1;
   }
+}
+
+.arrowDown {
+  display: block;
+  position: absolute;
+  bottom: -15px;
+  right: 60px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid @primary-color;
+  opacity: 0.9;
 }

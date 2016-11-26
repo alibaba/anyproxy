@@ -11,7 +11,8 @@ import { initWs } from 'common/WsUtil';
 import { updateRecord, updateMultipleRecords, updateWholeRequest } from 'action/recordAction';
 import {
     updateCanLoadMore,
-    updateShouldClearRecord
+    updateShouldClearRecord,
+    updateShowNewRecordTip
 } from 'action/globalStatusAction';
 const RecordWorkder = require('worker-loader?inline!./record-worker.jsx');
 import ApiUtil, { getJSON, isApiSuccess } from 'common/ApiUtil';
@@ -42,6 +43,9 @@ class WsListener extends React.Component {
         this.loadPrevious = this.loadPrevious.bind(this);
         this.stopPanelRefreshing = this.stopPanelRefreshing.bind(this);
         fetchLatestLog();
+
+        this.refreshing = true;
+        this.loadingNext = false;
     }
 
     static propTypes = {
@@ -58,7 +62,7 @@ class WsListener extends React.Component {
     }
 
     loadNext () {
-        this.stopPanelRefreshing();
+        this.loadingNext = true;
         myRecordWorder.postMessage(JSON.stringify({
             type: 'loadMore',
             data: 500
@@ -66,13 +70,17 @@ class WsListener extends React.Component {
     }
 
     stopPanelRefreshing () {
+        this.refreshing = false;
         myRecordWorder.postMessage(JSON.stringify({
             type: 'updateRefreshing',
             refreshing: false
         }));
     }
 
-    resumeRefreshing () {
+    resumePanelRefreshing () {
+        this.refreshing = true;
+        this.loadingNext = false;
+        this.props.dispatch(updateShowNewRecordTip(false));
         myRecordWorder.postMessage(JSON.stringify({
             type: 'updateRefreshing',
             refreshing: true
@@ -102,7 +110,16 @@ class WsListener extends React.Component {
                     const records = data.content;
                     // stop update the record when it's turned off
                     if (this.props.globalStatus.recording) {
-                        // this.props.dispatch(updateMultipleRecords(records));
+
+                        // only in multiple mode we consider there are new records
+                        if (!this.refreshing && !this.loadingNext) {
+                            console.info(`==> this.loadingNext`, this.loadingNext)
+                            const hasNew = records.some((item) => {
+                                return (typeof item.id !== 'undefined');
+                            });
+                            hasNew && this.props.dispatch(updateShowNewRecordTip(true));
+                        }
+
                         const message = {
                             type: 'updateMultiple',
                             data: records
@@ -128,6 +145,7 @@ class WsListener extends React.Component {
         this.initWs();
         myRecordWorder.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
+            this.loadingNext = false;
             if (data.shouldUpdateRecord) {
                 this.props.dispatch(updateWholeRequest(data.recordList));
             }

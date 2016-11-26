@@ -26,6 +26,9 @@ export const INCREASE_DISPLAY_RECORD_LIST = 'INCREASE_DISPLAY_RECORD_LIST';
 export const UPDATE_SHOULD_CLEAR_RECORD = 'UPDATE_SHOULD_CLEAR_RECORD';
 export const UPDATE_APP_VERSION = 'UPDATE_APP_VERSION';
 
+// should we display the tip for new record
+export const UPDATE_SHOW_NEW_RECORD_TIP = 'UPDATE_SHOW_NEW_RECORD_TIP';
+
 export function stopRecording() {
     return {
         type: STOP_RECORDING
@@ -182,4 +185,10 @@ export function updateLocalAppVersion (version) {
     };
 }
 
+export function updateShowNewRecordTip (shouldShow) {
+    return {
+        type: UPDATE_SHOW_NEW_RECORD_TIP,
+        data: shouldShow
+    };
+}
 

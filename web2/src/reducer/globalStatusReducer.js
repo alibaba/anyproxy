@@ -1,11 +1,9 @@
-const defaultDisplayRecordLimit = 500;
 const defaultStatus = {
     recording: true,
     panelRefreshing: true,  // indicate whether the record panel should be refreshing
     showFilter: false, // if the filter panel is showing
     showMapLocal: false,
     activeMenuKey: '',
-    displayRecordLimit: defaultDisplayRecordLimit,
     canLoadMore: false,
     interceptHttpsFlag: false,
     globalProxyFlag: false, // is global proxy now
@@ -17,6 +15,7 @@ const defaultStatus = {
     appVersion: '',
     panelLoadingNext: false,
     panelLoadingPrev: false,
+    showNewRecordTip: false,
     mappedConfig:[] // configured map config
 };
 
@@ -40,7 +39,8 @@ import {
     UPDATE_CAN_LOAD_MORE,
     INCREASE_DISPLAY_RECORD_LIST,
     UPDATE_SHOULD_CLEAR_RECORD,
-    UPDATE_APP_VERSION
+    UPDATE_APP_VERSION,
+    UPDATE_SHOW_NEW_RECORD_TIP
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -188,6 +188,12 @@ function requestListReducer (state = defaultStatus, action) {
         case UPDATE_APP_VERSION: {
             const newState = Object.assign({}, state);
             newState.appVersion = action.data;
+            return newState;
+        }
+
+        case UPDATE_SHOW_NEW_RECORD_TIP: {
+            const newState = Object.assign({}, state);
+            newState.showNewRecordTip = action.data;
             return newState;
         }
 
