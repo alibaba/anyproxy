@@ -17,7 +17,7 @@ self.updateQueryTimer = null;
 self.refreshing = true;
 self.beginIndex = 0;
 self.endIndex = self.beginIndex + defaultLimit -1;
-self.inDiff = false; // mark if currently in diff working
+self.IN_DIFF = false; // mark if currently in diff working
 const getFilterReg = function (filterStr) {
     let filterReg = null;
     if (filterStr) {
@@ -51,20 +51,10 @@ const getFilterReg = function (filterStr) {
     return filterReg;
 };
 
-// diff the record
-self.diffRecords = function () {
-    if (self.inDiff) {
-        return;
-    }
-
-    self.inDiff = true;
+self.getFilteredRecords = function () {
     const filterReg = getFilterReg(self.filterStr);
     const filterdRecords = [];
     const length = recordList.length;
-
-    // mark if the component need to be refreshed
-    let shouldUpdateRecord = false;
-    let shouldUpdateLoadMore = false;
 
     // filtered out the records
     for (let i = 0 ; i < length; i++) {
@@ -78,9 +68,27 @@ self.diffRecords = function () {
         }
     }
 
+    return filterdRecords;
+};
+
+// diff the record, so if refreshing is stoped the page will not be updated
+self.diffRecords = function () {
+    if (self.IN_DIFF) {
+        return;
+    }
+    self.IN_DIFF = true;
+    // mark if the component need to be refreshed
+    let shouldUpdateRecord = false;
+
+    const filterdRecords = self.getFilteredRecords();
+
     if (self.refreshing) {
         self.beginIndex = filterdRecords.length -1 - defaultLimit;
         self.endIndex = filterdRecords.length -1;
+    } else {
+        if (self.endIndex > filterdRecords.length) {
+            self.endIndex = filterdRecords.length;
+        }
     }
 
     const newStateRecords = filterdRecords.slice(self.beginIndex, self.endIndex +1);
@@ -104,10 +112,26 @@ self.diffRecords = function () {
     self.currentStateData = newStateRecords;
 
     self.postMessage(JSON.stringify({
+        type: 'updateData',
         shouldUpdateRecord: shouldUpdateRecord,
         recordList: newStateRecords
     }));
-    self.inDiff = false;
+    self.IN_DIFF = false;
+};
+
+// check if there are many new records arrivied
+self.checkNewRecordsTip = function () {
+    if (self.IN_DIFF) {
+        return;
+    }
+
+    const newRecordLength = self.getFilteredRecords().length;
+    console.info(`==> check tip`, newRecordLength, self.endIndex);
+
+    self.postMessage(JSON.stringify({
+        type: 'updateTip',
+        data: (newRecordLength - self.endIndex) > 100
+    }));
 };
 
 const updateSingle = function (record) {
@@ -171,6 +195,8 @@ self.addEventListener('message', (e) => {
             updateSingle(data.data);
             if(self.refreshing) {
                 self.diffRecords();
+            } else {
+                self.checkNewRecordsTip();
             }
             break;
         }
@@ -179,6 +205,8 @@ self.addEventListener('message', (e) => {
             updateMultiple(data.data);
             if(self.refreshing) {
                 self.diffRecords();
+            } else {
+                self.checkNewRecordsTip();
             }
             break;
         }
@@ -195,7 +223,7 @@ self.addEventListener('message', (e) => {
         }
 
         case 'loadMore': {
-            if (self.inDiff) {
+            if (self.IN_DIFF) {
                 return;
             }
             self.refreshing = false;

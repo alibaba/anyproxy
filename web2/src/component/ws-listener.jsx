@@ -146,9 +146,21 @@ class WsListener extends React.Component {
         myRecordWorder.addEventListener('message', (e) => {
             const data = JSON.parse(e.data);
             this.loadingNext = false;
-            if (data.shouldUpdateRecord) {
-                this.props.dispatch(updateWholeRequest(data.recordList));
+
+            switch (data.type) {
+                case 'updateData': {
+                    if (data.shouldUpdateRecord) {
+                        this.props.dispatch(updateWholeRequest(data.recordList));
+                    }
+                    break;
+                }
+
+                case 'updateTip': {
+                    this.props.dispatch(updateShowNewRecordTip(data.data));
+                }
             }
+
+
         });
     }
 

@@ -188,7 +188,6 @@ class RecordPanel extends React.Component {
                             <tbody className="ant-table-tbody" >
                                 {this.getLoadingPreviousDiv()}
                                 {this.getTrs()}
-                                {this.getLoadingNextDiv()}
                             </tbody>
 
                         </table>
