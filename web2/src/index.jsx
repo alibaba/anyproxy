@@ -55,12 +55,16 @@ class App extends React.Component{
         this.onRecordScroll = this.onRecordScroll.bind(this);
         this.stopRefresh = this.stopRefresh.bind(this);
         this.resumeFresh = this.resumeFresh.bind(this);
+        this.detectIfToStopRefreshing = this.detectIfToStopRefreshing.bind(this);
+        this.scrollHandler = this.scrollHandler.bind(this);
+        this.initRecrodPanelWrapperRef = this.initRecrodPanelWrapperRef.bind(this);
 
         this.recordTableRef = null;
         this.wsListenerRef = null;
 
         this.lastScrollTop = 0;
 
+        this.scrollHandlerTimeout = null;
         this.stopRefreshTimout = null;
         this.stopRefreshTokenScrollTop = -1; // the token used to decide the move distance
     }
@@ -85,39 +89,50 @@ class App extends React.Component{
         });
     }
 
-    onRecordScroll () {
+    detectIfToStopRefreshing (currentScrollTop) {
+        if (!this.stopRefreshTimout) {
+            this.stopRefreshTokenScrollTop = currentScrollTop;
+        }
 
+        this.stopRefreshTimout = setTimeout(() => {
+            // if the scrollbar is scrolled up more than 30px, stop refreshing
+            if ((this.stopRefreshTokenScrollTop - currentScrollTop) > 30) {
+                this.stopRefresh();
+                this.stopRefreshTokenScrollTop = null;
+            }
+        }, 100);
+    }
+
+    initRecrodPanelWrapperRef (ref) {
+        this.recordTableRef = ref;
+        ref.addEventListener('wheel', this.onRecordScroll, { passive:true });
+    }
+
+    scrollHandler () {
         if (!this.recordTableRef || !this.wsListenerRef) {
             return;
         }
         const scrollTop = this.recordTableRef.scrollTop;
 
-        if (scrollTop < this.lastScrollTop) {
-            if (!this.stopRefreshTimout) {
-                this.stopRefreshTokenScrollTop = scrollTop;
-            }
+        if (scrollTop < this.lastScrollTop || (this.lastScrollTop === 0)) {
 
-            this.stopRefreshTimout = setTimeout(() => {
-                // if the scrollbar is scrolled up more than 30px, stop refreshing
-                if ((this.stopRefreshTokenScrollTop - scrollTop) > 30) {
-                    this.stopRefresh();
-                    this.stopRefreshTokenScrollTop = null;
-                }
-            }, 100);
+            this.detectIfToStopRefreshing(scrollTop);
 
             // load more previous record when scrolled to top
-            if (scrollTop < 2) {
+            if (scrollTop < 10) {
+                this.state.loadingPrev = true;
                 this.setState({
                     loadingPrev: true
                 });
                 this.wsListenerRef.loadPrevious();
             }
-        } else if (scrollTop > this.lastScrollTop) {
+        } else if (scrollTop >= this.lastScrollTop) {
             const recordPanelHeight = this.recordTableRef.firstChild.clientHeight;
             const tableHeight = this.recordTableRef.clientHeight;
 
             // when close to bottom in less than 30, load more next records
             if (scrollTop + tableHeight + 30 > recordPanelHeight) {
+                this.state.loadNext = true;
                 this.setState({
                     loadingNext: true
                 });
@@ -125,6 +140,13 @@ class App extends React.Component{
             }
         }
         this.lastScrollTop = scrollTop;
+    }
+
+    onRecordScroll () {
+        this.scrollHandlerTimeout && clearTimeout(this.scrollHandlerTimeout);
+        this.scrollHandlerTimeout = setTimeout(() => {
+            this.scrollHandler();
+        }, 60);
     }
 
     getResumeFreshDiv () {
@@ -173,7 +195,28 @@ class App extends React.Component{
     }
 
     componentWillReceiveProps (nextProps) {
-        if (nextProps.requestRecord.recordList !== this.props.requestRecord.recordList) {
+        const { recordList: nextRecordList } = nextProps.requestRecord;
+        const { recordList: currentRecordList } = this.props.requestRecord;
+
+        // if there are new data, reset the status of loadingNext and loadingPrev
+        if (nextRecordList !== currentRecordList) {
+
+            // scroll the window to last remembered position, when in loading next mode
+            if (this.state.loadingPrev) {
+                const nextBeginId = nextRecordList[0].id;
+                const currentBeginId = currentRecordList[0].id;
+
+                if (nextBeginId < currentBeginId) {
+                    // each line is limited to 29px
+                    const scrollPosition = 29 * (nextRecordList.length - currentRecordList.length);
+                    if (this.recordTableRef) {
+                        this.recordTableRef.scrollTop = scrollPosition;
+                    }
+                }
+
+                this.state.loadingPrev = false;
+            }
+
             this.setState({
                 loadingNext: false,
                 loadingPrev: false
@@ -197,8 +240,7 @@ class App extends React.Component{
                     </div>
                     <div
                         className={Style.tableWrapper}
-                        ref={(ref) => {this.recordTableRef = ref;}}
-                        onScroll={this.onRecordScroll}
+                        ref={this.initRecrodPanelWrapperRef}
                     >
                         <RecordPanel
                             data={this.props.requestRecord.recordList}

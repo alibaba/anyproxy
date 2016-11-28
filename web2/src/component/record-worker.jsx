@@ -126,11 +126,10 @@ self.checkNewRecordsTip = function () {
     }
 
     const newRecordLength = self.getFilteredRecords().length;
-    console.info(`==> check tip`, newRecordLength, self.endIndex);
 
     self.postMessage(JSON.stringify({
         type: 'updateTip',
-        data: (newRecordLength - self.endIndex) > 100
+        data: (newRecordLength - self.endIndex) > 20
     }));
 };
 

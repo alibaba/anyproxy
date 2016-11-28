@@ -57,7 +57,7 @@ class RecordRow extends React.Component {
                 <td className={Style.method} >{this.getMethodDiv(data)}</td>
                 <td className={Style.code} >{this.getCodeDiv(data)}</td>
                 <td className={Style.host} >{data.host}</td>
-                <td className={Style.path} >{data.path}</td>
+                <td className={Style.path} title={data.path} >{data.path}</td>
                 <td className={Style.mime} >{data.mime}</td>
                 <td className={Style.time} >{formatDate(data.startTime, 'hh:mm:ss')}</td>
             </tr>

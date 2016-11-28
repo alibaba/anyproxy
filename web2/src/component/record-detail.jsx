@@ -86,6 +86,8 @@ class RecordDetail extends React.Component {
                     value: cookie[1]
                 };
             });
+        } else {
+            return <div className={Style.noCookes}>No Cookies</div>;
         }
         const columns = [
             {
