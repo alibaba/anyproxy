@@ -11,7 +11,7 @@ import { message, Button, Spin } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import { hideRootCA } from 'action/globalStatusAction';
 import { MenuKeyMap } from 'common/Constant';
-import { getJSON, ajaxGet } from 'common/ApiUtil';
+import { getJSON, ajaxGet, postJSON } from 'common/ApiUtil';
 
 import Style from './download-root-ca.less';
 import CommonStyle from '../style/common.less';
@@ -20,7 +20,8 @@ class DownloadRootCA extends React.Component {
     constructor () {
         super();
         this.state = {
-            loadingCAQr: false
+            loadingCAQr: false,
+            generatingCA: false
         };
 
         this.onClose = this.onClose.bind(this);
@@ -42,6 +43,7 @@ class DownloadRootCA extends React.Component {
                 this.setState({
                     loadingCAQr: false,
                     CAQrCodeImageDom: response.qrImgDom,
+                    isRootCAFileExists: response.isRootCAFileExists,
                     url: response.url
                 });
             })
@@ -68,33 +70,81 @@ class DownloadRootCA extends React.Component {
         return this.state.loadingCAQr ? spin : content;
     }
 
+    getGenerateRootCADiv () {
+
+        const doToggleRemoteIntercept = () => {
+            postJSON('/api/generateRootCA')
+                .then((result) => {
+                    this.setState({
+                        generateRootCA: false,
+                        isRootCAFileExists: true
+                    });
+                })
+                .catch((error) => {
+                    this.setState({
+                        generatingCA: false
+                    });
+                    message.error('生成根证书失败,请重试');
+                });
+        };
+
+        return (
+            <div className={Style.wrapper}>
+                <div className={Style.title} >
+                    RootCA
+                </div>
+
+                <div className={Style.generateRootCaTip} >
+                    <span >Your RootCA has not been generated yet, please click the button to generate before you download it.</span>
+                    <span className={Style.strongColor} >Please install and trust the generated RootCA.</span>
+                </div>
+
+                <div className={Style.generateCAButton} >
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={doToggleRemoteIntercept}
+                        loading={this.state.generateRootCA}
+                    >
+                        OK, GENERATE
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    getDownloadDiv () {
+        return (
+            <div className={Style.wrapper} >
+                <div className={Style.fullHeightWrapper} >
+                    <div className={Style.title} >
+                        RootCA
+                    </div>
+                    <div className={Style.arCodeDivWrapper} >
+                        {this.getQrCodeContent()}
+                    </div>
+                </div>
+
+                <div className={Style.buttons} >
+                    <a href="/fetchCrtFile" target="_blank">
+                        <Button type="primary" size="large" > Download </Button>
+                    </a>
+                    <span className={Style.tipSpan} >Or click the button to download.</span>
+                </div>
+            </div>
+        );
+    }
+
     componentDidMount () {
         this.fetchData();
     }
 
     render() {
-
         const panelVisible = this.props.globalStatus.activeMenuKey === MenuKeyMap.ROOT_CA;
 
         return (
             <ResizablePanel onClose={this.onClose} visible={panelVisible} >
-                <div className={Style.wrapper} >
-                    <div className={Style.fullHeightWrapper} >
-                        <div className={Style.title} >
-                            RootCA
-                        </div>
-                        <div className={Style.arCodeDivWrapper} >
-                            {this.getQrCodeContent()}
-                        </div>
-                    </div>
-
-                    <div className={Style.buttons} >
-                        <a href="/fetchCrtFile" target="_blank">
-                            <Button type="primary" size="large" > Download </Button>
-                        </a>
-                        <span className={Style.tipSpan} >Or click the button to download.</span>
-                    </div>
-                </div>
+                {this.state.isRootCAFileExists ? this.getDownloadDiv() : this.getGenerateRootCADiv()}
 
             </ResizablePanel>
         );
