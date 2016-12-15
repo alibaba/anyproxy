@@ -9,7 +9,7 @@ import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { message, Button, Spin } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
-import { hideRootCA } from 'action/globalStatusAction';
+import { hideRootCA, updateIsRootCAExists } from 'action/globalStatusAction';
 import { MenuKeyMap } from 'common/Constant';
 import { getJSON, ajaxGet, postJSON } from 'common/ApiUtil';
 
@@ -79,6 +79,7 @@ class DownloadRootCA extends React.Component {
                         generateRootCA: false,
                         isRootCAFileExists: true
                     });
+                    this.props.dispatch(updateIsRootCAExists(true));
                 })
                 .catch((error) => {
                     this.setState({
@@ -144,7 +145,7 @@ class DownloadRootCA extends React.Component {
 
         return (
             <ResizablePanel onClose={this.onClose} visible={panelVisible} >
-                {this.state.isRootCAFileExists ? this.getDownloadDiv() : this.getGenerateRootCADiv()}
+                {this.props.globalStatus.isRootCAFileExists ? this.getDownloadDiv() : this.getGenerateRootCADiv()}
 
             </ResizablePanel>
         );

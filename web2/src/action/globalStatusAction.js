@@ -25,6 +25,7 @@ export const UPDATE_CAN_LOAD_MORE = 'UPDATE_CAN_LOAD_MORE';
 export const INCREASE_DISPLAY_RECORD_LIST = 'INCREASE_DISPLAY_RECORD_LIST';
 export const UPDATE_SHOULD_CLEAR_RECORD = 'UPDATE_SHOULD_CLEAR_RECORD';
 export const UPDATE_APP_VERSION = 'UPDATE_APP_VERSION';
+export const UPDATE_IS_ROOTCA_EXISTS = 'UPDATE_IS_ROOTCA_EXISTS';
 
 // should we display the tip for new record
 export const UPDATE_SHOW_NEW_RECORD_TIP = 'UPDATE_SHOW_NEW_RECORD_TIP';
@@ -192,3 +193,9 @@ export function updateShowNewRecordTip (shouldShow) {
     };
 }
 
+export function updateIsRootCAExists (exists) {
+    return  {
+        type: UPDATE_IS_ROOTCA_EXISTS,
+        data: exists
+    };
+}

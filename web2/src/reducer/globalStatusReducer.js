@@ -16,6 +16,7 @@ const defaultStatus = {
     panelLoadingNext: false,
     panelLoadingPrev: false,
     showNewRecordTip: false,
+    isRootCAFileExists: false,
     mappedConfig:[] // configured map config
 };
 
@@ -40,6 +41,7 @@ import {
     INCREASE_DISPLAY_RECORD_LIST,
     UPDATE_SHOULD_CLEAR_RECORD,
     UPDATE_APP_VERSION,
+    UPDATE_IS_ROOTCA_EXISTS,
     UPDATE_SHOW_NEW_RECORD_TIP
 } from 'action/globalStatusAction';
 
@@ -194,6 +196,12 @@ function requestListReducer (state = defaultStatus, action) {
         case UPDATE_SHOW_NEW_RECORD_TIP: {
             const newState = Object.assign({}, state);
             newState.showNewRecordTip = action.data;
+            return newState;
+        }
+
+        case UPDATE_IS_ROOTCA_EXISTS: {
+            const newState = Object.assign({}, state);
+            newState.isRootCAFileExists = action.data;
             return newState;
         }
 

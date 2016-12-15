@@ -16,6 +16,7 @@ import {
     toggleRemoteInterceptHttpsFlag,
     toggleRemoteGlobalProxyFlag,
     updateShouldClearRecord,
+    updateIsRootCAExists,
     updateLocalAppVersion
 } from 'action/globalStatusAction';
 
@@ -78,7 +79,7 @@ class HeaderMenu extends React.Component {
     togglerHttpsIntercept () {
         const self = this;
         // if no rootCA exists, inform the user about trust the root
-        if (!this.state.rootCAExists) {
+        if (!this.props.globalStatus.isRootCAFileExists) {
             Modal.info({
                 title: 'AnyProxy is about to generate the root CA for you',
                 content: (
@@ -92,6 +93,7 @@ class HeaderMenu extends React.Component {
                 width: 500,
                 onOk () {
                     doToggleRemoteIntercept();
+                    this.props.dispatch(updateIsRootCAExists(true));
                 }
             });
         } else {
@@ -123,7 +125,6 @@ class HeaderMenu extends React.Component {
             .then((resposne) => {
                 this.setState({
                     ruleSummary: resposne.ruleSummary,
-                    rootCAExists: resposne.rootCAExists,
                     rootCADirPath: resposne.rootCADirPath,
                     ipAddress: resposne.ipAddress,
                     port: resposne.port
@@ -131,6 +132,7 @@ class HeaderMenu extends React.Component {
                 this.props.dispatch(updateLocalInterceptHttpsFlag(resposne.currentInterceptFlag));
                 this.props.dispatch(updateLocalGlobalProxyFlag(resposne.currentGlobalProxyFlag));
                 this.props.dispatch(updateLocalAppVersion(resposne.appVersion));
+                this.props.dispatch(updateIsRootCAExists(resposne.rootCAExists));
             })
             .catch((error) => {
                 console.error(error);
