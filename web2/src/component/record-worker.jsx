@@ -8,16 +8,19 @@
 * The App itself will just need to display all the filtered records, the filter and max-limit logic are handled here.
 */
 let recordList = [];
+// store all the filtered record, so there will be no need to re-calculate the filtere record fully through all records.
+self.FILTERED_RECORD_LIST = [];
 const defaultLimit = 500;
 self.currentStateData = []; // the data now used by state
 self.filterStr = '';
-self.limit = 0;
+
 self.canLoadMore = false;
 self.updateQueryTimer = null;
 self.refreshing = true;
 self.beginIndex = 0;
 self.endIndex = self.beginIndex + defaultLimit -1;
 self.IN_DIFF = false; // mark if currently in diff working
+
 const getFilterReg = function (filterStr) {
     let filterReg = null;
     if (filterStr) {
@@ -51,27 +54,72 @@ const getFilterReg = function (filterStr) {
     return filterReg;
 };
 
-self.getFilteredRecords = function () {
-    const filterReg = getFilterReg(self.filterStr);
-    const filterdRecords = [];
-    const length = recordList.length;
-
-    // filtered out the records
-    for (let i = 0 ; i < length; i++) {
-        const item = recordList[i];
-        if (filterReg && filterReg.test(item.url)) {
-            filterdRecords.push(item);
-        }
-
-        if (!filterReg) {
-            filterdRecords.push(item);
-        }
-    }
-
-    return filterdRecords;
+self.resetDisplayRecordIndex = function () {
+    self.beginIndex = 0;
+    self.endIndex = self.beginIndex + defaultLimit -1;
 };
 
-// diff the record, so if refreshing is stoped the page will not be updated
+self.getFilteredRecords = function () {
+    // const filterReg = getFilterReg(self.filterStr);
+    // const filterdRecords = [];
+    // const length = recordList.length;
+
+    // // filtered out the records
+    // for (let i = 0 ; i < length; i++) {
+    //     const item = recordList[i];
+    //     if (filterReg && filterReg.test(item.url)) {
+    //         filterdRecords.push(item);
+    //     }
+
+    //     if (!filterReg) {
+    //         filterdRecords.push(item);
+    //     }
+    // }
+
+    // return filterdRecords;
+
+    return self.FILTERED_RECORD_LIST;
+};
+
+/*
+* calculate the filtered records, at each time the origin list is updated
+* @param isFullyCalculate bool,
+         whether to calculate the filtered record fully, if ture, will do a fully calculation;
+         otherwise, will only calculate the "listForThisTime", and push the filtered one to filteredRecordList
+* @param listForThisTime object,
+          the list which to be calculated for this time, usually the new
+*/
+self.calculateFilteredRecords = function (isFullyCalculate, listForThisTime = []) {
+    const filterReg = getFilterReg(self.filterStr);
+    let targetList = [];
+    if (isFullyCalculate) {
+        self.FILTERED_RECORD_LIST = [];
+        const length = recordList.length;
+        // filtered out the records
+        for (let i = 0 ; i < length; i++) {
+            const item = recordList[i];
+            if (!filterReg || (filterReg && filterReg.test(item.url))) {
+                self.FILTERED_RECORD_LIST.push(item);
+            }
+        }
+
+    } else {
+        listForThisTime.forEach((item) => {
+            const index = self.FILTERED_RECORD_LIST.findIndex((record) => {
+                return item.id === record.id;
+            });
+
+            if (index >= 0) {
+                self.FILTERED_RECORD_LIST[index] = item;
+            } else {
+                self.FILTERED_RECORD_LIST.push(item);
+            }
+        });
+    }
+};
+
+// diff the record, so when the refreshing is stoped, the page will not be updated
+// cause the filtered records will be unchanged
 self.diffRecords = function () {
     if (self.IN_DIFF) {
         return;
@@ -126,14 +174,13 @@ self.checkNewRecordsTip = function () {
     }
 
     const newRecordLength = self.getFilteredRecords().length;
-
     self.postMessage(JSON.stringify({
         type: 'updateTip',
         data: (newRecordLength - self.endIndex) > 20
     }));
 };
 
-const updateSingle = function (record) {
+self.updateSingle = function (record) {
     recordList.forEach((item) => {
         item._render = false;
     });
@@ -149,9 +196,10 @@ const updateSingle = function (record) {
     } else {
         recordList.push(record);
     }
+    self.calculateFilteredRecords(false, [record]);
 };
 
-const updateMultiple = function (records) {
+self.updateMultiple = function (records) {
     recordList.forEach((item) => {
         item._render = false;
     });
@@ -169,6 +217,9 @@ const updateMultiple = function (records) {
             recordList.push(record);
         }
     });
+
+    self.calculateFilteredRecords(false, records);
+
 };
 
 self.addEventListener('message', (e) => {
@@ -180,18 +231,19 @@ self.addEventListener('message', (e) => {
         }
         case 'updateQuery': {
             // if filterStr or limit changed
-            if (data.limit !== self.limit || data.filterStr !== self.filterStr) {
+            if (data.filterStr !== self.filterStr) {
                 self.updateQueryTimer && clearTimeout(self.updateQueryTimer);
                 self.updateQueryTimer = setTimeout(function () {
-                    self.limit = data.limit;
+                    self.resetDisplayRecordIndex();
                     self.filterStr = data.filterStr;
+                    self.calculateFilteredRecords(true);
                     self.diffRecords();
                 }, 150);
             }
             break;
         }
         case 'updateSingle': {
-            updateSingle(data.data);
+            self.updateSingle(data.data);
             if(self.refreshing) {
                 self.diffRecords();
             } else {
@@ -201,7 +253,7 @@ self.addEventListener('message', (e) => {
         }
 
         case 'updateMultiple': {
-            updateMultiple(data.data);
+            self.updateMultiple(data.data);
             if(self.refreshing) {
                 self.diffRecords();
             } else {
@@ -211,12 +263,14 @@ self.addEventListener('message', (e) => {
         }
         case 'initRecord': {
             recordList = data.data;
+            self.calculateFilteredRecords(true);
             self.diffRecords();
             break;
         }
 
         case 'clear': {
             recordList = [];
+            self.calculateFilteredRecords(true);
             self.diffRecords();
             break;
         }

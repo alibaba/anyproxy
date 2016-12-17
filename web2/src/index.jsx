@@ -112,6 +112,7 @@ class App extends React.Component{
         if (!this.recordTableRef || !this.wsListenerRef) {
             return;
         }
+        const self = this;
         const scrollTop = this.recordTableRef.scrollTop;
 
         if (scrollTop < this.lastScrollTop || (this.lastScrollTop === 0)) {
@@ -120,10 +121,18 @@ class App extends React.Component{
 
             // load more previous record when scrolled to top
             if (scrollTop < 10) {
-                this.state.loadingPrev = true;
-                this.setState({
+                self.state.loadingPrev = true;
+                self.setState({
                     loadingPrev: true
                 });
+
+                //TODO: hide the loading stauts after 1000 ms, a lazy way to hide it when there is no previous records
+                setTimeout(() => {
+                    self.state.loadingPrev = false;
+                    self.setState({
+                        loadingPrev: false
+                    });
+                }, 1000);
                 this.wsListenerRef.loadPrevious();
             }
         } else if (scrollTop >= this.lastScrollTop) {

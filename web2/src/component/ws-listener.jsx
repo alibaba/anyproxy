@@ -111,14 +111,14 @@ class WsListener extends React.Component {
                     // stop update the record when it's turned off
                     if (this.props.globalStatus.recording) {
 
-                        // only in multiple mode we consider there are new records
-                        if (!this.refreshing && !this.loadingNext) {
-                            console.info(`==> this.loadingNext`, this.loadingNext)
-                            const hasNew = records.some((item) => {
-                                return (typeof item.id !== 'undefined');
-                            });
-                            hasNew && this.props.dispatch(updateShowNewRecordTip(true));
-                        }
+                        // // only in multiple mode we consider there are new records
+                        // if (!this.refreshing && !this.loadingNext) {
+                        //     console.info(`==> this.loadingNext`, this.loadingNext)
+                        //     const hasNew = records.some((item) => {
+                        //         return (typeof item.id !== 'undefined');
+                        //     });
+                        //     hasNew && this.props.dispatch(updateShowNewRecordTip(true));
+                        // }
 
                         const message = {
                             type: 'updateMultiple',
@@ -157,6 +157,7 @@ class WsListener extends React.Component {
 
                 case 'updateTip': {
                     this.props.dispatch(updateShowNewRecordTip(data.data));
+                    break;
                 }
             }
 
