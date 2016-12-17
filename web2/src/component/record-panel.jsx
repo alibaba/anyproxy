@@ -169,7 +169,7 @@ class RecordPanel extends React.Component {
                                 <col style={{ 'width': '100px', 'minWidth': '100px' }} />
                                 <col style={{ 'width': '70px', 'minWidth': '70px' }} />
                                 <col style={{ 'width': '200px', 'minWidth': '200px' }} />
-                                <col style={{ 'width': '885px', 'minWidth': '885px' }}/>
+                                <col style={{ 'width': 'auto', 'minWidth': '600px' }}/>
                                 <col style={{ 'width': '160px', 'minWidth': '160px' }} />
                                 <col style={{ 'width': '100px', 'minWidth': '100px' }} />
                             </colgroup>
