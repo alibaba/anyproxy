@@ -153,8 +153,10 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                self.ws = new wsServer({port : socketPort});
-                callback(null);
+                if (!disableWebInterface) {
+                    self.ws = new wsServer({port : socketPort});
+                    callback(null);
+                }
             },
 
             //start web interface

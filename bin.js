@@ -15,6 +15,7 @@ program
     .option('-t, --type [value]', 'http|https, http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
     .option('-w, --web [value]' , 'web GUI port, 8002 for default')
+    .option('-I, --no-webinterface', 'disable WebInterface')
     .option('-f, --file [value]', 'save request data to a specified file, will use in-memory db if not specified')
     .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
@@ -91,7 +92,7 @@ if(program.clear){
         throttle            : program.throttle,
         webPort             : program.web,
         rule                : ruleModule,
-        disableWebInterface : false,
+        disableWebInterface : !program.webinterface,
         setAsGlobalProxy    : program.global,
         interceptHttps      : program.intercept,
         silent              : program.silent
