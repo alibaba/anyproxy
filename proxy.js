@@ -63,7 +63,8 @@ function proxyServer(option){
         proxyWebPort        = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
-        disableWebInterface = !!option.disableWebInterface,
+        disableWebInterface = !!option.disablePersistence || !!option.disableWebInterface,
+        disablePersistence  = !!option.disablePersistence,
         ifSilent            = !!option.silent;
 
     if(ifSilent){
@@ -110,10 +111,12 @@ function proxyServer(option){
             //clear cache dir, prepare recorder
             function(callback){
                 util.clearCacheDir(function(){
-                    if(option.dbFile){
-                        global.recorder = new Recorder({filename: option.dbFile});
-                    }else{
-                        global.recorder = new Recorder();
+                    if (!option.disablePersistence) {
+                        if(option.dbFile){
+                            global.recorder = new Recorder({filename: option.dbFile});
+                        }else{
+                            global.recorder = new Recorder();
+                        }
                     }
                     callback();
                 });
