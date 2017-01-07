@@ -245,7 +245,7 @@ class App extends React.Component{
                 </div>
                 <div className={Style.rightPanel} >
                     <div className={Style.headerWrapper} >
-                        <HeaderMenu />
+                        <HeaderMenu resumeRefreshFunc={this.resumeFresh}/>
                     </div>
                     <div
                         className={Style.tableWrapper}

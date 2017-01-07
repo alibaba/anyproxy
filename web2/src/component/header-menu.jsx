@@ -49,7 +49,8 @@ class HeaderMenu extends React.Component {
 
     static propTypes = {
         dispatch: PropTypes.func,
-        globalStatus: PropTypes.object
+        globalStatus: PropTypes.object,
+        resumeRefreshFunc: PropTypes.func
     }
 
     stopRecording () {
@@ -63,6 +64,7 @@ class HeaderMenu extends React.Component {
 
     clearAllRecord () {
         this.props.dispatch(updateShouldClearRecord(true));
+        this.props.resumeRefreshFunc && this.props.resumeRefreshFunc();
     }
 
     handleRuningInfoVisibleChange (visible) {
