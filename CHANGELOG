@@ -1,3 +1,14 @@
+22 Dec 2016: AnyProxy 4.0.0-beta:
+
+    * to AnyProxy rules: all the rule interfaces are asynchronous now, you can write them in a Promise way
+    * to the UI, rewrite the code and enhance the user experience
+
+19 Sep 2016: AnyProxy 3.10.3:
+
+    * fix the cert path issue with Windows
+    * split out the cert management to an independent module
+    * add unit tests to AnyProxy
+
 29 Apr 2016: AnyProxy 3.10.0:
 
     * using node-forge to generate HTTPS certificates instead of openssl

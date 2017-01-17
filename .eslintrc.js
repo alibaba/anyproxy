@@ -184,7 +184,7 @@ module.exports = {
     "eol-last": 0,                         // enforce newline at the end of file, with no multiple empty lines
     "func-names": 0,                       // require function expressions to have a name (off by default)
     "func-style": 0,                       // enforces use of function declarations or expressions (off by default)
-    "indent": [2, 4],                      // this option sets a specific tab width for your code (off by default)
+    "indent": [2, 4, { "SwitchCase": 1 }],                      // this option sets a specific tab width for your code (off by default)
     "key-spacing": 0,                      // enforces spacing between keys and values in object literal properties
     "lines-around-comment": 0,             // enforces empty lines around comments (off by default)
     "linebreak-style": 0,                  // disallow mixed 'LF' and 'CRLF' as linebreaks (off by default)

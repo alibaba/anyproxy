@@ -66,6 +66,9 @@ function proxyServer(option){
         disableWebInterface = !!option.disableWebInterface,
         ifSilent            = !!option.silent;
 
+    self.IS_GLOBAL_PROXY = false; // mark if global proxy is on
+    self.httpProxyServer = null;
+
     if(ifSilent){
         logUtil.setPrintStatus(false);
     }
@@ -102,8 +105,6 @@ function proxyServer(option){
         }
         global._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
     }
-
-    self.httpProxyServer = null;
 
     async.series(
         [
@@ -153,7 +154,7 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                self.ws = new wsServer({port : socketPort});
+                self.ws = new wsServer({ port : socketPort });
                 callback(null);
             },
 
@@ -166,6 +167,7 @@ function proxyServer(option){
                         port         : proxyWebPort,
                         wsPort       : socketPort,
                         userRule     : proxyRules,
+                        proxyInstance: self,
                         ip           : ip.address()
                     };
 
@@ -181,7 +183,7 @@ function proxyServer(option){
                     if(!/^win/.test(process.platform) && !process.env.SUDO_UID){
                         console.log('sudo password may be required.');
                     }
-                    var result = SystemProxyMgr.enableGlobalProxy(ip.address(), proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+                    var result = self.enableGlobalProxy();
                     if (result.status) {
                         callback(result.stdout);
                     } else {
@@ -202,9 +204,9 @@ function proxyServer(option){
                 process.on("exit",function(code){
                     logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
 
-                    if (option.setAsGlobalProxy) {
+                    if (self.IS_GLOBAL_PROXY) {
                         console.log('resigning global proxy...');
-                        var result = SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
+                        var result = self.disableGlobalProxy();
 
                         if (result.status) {
                             console.log(color.red(result.stdout));
@@ -218,11 +220,17 @@ function proxyServer(option){
 
                 //exit cause ctrl+c
                 process.on("SIGINT", function() {
+                    if (self.IS_GLOBAL_PROXY) {
+                        self.disableGlobalProxy();
+                    }
                     process.exit();
                 });
 
                 process.on("uncaughtException",function(err){
                     logUtil.printLog('Caught exception: ' + (err.stack || err), logUtil.T_ERR);
+                    if (self.IS_GLOBAL_PROXY) {
+                        self.disableGlobalProxy();
+                    }
                     process.exit();
                 });
 
@@ -252,11 +260,43 @@ function proxyServer(option){
         self.httpProxyServer && self.httpProxyServer.close();
         self.ws && self.ws.closeAll();
         self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
+        if (self.IS_GLOBAL_PROXY) {
+            self.disableGlobalProxy();
+        }
         logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
-    }
+
+    };
+
+    self.setIntercept = function (flag) {
+        currentRule.setInterceptFlag(flag);
+    };
+
+    self.getInterceptFlag = function () {
+        return currentRule.getInterceptFlag();
+    };
+
+    self.getGlobalProxyFlag = function () {
+        return self.IS_GLOBAL_PROXY;
+    };
+
+    self.enableGlobalProxy = function () {
+        self.IS_GLOBAL_PROXY = true;
+        return SystemProxyMgr.enableGlobalProxy('127.0.0.1', proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
+    };
+
+    self.disableGlobalProxy = function () {
+        self.IS_GLOBAL_PROXY = false;
+        return SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
+    };
+
+    self.getProxyPort = function () {
+        return proxyPort;
+    };
+
 }
 
 module.exports.proxyServer        = proxyServer;
 module.exports.generateRootCA     = certMgr.generateRootCA;
 module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
 module.exports.setRules           = requestHandler.setRules;
+

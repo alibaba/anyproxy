@@ -1,0 +1,63 @@
+doctype html
+html(lang="en")
+  head
+    title AnyProxy Inner Error
+  style.
+    body {
+      color: #666;
+      line-height: 1.5;
+      font-size: 13px;
+      font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+    }
+    .stackError {
+      border-radius: 5px;
+      padding: 20px;
+      border: 1px solid #fdc;
+      background-color: #ffeee6;
+      color: #666;
+    }
+    .stackError li {
+      list-style-type: none;
+    }
+    .infoItem {
+      overflow: hidden;
+      border: 1px solid #d5f1fd;
+      background-color: #eaf8fe;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .infoItem .label {
+      min-width: 70px;
+      float: left;
+      font-weight: 600;
+      background-color: #76abc1;
+      color: #fff;
+      padding: 5px;
+    }
+    .infoItem .value {
+      overflow:hidden;
+      padding: 5px;
+    }
+    .tip {
+      color: #808080;
+    }
+  body
+    h1 # AnyProxy Inner Error
+    h3 Oops! Error happend when AnyProxy handle the request.
+    p.tip This is an error occurred inside AnyProxy, not from your target website.
+    .infoItem
+      .label
+        | Protocol:
+      .value #{protocol}
+    .infoItem
+      .label
+        | Host:
+      .value #{host}
+    .infoItem
+      .label
+        | URL:
+      .value #{url}
+    p
+      ul.stackError
+        each item in errorStack
+          li= item

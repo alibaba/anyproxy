@@ -14,26 +14,53 @@ export function formatDate(date, formatter) {
     const transform = function(value) {
         return value < 10 ? '0' + value : value;
     };
-    return formatter.replace(/^yyyy|MM|dd|hh|mm|ss/g, function(match) {
+    return formatter.replace(/^YYYY|MM|DD|hh|mm|ss/g, function(match) {
         switch (match) {
-        case 'yyyy':
-            return transform(date.getFullYear());
-        case 'MM':
-            return transform(date.getMonth() + 1);
-        case 'mm':
-            return transform(date.getMinutes());
-        case 'dd':
-            return transform(date.getDate());
-        case 'hh':
-            return transform(date.getHours());
-        case 'ss':
-            return transform(date.getSeconds());
+            case 'YYYY':
+                return transform(date.getFullYear());
+            case 'MM':
+                return transform(date.getMonth() + 1);
+            case 'mm':
+                return transform(date.getMinutes());
+            case 'DD':
+                return transform(date.getDate());
+            case 'hh':
+                return transform(date.getHours());
+            case 'ss':
+                return transform(date.getSeconds());
         }
     });
 }
 
+export function selectText(element) {
+    let range, selection;
+
+    if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(element);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else if (document.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    }
+}
+
+export function getQueryParameter (name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results == null) {
+        return '';
+    } else {
+        return results[1] || '';
+    }
+}
+
 const CommonUtil = {
-    formatDate
+    formatDate,
+    selectText,
+    getQueryParameter
 };
 
 export default CommonUtil;

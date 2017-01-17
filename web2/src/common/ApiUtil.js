@@ -2,9 +2,7 @@
 * AJAX操作工具类
 */
 import PromiseUtil from './PromiseUtil';
-
 export function getJSON(url, data) {
-    console.info('GET JSON calling');
     const d = PromiseUtil.defer();
     fetch(url + serializeQuery(data))
         .then((data) => {
@@ -21,6 +19,10 @@ export function postJSON(url, data) {
     const d = PromiseUtil.defer();
     fetch(url, {
         method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(data)
     })
         .then((data) => {
@@ -34,11 +36,8 @@ export function postJSON(url, data) {
     return d.promise;
 }
 
-function serializeQuery (data) {
-    if (!data) {
-        return '';
-    }
-
+function serializeQuery (data = {}) {
+    data['__t'] = Date.now();// disable the cache
     const queryArray = [];
 
     for (let key in data) {
@@ -50,9 +49,14 @@ function serializeQuery (data) {
     return queryStr ? '?' + queryStr : '';
 }
 
+export function isApiSuccess (response) {
+    return response.status === 'success';
+}
+
 const ApiUtil = {
     getJSON,
-    postJSON
+    postJSON,
+    isApiSuccess
 };
 
 export default ApiUtil;

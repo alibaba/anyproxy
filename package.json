@@ -1,18 +1,16 @@
 {
   "name": "anyproxy",
-  "version": "3.10.3Beta1",
+  "version": "4.0.0-beta1",
   "description": "A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.",
   "main": "proxy.js",
   "bin": {
     "anyproxy": "bin.js"
   },
   "dependencies": {
-    "antd": "^1.11.1",
+    "antd": "^2.5.0",
     "async": "~0.9.0",
     "async-task-mgr": ">=1.1.0",
-    "babel-polyfill": "^6.13.0",
     "body-parser": "^1.13.1",
-    "change-case": "^3.0.0",
     "classnames": "^2.2.5",
     "co": "^4.6.0",
     "colorful": "^2.1.0",
@@ -27,14 +25,17 @@
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "mime-types": "2.1.11",
+    "moment": "^2.15.1",
     "nedb": "^0.11.0",
     "node-easy-cert": "^1.0.0",
     "node-forge": "^0.6.39",
     "npm": "^2.7.0",
+    "pug": "^2.0.0-beta6",
     "q": "^1.4.1",
     "qrcode-npm": "0.0.3",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
+    "react-json-tree": "^0.10.0",
     "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.6.0",
@@ -47,6 +48,7 @@
   "devDependencies": {
     "autoprefixer": "^6.4.1",
     "babel-core": "^6.14.0",
+    "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-import": "^1.0.0",
     "babel-plugin-transform-runtime": "^6.15.0",
@@ -69,16 +71,20 @@
     "koa-websocket": "^2.0.0",
     "nodeunit": "^0.9.1",
     "postcss-loader": "^0.13.0",
+    "react-addons-perf": "^15.4.0",
     "request": "^2.74.0",
     "stream-equal": "0.1.8",
+    "svg-inline-loader": "^0.7.1",
+    "svg-inline-react": "^1.0.2",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "worker-loader": "^0.7.1"
   },
   "scripts": {
     "test": "sh test/test.sh",
     "testserver": "node test/server/startServer.js",
-    "buildweb": "webpack --config web2/webpack.config.js --process --colors",
-    "webserver": "webpack --config web2/webpack.config.js --process --colors --watch"
+    "buildweb": "set NODE_ENV=production && webpack --config web2/webpack.config.js --process --colors",
+    "webserver": "set NODE_ENV=test && webpack --config web2/webpack.config.js --process --colors --watch"
   },
   "repository": {
     "type": "git",

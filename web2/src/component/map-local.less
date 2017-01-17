@@ -1,0 +1,58 @@
+@import '../style/constant.less';
+@panel-width: 100%;
+.mapLocalWrapper {
+    padding: 10px 15px 30px;
+}
+
+.title {
+  font-size: @middlepanel-font-size;
+  text-align: left;
+  font-weight: 200;
+  margin-bottom: 12px;
+  color: @hint-color;
+}
+
+.treeWrapper {
+      height: 310px;
+      width: @panel-width;
+      overflow: auto;
+      border: 1px solid @light-border-color;
+      border-radius: 4px;
+}
+
+.form {
+    width: @panel-width;
+    label {
+      font-weight: 600;
+    }
+}
+
+.mappedKeyDiv {
+  position: relative;
+  strong {
+    display: block;
+    width: 230px;
+    word-wrap: break-word;
+  }
+  a {
+    overflow: hidden;
+    position: absolute;
+    top: 1px;
+    right: 8px;
+  }
+}
+
+.mappedList {
+    padding-left: 25px;
+    padding-bottom: 15px;
+    li {
+        list-style-type: disc;
+    }
+}
+
+.operations {
+    margin-top: 10px;
+    button {
+        width: @panel-width;
+    }
+}

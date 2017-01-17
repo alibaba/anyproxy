@@ -2,7 +2,7 @@
  *  Promise的工具类
  */
 
-function defer() {
+export function defer() {
     const d = {};
     d.promise = new Promise((resolve, reject) => {
         d.resolve = resolve;
