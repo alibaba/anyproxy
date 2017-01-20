@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="23px" viewBox="0 0 26 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41 (35326) - http://www.bohemiancoding.com/sketch -->
+    <title>clear</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14.404298,23 L25.8072366,10.1478112 L14.7771384,0.0807951437 L0.573792401,16.0893076 L8.14561061,23 L14.404298,23 Z" id="eye-path-1"></path>
+    </defs>
+    <g id="clear-Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="clear">
+            <g id="clear-group1">
+                <mask id="clear-mask-2" fill="white">
+                    <use xlink:href="#eye-path-1"></use>
+                </mask>
+                <use id="clear-Mask" fill="#3A3A3A" xlink:href="#eye-path-1"></use>
+                <polygon id="clear-gray-rec" fill="#E0E0E0" mask="url(#clear-mask-2)" points="5.94833903 7.43670143 19.9092371 19.7626302 10.9693568 28.720266 -2.14582775 16.3594041"></polygon>
+            </g>
+            <polyline id="clear-bottom-line" stroke="#3A3A3A" stroke-width="2" stroke-linecap="square" points="3.3999939 22 8.17626453 22 18.5999939 22"></polyline>
+        </g>
+    </g>
+</svg>

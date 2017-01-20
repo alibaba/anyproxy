@@ -1,7 +1,8 @@
 //replace all the images with local one
-var fs      = require("fs");
+const fs      = require("fs");
 
-var LOCAL_IMAGE = "/Users/path/to/image.png";
+const LOCAL_IMAGE = "/Users/path/to/image.png";
+
 
 module.exports = {
 
@@ -11,17 +12,25 @@ module.exports = {
 
     //mark if use local response
     shouldUseLocalResponse : function(req,reqBody){
-        if(/\.(png|gif|jpg|jpeg)$/.test(req.url)){
-            req.replaceLocalFile = true;
-            return true;
-        }else{
-            return false;
-        }
+        return new Promise((resolve, reject) => {
+            if(/\.(png|gif|jpg|jpeg)$/.test(req.url)){
+                req.replaceLocalFile = true;
+                resolve(true);
+            }else{
+                resolve(false);
+            }
+        });
     },
 
-    dealLocalResponse : function(req,reqBody,callback){
+    dealLocalResponse : function(req,reqBody){
         if(req.replaceLocalFile){
-            callback(200, {"content-type":"image/png"}, fs.readFileSync(LOCAL_IMAGE) );
+            return new Promise((resolve, reject) => {
+                resolve({
+                    code: 200,
+                    header: { "content-type":"image/png" },
+                    body: fs.readFileSync(LOCAL_IMAGE)
+                });
+            });
         }
     }
 };

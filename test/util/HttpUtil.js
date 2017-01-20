@@ -94,6 +94,7 @@ function doRequest (method = 'GET', url, params, headers = {}, isProxy) {
         form: params,
         url: url,
         headers: headers,
+        followRedirect: false,
         rejectUnauthorized: false
     };
 
@@ -108,9 +109,9 @@ function doRequest (method = 'GET', url, params, headers = {}, isProxy) {
             function (error, response, body) {
                 if (error) {
                     reject(error);
-                    return;
+                } else {
+                    resolve(response);
                 }
-                resolve(response);
             }
         );
     });
@@ -238,6 +239,13 @@ function generateWsUrl (protocol, urlPath) {
     return protocol === 'wss' ? WSS_SERVER_BASE + urlPath : WS_SERVER_BASE + urlPath;
 }
 
+/*
+* verify if the request data is a valid proxy request, by checking specified header
+*/
+function isViaProxy(req) {
+    return req.headers['via-proxy'] === 'true';
+}
+
 module.exports = {
     proxyGet,
     proxyPost,
@@ -258,5 +266,6 @@ module.exports = {
     directOptions,
     proxyOptions,
     directPutUpload,
-    proxyPutUpload
+    proxyPutUpload,
+    isViaProxy
 };

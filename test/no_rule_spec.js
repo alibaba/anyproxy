@@ -239,26 +239,17 @@ function testRequest(protocol = 'http') {
                         .then(proxyRes => {
                             directGet(url)
                                 .then(directRes => {
-                                    const redirects = directRes.request._redirect.redirects || [];
-                                    const proxyRedirects = proxyRes.request._redirect.redirects || [];
-                                    expect(redirects.length).toEqual(1);
-                                    expect(proxyRedirects.length).toEqual(1);
-
-                                    expect(redirects[0].statusCode).toEqual(redirectCode);
-                                    expect(redirects[0].redirectUri).toEqual(proxyRedirects[0].redirectUri);
-                                    expect(redirects[0].statusCode).toEqual(proxyRedirects[0].statusCode);
-                                    if (protocol === 'https') {
-                                        expect(redirects[0].redirectUri).toEqual('https://localhost:3001/test');
-                                    } else {
-                                        expect(redirects[0].redirectUri).toEqual('http://localhost:3000/test');
-                                    }
+                                    expect(directRes.statusCode).toEqual(redirectCode);
+                                    expect(directRes.headers.location).toEqual(proxyRes.headers.location);
+                                    expect(directRes.statusCode).toEqual(proxyRes.statusCode);
+                                    expect(directRes.headers.location).toEqual('/test');
                                     done();
-                                }, error => {
+                                }).catch( error => {
                                     console.log(`error happened in direct ${redirectCode}:`, error);
                                     done.fail(`error happened in direct ${redirectCode}`);
                                 });
 
-                        }, error => {
+                        }).catch(error => {
                             console.log(`error happened in proxy ${redirectCode}:`, error);
                             done.fail(`error happened in proxy ${redirectCode}`);
                         });

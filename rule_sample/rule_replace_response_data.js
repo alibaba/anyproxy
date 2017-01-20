@@ -1,19 +1,20 @@
-//rule scheme :
+//rule scheme : replace the reponse data
+const Buffer = require('buffer').Buffer;
 
 module.exports = {
 
-    replaceServerResDataAsync: function(req,res,serverResData,callback){
+    replaceServerResData: function(req,res,serverResData){
         //append "hello world" to all web pages
-
-        //for those non-unicode response , serverResData.toString() should not be your first choice.
-        //this issue may help you understanding how to modify an non-unicode response: https://github.com/alibaba/anyproxy/issues/20
-        if(/html/i.test(res.headers['content-type'])){
-            var newDataStr = serverResData.toString();
-            newDataStr += "hello world!";
-            callback(newDataStr);
-        }else{
-            callback(serverResData);
-        }
-
+        return new Promise((resolve, reject) => {
+            //for those non-unicode response , serverResData.toString() should not be your first choice.
+            //refer to the issue for more detail: https://github.com/alibaba/anyproxy/issues/20
+            if(/html/i.test(res.headers['content-type'])){
+                var newDataStr = serverResData.toString();
+                newDataStr += "hello world!";
+                resolve(Buffer.from(newDataStr));
+            }else{
+                resolve(serverResData);
+            }
+        });
     }
 };

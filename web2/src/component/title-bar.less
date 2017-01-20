@@ -1,0 +1,45 @@
+@import '../style/constant.less';
+.wrapper {
+    position: relative;
+}
+.iconButtons {
+    overflow: hidden;
+    span {
+        position: relative;
+        display: block;
+        float: left;
+        width: 12.44px;
+        height: 12.84px;
+        border-radius: 50%;
+        margin: 0 7px;
+    }
+
+    .close {
+        background-color: #EB3131;
+    }
+
+    .disabled {
+        background-color: #aaa;
+    }
+
+    .minimize {
+        background-color: #FFBF11;
+    }
+
+    .maxmize {
+        background-color: #09CE26;
+    }
+
+    i {
+        display: none;
+        position: absolute;
+        left: 0px;
+        top: 1px;
+    }
+
+    &:hover {
+        i {
+            display: block;
+        }
+    }
+}

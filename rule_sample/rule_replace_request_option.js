@@ -3,7 +3,7 @@
 module.exports = {
 
     replaceRequestOption : function(req,option){
-        //replace request towards http://www.taobao.com 
+        //replace request towards http://www.taobao.com
         //                     to http://www.taobao.com/about/
 
         /*
@@ -16,8 +16,12 @@ module.exports = {
             headers  : {cookie:""}
         }
         */
-        if(option.hostname == "www.taobao.com" && option.path == "/"){
-            option.path = "/about/";
-        }
+        return new Promise((resolve, reject) => {
+            const newOption = Object.assign({}, option);
+            if(newOption.hostname == "www.taobao.com" && newOption.path == "/"){
+                newOption.path = "/about/";
+            }
+            resolve(newOption);
+        });
     }
 };

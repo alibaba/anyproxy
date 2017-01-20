@@ -8,11 +8,11 @@ const { proxyGet, generateUrl } = require('./util/HttpUtil.js');
 const Server = require('./server/server.js');
 const { printLog } = require('./util/CommonUtil.js');
 
-const rule = require('./test_rules/shouldUseLocalResponseRule.js');
+const rule = require('./test_rules/test_rule_should_use_local_response.js');
 const expectedLocalBody = 'handled_in_local_response';
 
 
-testWrapper('http');
+// testWrapper('http');
 testWrapper('https');
 
 function testWrapper(protocol, ) {
@@ -21,7 +21,7 @@ function testWrapper(protocol, ) {
         let serverInstance ;
 
         beforeAll((done) => {
-            jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000000;
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
             printLog('Start server for rule_shouldUseLocalResponse_spec');
 
             serverInstance = new Server();
@@ -37,7 +37,6 @@ function testWrapper(protocol, ) {
             serverInstance && serverInstance.close();
             proxyServer && proxyServer.close();
             printLog('Close server for rule_shouldUseLocalResponse_spec');
-
         });
 
         it('Should use local response if the assertion is true', done => {
@@ -47,7 +46,7 @@ function testWrapper(protocol, ) {
                     expect(res.body).toEqual(expectedLocalBody);
                     expect(res.headers['via-proxy-local']).toEqual('true');
                     done();
-                }, error => {
+                }).catch((error) => {
                     console.log('error happened in proxy get for shouldUseLocal: ',error);
                     done.fail('error happened when test shouldUseLocal rule');
                 });

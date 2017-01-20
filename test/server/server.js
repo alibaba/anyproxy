@@ -10,11 +10,33 @@ const websocket = require('koa-websocket');
 const wsRouter = require('koa-router')();
 const color = require('colorful');
 const WebSocketServer = require('ws').Server;
+const tls = require('tls');
+const crypto = require('crypto');
+
+var createSecureContext = tls.createSecureContext || crypto.createSecureContext;
 
 const DEFAULT_PORT = 3000;
 const HTTPS_PORT = 3001;
+const HTTPS_PORT2 = 3002; // start multiple https server
 const UPLOAD_DIR = './test/temp';
 const PROXY_KEY_PREFIX = 'proxy-';
+
+
+function SNICertCallback (serverName, SNICallback) {
+    console.info('SNI called with server name: ', serverName);
+    certMgr.getCertificate(serverName,function(err,key,crt){
+        if(err) {
+            console.error('error happend in sni callback', err);
+            return;
+        }
+        const ctx = createSecureContext({
+            key: key,
+            cert: crt
+        });
+
+        SNICallback(null, ctx);
+    });
+}
 
 function KoaServer() {
     this.httpServer = null;
@@ -27,19 +49,21 @@ function KoaServer() {
      */
     this.logRequest = function* (next) {
         const headers = this.request.headers;
-        let key = this.request.host + this.request.url;
+        let key = this.request.protocol + '://' + this.request.host + this.request.url;
 
         // take proxy data with 'proxy-' + url
         if (headers['via-proxy'] === 'true') {
             key = PROXY_KEY_PREFIX + key;
         }
 
+        printLog('log request with key :' + key);
         let body = this.request.body;
         body = typeof body === 'object' ? JSON.stringify(body) : body;
         self.requestRecordMap[key] = {
             headers: headers,
             body: body
         };
+
         yield next;
     };
 
@@ -48,10 +72,10 @@ function KoaServer() {
 
 KoaServer.prototype.constructRouter = function() {
     const router = KoaRouter();
-    router.post('/test/getuser', this.logRequest, koaBody(),  function*(next) {
+    router.post('/test/getuser', koaBody(), this.logRequest, function*(next) {
         printLog('requesting post /test/getuser');
         this.response.set('reqbody', JSON.stringify(this.request.body));
-        this.response.body = 'something in post';
+        this.response.body = 'body_post_getuser';
     });
 
     router.get('/test', this.logRequest, function*(next) {
@@ -64,7 +88,7 @@ KoaServer.prototype.constructRouter = function() {
     router.get('/test/uselocal', this.logRequest, function*(next) {
         printLog('request in get local:' + JSON.stringify(this.request));
         this.response.body = 'something should be in local';
-        this.response.__req = this.request;
+        // this.response.__req = this.request;
         printLog('response in get:' + JSON.stringify(this.response));
     });
 
@@ -165,6 +189,33 @@ KoaServer.prototype.constructRouter = function() {
     //     this.response.body = 'connect_established_body';
     // });
 
+    router.get('/test/should_not_replace_option', this.logRequest, function * (next) {
+        this.response.body = 'the_option_that_not_be_replaced';
+    });
+
+    router.get('/test/should_replace_option', this.logRequest, function * (next) {
+        this.response.body = "the_request_that_has_not_be_replaced";
+    });
+
+    router.get('/test/new_replace_option', this.logRequest, function* (next) {
+        this.response.body= 'the_new_replaced_option_page_content';
+    });
+
+    router.get('/test/normal_request1', this.logRequest, koaBody(),  function*(next) {
+        printLog('requesting get /test/normal_request1');
+        this.response.body = 'body_normal_request1';
+    });
+
+    router.get('/test/normal_request2', this.logRequest, koaBody(),  function*(next) {
+        printLog('requesting get /test/normal_request2');
+        this.response.body = 'body_normal_request2';
+    });
+
+    router.post('/test/normal_post_request1', koaBody(), this.logRequest, function*(next) {
+        printLog('requesting post /test/normal_post_request1');
+        this.response.body = 'body_normal_post_request1';
+    });
+
     return router;
 };
 
@@ -190,12 +241,12 @@ KoaServer.prototype.constructWsRouter = function() {
 };
 
 KoaServer.prototype.getRequestRecord = function (key) {
-    return this.requestRecordMap[key] || {};
+    return this.requestRecordMap[key] || null;
 };
 
 KoaServer.prototype.getProxyRequestRecord = function (key) {
     key = PROXY_KEY_PREFIX + key;
-    return this.requestRecordMap[key] || {};
+    return this.requestRecordMap[key] || null;
 };
 
 KoaServer.prototype.handleRecievedMessage = function(ws, message) {
@@ -225,6 +276,7 @@ KoaServer.prototype.start = function() {
             console.error('failed to create https server:', error);
         } else {
             self.httpsServer = https.createServer({
+                SNICallback: SNICertCallback,
                 key: keyContent,
                 cert: crtContent
             }, app.callback());
@@ -248,6 +300,13 @@ KoaServer.prototype.start = function() {
 
             self.httpsServer.listen(HTTPS_PORT);
 
+            self.httpsServer2 = https.createServer({
+                key: keyContent,
+                cert: crtContent
+            }, app.callback());
+
+            self.httpsServer2.listen(HTTPS_PORT2);
+
             printLog('HTTPS is now listening on port :' + HTTPS_PORT);
 
             printLog('Server started successfully');
@@ -261,13 +320,14 @@ KoaServer.prototype.close = function() {
     printLog('Closing server now...');
     this.httpServer && this.httpServer.close();
     this.httpsServer && this.httpsServer.close();
+    this.httpsServer2 && this.httpsServer2.close();
     this.requestRecordMap = {};
     printLog('Server closed successfully');
 };
 
 
 function printLog(content) {
-    console.log(color.cyan('===SERVER LOG===' + content));
+    console.log(color.cyan('[SERVER LOG]: ' + content));
 }
 
 

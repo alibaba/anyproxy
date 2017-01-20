@@ -1,20 +1,28 @@
-//rule scheme :
+//rule scheme : remove the cache header in request and response
 
 module.exports = {
-	replaceRequestOption : function(req,option){
-	    var newOption = option;
-	    delete newOption.headers['if-none-match'];
-	    delete newOption.headers['if-modified-since'];
+    summary: function () {
+        return 'The rule to disable cache';
+    },
 
-	    return newOption;
-	},
+    replaceRequestOption : function(req,option){
+        return new Promise((resolve, reject) => {
+            option = Object.assign({}, option);
+            delete option.headers['if-none-match'];
+            delete option.headers['if-modified-since'];
+            resolve(option);
+        });
+    },
 
     replaceResponseHeader: function(req,res,header){
-        header = header || {};
-        header["Cache-Control"]                    = "no-cache, no-store, must-revalidate";
-        header["Pragma"]                           = "no-cache";
-        header["Expires"]                          = 0;
+        return new Promise((resolve, reject) => {
+            header = Object.assign({}, header);
+            header = header || {};
+            header["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            header["Pragma"] = "no-cache";
+            header["Expires"] = 0;
 
-        return header;
+            resolve(header);
+        });
     }
 };
