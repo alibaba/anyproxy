@@ -84,7 +84,8 @@
     "test": "sh test/test.sh",
     "testserver": "node test/server/startServer.js",
     "buildweb": "set NODE_ENV=production && webpack --config web2/webpack.config.js --process --colors",
-    "webserver": "set NODE_ENV=test && webpack --config web2/webpack.config.js --process --colors --watch"
+    "webserver": "set NODE_ENV=test && webpack --config web2/webpack.config.js --process --colors --watch",
+    "prepublish": "npm run buildweb"
   },
   "repository": {
     "type": "git",
