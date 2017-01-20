@@ -12,7 +12,7 @@ module.exports = {
         if (req.url.indexOf('/getuser') >= 0) {
             let requestStr = data.toString();
             requestStr += '&authToken=auth_token_inrule';
-            d.resolve(Buffer.from(requestStr));
+            d.resolve(new Buffer(requestStr));
         } else {
             d.resolve(data);
         }

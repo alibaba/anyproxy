@@ -10,7 +10,7 @@ module.exports = {
         if(req.url.indexOf('/test/normal_request1') > -1){
             var newDataStr = serverResData.toString();
             newDataStr += "_hello_world!";
-            d.resolve(Buffer.from(newDataStr));
+            d.resolve(new Buffer(newDataStr));
         }else{
             d.resolve(serverResData);
         }

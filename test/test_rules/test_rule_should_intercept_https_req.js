@@ -14,7 +14,7 @@ module.exports = {
         //add "hello github" to all github pages
         serverResData = serverResData.toString();
         serverResData += "_hello_world!";
-        d.resolve(Buffer.from(serverResData));
+        d.resolve(new Buffer(serverResData));
 
         return d.promise;
     },
