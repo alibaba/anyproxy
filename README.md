@@ -39,9 +39,9 @@ Home page : [AnyProxy.io](http://anyproxy.io)
 
 > The new version is in Beta release. Don't hesitate to send your PR or report an issue, we hope to hear your voice!
 
-> `npm install -g anyproxy 4.0.0-beta`, hope you like it!
+> `npm install -g anyproxy@beta`, hope you like it!
 
-![anyproxy_gif2](https://zos.alipayobjects.com/rmsportal/qzjbHWyxQsXPNEqXZqMD.gif)
+<img src="https://zos.alipayobjects.com/rmsportal/qzjbHWyxQsXPNEqXZqMD.gif" width="900" alt="AnyProxy screenshot" ) />
 
 Feature
 ------------
