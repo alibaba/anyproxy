@@ -41,7 +41,7 @@ Home page : [AnyProxy.io](http://anyproxy.io)
 
 > `npm install -g anyproxy@beta`, hope you like it!
 
-<img src="https://zos.alipayobjects.com/rmsportal/qzjbHWyxQsXPNEqXZqMD.gif" width="900" alt="AnyProxy screenshot" ) />
+<img src="https://zos.alipayobjects.com/rmsportal/HCAVzYcXaFYtPkBZDNHC.png" width="900" alt="AnyProxy screenshot" />
 
 Feature
 ------------
