@@ -1,302 +1,231 @@
-try{
-    global.util = require('./lib/util');
-}catch(e){}
+'use strict';
 
-var http = require('http'),
-    https           = require('https'),
-    fs              = require('fs'),
-    async           = require("async"),
-    url             = require('url'),
-    program         = require('commander'),
-    color           = require('colorful'),
-    certMgr         = require("./lib/certMgr"),
-    getPort         = require("./lib/getPort"),
-    Recorder        = require("./lib/recorder"),
-    logUtil         = require("./lib/log"),
-    wsServer        = require("./lib/wsServer"),
-    webInterface    = require("./lib/webInterface"),
-    SystemProxyMgr  = require('./lib/systemProxyMgr'),
-    inherits        = require("util").inherits,
-    util            = require("./lib/util"),
-    path            = require("path"),
-    juicer          = require('juicer'),
-    events          = require("events"),
-    express         = require("express"),
-    ip              = require("ip"),
-    ThrottleGroup   = require("stream-throttle").ThrottleGroup,
-    iconv           = require('iconv-lite'),
-    Buffer          = require('buffer').Buffer;
+const http = require('http'),
+  https = require('https'),
+  async = require('async'),
+  color = require('colorful'),
+  certMgr = require('./lib/certMgr'),
+  Recorder = require('./lib/recorder'),
+  logUtil = require('./lib/log'),
+  util = require('./lib/util'),
+  events = require('events'),
+  ThrottleGroup = require('stream-throttle').ThrottleGroup;
 
-var T_TYPE_HTTP            = 0,
-    T_TYPE_HTTPS           = 1,
-    DEFAULT_PORT           = 8001,
-    DEFAULT_WEB_PORT       = 8002, // port for web interface
-    DEFAULT_WEBSOCKET_PORT = 8003, // internal web socket for web interface, not for end users
-    DEFAULT_CONFIG_PORT    = 8088,
-    DEFAULT_HOST           = "localhost",
-    DEFAULT_TYPE           = T_TYPE_HTTP;
+const T_TYPE_HTTP = 'http',
+  T_TYPE_HTTPS = 'https',
+  DEFAULT_CONFIG_PORT = 8088,
+  DEFAULT_TYPE = T_TYPE_HTTP;
 
-var default_rule = util.freshRequire('./rule_default');
-var requestHandler = util.freshRequire('./requestHandler');
+const PROXY_STATUS_INIT = 'INIT';
+const PROXY_STATUS_READY = 'READY';
+const PROXY_STATUS_CLOSED = 'CLOSED';
 
-//option
-//option.type     : 'http'(default) or 'https'
-//option.port     : 8001(default)
-//option.hostname : localhost(default)
-//option.rule          : ruleModule
-//option.webPort       : 8002(default)
-//option.socketPort    : 8003(default)
-//option.webConfigPort : 8088(default)
-//option.dbFile        : null(default)
-//option.throttle      : null(default)
-//option.disableWebInterface
-//option.silent        : false(default)
-//option.interceptHttps ,internal param for https
-function proxyServer(option){
-    option = option || {};
+/**
+ * 
+ * @class ProxyServer
+ * @extends {events.EventEmitter}
+ */
+class ProxyServer extends events.EventEmitter {
 
-    var self       = this,
-        proxyType           = /https/i.test(option.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP ,
-        proxyPort           = option.port     || DEFAULT_PORT,
-        proxyHost           = option.hostname || DEFAULT_HOST,
-        proxyRules          = option.rule     || default_rule,
-        proxyWebPort        = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
-        socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
-        proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
-        disableWebInterface = !!option.disableWebInterface,
-        ifSilent            = !!option.silent;
+  /**
+   * Creates an instance of ProxyServer.
+   * 
+   * @param {object} config - configs
+   * @param {number} config.port - port of the proxy server
+   * @param {object} [config.rule=null] - rule module to use
+   * @param {string} [config.type=http] - type of the proxy server, could be 'http' or 'https'
+   * @param {strign} [config.hostname=localhost] - host name of the proxy server, required when this is an https proxy
+   * @param {object} [config.webInterface] - config of the web interface
+   * @param {boolean} [config.webInterface.enable=false] - if web interface is enabled
+   * @param {number} [config.webInterface.webPort=8002] - http port of the web interface
+   * @param {number} [config.webInterface.wsPort] - web socket port of the web interface
+   * @param {number} [config.throttle] - speed limit in kb/s
+   * @param {boolean} [config.forceProxyHttps=false] - if proxy all https requests
+   * @param {boolean} [config.silent=false] - if keep the console silent
+   * @param {boolean} [config.dangerouslyIgnoreUnauthorized=false] - if ignore unauthorized server response
+   * 
+   * @memberOf ProxyServer
+   */
+  constructor(config) {
+    super();
+    config = config || {};
 
-    self.IS_GLOBAL_PROXY = false; // mark if global proxy is on
-    self.httpProxyServer = null;
+    this.status = PROXY_STATUS_INIT;
+    this.proxyPort = config.port;
+    this.proxyType = /https/i.test(config.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP;
+    this.proxyHostName = config.hostname || 'localhost';
+    this.proxyWebinterfaceConfig = config.webInterface;
+    this.proxyConfigPort = config.webConfigPort || DEFAULT_CONFIG_PORT;    //TODO : port to ui config server
+    
+    if (config.forceProxyHttps && !certMgr.ifRootCAFileExists()) {
+      throw new Error('root CA not found. can not intercept https'); // TODO : give a reference to user
+    } else if (this.proxyType === T_TYPE_HTTPS && !config.hostname) {
+      throw new Error('hostname is required in https proxy');
+    } else if (!this.proxyPort) {
+      throw new Error('proxy port is required');
+    }
+    
+    // ??
+    // currentRule.setInterceptFlag(true);
+    // logUtil.printLog(color.blue("The WebSocket will not work properly in the https intercept mode :("), logUtil.T_TIP);
 
-    if(ifSilent){
-        logUtil.setPrintStatus(false);
+    this.httpProxyServer = null;
+    this.requestHandler = null;
+
+    // copy the rule to keep the original proxyRule independent        
+    this.proxyRule = config.rule || {};
+
+    if (config.silent) {
+      logUtil.setPrintStatus(false);
     }
 
-    // copy the rule to keep the original proxyRules independent
-    proxyRules = Object.assign({}, proxyRules);
-
-    var currentRule = requestHandler.setRules(proxyRules); //TODO : optimize calling for set rule
-
-    if(!!option.interceptHttps){
-        if (!certMgr.isRootCAFileExists()) {
-            util.showRootInstallTip();
-            process.exit(0);
-            return;
-        }
-
-        currentRule.setInterceptFlag(true);
-
-        //print a tip when using https features in Node < v0.12
-        var nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-        if(nodeVersion < 0.12){
-            logUtil.printLog(color.red("node >= v0.12 is required when trying to intercept HTTPS requests :("), logUtil.T_ERR);
-        }
-
-        logUtil.printLog(color.blue("The WebSocket will not work properly in the https intercept mode :("), logUtil.T_TIP);
+    if (config.throttle) {
+      logUtil.printLog('throttle :' + config.throttle + 'kb/s');
+      const rate = parseInt(config.throttle, 10);
+      if (rate < 1) {
+        throw new Error('Invalid throttle rate value, should be positive integer');
+      }
+      global._throttle = new ThrottleGroup({ rate: 1024 * rate }); // rate - byte/sec
     }
 
-    if(option.throttle){
-        logUtil.printLog("throttle :" + option.throttle + "kb/s");
-        const rate = parseInt(option.throttle);
-        if (rate < 1) {
-            logUtil.printLog(color.red('Invalid throttle rate value, should be positive integer\n'), logUtil.T_ERR);
-            process.exit(0);
-        }
-        global._throttle = new ThrottleGroup({rate: 1024 * parseFloat(option.throttle) }); // rate - byte/sec
-    }
+    // init recorder
+    this.recorder = new Recorder();
+    global.recorder = this.recorder; // TODO 消灭这个global
 
+    // init request handler
+    const RequestHandler = util.freshRequire('./requestHandler');
+    this.requestHandler = new RequestHandler({
+      forceProxyHttps: !!config.forceProxyHttps,
+      dangerouslyIgnoreUnauthorized: !!config.dangerouslyIgnoreUnauthorized
+    }, this.proxyRule, this.recorder);
+  }
+
+  /**
+   * start the proxy server
+   * 
+   * @returns ProxyServer
+   * 
+   * @memberOf ProxyServer
+   */
+  start() {
+    const self = this;
+    if (self.status !== PROXY_STATUS_INIT) {
+      throw new Error('server status is not PROXY_STATUS_INIT, can not run start()');
+    }
     async.series(
-        [
-            //clear cache dir, prepare recorder
-            function(callback){
-                util.clearCacheDir(function(){
-                    if(option.dbFile){
-                        global.recorder = new Recorder({filename: option.dbFile});
-                    }else{
-                        global.recorder = new Recorder();
-                    }
-                    callback();
-                });
-            },
-
-            //creat proxy server
-            function(callback){
-                if(proxyType == T_TYPE_HTTPS){
-                    certMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
-                        if(err){
-                            callback(err);
-                        }else{
-                            self.httpProxyServer = https.createServer({
-                                key : keyContent,
-                                cert: crtContent
-                            },requestHandler.userRequestHandler);
-                            callback(null);
-                        }
-                    });
-                }else{
-                    self.httpProxyServer = http.createServer(requestHandler.userRequestHandler);
-                    callback(null);
-                }
-            },
-
-            //handle CONNECT request for https over http
-            function(callback){
-                self.httpProxyServer.on('connect',requestHandler.connectReqHandler);
+      [
+        //creat proxy server
+        function (callback) {
+          if (self.proxyType === T_TYPE_HTTPS) {
+            certMgr.getCertificate(self.proxyHostName, (err, keyContent, crtContent) => {
+              if (err) {
+                callback(err);
+              } else {
+                self.httpProxyServer = https.createServer({
+                  key: keyContent,
+                  cert: crtContent
+                }, self.requestHandler.userRequestHandler);
                 callback(null);
-            },
+              }
+            });
+          } else {
+            self.httpProxyServer = http.createServer(self.requestHandler.userRequestHandler);
+            callback(null);
+          }
+        },
 
-            //start proxy server
-            function(callback){
-                self.httpProxyServer.listen(proxyPort);
-                callback(null);
-            },
+        //handle CONNECT request for https over http
+        function (callback) {
+          self.httpProxyServer.on('connect', self.requestHandler.connectReqHandler);
+          callback(null);
+        },
 
-            //start web socket service
-            function(callback){
-                self.ws = new wsServer({ port : socketPort });
-                callback(null);
-            },
+        //start proxy server
+        function (callback) {
+          self.httpProxyServer.listen(self.proxyPort);
+          callback(null);
+        },
 
-            //start web interface
-            function(callback){
-                if(disableWebInterface){
-                    logUtil.printLog('web interface is disabled');
-                }else{
-                    var config = {
-                        port         : proxyWebPort,
-                        wsPort       : socketPort,
-                        userRule     : proxyRules,
-                        proxyInstance: self,
-                        ip           : ip.address()
-                    };
+        //start web socket service
+        // function(callback){
+        //     self.ws = new wsServer({ port : self.proxyWsPort }, self.recorder);
+        //     callback(null);
+        // },
 
-                    self.webServerInstance = new webInterface(config);
-                }
-                callback(null);
-            },
+        //set proxy rule
+        // function(callback){
+        //     if (self.interceptHttps) {
+        //         self.proxyRule.setInterceptFlag(true);
+        //     }
+        //     callback(null);
+        // },
 
-            //set global proxy
-            function(callback) {
-                if (option.setAsGlobalProxy) {
-                    console.log('setting global proxy for you...');
-                    if(!/^win/.test(process.platform) && !process.env.SUDO_UID){
-                        console.log('sudo password may be required.');
-                    }
-                    var result = self.enableGlobalProxy();
-                    if (result.status) {
-                        callback(result.stdout);
-                    } else {
-                        if(/^win/.test(process.platform)){
-                            console.log('AnyProxy is now the default proxy for your system. It may take up to 1min to take effect.');
-                        } else{
-                            console.log('AnyProxy is now the default proxy for your system.');
-                        }
-                        callback(null);
-                    }
-                } else {
-                    callback(null);
-                }
-            },
+        //start web interface
+        function (callback) {
+          if (self.proxyWebinterfaceConfig && self.proxyWebinterfaceConfig.enable) {
+            const webInterface = require('./lib/webInterface');
+            self.webServerInstance = new webInterface(self.proxyWebinterfaceConfig, self);
+          }
+          callback(null);
+        },
+      ],
 
-            //server status manager
-            function(callback){
-                process.on("exit",function(code){
-                    logUtil.printLog('AnyProxy is about to exit with code: ' + code, logUtil.T_ERR);
+      //final callback
+      (err, result) => {
+        if (!err) {
+          const tipText = (self.proxyType === T_TYPE_HTTP ? 'Http' : 'Https') + ' proxy started on port ' + self.proxyPort;
+          logUtil.printLog(color.green(tipText));
 
-                    if (self.IS_GLOBAL_PROXY) {
-                        console.log('resigning global proxy...');
-                        var result = self.disableGlobalProxy();
+          if (self.webServerInstance) {
+            const webTip = 'web interface started on port ' + self.webServerInstance.webPort;
+            logUtil.printLog(color.green(webTip));
+          }
 
-                        if (result.status) {
-                            console.log(color.red(result.stdout));
-                        } else{
-                            console.log('global proxy resigned.');
-                        }
-                    }
-
-                    process.exit();
-                });
-
-                //exit cause ctrl+c
-                process.on("SIGINT", function() {
-                    if (self.IS_GLOBAL_PROXY) {
-                        self.disableGlobalProxy();
-                    }
-                    process.exit();
-                });
-
-                process.on("uncaughtException",function(err){
-                    logUtil.printLog('Caught exception: ' + (err.stack || err), logUtil.T_ERR);
-                    if (self.IS_GLOBAL_PROXY) {
-                        self.disableGlobalProxy();
-                    }
-                    process.exit();
-                });
-
-                callback(null);
-            }
-        ],
-
-        //final callback
-        function(err,result){
-            if(!err){
-                var webTip,webUrl;
-                webUrl = "http://" + ip.address() + ":" + proxyWebPort +"/";
-                webTip = "GUI interface started at : " + webUrl;
-                logUtil.printLog(color.green(webTip));
-
-                var tipText = (proxyType == T_TYPE_HTTP ? "Http" : "Https") + " proxy started at " + color.bold(ip.address() + ":" + proxyPort);
-                logUtil.printLog(color.green(tipText));
-            }else{
-                var tipText = "err when start proxy server :(";
-                logUtil.printLog(color.red(tipText), logUtil.T_ERR);
-                logUtil.printLog(err, logUtil.T_ERR);
-            }
+          self.status = PROXY_STATUS_READY;
+          self.emit('ready');
+        } else {
+          const tipText = 'err when start proxy server :(';
+          logUtil.printLog(color.red(tipText), logUtil.T_ERR);
+          logUtil.printLog(err, logUtil.T_ERR);
+          self.emit('error', {
+            error: err
+          });
         }
+      }
     );
 
-    self.close = function(){
-        self.httpProxyServer && self.httpProxyServer.close();
-        self.ws && self.ws.closeAll();
-        self.webServerInstance && self.webServerInstance.server && self.webServerInstance.server.close();
-        if (self.IS_GLOBAL_PROXY) {
-            self.disableGlobalProxy();
-        }
-        logUtil.printLog("server closed :" + proxyHost + ":" + proxyPort);
+    return self;
+  }
+  
+  
+  /**
+   * close the proxy server
+   * 
+   * @returns ProxyServer
+   * 
+   * @memberOf ProxyServer
+   */
+  close() {
+    // clear recorder cache
+    this.recorder && this.recorder.clear();
 
-    };
+    this.httpProxyServer && this.httpProxyServer.close();
+    this.webServerInstance && this.webServerInstance.close();
 
-    self.setIntercept = function (flag) {
-        currentRule.setInterceptFlag(flag);
-    };
+    this.recorder = null;
+    this.httpProxyServer = null;
+    this.webServerInstance = null;
 
-    self.getInterceptFlag = function () {
-        return currentRule.getInterceptFlag();
-    };
+    this.status = PROXY_STATUS_CLOSED;
+    logUtil.printLog('server closed ' + this.proxyHostName + ':' + this.proxyPort);
 
-    self.getGlobalProxyFlag = function () {
-        return self.IS_GLOBAL_PROXY;
-    };
-
-    self.enableGlobalProxy = function () {
-        self.IS_GLOBAL_PROXY = true;
-        return SystemProxyMgr.enableGlobalProxy('127.0.0.1', proxyPort, proxyType == T_TYPE_HTTP ? "Http" : "Https");
-    };
-
-    self.disableGlobalProxy = function () {
-        self.IS_GLOBAL_PROXY = false;
-        return SystemProxyMgr.disableGlobalProxy(proxyType == T_TYPE_HTTP ? "Http" : "Https");
-    };
-
-    self.getProxyPort = function () {
-        return proxyPort;
-    };
-
+    return this
+  }
 }
 
-module.exports.proxyServer        = proxyServer;
-module.exports.generateRootCA     = certMgr.generateRootCA;
-module.exports.isRootCAFileExists = certMgr.isRootCAFileExists;
-module.exports.setRules           = requestHandler.setRules;
+module.exports.ProxyServer = ProxyServer;
+module.exports.utils = {
+  systemProxyMgr: require('./lib/systemProxyMgr'),
+  certMgr,
+};
 
