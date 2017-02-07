@@ -31,18 +31,6 @@ Home page : [AnyProxy.io](http://anyproxy.io)
     * [HTTPS相关教程](https://github.com/alibaba/anyproxy/wiki/HTTPS%E7%9B%B8%E5%85%B3%E6%95%99%E7%A8%8B)，讲解如何配置AnyProxy的https特性
 * 中文主页：[http://anyproxy.io](http://anyproxy.io/cn)
 
-# [4.0.0-beta](../../tree/4.x) published!
-
- *With Asynchronous rule API supported, and a new designed UI.*
-
- **want to get a full control over your requests and responses? Just write a rule and return a Promise.** You can find the [full API docs of v4.0Beta](../../blob/4.x/doc/rule_api.md).
-
-> The new version is in Beta release. Don't hesitate to send your PR or report an issue, we hope to hear your voice!
-
-> `npm install -g anyproxy@beta`, hope you like it!
-
-<img src="https://zos.alipayobjects.com/rmsportal/HCAVzYcXaFYtPkBZDNHC.png" width="900" alt="AnyProxy screenshot" />
-
 Feature
 ------------
 * work as http or https proxy
