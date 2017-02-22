@@ -27,3 +27,4 @@ node_modules
 .lock-wscript
 temp
 tags
+auth.db
