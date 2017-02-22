@@ -122,7 +122,7 @@ function proxyServer(option){
                 });
             },
 
-            //creat proxy server
+            //create proxy server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){
                     certMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
