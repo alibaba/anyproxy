@@ -12,7 +12,7 @@ AnyProxy
 [download-image]: https://img.shields.io/npm/dm/anyproxy.svg?style=flat-square
 [download-url]: https://npmjs.org/package/anyproxy
 
-A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.
+A fully configurable HTTP/HTTPS proxy in NodeJS.
 
 Home page : [AnyProxy.io](http://anyproxy.io)
 
