@@ -52,6 +52,8 @@ var requestHandler = util.freshRequire('./requestHandler');
 //option.disableWebInterface
 //option.silent        : false(default)
 //option.interceptHttps ,internal param for https
+//option.auth          : false(default)
+//option.authFile      : __dirname/auth.db(default)
 function proxyServer(option){
     option = option || {};
 
@@ -63,11 +65,19 @@ function proxyServer(option){
         proxyWebPort        = option.webPort       || DEFAULT_WEB_PORT,       //port for web interface
         socketPort          = option.socketPort    || DEFAULT_WEBSOCKET_PORT, //port for websocket
         proxyConfigPort     = option.webConfigPort || DEFAULT_CONFIG_PORT,    //port to ui config server
-        disableWebInterface = !!option.disableWebInterface,
+        disableWebInterface = !!option.disablePersistence || !!option.disableWebInterface,
+        disablePersistence  = !!option.disablePersistence,
         ifSilent            = !!option.silent;
 
     if(ifSilent){
         logUtil.setPrintStatus(false);
+    }
+
+    if (option.auth) {
+        var Datastore = require('nedb');
+        global.auth = new Datastore({filename: option.authFile, autoload: true});
+        global.auth.persistence.setAutocompactionInterval(5001);
+        logUtil.printLog('proxy auth file loaded : ' + option.authFile);
     }
 
     // copy the rule to keep the original proxyRules independent
@@ -110,16 +120,18 @@ function proxyServer(option){
             //clear cache dir, prepare recorder
             function(callback){
                 util.clearCacheDir(function(){
-                    if(option.dbFile){
-                        global.recorder = new Recorder({filename: option.dbFile});
-                    }else{
-                        global.recorder = new Recorder();
+                    if (!option.disablePersistence) {
+                        if(option.dbFile){
+                            global.recorder = new Recorder({filename: option.dbFile});
+                        }else{
+                            global.recorder = new Recorder();
+                        }
                     }
                     callback();
                 });
             },
 
-            //creat proxy server
+            //create proxy server
             function(callback){
                 if(proxyType == T_TYPE_HTTPS){
                     certMgr.getCertificate(proxyHost,function(err,keyContent,crtContent){
@@ -153,8 +165,10 @@ function proxyServer(option){
 
             //start web socket service
             function(callback){
-                self.ws = new wsServer({port : socketPort});
-                callback(null);
+                if (!disableWebInterface) {
+                    self.ws = new wsServer({port : socketPort});
+                    callback(null);
+                }
             },
 
             //start web interface

@@ -5,6 +5,7 @@
 
 let proxy = require('../../proxy.js');
 const util = require('../../lib/util.js');
+const path = require('path');
 
 const DEFAULT_OPTIONS = {
     type: "http",
@@ -58,8 +59,19 @@ function proxyServerWithoutHttpsIntercept (rule) {
     return new proxy.proxyServer(options);
 }
 
+function proxyServerWithProxyAuth () {
+    proxy = util.freshRequire('../proxy.js');
+
+    const options = util.merge({}, DEFAULT_OPTIONS);
+    options.auth = true;
+    options.authFile = path.resolve(process.cwd(), 'test/data/auth.db');
+
+    return new proxy.proxyServer(options);
+}
+
 module.exports = {
     defaultProxyServer,
     proxyServerWithoutHttpsIntercept,
-    proxyServerWithRule
+    proxyServerWithRule,
+    proxyServerWithProxyAuth
 };

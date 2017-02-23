@@ -15,6 +15,8 @@ program
     .option('-t, --type [value]', 'http|https, http for default')
     .option('-p, --port [value]', 'proxy port, 8001 for default')
     .option('-w, --web [value]' , 'web GUI port, 8002 for default')
+    .option('-I, --no-webinterface', 'disable WebInterface')
+    .option('-P, --no-persistence', 'disable data persistence, will also disable WebInterface')
     .option('-f, --file [value]', 'save request data to a specified file, will use in-memory db if not specified')
     .option('-r, --rule [value]', 'path for rule file,')
     .option('-g, --root [value]', 'generate root CA')
@@ -23,8 +25,15 @@ program
     .option('-s, --silent', 'do not print anything into terminal')
     .option('-c, --clear', 'clear all the tmp certificates')
     .option('-o, --global', 'set as global proxy for system')
+    .option('-A, --auth', 'enable proxy authorization')
+    .option('-a, --adduser <user> <password> [<user> <password>]...', 'add proxy user')
+    .option('-m, --moduser <user> <password>', 'modify proxy user password')
+    .option('-d, --deluser <user> [user]...', 'delete proxy user')
+    .option('-F, --authFile [value]', 'save proxy auth data to a specified file, if not specified use __dirname/auth.db')
     .option('install', '[alpha] install node modules')
     .parse(process.argv);
+
+var authFile = program.authFile ? path.resolve(process.cwd(), program.authFile) : path.resolve(__dirname, 'auth.db');
 
 if(program.clear){
     require("./lib/certMgr").clearCerts(function(){
@@ -46,6 +55,58 @@ if(program.clear){
         });
         npm.registry.log.on("log", function (message) {});
     });
+}else if (program.adduser || program.deluser || program.moduser){
+    var db, Datastore = require('nedb'),
+        args = program.args,
+        users = [];
+
+    try {
+        db = new Datastore({filename: authFile, autoload: true});
+        db.ensureIndex({ fieldName: 'username', unique: true});
+        db.persistence.setAutocompactionInterval(5001);
+
+        console.log("proxy auth file : " + authFile);
+    } catch (e) {
+        console.log('create proxy auth database file failed, ' + e);
+        process.exit(-1);
+    }
+
+    if (program.adduser) {
+        args.unshift(program.adduser);
+
+        if (args.length % 2 !== 0) {
+            console.log('add user failed, every user must be set a password.');
+            process.exit(-1);
+        }
+
+        for (var i = 0; i < args.length; i += 2) {
+            users.push({username: args[i], password: args[i + 1]});
+        }
+
+        db.insert(users, function (err) {
+            err && console.log('create proxy user failed: ' + err.message);
+        });
+    } else if (program.deluser) {
+        args.push(program.deluser);
+
+        args.forEach(function (user) {
+            db.remove({username: user}, {}, function (err) {
+                err && console.log('delete user failed: ' + err.message);
+            });
+        });
+    } else {
+        if (args.length <= 0) {
+            console.log('user password must be set.');
+            process.exit(-1);
+        }
+
+        db.update({username: program.moduser}, {username: program.moduser, password: args[0]}, {upsert: true}, function (err) {
+            err && console.log('modify proxy user failed: ' + err.message);
+        });
+    }
+
+    // db.persistence.compactDatafile();
+    db.persistence.stopAutocompaction();
 }else{
     var proxy = require("./proxy.js");
     var ruleModule;
@@ -91,9 +152,12 @@ if(program.clear){
         throttle            : program.throttle,
         webPort             : program.web,
         rule                : ruleModule,
-        disableWebInterface : false,
+        disableWebInterface : !program.persistence || !program.webinterface,
+        disablePersistence  : !program.persistence,
         setAsGlobalProxy    : program.global,
         interceptHttps      : program.intercept,
-        silent              : program.silent
+        silent              : program.silent,
+        auth                : program.auth,
+        authFile            : authFile
     });
 }
