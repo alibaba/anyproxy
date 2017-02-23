@@ -115,13 +115,6 @@ if(program.clear){
         logUtil.setPrintStatus(false);
     }
 
-    if (program.auth) {
-        var Datastore = require('nedb');
-        global.auth = new Datastore({filename: authFile, autoload: true});
-        global.auth.persistence.setAutocompactionInterval(5001);
-        logUtil.printLog('proxy auth file loaded : ' + authFile);
-    }
-
     if(program.rule){
         var ruleFilePath = path.resolve(process.cwd(),program.rule);
         try{
@@ -163,6 +156,8 @@ if(program.clear){
         disablePersistence  : !program.persistence,
         setAsGlobalProxy    : program.global,
         interceptHttps      : program.intercept,
-        silent              : program.silent
+        silent              : program.silent,
+        auth                : program.auth,
+        authFile            : authFile
     });
 }

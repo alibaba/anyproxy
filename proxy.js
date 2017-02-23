@@ -52,6 +52,8 @@ var requestHandler = util.freshRequire('./requestHandler');
 //option.disableWebInterface
 //option.silent        : false(default)
 //option.interceptHttps ,internal param for https
+//option.auth          : false(default)
+//option.authFile      : __dirname/auth.db(default)
 function proxyServer(option){
     option = option || {};
 
@@ -69,6 +71,13 @@ function proxyServer(option){
 
     if(ifSilent){
         logUtil.setPrintStatus(false);
+    }
+
+    if (option.auth) {
+        var Datastore = require('nedb');
+        global.auth = new Datastore({filename: option.authFile, autoload: true});
+        global.auth.persistence.setAutocompactionInterval(5001);
+        logUtil.printLog('proxy auth file loaded : ' + option.authFile);
     }
 
     // copy the rule to keep the original proxyRules independent
