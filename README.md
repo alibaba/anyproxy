@@ -123,7 +123,7 @@ AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模�
 
 * Step 4, 查看请求信息
 
-  * 浏览器访问http://127.0.0.1:8002，界面上能看到刚才的请求信息
+  * 浏览器访问http://127.0.0.1:8002 ，界面上能看到刚才的请求信息
 
 ### 处理流程
 
@@ -140,6 +140,7 @@ AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模�
   * 被明文解析后的https请求，处理流程同http一致。未明文解析请求不会再进入规则模块做处理。
 
 * 完整的请求处理流程如下，供参考
+
 ![](https://zos.alipayobjects.com/rmsportal/TWyNuSJtEZBdrdcOMRjE.png@600w)
 
 ### 如何引用
@@ -502,4 +503,4 @@ A: 只需配置http代理服务器即可，AnyProxy支持 **CONNECT** 请求，�
 
 * Android HTTP代理配置
 
-![](http://alipay-os.oss-cn-hangzhou-zmf.aliyuncs.com/rmsportal/xEMKcQifsevRbfUWUejf.png)
+![](https://zos.alipayobjects.com/rmsportal/YQtbQYVNuOszZGdAOauU.png@300w)
