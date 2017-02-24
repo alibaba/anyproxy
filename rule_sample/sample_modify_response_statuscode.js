@@ -1,8 +1,6 @@
 /* 
   sample: 
     modify all status code of http://httpbin.org/ to 404
-  start proyx:
-    anyproxy --rule sample_modify_response_statuscode.js
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:

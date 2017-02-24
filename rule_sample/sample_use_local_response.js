@@ -1,8 +1,6 @@
 /* 
   sample: 
     intercept all requests toward httpbin.org, use a local response
-  start proyx:
-    anyproxy --rule sample_use_local_response.js
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
 */

@@ -1,8 +1,6 @@
 /* 
   sample: 
     redirect all http requests of httpbin.org to https
-  start proyx:
-    anyproxy --rule sample_modify_request_protocol.js
   test:
     curl 'http://httpbin.org/get?show_env=1' --proxy http://127.0.0.1:8001
   expected response:

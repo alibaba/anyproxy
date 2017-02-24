@@ -1,8 +1,6 @@
 /* 
   sample: 
     modify response data of http://httpbin.org/user-agent
-  start proyx:
-    anyproxy --rule sample.js
   test:
     curl 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:

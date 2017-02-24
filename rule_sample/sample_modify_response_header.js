@@ -1,8 +1,6 @@
 /* 
   sample: 
     modify response header of http://httpbin.org/user-agent
-  start proyx:
-    anyproxy --rule sample_modify_response_header.js
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:
