@@ -1,3 +1,7 @@
+26 Feb 2016: AnyProxy 3.10.4:
+
+   * let users assign the port for web socket in AnyProxy cli
+
 19 Sep 2016: AnyProxy 3.10.3:
 
     * fix the cert path issue with Windows
