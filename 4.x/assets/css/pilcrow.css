@@ -1,0 +1,47 @@
+/* needed because the container has overflow: hidden, but the pilcrows overflow */
+.markdown-body {
+  padding-left: 30px;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+}
+
+.markdown-body h1:hover .header-link:before,
+.markdown-body h2:hover .header-link:before,
+.markdown-body h3:hover .header-link:before,
+.markdown-body h4:hover .header-link:before,
+.markdown-body h5:hover .header-link:before,
+.markdown-body h6:hover .header-link:before {
+    content: "\00B6";/* pilcrow */
+    color: #888;
+    font-size: smaller;
+}
+
+.markdown-body .header-link {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  position: absolute;
+  top: 0;
+  left: -0.7em;
+  display: block;
+  padding-right: 1em;
+}
+
+.markdown-body h1:hover .header-link,
+.markdown-body h2:hover .header-link,
+.markdown-body h3:hover .header-link,
+.markdown-body h4:hover .header-link,
+.markdown-body h5:hover .header-link,
+.markdown-body h6:hover .header-link {
+  display: inline-block;
+  text-decoration: none;
+}

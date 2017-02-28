@@ -23,7 +23,7 @@ body {
   z-index: 1;
   width: 100%;
   text-align: right;
-  color: #5a5a5a;
+  color: #5A5A5A;
 }
 .wrapper .cornerBtnWrapper a {
   display: inline-block;
@@ -36,7 +36,7 @@ body {
 }
 .wrapper a {
   font-size: 16px;
-  color: #00aaee;
+  color: #00AAEE;
 }
 .wrapper h4.subTitle {
   font-size: 30px;
@@ -44,7 +44,7 @@ body {
   padding: 50px 0 10px 0;
   width: 100%;
   text-align: center;
-  color: #5a5a5a;
+  color: #5A5A5A;
 }
 .wrapper h4.subTitle.white {
   color: #FFF;
@@ -57,12 +57,12 @@ body {
   border: 1px solid #FFF;
 }
 .wrapper .actionBtn.actionBtnWhite:hover {
-  background: #f9f9f9;
-  color: #326eeb;
+  background: #F9F9F9;
+  color: #326EEB;
 }
 .wrapper .actionBtn {
-  color: #326eeb;
-  border: 1px solid #326eeb;
+  color: #326EEB;
+  border: 1px solid #326EEB;
   line-height: 30px;
   font-size: 30px;
   padding: 20px 45px;
@@ -77,8 +77,8 @@ body {
   }
 }
 .wrapper .actionBtn:hover {
-  background: #326eeb;
-  color: #f9f9f9;
+  background: #326EEB;
+  color: #F9F9F9;
 }
 .wrapper > div {
   width: 100%;
@@ -103,11 +103,11 @@ body {
 }
 .brief .slogan {
   font-size: 16px;
-  color: #5a5a5a;
+  color: #5A5A5A;
   padding: 0 20px;
 }
 .feature {
-  background: #dedede;
+  background: #DEDEDE;
 }
 .feature .featureContent {
   width: 1200px;
@@ -135,18 +135,18 @@ body {
   width: 70px;
   text-align: center;
   font-size: 40px;
-  color: #5a5a5a;
+  color: #5A5A5A;
 }
 .feature .featureContent .iconWrapper .bigger {
   font-size: 44px;
 }
 .feature .featureContent h4 {
-  color: #5a5a5a;
+  color: #5A5A5A;
   margin: 12px auto 2px;
   font-size: 20px;
 }
 .feature .featureContent h5 {
-  color: #777777;
+  color: #777;
   margin: 0;
 }
 .feature .featureContent h5,
@@ -174,7 +174,7 @@ body {
   }
 }
 .quickstart {
-  background: #f9f9f9;
+  background: #F9F9F9;
 }
 .quickstart .quickstartContent {
   position: relative;
@@ -213,12 +213,12 @@ body {
   }
 }
 .listSection li {
-  color: #5a5a5a;
+  color: #5A5A5A;
   font-size: 16px;
   line-height: 40px;
 }
 .sample {
-  background: #f9f9f9;
+  background: #F9F9F9;
 }
 .sample .sampleContent {
   width: 890px;
@@ -235,7 +235,7 @@ body {
 .sample .itemTitle {
   font-size: 16px;
   margin: 0px 10px;
-  color: #5a5a5a;
+  color: #5A5A5A;
 }
 @media only screen and (min-device-width: 320px) and (max-device-width: 600px) and (-webkit-min-device-pixel-ratio: 2) {
   .sample .itemTitle {
@@ -275,7 +275,7 @@ body {
 }
 .sample hr {
   border: none;
-  border-top: 1px solid #777777;
+  border-top: 1px solid #777;
   width: 80%;
   margin: 0 auto;
   padding: 15px 0;
@@ -285,11 +285,11 @@ body {
   padding-bottom: 20px;
 }
 .readMore {
-  background: #f9f9f9;
+  background: #F9F9F9;
   padding-bottom: 50px;
 }
 .learnMore {
-  background: #326eeb;
+  background: #326EEB;
   text-align: center;
   position: relative;
   padding: 120px 0;

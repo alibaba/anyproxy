@@ -1,7 +1,7 @@
 {
 	"cn":{
 		"language":"cn",
-		"summary":"AnyProxy是一个开放式的HTTP/HTTPS代理，你可以灵活控制各种网络数据",
+		"summary":"AnyProxy 4.x版正在Beta中，欢迎试用 Ref：<a href=\"/4.x/\">AnyProxy 4.x 文档</a>",
 		"featureA":"基于Node.js",
 		"featureADesc":"全程JavaScript，学习无压力",
 		"featureB":"支持Https",
