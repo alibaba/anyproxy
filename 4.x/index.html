@@ -341,8 +341,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_use_local_response.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     intercept all requests toward httpbin.org, use a local response
-  start proyx:
-    anyproxy --rule sample_use_local_response.js
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
 */</span>
@@ -366,8 +364,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_header.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     modify the user-agent in requests toward httpbin.org
-  start proyx:
-    anyproxy --rule sample_modify_request_header.js
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
 */</span>
@@ -388,21 +384,16 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     modify the post data towards http://httpbin.org/post
-  start proyx:
-    anyproxy --rule sample_modify_request_data.js
   test:
-    curl http://httpbin.org/ --proxy http://127.0.0.1:8001
+    curl -H "Content-Type: text/plain" -X POST -d 'original post data' http://httpbin.org/post --proxy http://127.0.0.1:8001
   expected response:
     { "data": "i-am-anyproxy-modified-post-data" }
-
 */</span>
 <span class="hljs-built_in">module</span>.exports = {
   *beforeSendRequest(requestDetail) {
-    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">'http://httpbin.org'</span>) === <span class="hljs-number">0</span>) {
-      <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
-      newRequestOptions.headers[<span class="hljs-string">'User-Agent'</span>] = <span class="hljs-string">'AnyProxy/0.0.0'</span>;
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">'http://httpbin.org/post'</span>) === <span class="hljs-number">0</span>) {
       <span class="hljs-keyword">return</span> {
-        <span class="hljs-attr">requestOptions</span>: newRequestOptions
+        <span class="hljs-attr">requestData</span>: <span class="hljs-string">'i-am-anyproxy-modified-post-data'</span>
       };
     }
   },
@@ -413,8 +404,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_path.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     redirect all httpbin.org requests to http://httpbin.org/user-agent
-  start proyx:
-    anyproxy --rule sample_modify_request_path.js
   test:
     curl http://httpbin.org/any-path --proxy http://127.0.0.1:8001
   expected response:
@@ -438,8 +427,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_protocol.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     redirect all http requests of httpbin.org to https
-  start proyx:
-    anyproxy --rule sample_modify_request_protocol.js
   test:
     curl 'http://httpbin.org/get?show_env=1' --proxy http://127.0.0.1:8001
   expected response:
@@ -463,8 +450,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_statuscode.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     modify all status code of http://httpbin.org/ to 404
-  start proyx:
-    anyproxy --rule sample_modify_response_statuscode.js
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:
@@ -487,8 +472,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_header.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     modify response header of http://httpbin.org/user-agent
-  start proyx:
-    anyproxy --rule sample_modify_response_header.js
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:
@@ -511,8 +494,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
     modify response data of http://httpbin.org/user-agent
-  start proyx:
-    anyproxy --rule sample.js
   test:
     curl 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
   expected response:
