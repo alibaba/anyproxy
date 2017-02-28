@@ -1,6 +1,8 @@
 AnyProxy
 ==========
 
+> AnyProxy 4.x正在Beta中，欢迎试用！文档：http://anyproxy.io/4.x/
+
 [![NPM version][npm-image]][npm-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
