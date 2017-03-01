@@ -690,6 +690,7 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 
   <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
   <script>
+  window.onload = function(){
     var itemList = [];
     var targetMap = {};
     $("[id]", ".main-content").map(function (index, heading) {
@@ -707,20 +708,17 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
     var updateTocActive = function (e) {
       var windowHeight = window.innerHeight;
       //find the first item to match
-      var scrollY = window.scrollY;
+      var scrollYThres = window.scrollY + 200;
       var target;
-      if (scrollY < 100) {
+      if (scrollYThres < 100) {
         target = itemList[0].tocItem;
       } else {
         itemList.forEach(function (item, index) {
           if (target) return;
-
-          if (index < itemList.length - 1) {
-            if (item.top <= scrollY + windowHeight / 2 && itemList[index + 1].top > scrollY + windowHeight / 2) {
-              target = item.tocItem;
+          if (index > 0) {
+            if (item.top >= scrollYThres) {
+              target = itemList[index - 1].tocItem;
             }
-          } else {
-            target = item.tocItem;
           }
         });
       }
@@ -731,6 +729,7 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 
     window.onscroll = updateTocActive;
     updateTocActive();
+  }
   </script>
 </body>
 
