@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict'
+
 // exist-false, trusted-false : create CA
 // exist-true,  trusted-false : trust CA
 // exist-true,  trusted-true  : all things done
