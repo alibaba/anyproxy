@@ -29,11 +29,19 @@
     <li class="sidebar-header-3"><a href="#开发示例">开发示例</a></li>
     <li class="sidebar-header-3"><a href="#处理流程">处理流程</a></li>
     <li class="sidebar-header-3"><a href="#如何引用">如何引用</a></li>
-    <li class="sidebar-header-3"><a href="#接口详解">接口详解</a></li>
+    <li class="sidebar-header-2"><a href="#规则接口文档">规则接口文档</a></li>
+    <li class="sidebar-header-3"><a href="#summary">summary</a></li>
     <li class="sidebar-header-4"><a href="#summary()">summary()</a></li>
+    <li class="sidebar-header-3"><a href="#beforesendrequest">beforeSendRequest</a></li>
     <li class="sidebar-header-4"><a href="#beforesendrequest(requestdetail)">beforeSendRequest(requestDetail)</a></li>
+    <li class="sidebar-header-3"><a href="#beforesendresponse">beforeSendResponse</a></li>
     <li class="sidebar-header-4"><a href="#beforesendresponse(requestdetail,-responsedetail)">beforeSendResponse(requestDetail, responseDetail)</a></li>
+    <li class="sidebar-header-3"><a href="#beforedealhttpsrequest">beforeDealHttpsRequest</a></li>
     <li class="sidebar-header-4"><a href="#beforedealhttpsrequest(requestdetail)">beforeDealHttpsRequest(requestDetail)</a></li>
+    <li class="sidebar-header-3"><a href="#onerror">onError</a></li>
+    <li class="sidebar-header-4"><a href="#onerror(requestdetail,-error)">onError(requestDetail, error)</a></li>
+    <li class="sidebar-header-3"><a href="#onconnecterror">onConnectError</a></li>
+    <li class="sidebar-header-4"><a href="#onconnecterror(requestdetail,-error)">onConnectError(requestDetail, error)</a></li>
     <li class="sidebar-header-3"><a href="#faq">FAQ</a></li>
     <li class="sidebar-header-2"><a href="#规则模块样例">规则模块样例</a></li>
     <li class="sidebar-header-3"><a href="#使用本地数据">使用本地数据</a></li>
@@ -170,7 +178,11 @@ anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所�
 </ul>
 <h3 id="处理流程"><a class="header-link" href="#处理流程"></a>处理流程</h3>
 <ul class="list">
-<li><p>当http请求经过代理服务器时，代理服务器的处理流程是：</p>
+<li>处理流程图如下</li>
+</ul>
+<p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/TWyNuSJtEZBdrdcOMRjE.png" width="550" /></p>
+<ul class="list">
+<li><p>当http请求经过代理服务器时，代理服务器的具体流程是：</p>
 <ul class="list">
 <li>收集请求所有请求参数，包括method, header, body等</li>
 <li>AnyProxy调用规则模块<code>beforeSendRequest</code>方法，由模块做处理，返回新的请求参数，或返回响应内容</li>
@@ -186,10 +198,7 @@ anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所�
 <li>被明文解析后的https请求，处理流程同http一致。未明文解析请求不会再进入规则模块做处理。</li>
 </ul>
 </li>
-<li><p>完整的请求处理流程如下，供参考</p>
-</li>
 </ul>
-<p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/TWyNuSJtEZBdrdcOMRjE.png" width="550" /></p>
 <h3 id="如何引用"><a class="header-link" href="#如何引用"></a>如何引用</h3>
 <p>如下几种方案都可以用来引用规则模块：</p>
 <ul class="list">
@@ -203,17 +212,27 @@ anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所�
 <pre class="hljs"><code>anyproxy --rule ./myRulePkg/ <span class="hljs-comment">#本地包</span>
 npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-comment">#全局包</span></code></pre></li>
 </ul>
-<h3 id="接口详解"><a class="header-link" href="#接口详解"></a>接口详解</h3>
-<p>规则模块应该符合cmd规范，一个典型的规则模块代码结构如下</p>
+<h2 id="规则接口文档"><a class="header-link" href="#规则接口文档"></a>规则接口文档</h2>
+<p>规则模块应该符合cmd规范，一个典型的规则模块代码结构如下。模块中所有方法都是可选的，只需实现业务感兴趣的部分即可。</p>
 <pre class="hljs"><code><span class="hljs-built_in">module</span>.exports = {
-  summary() { <span class="hljs-keyword">return</span> <span class="hljs-string">'my customized rule for AnyProxy'</span>; },
-  *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> },
-  *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> },
-  *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }
-};</code></pre><h4 id="summary()"><a class="header-link" href="#summary()"></a>summary()</h4>
+  <span class="hljs-comment">// 模块介绍</span>
+  summary() { <span class="hljs-keyword">return</span> <span class="hljs-string">'my customized rule for AnyProxy'</span>; }, 
+  <span class="hljs-comment">// 发送请求前拦截处理</span>
+  *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  <span class="hljs-comment">// 发送响应前处理</span>
+  *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  <span class="hljs-comment">// 是否处理https请求</span>
+  *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  <span class="hljs-comment">// 请求出错的事件</span>
+  *onError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> }, 
+  <span class="hljs-comment">// https连接服务器出错</span>
+  *onConnectError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> } 
+};</code></pre><h3 id="summary"><a class="header-link" href="#summary"></a>summary</h3>
+<h4 id="summary()"><a class="header-link" href="#summary()"></a>summary()</h4>
 <ul class="list">
 <li>返回规则模块介绍，用于AnyProxy提示用户</li>
 </ul>
+<h3 id="beforesendrequest"><a class="header-link" href="#beforesendrequest"></a>beforeSendRequest</h3>
 <h4 id="beforesendrequest(requestdetail)"><a class="header-link" href="#beforesendrequest(requestdetail)"></a>beforeSendRequest(requestDetail)</h4>
 <ul class="list">
 <li>AnyProxy向服务端发送请求前，会调用<code>beforeSendRequest</code>，并带上参数<code>requestDetail</code></li>
@@ -225,7 +244,7 @@ npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-commen
 <li><code>_req</code> {object} 请求的原始request</li>
 </ul>
 </li>
-<li><p>举例：请求 <em>anyproxy.io</em> 时，requestDetail参数内容大致如下</p>
+<li><p>举例：请求 <em>anyproxy.io</em> 时，<code>requestDetail</code>参数内容大致如下</p>
 <pre class="hljs"><code>{
   <span class="hljs-attr">protocol</span>: <span class="hljs-string">'http'</span>,
   <span class="hljs-attr">url</span>: <span class="hljs-string">'http://anyproxy.io/'</span>,
@@ -266,14 +285,17 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
   <span class="hljs-attr">requestData</span>: <span class="hljs-string">'my new request data'</span>
   <span class="hljs-comment">//这里也可以同时加上requestOptions</span>
 };</code></pre><ul class="list">
-<li>直接返回客户端，不再发起请求</li>
+<li>直接返回客户端，不再发起请求，其中<code>statusCode</code> <code>header</code> 是必选字段</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> {
-  <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
-  <span class="hljs-attr">header</span>: { <span class="hljs-string">'content-type'</span>: <span class="hljs-string">'text/html'</span> },
-  <span class="hljs-attr">body</span>: <span class="hljs-string">'this could be a &lt;string&gt; or &lt;buffer&gt;'</span>
+  <span class="hljs-attr">response</span>: {
+    <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">header</span>: { <span class="hljs-string">'content-type'</span>: <span class="hljs-string">'text/html'</span> },
+    <span class="hljs-attr">body</span>: <span class="hljs-string">'this could be a &lt;string&gt; or &lt;buffer&gt;'</span>
+  }
 };</code></pre></li>
 </ul>
+<h3 id="beforesendresponse"><a class="header-link" href="#beforesendresponse"></a>beforeSendResponse</h3>
 <h4 id="beforesendresponse(requestdetail,-responsedetail)"><a class="header-link" href="#beforesendresponse(requestdetail,-responsedetail)"></a>beforeSendResponse(requestDetail, responseDetail)</h4>
 <ul class="list">
 <li>AnyProxy向客户端发送请求前，会调用<code>beforeSendResponse</code>，并带上参数<code>requestDetail</code> <code>responseDetail</code></li>
@@ -283,7 +305,19 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
 <li><code>_res</code> {object} 原始的服务端返回对象</li>
 </ul>
 </li>
-<li>举例，请求www.qq.com时，responseDetail参数内容大致如下</li>
+<li><p>举例，请求 <em>anyproxy.io</em> 时，<code>responseDetail</code>参数内容大致如下</p>
+<pre class="hljs"><code>{ 
+  <span class="hljs-attr">response</span>: { 
+    <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">header</span>: { 
+      <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'image/gif'</span>,
+      <span class="hljs-attr">Connection</span>: <span class="hljs-string">'close'</span>,
+      <span class="hljs-string">'Cache-Control'</span>: <span class="hljs-string">'...'</span>
+    },
+    <span class="hljs-attr">body</span>: <span class="hljs-string">'...'</span>
+  },
+  <span class="hljs-attr">_res</span>: { <span class="hljs-comment">/* ... */</span> }
+}</code></pre></li>
 <li><p>以下几种返回都是合法的</p>
 <ul class="list">
 <li>不做任何处理，返回null</li>
@@ -304,6 +338,7 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
   <span class="hljs-attr">response</span>: newResponse
 };</code></pre></li>
 </ul>
+<h3 id="beforedealhttpsrequest"><a class="header-link" href="#beforedealhttpsrequest"></a>beforeDealHttpsRequest</h3>
 <h4 id="beforedealhttpsrequest(requestdetail)"><a class="header-link" href="#beforedealhttpsrequest(requestdetail)"></a>beforeDealHttpsRequest(requestDetail)</h4>
 <ul class="list">
 <li>AnyProxy收到https请求时，会调用<code>beforeDealHttpsRequest</code>，并带上参数<code>requestDetail</code></li>
@@ -316,9 +351,37 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 </ul>
 </li>
 <li>返回值<ul class="list">
-<li><code>true</code>或者<code>false</code>，是否需要AnyProxy解析https</li>
+<li><code>true</code>或者<code>false</code>，表示是否需要AnyProxy替换证书并解析https</li>
 </ul>
 </li>
+</ul>
+<h3 id="onerror"><a class="header-link" href="#onerror"></a>onError</h3>
+<h4 id="onerror(requestdetail,-error)"><a class="header-link" href="#onerror(requestdetail,-error)"></a>onError(requestDetail, error)</h4>
+<ul class="list">
+<li>在请求处理过程中发生错误时，AnyProxy会调用<code>onError</code>方法，并提供对应的错误信息</li>
+<li>多数场景下，错误会在请求目标服务器的时候发生，比如DNS解析失败、请求超时等</li>
+<li><code>requestDetail</code> 同<code>beforeSendRequest</code>中的参数</li>
+<li><p>以下几种返回都是合法的</p>
+<ul class="list">
+<li>不做任何处理。此时AnyProxy会返回一个默认的错误页。</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</code></pre><ul class="list">
+<li>返回自定义错误页</li>
+</ul>
+<pre class="hljs"><code><span class="hljs-keyword">return</span> {
+  <span class="hljs-attr">response</span>: {
+    <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
+    <span class="hljs-attr">header</span>: { <span class="hljs-string">'content-type'</span>: <span class="hljs-string">'text/html'</span> },
+    <span class="hljs-attr">body</span>: <span class="hljs-string">'this could be a &lt;string&gt; or &lt;buffer&gt;'</span>
+  }
+};</code></pre></li>
+</ul>
+<h3 id="onconnecterror"><a class="header-link" href="#onconnecterror"></a>onConnectError</h3>
+<h4 id="onconnecterror(requestdetail,-error)"><a class="header-link" href="#onconnecterror(requestdetail,-error)"></a>onConnectError(requestDetail, error)</h4>
+<ul class="list">
+<li>AnyProxy在与目标HTTPS服务器建立连接的过程中，如果发生错误，AnyProxy会调用这个方法</li>
+<li><code>requestDetail</code> 同<code>beforeDealHttpsRequest</code>中的参数</li>
+<li>此处无法控制向客户端的返回信息，无需返回值。</li>
 </ul>
 <h3 id="faq"><a class="header-link" href="#faq"></a>FAQ</h3>
 <ul class="list">

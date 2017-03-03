@@ -30,7 +30,9 @@ body{
 .toc-container{
   width: 200px;
   position: fixed;
-  top: 42px;
+  top: 20px;
+  height: 95vh;
+  overflow-y: auto;
 }
 
 .toc-container ul{
