@@ -46,8 +46,10 @@
   },
   "scripts": {
     "test": "sh test/test.sh",
-    "testserver": "node test/server/startServer.js"
+    "testserver": "node test/server/startServer.js",
+    "no-pre-commit": "exit 0"
   },
+  "pre-commit": "no-pre-commit",
   "repository": {
     "type": "git",
     "url": "https://github.com/alibaba/anyproxy"

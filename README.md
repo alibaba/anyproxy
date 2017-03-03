@@ -133,7 +133,7 @@ Contact
 -----------------
 
 * Please feel free to [raise issue](https://github.com/alibaba/anyproxy/issues), or give us some advice. :)
-* AnyProxy用户旺旺群：1203077233
+* AnyProxy用户旺旺群已经停止维护，任何疑问可以直接[提issue](https://github.com/alibaba/anyproxy/issues) :)
 
 
 License
