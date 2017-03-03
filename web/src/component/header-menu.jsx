@@ -230,30 +230,6 @@ class HeaderMenu extends React.Component {
                     <span>Clear</span>
                 </a>
 
-                <span className={Style.menuItemSpliter} />
-
-                <a
-                    className={interceptHttpsStyle}
-                    href="javascript:void(0)"
-                    onClick={this.togglerHttpsIntercept}
-                    title="Enable or Disable the HTTPS intercept"
-                >
-                    <div className={Style.eyeIcon} >
-                        <InlineSVG src={require("svg-inline!assets/view-eye.svg")} />
-                    </div>
-                    <span>Inercept HTTPS</span>
-                </a>
-
-                <a
-                    className={globalProxyStyle}
-                    href="javascript:void(0)"
-                    onClick={this.toggleGlobalProxyFlag}
-                    title="Enable or Disable the HTTPS intercept"
-                >
-                    <InlineSVG src={require("svg-inline!assets/touchmeter.svg")} />
-                    <span>System Proxy</span>
-                </a>
-
                 <Popover
                     content={runningInfoDiv}
                     trigger="click"
