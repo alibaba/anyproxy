@@ -34,8 +34,8 @@ const ruleReturnAnErrorPage = {
   }
 };
 
-// testWrapper('http');
-// testWrapper('https');
+testWrapper('http');
+testWrapper('https');
 testHttpsConnect();
 
 function testWrapper(protocol) {
@@ -121,7 +121,7 @@ function testHttpsConnect() {
     // let serverInstance;
 
     beforeAll((done) => {
-      errorInConnect = null;      
+      errorInConnect = null;
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
       printLog('Start server for rule_deal_error_custom_error_page');
 
@@ -152,5 +152,3 @@ function testHttpsConnect() {
     });
   });
 }
-
-

@@ -139,7 +139,7 @@ class RecordDetail extends React.Component {
 
         const self = this;
 
-        let reqBodyDiv = <div>message={recordDetail.resBody} </div>;
+        let reqBodyDiv = <div>{recordDetail.resBody} </div>;
 
         switch (recordDetail.type) {
             case 'image': {

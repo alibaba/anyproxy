@@ -4,30 +4,30 @@
 */
 import { message } from 'antd';
 
-export function initWs (key = '') {
-    if(!WebSocket){
-        throw (new Error("WebSocket is not supportted on this browser"));
-    }
+export function initWs(wsPort = 8003, key = '') {
+  if(!WebSocket){
+    throw (new Error('WebSocket is not supportted on this browser'));
+  }
 
-    const wsClient = new WebSocket('ws://localhost:8003/' + key);
+  const wsClient = new WebSocket(`ws://localhost:${wsPort}/${key}`);
 
-    wsClient.onerror = (error) => {
-        console.error(error);
-        message.error('error happened when setup websocket');
-    };
+  wsClient.onerror = (error) => {
+    console.error(error);
+    message.error('error happened when setup websocket');
+  };
 
-    wsClient.onopen = (e) => {
-        console.info('websocket opened: ', e);
-    };
+  wsClient.onopen = (e) => {
+    console.info('websocket opened: ', e);
+  };
 
-    wsClient.onclose = (e) => {
-        console.info('websocket closed: ', e);
-    };
+  wsClient.onclose = (e) => {
+    console.info('websocket closed: ', e);
+  };
 
-    return wsClient;
+  return wsClient;
 }
 
 export default {
-    initWs: initWs
+  initWs: initWs
 };
 

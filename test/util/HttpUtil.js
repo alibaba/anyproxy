@@ -1,3 +1,4 @@
+/* eslint prefer-arrow-callback: 0 */
 /**
  * An util to make the request out
  *
@@ -5,6 +6,7 @@
 const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
+const phantom = require('phantom');
 const HttpsProxyAgent = require('https-proxy-agent');
 
 const PROXY_HOST = 'http://localhost:8001';
@@ -231,6 +233,50 @@ function isViaProxy(req) {
   return req.headers['via-proxy'] === 'true';
 }
 
+/*
+* check if url is supported by request moudle
+*/
+function isSupportedProtocol(requestPath) {
+  return requestPath.indexOf('http://') === 0 || requestPath.indexOf('https://') === 0;
+}
+
+/*
+* collect all request data in one url
+*/
+function getRequestData(pageUrl, cb) {
+  let _ph;
+  let _page;
+  let _outObj;
+  return phantom.create().then(ph => {
+    console.log('step 1: create page');
+    _ph = ph;
+    return _ph.createPage();
+  }).then(page => {
+    console.log('step 2: bind event');
+    _page = page;
+    _outObj = _ph.createOutObject();
+    _outObj.urls = [];
+    page.property('onResourceRequested', function (requestData, networkRequest, out) {
+      out.urls.push(requestData);
+    }, _outObj);
+    return _page.open(pageUrl);
+  })
+  .then(status => {
+    console.log('step 3: get urls');
+    return _outObj.property('urls');
+  })
+  .then(urls => {
+    console.log('step 4: close phantom');
+    _page.close();
+    _ph.exit();
+    return urls;
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+
 module.exports = {
   getHostFromUrl,
   getPathFromUrl,
@@ -255,5 +301,9 @@ module.exports = {
   proxyOptions,
   directPutUpload,
   proxyPutUpload,
-  isViaProxy
+  isViaProxy,
+  getRequestData,
+  directRequest,
+  proxyRequest,
+  isSupportedProtocol
 };

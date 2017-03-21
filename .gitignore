@@ -3,6 +3,7 @@ cert/**/*.key
 cert/**/*.crt
 cert/**/*.csr
 web/build/.module-cache/
+test/report/*.txt
 tmp.txt
 .*.swp
 ._*
@@ -12,6 +13,7 @@ tmp.txt
 .lock-wscript
 .svn
 .wafpickle-*
+.vscode
 CVS
 npm-debug.log
 logs

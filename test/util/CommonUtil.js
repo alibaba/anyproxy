@@ -3,7 +3,7 @@
 * The utility class for test
 */
 const color = require('colorful');
-
+const simhash = require('node-simhash');
 /*
 * Compare whether tow object are equal
 */
@@ -102,10 +102,10 @@ function isCommonReqEqual(url, serverInstance) {
     // exclued accept-encoding from comparing, since the proxy will remove it before sending it out
     delete directReqObj.headers['accept-encoding'];
 
-    // TODO: 我这里proxy出去的options里没有accept-encoding, 但node自己加上了。Why ? 
+    // TODO: 我这里proxy出去的options里没有accept-encoding, 但node自己加上了。Why ?
     // By 加里 2017.1.31
     delete proxyReqObj.headers['accept-encoding'];
-    
+
     // TODO: 有些content-length比对也会有问题，direct出去的有时没有。后面临时加个判断，需要细查
     if (typeof directReqObj.headers['content-length'] === 'undefined' && proxyReqObj.headers['content-length']) {
       directReqObj.headers['content-length'] = '0';
@@ -143,6 +143,10 @@ function printError(content) {
   console.log(color.red('==ERROR==: ' + content));
 }
 
+function printHilite(content) {
+  console.log(color.yellow('==LOG==: ' + content));
+}
+
 function parseUrlQuery(string = '') {
   const parameterArray = string.split('&');
   const parsedObj = {};
@@ -156,12 +160,83 @@ function parseUrlQuery(string = '') {
   return parsedObj;
 }
 
+function stringSimilarity(a, b, precision = 2) {
+  let similarity = '0%';
+  let isCongruent = false;
+  if (a && b) {
+    const targetLen = Math.max(a.length, b.length);
+    targetLen > 1000 ?
+      similarity = simHasH(a, b) :
+      similarity = LevenshteinSimilarity(a, b);
+    isCongruent = similarity === 100;
+    similarity = similarity.toFixed(precision) + '%';
+  }
+  return {
+    isCongruent,
+    similarity
+  }
+}
+
+/**
+* simhash similarity
+*/
+function simHasH(a, b) {
+  return (simhash.compare(a, b) * 100);
+}
+
+/**
+* Levenshtein Distance
+*/
+function LevenshteinSimilarity(a, b) {
+  let cost;
+  const maxLen = Math.max(a.length, b.length);
+  const minOfThree = (numa, numb, numc) => {
+    if (numa > numb) {
+      return numb > numc ? numc : numb;
+    } else {
+      return numa > numc ? numc : numa;
+    }
+  }
+  if (a.length === 0) cost = b.length;
+  if (b.length === 0) cost = a.length;
+
+  if (a.length > b.length) {
+    const tmp = a;
+    a = b;
+    b = tmp;
+  }
+
+  const row = [];
+  for (let i = 0; i <= a.length; i++) {
+    row[i] = i;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+    let prev = i;
+    for (let j = 1; j <= a.length; j++) {
+      let val;
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        val = row[j - 1];
+      } else {
+        val = minOfThree(row[j - 1] + 1, prev + 1, row[j] + 1);
+      }
+      row[j - 1] = prev;
+      prev = val;
+    }
+    row[a.length] = prev;
+  }
+  cost = row[a.length];
+  return ((maxLen - cost) / maxLen * 100);
+}
+
 module.exports = {
   isObjectEqual,
   isCommonResHeaderEqual,
   printLog,
   printWarn,
   printError,
+  printHilite,
   isCommonReqEqual,
-  parseUrlQuery
+  parseUrlQuery,
+  stringSimilarity
 };

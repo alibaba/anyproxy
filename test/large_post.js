@@ -2,7 +2,7 @@ const proxyTester = require('proxy-eval'),
   Buffer = require('buffer').Buffer,
   express = require('express');
 
-const app = express()
+const app = express();
  
 app.post('/', (req, res) => {
   const bigBody = new Buffer(1024 * 1024 * 10);

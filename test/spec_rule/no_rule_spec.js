@@ -396,33 +396,5 @@ function testRequest(protocol = 'http') {
           });
       }
     });
-
-    // describe('Test Big file download', () => {
-    //     // const url = '/test/download/bigfile';
-    //     const url = 'http://yunpan.alibaba-inc.com/downloadService.do?token=pZWiXMXUguIUQDvR098qnUVqVAWhNVY6';
-    //     const contentType = 'application/octet-stream';
-    //     const param = {};
-    //     it('BIG file downlaod should be working', (done) => {
-    //         directGet(url, param, CommonRequestHeader).then(proxyRes => {
-    //             console.info('proxyRes body:', proxyRes.body);
-
-    //             directGet(url, param, CommonRequestHeader).then(directRes => {
-    //                 expect(proxyRes.statusCode).toEqual(200);
-    //                 expect(proxyRes.headers['content-type']).toEqual(contentType);
-
-    //                 expect(proxyRes.statusCode).toEqual(directRes.statusCode);
-    //                 expect(proxyRes.headers['content-type']).toEqual(directRes.headers['content-type']);
-    //                 expect(proxyRes.body).toEqual(directRes.body);
-    //                 done();
-    //             }, error => {
-    //                 console.error('error in direct get bigfile :', error);
-    //                 done.fail(`error happend in direct get bigfile`);
-    //             });
-    //         }, error => {
-    //             console.error('error in proxy get bigfile :', error);
-    //             done.fail(`error happend in proxy get bigfile`);
-    //         });
-    //     });
-    // });
   });
 }

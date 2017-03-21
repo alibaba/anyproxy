@@ -70,6 +70,7 @@ if (program.clear) {
   })
   .catch(e => {
     logUtil.printLog(e, logUtil.T_ERR);
+    logUtil.printLog('code ' + e.code, logUtil.T_ERR);
     logUtil.printLog(e.stack, logUtil.T_ERR);
   });
 
@@ -85,7 +86,9 @@ if (program.clear) {
   process.on('SIGINT', () => {
     try {
       proxyServer && proxyServer.close();
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
     process.exit();
   });
 

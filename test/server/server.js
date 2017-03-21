@@ -20,7 +20,6 @@ const HTTPS_PORT2 = 3002; // start multiple https server
 const UPLOAD_DIR = path.resolve(__dirname, '../temp');
 const PROXY_KEY_PREFIX = 'proxy-';
 
-
 function SNICertCallback(serverName, SNICallback) {
   certMgr.getCertificate(serverName, (err, key, crt) => {
     if (err) {
@@ -214,6 +213,14 @@ KoaServer.prototype.constructRouter = function () {
   router.post('/test/normal_post_request1', koaBody(), this.logRequest, function*(next) {
     printLog('requesting post /test/normal_post_request1');
     this.response.body = 'body_normal_post_request1';
+  });
+
+  router.get('/big_response', this.logRequest, function* (next) {
+    const buf = new Buffer(1 * 1024 * 1024 * 1024); // 1GB
+    buf.fill(1);
+    printLog('request in get big response of 1GB');
+    this.response.type = 'application/octet-stream';
+    this.response.body = buf;
   });
 
   return router;
