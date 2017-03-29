@@ -3,7 +3,6 @@
 * The utility class for test
 */
 const color = require('colorful');
-const simhash = require('node-simhash');
 /*
 * Compare whether tow object are equal
 */
@@ -181,6 +180,7 @@ function stringSimilarity(a, b, precision = 2) {
 * simhash similarity
 */
 function simHasH(a, b) {
+  const simhash = require('node-simhash');  
   return (simhash.compare(a, b) * 100);
 }
 

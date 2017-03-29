@@ -33,7 +33,6 @@ const http = require('http'),
 
 const T_TYPE_HTTP = 'http',
   T_TYPE_HTTPS = 'https',
-  DEFAULT_CONFIG_PORT = 8088,
   DEFAULT_TYPE = T_TYPE_HTTP;
 
 const PROXY_STATUS_INIT = 'INIT';
@@ -71,10 +70,11 @@ class ProxyCore extends events.EventEmitter {
     this.proxyPort = config.port;
     this.proxyType = /https/i.test(config.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP;
     this.proxyHostName = config.hostname || 'localhost';
-    this.proxyConfigPort = config.webConfigPort || DEFAULT_CONFIG_PORT;    //TODO : port to ui config server
     this.recorder = config.recorder;
 
-    if (config.forceProxyHttps && !certMgr.ifRootCAFileExists()) {
+    if (parseInt(process.versions.node.split('.')[0], 10) < 4) {
+      throw new Error('node.js >= v4.x is required for anyproxy');
+    } else if (config.forceProxyHttps && !certMgr.ifRootCAFileExists()) {
       throw new Error('root CA not found. can not intercept https'); // TODO : give a reference to user
     } else if (this.proxyType === T_TYPE_HTTPS && !config.hostname) {
       throw new Error('hostname is required in https proxy');

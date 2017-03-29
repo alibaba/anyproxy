@@ -6,7 +6,6 @@
 const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
-const phantom = require('phantom');
 const HttpsProxyAgent = require('https-proxy-agent');
 
 const PROXY_HOST = 'http://localhost:8001';
@@ -247,6 +246,7 @@ function getRequestData(pageUrl, cb) {
   let _ph;
   let _page;
   let _outObj;
+  const phantom = require('phantom');  
   return phantom.create().then(ph => {
     console.log('step 1: create page');
     _ph = ph;
