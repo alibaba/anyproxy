@@ -3,6 +3,40 @@
 * The utility class for test
 */
 const color = require('colorful');
+
+function _isDeepEqual(source, target) {
+  // if the objects are Array
+  if (source.constructor === Array && target.constructor === Array) {
+    if (source.length !== target.length) {
+      return false;
+    }
+
+    let _isEqual = true;
+    for (let i = 0; i < source.length; i++) {
+      if (!_isDeepEqual(source[i], target[i])) {
+        _isEqual = false;
+        break;
+      }
+    }
+
+    return _isEqual;
+  }
+
+  // if the source and target are just object
+  if (typeof source === 'object' && typeof target === 'object') {
+    let _isEqual = true;
+    for (const key in source) {
+      if (!_isDeepEqual(source[key], target[key])) {
+        _isEqual = false;
+        break;
+      }
+    }
+
+    return _isEqual;
+  }
+
+  return source === target;
+}
 /*
 * Compare whether tow object are equal
 */
@@ -12,7 +46,7 @@ function isObjectEqual(source = {}, target = {}, url = '') {
   let isEqual = true;
 
   for (const key in source) {
-    isEqual = isEqual && source[key] === target[key];
+    isEqual = isEqual && _isDeepEqual(source[key], target[key]);
 
     if (!isEqual) {
       console.info('source object :', source);
@@ -73,7 +107,7 @@ function isCommonResHeaderEqual(directHeaders, proxyHeaders, requestUrl) {
   // remained filed are good to be same, but are allowed to be different
   // will warn out those different fileds
   for (const key in directHeaders) {
-    if (directHeaders[key] !== proxyHeaders[key]) {
+    if (!_isDeepEqual(directHeaders[key], proxyHeaders[key])) {
       printWarn(`key "${key}" of two response headers are different in request "${requestUrl}" :
        direct is: "${directHeaders[key]}", proxy is: "${proxyHeaders[key]}"`);
     }
@@ -180,7 +214,7 @@ function stringSimilarity(a, b, precision = 2) {
 * simhash similarity
 */
 function simHasH(a, b) {
-  const simhash = require('node-simhash');  
+  const simhash = require('node-simhash');
   return (simhash.compare(a, b) * 100);
 }
 
