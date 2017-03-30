@@ -12,6 +12,7 @@
         height: calc(100% - 114px);
         overflow: auto;
       }
+
     }
     th {
       padding-top: 15px !important;
@@ -55,6 +56,11 @@
 .activeRow {
   background: @active-color !important;
   color: #fff;
+  :global {
+    td {
+      background-color: transparent !important;
+    }
+  }
 }
 
 .okStatus {
