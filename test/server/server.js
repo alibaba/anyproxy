@@ -78,6 +78,11 @@ KoaServer.prototype.constructRouter = function () {
 
   router.get('/test', this.logRequest, function*(next) {
     printLog('request in get: ' + JSON.stringify(this.request));
+    this.cookies.set('a1', 'a1value');
+    this.cookies.set('a2', 'a2value');
+    this.cookies.set('a3', 'a3value');
+    this.response.set('header1', 'cookie2=headervalue2');
+
     this.response.body = 'something';
     this.response.__req = this.request;
     printLog('response in get:' + JSON.stringify(this.response));
