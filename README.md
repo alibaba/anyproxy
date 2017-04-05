@@ -1,7 +1,9 @@
 AnyProxy
 ==========
 
-> AnyProxy 4.x正在Beta中，欢迎试用！文档：http://anyproxy.io/4.x/
+> AnyProxy 4.x is in beta release now. Rule interface is simplified and Promise is supported. Welcome to have a try! http://anyproxy.io/4.x/
+
+> AnyProxy 4.x 正在beta中，rule接口大幅简化，同时支持了Promise。文档及试用：http://anyproxy.io/4.x/
 
 [![NPM version][npm-image]][npm-url]
 [![node version][node-image]][node-url]
