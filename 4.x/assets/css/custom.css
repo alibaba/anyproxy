@@ -1,11 +1,12 @@
 body{
-  max-width: 980px;
   font-size: 32px;
+  min-width: 980px;
+  max-width: 1180px;
 }
 
 .main-content{
-  padding-left: 200px;
-  width: 980px;
+  min-width: 980px;
+  max-width: 1180px;
 }
 
 .markdown-body blockquote{
@@ -25,14 +26,21 @@ body{
 .markdown-body{
   display: flex;
   padding-left: 0;
+  overflow: auto;
 }
 
 .toc-container{
-  width: 200px;
-  position: fixed;
+  min-width: 220px;
   top: 20px;
   height: 95vh;
   overflow-y: auto;
+}
+
+.toc-container .toc-content{
+  position: fixed;
+  overflow-y: scroll;
+  top:12px;
+  bottom: 0;
 }
 
 .toc-container ul{

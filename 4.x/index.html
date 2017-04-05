@@ -9,29 +9,41 @@
   <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
   <link type="text/css" rel="stylesheet" href="assets/css/atom-one-light.css" />
   <link type="text/css" rel="stylesheet" href="assets/css/custom.css" />
+  <meta name="description" content="A fully configurable proxy in NodeJS, which can handle HTTPS requests perfectly.">
+  <meta name="description" content="AnyProxy - 开放式的HTTP/HTTPS代理，你可以灵活控制各种网络数据">
+  <meta name="keywords" content="代理服务器 Proxy HTTP HTTPS">
+  <script>
+    //redirect to Chinese version if in China
+    if (new Date().getTimezoneOffset() == "-480" && !(/(cn|en)/i.test(location.href))) {
+      location.href = "/cn";
+    } else {
+      var _hmt = _hmt || []; (function () { var hm = document.createElement("script"); hm.src = "//hm.baidu.com/hm.js?4e51565b7d471fd6623c163a8fd79e07"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })();
+    }
+  </script>
 </head>
 
 <body>
   <a href="https://github.com/alibaba/anyproxy/tree/4.x" target="_blank">
-    <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
+    <img style="position: fixed; top: 0; right: 0; border: 0;z-index: 1;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
       alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
   </a>
 
   <article class="markdown-body">
-    <div class="toc-container" id="j_toc"><ul class="nav nav-list">
+    <div class="toc-container" id="j_toc">
+      <div class="toc-content"><ul class="nav nav-list">
     <li class="sidebar-header-1"><a href="#anyproxy">AnyProxy</a></li>
-    <li class="sidebar-header-2"><a href="#快速上手">快速上手</a></li>
-    <li class="sidebar-header-3"><a href="#安装">安装</a></li>
-    <li class="sidebar-header-3"><a href="#启动">启动</a></li>
-    <li class="sidebar-header-3"><a href="#其他命令">其他命令</a></li>
-    <li class="sidebar-header-2"><a href="#代理https请求">代理https请求</a></li>
-    <li class="sidebar-header-2"><a href="#规则模块（rule）">规则模块（Rule）</a></li>
-    <li class="sidebar-header-3"><a href="#开发示例">开发示例</a></li>
-    <li class="sidebar-header-3"><a href="#处理流程">处理流程</a></li>
-    <li class="sidebar-header-3"><a href="#如何引用">如何引用</a></li>
-    <li class="sidebar-header-2"><a href="#规则接口文档">规则接口文档</a></li>
+    <li class="sidebar-header-2"><a href="#quick-start">Quick start</a></li>
+    <li class="sidebar-header-3"><a href="#install">install</a></li>
+    <li class="sidebar-header-3"><a href="#launch">launch</a></li>
+    <li class="sidebar-header-3"><a href="#other-commands">other commands</a></li>
+    <li class="sidebar-header-2"><a href="#proxy-https-request">Proxy https request</a></li>
+    <li class="sidebar-header-2"><a href="#use-rule-module">Use rule module</a></li>
+    <li class="sidebar-header-3"><a href="#sample">sample</a></li>
+    <li class="sidebar-header-3"><a href="#the-entire-process">the entire process</a></li>
+    <li class="sidebar-header-3"><a href="#how-to-load-rule-module">how to load rule module</a></li>
+    <li class="sidebar-header-2"><a href="#rule-module-interface">Rule module interface</a></li>
     <li class="sidebar-header-3"><a href="#summary">summary</a></li>
-    <li class="sidebar-header-4"><a href="#summary()">summary()</a></li>
+    <li class="sidebar-header-4"><a href="#summary-1">summary</a></li>
     <li class="sidebar-header-3"><a href="#beforesendrequest">beforeSendRequest</a></li>
     <li class="sidebar-header-4"><a href="#beforesendrequest(requestdetail)">beforeSendRequest(requestDetail)</a></li>
     <li class="sidebar-header-3"><a href="#beforesendresponse">beforeSendResponse</a></li>
@@ -43,103 +55,102 @@
     <li class="sidebar-header-3"><a href="#onconnecterror">onConnectError</a></li>
     <li class="sidebar-header-4"><a href="#onconnecterror(requestdetail,-error)">onConnectError(requestDetail, error)</a></li>
     <li class="sidebar-header-3"><a href="#faq">FAQ</a></li>
-    <li class="sidebar-header-2"><a href="#规则模块样例">规则模块样例</a></li>
-    <li class="sidebar-header-3"><a href="#使用本地数据">使用本地数据</a></li>
-    <li class="sidebar-header-3"><a href="#修改请求头">修改请求头</a></li>
-    <li class="sidebar-header-3"><a href="#修改请求数据">修改请求数据</a></li>
-    <li class="sidebar-header-3"><a href="#修改请求的目标地址">修改请求的目标地址</a></li>
-    <li class="sidebar-header-3"><a href="#修改请求协议">修改请求协议</a></li>
-    <li class="sidebar-header-3"><a href="#修改返回状态码">修改返回状态码</a></li>
-    <li class="sidebar-header-3"><a href="#修改返回头">修改返回头</a></li>
-    <li class="sidebar-header-3"><a href="#修改返回内容并延迟">修改返回内容并延迟</a></li>
-    <li class="sidebar-header-2"><a href="#作为npm模块使用">作为npm模块使用</a></li>
-    <li class="sidebar-header-2"><a href="#关于anyproxy">关于AnyProxy</a></li>
-    <li class="sidebar-header-2"><a href="#配置帮助">配置帮助</a></li>
-    <li class="sidebar-header-3"><a href="#osx系统信任ca证书">OSX系统信任CA证书</a></li>
-    <li class="sidebar-header-3"><a href="#windows系统信任ca证书">Windows系统信任CA证书</a></li>
-    <li class="sidebar-header-3"><a href="#配置osx系统代理">配置OSX系统代理</a></li>
-    <li class="sidebar-header-3"><a href="#配置浏览器http代理">配置浏览器HTTP代理</a></li>
-    <li class="sidebar-header-3"><a href="#配置ios/android系统代理">配置iOS/Android系统代理</a></li>
+    <li class="sidebar-header-2"><a href="#rule-samples">Rule Samples</a></li>
+    <li class="sidebar-header-3"><a href="#use-local-response">use local response</a></li>
+    <li class="sidebar-header-3"><a href="#modify-request-header">modify request header</a></li>
+    <li class="sidebar-header-3"><a href="#modify-request-body">modify request body</a></li>
+    <li class="sidebar-header-3"><a href="#modify-the-request-target">modify the request target</a></li>
+    <li class="sidebar-header-3"><a href="#modify-request-protocol">modify request protocol</a></li>
+    <li class="sidebar-header-3"><a href="#modify-response-status-code">modify response status code</a></li>
+    <li class="sidebar-header-3"><a href="#modify-the-response-header">modify the response header</a></li>
+    <li class="sidebar-header-3"><a href="#modify-response-data-and-delay">modify response data and delay</a></li>
+    <li class="sidebar-header-2"><a href="#use-anyproxy-as-an-npm-module">Use AnyProxy as an npm module</a></li>
+    <li class="sidebar-header-2"><a href="#about-anyproxy">About AnyProxy</a></li>
+    <li class="sidebar-header-2"><a href="#appendix">Appendix</a></li>
+    <li class="sidebar-header-3"><a href="#config-root-ca-in-osx">Config root CA in OSX</a></li>
+    <li class="sidebar-header-3"><a href="#trust-root-ca-in-windows">trust root CA in windows</a></li>
+    <li class="sidebar-header-3"><a href="#config-osx-system-proxy">config OSX system proxy</a></li>
+    <li class="sidebar-header-3"><a href="#config-http-proxy-server">config http proxy server</a></li>
+    <li class="sidebar-header-3"><a href="#config-ios/android-proxy-server">config iOS/Android proxy server</a></li>
 </ul>
+      </div>
     </div>
     <div class="main-content"><h1 id="anyproxy"><a class="header-link" href="#anyproxy"></a>AnyProxy</h1>
-<blockquote>
-<p>本文档的适用范围是AnyProxy 4.0，此版本当前正在beta中，欢迎提供反馈</p>
-</blockquote>
-<p>AnyProxy是一个开放式的HTTP代理服务器。</p>
-<p>Github主页：<a href="https://github.com/alibaba/anyproxy/tree/4.x">https://github.com/alibaba/anyproxy/tree/4.x</a></p>
-<p>主要特性包括：</p>
+<p>AnyProxy is a fully configurable http/https proxy in NodeJS. Version 4.0 is in beta now.</p>
+<p>Ref: <a href="./cn.html">Chinese Doc 中文文档</a></p>
+<p>Github: </p>
 <ul class="list">
-<li>基于Node.js，开放二次开发能力，允许自定义请求处理逻辑</li>
-<li>支持Https的解析</li>
-<li>提供GUI界面，用以观察请求</li>
+<li><a href="https://github.com/alibaba/anyproxy/tree/4.x">https://github.com/alibaba/anyproxy/tree/4.x</a></li>
 </ul>
-<p>相比3.x版本，AnyProxy 4.0的主要变化：</p>
+<p>Features:</p>
 <ul class="list">
-<li>规则文件（Rule）全面支持Promise和Generator</li>
-<li>简化了规则文件内的接口</li>
-<li>Web版界面重构</li>
+<li>Offer you the ablity to handle http traffic by invoking a js module</li>
+<li>Intercept https</li>
+<li>GUI webinterface</li>
+</ul>
+<p>Change Logs since 3.x:</p>
+<ul class="list">
+<li>Support Promise and Generator in rule module</li>
+<li>Simplified interface in rule module</li>
+<li>A newly designed web interface</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/SqVntpzmscXPbSzfcGcr.png" width="500" /></p>
-<h2 id="快速上手"><a class="header-link" href="#快速上手"></a>快速上手</h2>
-<h3 id="安装"><a class="header-link" href="#安装"></a>安装</h3>
-<pre class="hljs"><code>npm install -g anyproxy@beta <span class="hljs-comment">#本文档对应的AnyProxy为4.0Beta版</span></code></pre><h3 id="启动"><a class="header-link" href="#启动"></a>启动</h3>
+<h2 id="quick-start"><a class="header-link" href="#quick-start"></a>Quick start</h2>
+<h3 id="install"><a class="header-link" href="#install"></a>install</h3>
+<pre class="hljs"><code>npm install -g anyproxy@beta <span class="hljs-comment"># 4.x is in beta now</span></code></pre><h3 id="launch"><a class="header-link" href="#launch"></a>launch</h3>
 <ul class="list">
-<li>命令行启动AnyProxy，默认端口号8001</li>
+<li>start AnyProxy in command line, with default port 8001</li>
 </ul>
 <pre class="hljs"><code>anyproxy</code></pre><ul class="list">
-<li>启动后将终端http代理服务器配置为127.0.0.1:8001即可</li>
-<li>访问<a href="http://127.0.0.1:8002">http://127.0.0.1:8002</a> ，web界面上能看到所有的请求信息</li>
+<li>now you can use http proxy server by 127.0.0.1:8001</li>
+<li>visit <a href="http://127.0.0.1:8002">http://127.0.0.1:8002</a> to see the http requests</li>
 </ul>
-<h3 id="其他命令"><a class="header-link" href="#其他命令"></a>其他命令</h3>
+<h3 id="other-commands"><a class="header-link" href="#other-commands"></a>other commands</h3>
 <ul class="list">
-<li>配置启动端口，如1080端口启动</li>
+<li>specify the port of http proxy</li>
 </ul>
-<pre class="hljs"><code>anyproxy --port 1080</code></pre><h2 id="代理https请求"><a class="header-link" href="#代理https请求"></a>代理https请求</h2>
+<pre class="hljs"><code>anyproxy --port 1080</code></pre><h2 id="proxy-https-request"><a class="header-link" href="#proxy-https-request"></a>Proxy https request</h2>
 <ul class="list">
-<li>AnyProxy默认不对https请求做处理，如需看到明文信息，需要配置CA证书</li>
+<li>AnyProxy does NOT intercept https requests by default. To view decrypted info, you have to config the CA certificate.</li>
 </ul>
 <blockquote>
-<p>解析https请求的原理是中间人攻击（man-in-the-middle），用户必须信任AnyProxy生成的CA证书，才能进行后续流程</p>
+<p>Under the hood, AnyProxy decryptes https requests by man-in-the-middle attack. Users have to trust the CA cert in advance. Otherwise, client side will issue errors about unsecure network.</p>
 </blockquote>
 <ul class="list">
-<li>生成证书并解析所有https请求</li>
+<li>generate certifycates and intercept</li>
 </ul>
-<pre class="hljs"><code>anyproxy-ca <span class="hljs-comment">#生成rootCA证书，生成后需要手动信任</span>
-anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所有https请求</span></code></pre><ul class="list">
-<li><a href="#osx系统信任ca证书">附录：如何信任CA证书</a></li>
+<pre class="hljs"><code>anyproxy-ca <span class="hljs-comment">#generate root CA. manually trust it after that.</span>
+anyproxy --intercept <span class="hljs-comment">#launch anyproxy and intercept all https traffic</span></code></pre><ul class="list">
+<li><a href="#osx系统信任ca证书">Appendix：how to trust CA</a></li>
 </ul>
-<h2 id="规则模块（rule）"><a class="header-link" href="#规则模块（rule）"></a>规则模块（Rule）</h2>
-<p>AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模块（rule），来自定义网络请求的处理逻辑。</p>
+<h2 id="use-rule-module"><a class="header-link" href="#use-rule-module"></a>Use rule module</h2>
+<p>AnyProxy provides the ability to load your own rules written in javascript. With rule module, you could customize the logic to handle requests.</p>
 <blockquote>
-<p>注意：引用规则前，请务必确保文件来源可靠，以免发生安全问题</p>
+<p>Make sure your rule file is got from a trusted source. Otherwise, you may face some unknown security risk.</p>
 </blockquote>
-<p>规则模块的能力范围包括：</p>
+<p>Rule module could do the following stuff:</p>
 <ul class="list">
-<li>拦截并修改正在发送的请求<ul class="list">
-<li>可修改内容包括请求头（request header)，请求体（request body），甚至是请求的目标地址等</li>
+<li>intercept and modify the request which is being sent<ul class="list">
+<li>editable fields include request header, body, target address</li>
 </ul>
 </li>
-<li>拦截并修改服务端响应<ul class="list">
-<li>可修改的内容包括http状态码(status code)、响应头（response header）、响应内容等</li>
+<li>intercept and modify the response from server<ul class="list">
+<li>editable fields include response status code, header, body</li>
 </ul>
 </li>
-<li>拦截https请求，对内容做修改<ul class="list">
-<li>本质是中间人攻击（man-in-the-middle attack），需要客户端提前信任AnyProxy生成的CA</li>
+<li>intercept https requests, modify request and response</li>
 </ul>
-</li>
-</ul>
-<h3 id="开发示例"><a class="header-link" href="#开发示例"></a>开发示例</h3>
+<h3 id="sample"><a class="header-link" href="#sample"></a>sample</h3>
 <ul class="list">
-<li><p>举例</p>
+<li><p>Target</p>
 <ul class="list">
-<li>需要编写一个规则模块，在 GET <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> 的返回值里加上测试信息，并延迟5秒返回</li>
+<li>write a rule module to append some text to the response of GET <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a>, and delay the response for 5 seconds</li>
 </ul>
 </li>
-<li><p>Step 1，编写规则</p>
+<li><p>Step 1，Write the rule file, save as sample.js</p>
 <pre class="hljs"><code><span class="hljs-comment">// file: sample.js</span>
 <span class="hljs-built_in">module</span>.exports = {
-  summary() { <span class="hljs-keyword">return</span> <span class="hljs-string">'a rule to modify response'</span>; },
+  <span class="hljs-attr">summary</span>: <span class="hljs-string">'a rule to modify response'</span>,
   *beforeSendResponse(requestDetail, responseDetail) {
     <span class="hljs-keyword">if</span> (requestDetail.url === <span class="hljs-string">'http://httpbin.org/user-agent'</span>) {
       <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
@@ -152,99 +163,102 @@ anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所�
     }
   },
 };</code></pre></li>
-<li><p>Step 2, 启动AnyProxy，加载规则</p>
+<li><p>Step 2, start AnyProxy and load the rule file</p>
 <ul class="list">
-<li>运行 <code>anyproxy --rule sample.js</code></li>
+<li>run <code>anyproxy --rule sample.js</code></li>
 </ul>
 </li>
-<li><p>Step 3, 测试规则</p>
+<li><p>Step 3, test</p>
 <ul class="list">
-<li><p>用curl测试 </p>
+<li><p>use curl </p>
 <pre class="hljs"><code>curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001</code></pre></li>
-<li><p>用浏览器测试：配置浏览器http代理为 127.0.0.1:8001，访问 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> </p>
+<li><p>use browser. Point the http proxy of browser to 127.0.0.1:8001, then visit <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> </p>
 </li>
-<li><p>经过代理服务器后，期望的返回如下</p>
+<li><p>the expected response from proxy is </p>
 </li>
 </ul>
 <pre class="hljs"><code>{
   <span class="hljs-string">"user-agent"</span>: <span class="hljs-string">"curl/7.43.0"</span>
 }
 - AnyProxy Hacked!</code></pre></li>
-<li><p>Step 4, 查看请求信息</p>
+<li><p>Step 4, view the request log</p>
 <ul class="list">
-<li>浏览器访问<a href="http://127.0.0.1:8002">http://127.0.0.1:8002</a> ，界面上能看到刚才的请求信息</li>
+<li>visit <a href="http://127.0.0.1:8002">http://127.0.0.1:8002</a>, the request just sent should be listed here</li>
 </ul>
 </li>
 </ul>
-<h3 id="处理流程"><a class="header-link" href="#处理流程"></a>处理流程</h3>
+<h3 id="the-entire-process"><a class="header-link" href="#the-entire-process"></a>the entire process</h3>
 <ul class="list">
-<li>处理流程图如下</li>
+<li>The flow chart is as follows</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/TWyNuSJtEZBdrdcOMRjE.png" width="550" /></p>
 <ul class="list">
-<li><p>当http请求经过代理服务器时，代理服务器的具体流程是：</p>
+<li><p>When got an http request, the entire process of proxy server is</p>
 <ul class="list">
-<li>收集请求所有请求参数，包括method, header, body等</li>
-<li>AnyProxy调用规则模块<code>beforeSendRequest</code>方法，由模块做处理，返回新的请求参数，或返回响应内容</li>
-<li>如果<code>beforeSendRequest</code>返回了响应内容，则立即把此响应返回到客户端（而不再发送到真正的服务端），流程结束。</li>
-<li>根据请求参数，向服务端发出请求，接收服务端响应。</li>
-<li>调用规则模块<code>beforeSendResponse</code>方法，由模块对响应内容进行处理</li>
-<li>把响应信息返回给客户端</li>
+<li>AnyProxy collects all the quest info, include method, header, body</li>
+<li>AnyProxy calls <code>beforeSendRequest</code> of the rule module. Rule module deal the request, return new request param or response content</li>
+<li>If <code>beforeSendRequest</code> returns the response content, AnyProxy will send the response to client without sending to target server. The process ends here.</li>
+<li>Send request to target server, collect response</li>
+<li>Call <code>beforeSendResponse</code> of the rule module. Rule module deal the response data</li>
+<li>Send response to client</li>
 </ul>
 </li>
-<li><p>当代理服务器收到https请求时，AnyProxy可以替换证书，对请求做明文解析。</p>
+<li><p>When AnyProxy get https request, it could replace the certificate and decrypt the request data</p>
 <ul class="list">
-<li>调用规则模块<code>beforeDealHttpsRequest</code>方法，如果返回<code>true</code>，会明文解析这个请求，其他请求不处理</li>
-<li>被明文解析后的https请求，处理流程同http一致。未明文解析请求不会再进入规则模块做处理。</li>
+<li>AnyProxy calls <code>beforeDealHttpsRequest</code> of the rule module</li>
+<li>If the function returns <code>true</code>, AnyProxy will do the man-in-the-middle attack to it. Otherwise, the request will not be dealed.</li>
 </ul>
 </li>
 </ul>
-<h3 id="如何引用"><a class="header-link" href="#如何引用"></a>如何引用</h3>
-<p>如下几种方案都可以用来引用规则模块：</p>
+<h3 id="how-to-load-rule-module"><a class="header-link" href="#how-to-load-rule-module"></a>how to load rule module</h3>
 <ul class="list">
-<li>使用本地路径<pre class="hljs"><code>anyproxy --rule ./rule.js</code></pre></li>
-<li><p>使用在线地址</p>
+<li><p>use local file</p>
+<pre class="hljs"><code>anyproxy --rule ./rule.js</code></pre></li>
+<li><p>use an online rule file</p>
 <pre class="hljs"><code>anyproxy --rule https://sample.com/rule.js</code></pre></li>
-<li><p>使用npm包</p>
+<li><p>use an npm module</p>
 <ul class="list">
-<li>AnyProxy使用<code>require()</code>加载本地规则，你可以在参数里传入一个本地的npm包路径，或是某个全局安装的npm包</li>
+<li>AnyProxy uses <code>require()</code> to load rule module. You could either load a local npm module or a global-installed one.</li>
 </ul>
-<pre class="hljs"><code>anyproxy --rule ./myRulePkg/ <span class="hljs-comment">#本地包</span>
-npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-comment">#全局包</span></code></pre></li>
+<pre class="hljs"><code>anyproxy --rule ./myRulePkg/ <span class="hljs-comment">#local module</span>
+npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-comment">#global-installed module</span></code></pre></li>
 </ul>
-<h2 id="规则接口文档"><a class="header-link" href="#规则接口文档"></a>规则接口文档</h2>
-<p>规则模块应该符合cmd规范，一个典型的规则模块代码结构如下。模块中所有方法都是可选的，只需实现业务感兴趣的部分即可。</p>
+<h2 id="rule-module-interface"><a class="header-link" href="#rule-module-interface"></a>Rule module interface</h2>
+<p>A typical rule module is as follows. All the functions are optional, just write the part you are interested in.</p>
 <pre class="hljs"><code><span class="hljs-built_in">module</span>.exports = {
-  <span class="hljs-comment">// 模块介绍</span>
-  summary() { <span class="hljs-keyword">return</span> <span class="hljs-string">'my customized rule for AnyProxy'</span>; }, 
-  <span class="hljs-comment">// 发送请求前拦截处理</span>
+  <span class="hljs-comment">// introduction</span>
+  summary: <span class="hljs-string">'my customized rule for AnyProxy'</span>, 
+  <span class="hljs-comment">// intercept before send request to server</span>
   *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
-  <span class="hljs-comment">// 发送响应前处理</span>
+  <span class="hljs-comment">// deal response before send to client </span>
   *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> }, 
-  <span class="hljs-comment">// 是否处理https请求</span>
+  <span class="hljs-comment">// if deal https request</span>
   *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
-  <span class="hljs-comment">// 请求出错的事件</span>
+  <span class="hljs-comment">// error happened when dealing requests</span>
   *onError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> }, 
-  <span class="hljs-comment">// https连接服务器出错</span>
+  <span class="hljs-comment">// error happened when connect to https server</span>
   *onConnectError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> } 
-};</code></pre><h3 id="summary"><a class="header-link" href="#summary"></a>summary</h3>
-<h4 id="summary()"><a class="header-link" href="#summary()"></a>summary()</h4>
+};</code></pre><blockquote>
+<p>All functions in your rule file, except summary, are all driven by <a href="https://www.npmjs.com/package/co">co</a> . They should be yieldable, i.e. return a promise or be a generator function.</p>
+</blockquote>
+<h3 id="summary"><a class="header-link" href="#summary"></a>summary</h3>
+<h4 id="summary-1"><a class="header-link" href="#summary-1"></a>summary</h4>
 <ul class="list">
-<li>返回规则模块介绍，用于AnyProxy提示用户</li>
+<li>Introduction of this rule file. AnyProxy will read this field and give some tip to user.</li>
 </ul>
 <h3 id="beforesendrequest"><a class="header-link" href="#beforesendrequest"></a>beforeSendRequest</h3>
 <h4 id="beforesendrequest(requestdetail)"><a class="header-link" href="#beforesendrequest(requestdetail)"></a>beforeSendRequest(requestDetail)</h4>
 <ul class="list">
-<li>AnyProxy向服务端发送请求前，会调用<code>beforeSendRequest</code>，并带上参数<code>requestDetail</code></li>
+<li>Before sending request to server, AnyProxy will call <code>beforeSendRequest</code> with param <code>requestDetail</code></li>
 <li><code>requestDetail</code> <ul class="list">
-<li><code>protocol</code> {string} 请求使用的协议，http或者https</li>
-<li><code>requestOptions</code> {object} 即将发送的请求配置，供require(&#39;http&#39;).request作为使用。详见：<a href="https://nodejs.org/api/http.html#http_http_request_options_callback">https://nodejs.org/api/http.html#http_http_request_options_callback</a></li>
-<li><code>requestData</code> {object} 请求Body</li>
-<li><code>url</code> {string} 请求url</li>
-<li><code>_req</code> {object} 请求的原始request</li>
+<li><code>protocol</code> {string} the protocol to use, http or https</li>
+<li><code>requestOptions</code> {object} the options of the request-to-go, a param of require(&#39;http&#39;).request . ref: <a href="https://nodejs.org/api/http.html#http_http_request_options_callback">https://nodejs.org/api/http.html#http_http_request_options_callback</a></li>
+<li><code>requestData</code> {object} request body</li>
+<li><code>url</code> {string} request url</li>
+<li><code>_req</code> {object} the native node.js request object</li>
 </ul>
 </li>
-<li><p>举例：请求 <em>anyproxy.io</em> 时，<code>requestDetail</code>参数内容大致如下</p>
+<li><p>e.g. When requesting  <em>anyproxy.io</em>, <code>requestDetail</code> is something like the following</p>
 <pre class="hljs"><code>{
   <span class="hljs-attr">protocol</span>: <span class="hljs-string">'http'</span>,
   <span class="hljs-attr">url</span>: <span class="hljs-string">'http://anyproxy.io/'</span>,
@@ -262,30 +276,30 @@ npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-commen
   <span class="hljs-attr">requestData</span>: <span class="hljs-string">'...'</span>,
   <span class="hljs-attr">_req</span>: { <span class="hljs-comment">/* ... */</span>}
 }</code></pre></li>
-<li><p>以下几种返回都是合法的</p>
+<li><p>Any of these return values are valid</p>
 <ul class="list">
-<li>不做任何处理，返回null</li>
+<li>do nothing, and return null</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</code></pre><ul class="list">
-<li>修改请求协议，如强制改用https发起请求</li>
+<li>modify the request protocol，i.e. force use https</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> {
   <span class="hljs-attr">protocol</span>: <span class="hljs-string">'https'</span>
 };</code></pre><ul class="list">
-<li>修改请求参数</li>
+<li>modify request param</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">var</span> newOption = <span class="hljs-built_in">Object</span>.assign({}, requestDetail.requestOptions);
 newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
 <span class="hljs-keyword">return</span> {
   <span class="hljs-attr">requestOptions</span>: newOption
 };</code></pre><ul class="list">
-<li>修改请求body</li>
+<li>modify request body</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> {
   <span class="hljs-attr">requestData</span>: <span class="hljs-string">'my new request data'</span>
-  <span class="hljs-comment">//这里也可以同时加上requestOptions</span>
+  <span class="hljs-comment">// requestOptions can also be used here</span>
 };</code></pre><ul class="list">
-<li>直接返回客户端，不再发起请求，其中<code>statusCode</code> <code>header</code> 是必选字段</li>
+<li>give response to the client, not sending request any longer. <code>statusCode</code> <code>headers</code>are required is this situation.</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> {
   <span class="hljs-attr">response</span>: {
@@ -298,14 +312,14 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
 <h3 id="beforesendresponse"><a class="header-link" href="#beforesendresponse"></a>beforeSendResponse</h3>
 <h4 id="beforesendresponse(requestdetail,-responsedetail)"><a class="header-link" href="#beforesendresponse(requestdetail,-responsedetail)"></a>beforeSendResponse(requestDetail, responseDetail)</h4>
 <ul class="list">
-<li>AnyProxy向客户端发送请求前，会调用<code>beforeSendResponse</code>，并带上参数<code>requestDetail</code> <code>responseDetail</code></li>
-<li><code>requestDetail</code> 同<code>beforeSendRequest</code>中的参数</li>
+<li>Before sending response to client, AnyProxy will call <code>beforeSendResponse</code> with param <code>requestDetail</code> <code>responseDetail</code></li>
+<li><code>requestDetail</code> is the same param as in <code>beforeSendRequest</code></li>
 <li><code>responseDetail</code> <ul class="list">
-<li><code>response</code> {object} 服务端的返回信息，包括<code>statusCode</code> <code>header</code> <code>body</code>三个字段</li>
-<li><code>_res</code> {object} 原始的服务端返回对象</li>
+<li><code>response</code> {object} the response from server, includes <code>statusCode</code> <code>header</code> <code>body</code></li>
+<li><code>_res</code> {object} the native node.js response object</li>
 </ul>
 </li>
-<li><p>举例，请求 <em>anyproxy.io</em> 时，<code>responseDetail</code>参数内容大致如下</p>
+<li><p>e.g. When requesting <em>anyproxy.io</em>, <code>responseDetail</code> is something like the following</p>
 <pre class="hljs"><code>{ 
   <span class="hljs-attr">response</span>: { 
     <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
@@ -318,19 +332,19 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
   },
   <span class="hljs-attr">_res</span>: { <span class="hljs-comment">/* ... */</span> }
 }</code></pre></li>
-<li><p>以下几种返回都是合法的</p>
+<li><p>Any of these return values are valid</p>
 <ul class="list">
-<li>不做任何处理，返回null</li>
+<li>do nothing, and return null</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</code></pre><ul class="list">
-<li>修改返回的状态码</li>
+<li>modify the response status code</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.reponse);
 newResponse.statusCode = <span class="hljs-number">404</span>;
 <span class="hljs-keyword">return</span> {
   <span class="hljs-attr">response</span>: newResponse
 };</code></pre><ul class="list">
-<li>修改返回的内容</li>
+<li>modify the response content</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.reponse);
 newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
@@ -341,32 +355,31 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <h3 id="beforedealhttpsrequest"><a class="header-link" href="#beforedealhttpsrequest"></a>beforeDealHttpsRequest</h3>
 <h4 id="beforedealhttpsrequest(requestdetail)"><a class="header-link" href="#beforedealhttpsrequest(requestdetail)"></a>beforeDealHttpsRequest(requestDetail)</h4>
 <ul class="list">
-<li>AnyProxy收到https请求时，会调用<code>beforeDealHttpsRequest</code>，并带上参数<code>requestDetail</code></li>
-<li>如果配置了全局解析https的参数，则AnyProxy会略过这个调用</li>
-<li>只有返回<code>true</code>时，AnyProxy才会尝试替换证书、解析https。否则只做数据流转发，无法看到明文数据。</li>
-<li>注意：https over http的代理模式中，这里的request是CONNECT请求</li>
+<li>When receiving https request, AnyProxy will call <code>beforeDealHttpsRequest</code> with param <code>requestDetail</code></li>
+<li>If configed with <code>forceProxyHttps</code> in launching, AnyProxy will skip calling this method</li>
+<li>Only by returning true, AnyProxy will try to replace the certificate and intercept the https request.</li>
 <li><code>requestDetail</code><ul class="list">
-<li><code>host</code> {string} 请求目标的Host，受制于协议，这里无法获取完整url</li>
-<li><code>_req</code> {object} 请求的原始request</li>
+<li><code>host</code> {string} the target host to request. Due to the request protocol, full url couldn&#39;t be got here</li>
+<li><code>_req</code> {object} the native node.js request object. The <code>_req</code> here refers to the CONNECT request.</li>
 </ul>
 </li>
-<li>返回值<ul class="list">
-<li><code>true</code>或者<code>false</code>，表示是否需要AnyProxy替换证书并解析https</li>
+<li>return value<ul class="list">
+<li><code>true</code> or <code>false</code>, whether AnyProxy should intercept the https request</li>
 </ul>
 </li>
 </ul>
 <h3 id="onerror"><a class="header-link" href="#onerror"></a>onError</h3>
 <h4 id="onerror(requestdetail,-error)"><a class="header-link" href="#onerror(requestdetail,-error)"></a>onError(requestDetail, error)</h4>
 <ul class="list">
-<li>在请求处理过程中发生错误时，AnyProxy会调用<code>onError</code>方法，并提供对应的错误信息</li>
-<li>多数场景下，错误会在请求目标服务器的时候发生，比如DNS解析失败、请求超时等</li>
-<li><code>requestDetail</code> 同<code>beforeSendRequest</code>中的参数</li>
-<li><p>以下几种返回都是合法的</p>
+<li>AnyProxy will call this method when an error happened in request handling.</li>
+<li>Errors usually are issued during requesting, e.g. DNS failure, request timeout</li>
+<li><code>requestDetail</code> is the same one as in <code>beforeSendRequest</code></li>
+<li><p>Any of these return values are valid</p>
 <ul class="list">
-<li>不做任何处理。此时AnyProxy会返回一个默认的错误页。</li>
+<li>do nothing, and AnyProxy will response a default error page</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</code></pre><ul class="list">
-<li>返回自定义错误页</li>
+<li>return a customized error page</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">return</span> {
   <span class="hljs-attr">response</span>: {
@@ -379,27 +392,36 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <h3 id="onconnecterror"><a class="header-link" href="#onconnecterror"></a>onConnectError</h3>
 <h4 id="onconnecterror(requestdetail,-error)"><a class="header-link" href="#onconnecterror(requestdetail,-error)"></a>onConnectError(requestDetail, error)</h4>
 <ul class="list">
-<li>AnyProxy在与目标HTTPS服务器建立连接的过程中，如果发生错误，AnyProxy会调用这个方法</li>
-<li><code>requestDetail</code> 同<code>beforeDealHttpsRequest</code>中的参数</li>
-<li>此处无法控制向客户端的返回信息，无需返回值。</li>
+<li>AnyProxy will call this method when failed to connect target server in https request</li>
+<li><code>requestDetail</code> is the same one as in <code>beforeDealHttpsRequest</code></li>
+<li>no return value is required </li>
 </ul>
 <h3 id="faq"><a class="header-link" href="#faq"></a>FAQ</h3>
 <ul class="list">
-<li>Q: 为什么https请求不能进入处理函数？</li>
-<li>A: 请确认规则文件内是否配置了<code>beforeDealHttpsRequest</code>方法，或启动时是否使用了<code>--intercept</code>参数</li>
+<li>Q: can not deal https request in rule module.</li>
+<li><p>A: Any of these options could be used to change the way AnyProxy deall https requests </p>
+<ol class="list">
+<li>config <code>--intercept</code> when luanching AnyProxy via cli, or use <code>forceProxyHttps</code> when using as an npm module</li>
+<li>place a <code>beforeDealHttpsRequest</code> function in your rule file and determine which request to intercept by your own.</li>
+</ol>
+</li>
+<li><p>Q: get an error says <em>function is not yieldable</em></p>
+</li>
+<li>A: Rule module is driven by <a href="https://www.npmjs.com/package/co">co</a>. The functions inside should  be yieldable, i.e. return a promise or be a generator function.</li>
 </ul>
-<h2 id="规则模块样例"><a class="header-link" href="#规则模块样例"></a>规则模块样例</h2>
+<h2 id="rule-samples"><a class="header-link" href="#rule-samples"></a>Rule Samples</h2>
 <ul class="list">
-<li>这里提供一些样例，来讲解如何开发规则模块，你可以直接通过 <code>anyproxy --rule http://....js</code> 来加载这些样例模块</li>
-<li>用curl发请求测试的方法如下<ul class="list">
-<li>直接请求服务器：<code>curl http://httpbin.org/</code></li>
-<li>通过代理服务器请求：<code>curl http://httpbin.org/ --proxy http://127.0.0.1:8001</code></li>
+<li>here are some samples about frequently used rule file</li>
+<li>try these samples by <code>anyproxy --rule http://....js</code></li>
+<li>how to test with curl:<ul class="list">
+<li>request the server directly <code>curl http://httpbin.org/</code></li>
+<li>request the server via proxy <code>curl http://httpbin.org/ --proxy http://127.0.0.1:8001</code></li>
 </ul>
 </li>
 </ul>
-<h3 id="使用本地数据"><a class="header-link" href="#使用本地数据"></a>使用本地数据</h3>
+<h3 id="use-local-response"><a class="header-link" href="#use-local-response"></a>use local response</h3>
 <ul class="list">
-<li>拦截发送到 <a href="http://httpbin.org">http://httpbin.org</a> 的请求，使用本地数据代替服务端返回</li>
+<li>intercept the request towards <a href="http://httpbin.org">http://httpbin.org</a> , return the local-defined response</li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_use_local_response.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -420,9 +442,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   },
-};</code></pre><h3 id="修改请求头"><a class="header-link" href="#修改请求头"></a>修改请求头</h3>
+};</code></pre><h3 id="modify-request-header"><a class="header-link" href="#modify-request-header"></a>modify request header</h3>
 <ul class="list">
-<li>修改发送到 httpbin.org 的user-agent</li>
+<li>modify the user-agent sent to httpbin.org</li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_header.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -440,9 +462,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   },
-};</code></pre><h3 id="修改请求数据"><a class="header-link" href="#修改请求数据"></a>修改请求数据</h3>
+};</code></pre><h3 id="modify-request-body"><a class="header-link" href="#modify-request-body"></a>modify request body</h3>
 <ul class="list">
-<li>修改发送到 <a href="http://httpbin.org/post">http://httpbin.org/post</a> 的post数据</li>
+<li>modify the post body of <a href="http://httpbin.org/post">http://httpbin.org/post</a></li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -460,9 +482,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   },
-};</code></pre><h3 id="修改请求的目标地址"><a class="header-link" href="#修改请求的目标地址"></a>修改请求的目标地址</h3>
+};</code></pre><h3 id="modify-the-request-target"><a class="header-link" href="#modify-the-request-target"></a>modify the request target</h3>
 <ul class="list">
-<li>把所有发送到 <a href="http://httpbin.org/">http://httpbin.org/</a> 的请求全部改到 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a></li>
+<li>send all the request towards <a href="http://httpbin.org/">http://httpbin.org/</a> to <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a></li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_path.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -483,9 +505,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   },
-};</code></pre><h3 id="修改请求协议"><a class="header-link" href="#修改请求协议"></a>修改请求协议</h3>
+};</code></pre><h3 id="modify-request-protocol"><a class="header-link" href="#modify-request-protocol"></a>modify request protocol</h3>
 <ul class="list">
-<li>把用http协议请求的 <a href="http://httpbin.org">http://httpbin.org</a> 改成https并发送</li>
+<li>modify the http request towards <a href="http://httpbin.org">http://httpbin.org</a> to https</li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_protocol.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -506,9 +528,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   }
-};</code></pre><h3 id="修改返回状态码"><a class="header-link" href="#修改返回状态码"></a>修改返回状态码</h3>
+};</code></pre><h3 id="modify-response-status-code"><a class="header-link" href="#modify-response-status-code"></a>modify response status code</h3>
 <ul class="list">
-<li>把 所有<a href="http://httpbin.org">http://httpbin.org</a> 的返回状态码都改成404</li>
+<li>modify all status code from <a href="http://httpbin.org">http://httpbin.org</a> to 404</li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_statuscode.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -528,9 +550,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   }
-};</code></pre><h3 id="修改返回头"><a class="header-link" href="#修改返回头"></a>修改返回头</h3>
+};</code></pre><h3 id="modify-the-response-header"><a class="header-link" href="#modify-the-response-header"></a>modify the response header</h3>
 <ul class="list">
-<li>在 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> 的返回头里加上 X-Proxy-By:AnyProxy</li>
+<li>add X-Proxy-By:AnyProxy to the response header from <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a></li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_header.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -550,9 +572,9 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       };
     }
   }
-};</code></pre><h3 id="修改返回内容并延迟"><a class="header-link" href="#修改返回内容并延迟"></a>修改返回内容并延迟</h3>
+};</code></pre><h3 id="modify-response-data-and-delay"><a class="header-link" href="#modify-response-data-and-delay"></a>modify response data and delay</h3>
 <ul class="list">
-<li>在 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> 的返回最后追加AnyProxy的签名，并延迟5秒</li>
+<li>append some info to the response of <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a>, then delay the response for 5 seconds.</li>
 </ul>
 <pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_response_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
   sample: 
@@ -564,7 +586,6 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 */</span>
 
 <span class="hljs-built_in">module</span>.exports = {
-  summary() { <span class="hljs-keyword">return</span> <span class="hljs-string">'a rule to modify response'</span>; },
   *beforeSendResponse(requestDetail, responseDetail) {
     <span class="hljs-keyword">if</span> (requestDetail.url === <span class="hljs-string">'http://httpbin.org/user-agent'</span>) {
       <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
@@ -576,14 +597,16 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
       });
     }
   },
-};</code></pre><h2 id="作为npm模块使用"><a class="header-link" href="#作为npm模块使用"></a>作为npm模块使用</h2>
-<p>AnyProxy可以作为一个npm模块使用，整合进其他工具。
-注意：如要启用https解析，请在代理服务器启动前自行调用<code>AnyProxy.utils.certMgr</code>相关方法生成证书，并引导用户信任安装。</p>
+};</code></pre><h2 id="use-anyproxy-as-an-npm-module"><a class="header-link" href="#use-anyproxy-as-an-npm-module"></a>Use AnyProxy as an npm module</h2>
+<p>AnyProxy can be used as an npm module</p>
+<blockquote>
+<p>To enable https feature, please guide users to use <code>anyproxy-ca</code> in cli. Or use methods under <code>AnyProxy.utils.certMgr</code> to generate certificates.</p>
+</blockquote>
 <ul class="list">
-<li>引入</li>
+<li>install</li>
 </ul>
-<pre class="hljs"><code>npm i anyproxy --save</code></pre><ul class="list">
-<li>使用举例</li>
+<pre class="hljs"><code>npm i anyproxy@beta --save <span class="hljs-comment"># 4.0 is in beta now</span></code></pre><ul class="list">
+<li>sample</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> AnyProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'anyproxy'</span>);
 <span class="hljs-keyword">const</span> options = {
@@ -608,72 +631,71 @@ proxyServer.start();
 proxyServer.close();</code></pre><ul class="list">
 <li><p>Class: AnyProxy.proxyServer</p>
 <ul class="list">
-<li><p>创建代理服务器</p>
+<li><p>create a proxy server</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> proxy = <span class="hljs-keyword">new</span> AnyProxy.proxyServer(options)</code></pre></li>
 <li><p><code>options</code></p>
 <ul class="list">
-<li><code>port</code> {number} 必选，代理服务器端口</li>
-<li><code>rule</code> {object} 自定义规则模块</li>
-<li><code>throttle</code> {number} 限速值，单位kb/s，默认不限速</li>
-<li><code>forceProxyHttps</code> {boolean} 是否强制拦截所有的https，忽略规则模块的返回，默认<code>false</code></li>
-<li><code>silent</code> {boolean} 是否屏蔽所有console输出，默认<code>false</code></li>
-<li><code>dangerouslyIgnoreUnauthorized</code> {boolean} 是否忽略请求中的证书错误，默认<code>false</code></li>
-<li><code>webInterface</code> {object} web版界面配置<ul class="list">
-<li><code>enable</code> {boolean} 是否启用web版界面，默认<code>false</code></li>
-<li><code>webPort</code> {number} web版界面端口号，默认<code>8002</code></li>
-<li><code>wsPort</code> {number} web版界面的ws端口号，默认<code>8003</code></li>
+<li><code>port</code> {number} required, port number of proxy server</li>
+<li><code>rule</code> {object} your rule module</li>
+<li><code>throttle</code> {number} throttle in kb/s, unlimited for default</li>
+<li><code>forceProxyHttps</code> {boolean} in force intercept all https request, false for default</li>
+<li><code>silent</code> {boolean} if keep silent in console, false for default<code>false</code></li>
+<li><code>dangerouslyIgnoreUnauthorized</code> {boolean} if ignore certificate error in request, false for default</li>
+<li><code>webInterface</code> {object} config for web interface<ul class="list">
+<li><code>enable</code> {boolean} if enable web interface, false for default</li>
+<li><code>webPort</code> {number} port number for web interface</li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p>Event: <code>ready</code></p>
 <ul class="list">
-<li>代理服务器启动完成</li>
-<li>示例</li>
+<li>emit when proxy server is ready</li>
+<li>sample</li>
 </ul>
 <pre class="hljs"><code>proxy.on(<span class="hljs-string">'ready'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ })</code></pre></li>
 <li><p>Event: <code>error</code></p>
 <ul class="list">
-<li>代理服务器发生错误</li>
-<li>示例</li>
+<li>emit when error happened inside proxy server</li>
+<li>sample</li>
 </ul>
 <pre class="hljs"><code>proxy.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ })</code></pre></li>
 <li><p>Method: <code>start</code></p>
 <ul class="list">
-<li>启动代理服务器</li>
-<li>示例</li>
+<li>start proxy server</li>
+<li>sample</li>
 </ul>
 <pre class="hljs"><code>proxy.start();</code></pre></li>
 <li><p>Method: <code>close</code></p>
 <ul class="list">
-<li>关闭代理服务器</li>
-<li>示例</li>
+<li>close proxy server</li>
+<li>sample</li>
 </ul>
 <pre class="hljs"><code>proxy.close();</code></pre></li>
 </ul>
 </li>
 <li><p>AnyProxy.utils.systemProxyMgr</p>
 <ul class="list">
-<li>管理系统的全局代理配置，方法调用时可能会弹出密码框</li>
-<li>使用示例</li>
+<li>manage the system proxy config. sudo password may be required</li>
+<li>sample</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-comment">// 配置127.0.0.1:8001为全局http代理服务器</span>
+<pre class="hljs"><code><span class="hljs-comment">// set 127.0.0.1:8001 as system http server</span>
 AnyProxy.utils.systemProxyMgr.enableGlobalProxy(<span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-string">'8001'</span>);    
 
-<span class="hljs-comment">// 关闭全局代理服务器</span>
+<span class="hljs-comment">// disable global proxy server</span>
 AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 <li><p>AnyProxy.utils.certMgr</p>
 <ul class="list">
-<li>管理AnyProxy的证书</li>
+<li>Manage certificates of AnyProxy</li>
 <li><code>AnyProxy.utils.certMgr.ifRootCAFileExists()</code><ul class="list">
-<li>校验系统内是否存在AnyProxy的根证书</li>
+<li>detect if AnyProx rootCA exists</li>
 </ul>
 </li>
 <li><code>AnyProxy.utils.certMgr.generateRootCA(callback)</code><ul class="list">
-<li>生成AnyProxy的rootCA，完成后请引导用户信任.crt文件</li>
+<li>generate a rootCA</li>
 </ul>
 </li>
-<li>样例</li>
+<li>Sample</li>
 </ul>
 <pre class="hljs"><code>  <span class="hljs-keyword">const</span> AnyProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">'AnyProxy'</span>);
   <span class="hljs-keyword">const</span> exec = <span class="hljs-built_in">require</span>(<span class="hljs-string">'child_process'</span>).exec;
@@ -696,56 +718,55 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
     });
   }</code></pre></li>
 </ul>
-<h2 id="关于anyproxy"><a class="header-link" href="#关于anyproxy"></a>关于AnyProxy</h2>
+<h2 id="about-anyproxy"><a class="header-link" href="#about-anyproxy"></a>About AnyProxy</h2>
 <ul class="list">
-<li>AnyProxy是支付宝前端团队推出的开源产品</li>
 <li>Change Log: <a href="https://github.com/alibaba/anyproxy/blob/master/CHANGELOG">https://github.com/alibaba/anyproxy/blob/master/CHANGELOG</a></li>
-<li>代码库：<a href="https://github.com/alibaba/anyproxy">https://github.com/alibaba/anyproxy</a></li>
-<li>issue反馈：<a href="https://github.com/alibaba/anyproxy/issues">https://github.com/alibaba/anyproxy/issues</a></li>
+<li>Github：<a href="https://github.com/alibaba/anyproxy">https://github.com/alibaba/anyproxy</a></li>
+<li>issue：<a href="https://github.com/alibaba/anyproxy/issues">https://github.com/alibaba/anyproxy/issues</a></li>
 </ul>
-<h2 id="配置帮助"><a class="header-link" href="#配置帮助"></a>配置帮助</h2>
-<h3 id="osx系统信任ca证书"><a class="header-link" href="#osx系统信任ca证书"></a>OSX系统信任CA证书</h3>
+<h2 id="appendix"><a class="header-link" href="#appendix"></a>Appendix</h2>
+<h3 id="config-root-ca-in-osx"><a class="header-link" href="#config-root-ca-in-osx"></a>Config root CA in OSX</h3>
 <ul class="list">
-<li>类似这种报错都是因为系统没有信任AnyProxy生成的CA所造成的</li>
+<li>this kind of errors is usually caused by untrusted root CA</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/CBkLGYgvoHAYwNVAYkpk.png" width="450" /></p>
 <blockquote>
-<p>警告：CA证书和系统安全息息相关，建议亲自生成，并妥善保管</p>
+<p>Warning: please keep your root CA safe since it may influence your system security.</p>
 </blockquote>
-<p>安装CA：</p>
+<p>install ：</p>
 <ul class="list">
-<li><p>双击打开rootCA.crt</p>
+<li><p>double click <em>rootCA.crt</em></p>
 </li>
-<li><p>确认将证书添加到login或system</p>
+<li><p>add cert into login or system</p>
 </li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/bCwNUFFpvsmVuljQKrIk.png" width="350" /></p>
 <ul class="list">
-<li>找到刚刚导入的AnyProxy证书，配置为信任（Always Trust）</li>
+<li>find the newly imported AnyProxy certificates, configured as <strong>Always Trust</strong></li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/HOmEElNGdoZEWFMLsTNT.png" width="700" /></p>
-<h3 id="windows系统信任ca证书"><a class="header-link" href="#windows系统信任ca证书"></a>Windows系统信任CA证书</h3>
+<h3 id="trust-root-ca-in-windows"><a class="header-link" href="#trust-root-ca-in-windows"></a>trust root CA in windows</h3>
 <p class="img-container"><img src="https://t.alipayobjects.com/tfscom/T1D3hfXeFtXXXXXXXX.jpg" width="700" /></p>
-<h3 id="配置osx系统代理"><a class="header-link" href="#配置osx系统代理"></a>配置OSX系统代理</h3>
+<h3 id="config-osx-system-proxy"><a class="header-link" href="#config-osx-system-proxy"></a>config OSX system proxy</h3>
 <ul class="list">
-<li>在wifi高级设置中，配置http代理即可</li>
+<li>the config is in wifi - advanced</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/vduwhobSTypTfgniBvoa.png" width="500" /></p>
-<h3 id="配置浏览器http代理"><a class="header-link" href="#配置浏览器http代理"></a>配置浏览器HTTP代理</h3>
+<h3 id="config-http-proxy-server"><a class="header-link" href="#config-http-proxy-server"></a>config http proxy server</h3>
 <ul class="list">
-<li>以Chrome的<a href="https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif">SwitchyOmega插件</a>为例</li>
+<li>take Chrome extent [SwitchyOmega] as an example(<a href="https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)为例">https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)为例</a></li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/jIPZrKmqXRaSledQeJUJ.png" width="500" /></p>
-<h3 id="配置ios/android系统代理"><a class="header-link" href="#配置ios/android系统代理"></a>配置iOS/Android系统代理</h3>
+<h3 id="config-ios/android-proxy-server"><a class="header-link" href="#config-ios/android-proxy-server"></a>config iOS/Android proxy server</h3>
 <ul class="list">
-<li><p>代理服务器都在wifi设置中配置</p>
+<li><p>proxy settings are placed in wifi setting</p>
 </li>
-<li><p>iOS HTTP代理配置</p>
+<li><p>iOS</p>
 </li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/tLGqIozhffTccUgPakuw.png" width="260" /></p>
 <ul class="list">
-<li>Android HTTP代理配置</li>
+<li>Android</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/YQtbQYVNuOszZGdAOauU.png" width="260" /></p>
     </div>
