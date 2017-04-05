@@ -242,17 +242,16 @@ function isSupportedProtocol(requestPath) {
 /*
 * collect all request data in one url
 */
-function getRequestData(pageUrl, cb) {
+function getRequestListFromPage(pageUrl, cb) {
   let _ph;
   let _page;
   let _outObj;
   const phantom = require('phantom');  
+  console.log(`collecting requests from ${pageUrl}...`);
   return phantom.create().then(ph => {
-    console.log('step 1: create page');
     _ph = ph;
     return _ph.createPage();
   }).then(page => {
-    console.log('step 2: bind event');
     _page = page;
     _outObj = _ph.createOutObject();
     _outObj.urls = [];
@@ -262,16 +261,15 @@ function getRequestData(pageUrl, cb) {
     return _page.open(pageUrl);
   })
   .then(status => {
-    console.log('step 3: get urls');
     return _outObj.property('urls');
   })
   .then(urls => {
-    console.log('step 4: close phantom');
     _page.close();
     _ph.exit();
     return urls;
   })
   .catch((err) => {
+    console.log(`failed to collecting requests from ${pageUrl}`);
     console.log(err);
   });
 }
@@ -302,7 +300,7 @@ module.exports = {
   directPutUpload,
   proxyPutUpload,
   isViaProxy,
-  getRequestData,
+  getRequestListFromPage,
   directRequest,
   proxyRequest,
   isSupportedProtocol

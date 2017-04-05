@@ -1,10 +1,12 @@
+/**
+ * use phantomjs to capture requests in real websites, then compare the directly-connected response with those through AnyProxy
+ */
 const fs = require('fs');
 const ProxyServerUtil = require('../util/ProxyServerUtil.js');
 const HttpUtil = require('../util/HttpUtil.js');
 const path = require('path');
 const { printLog, printError, printHilite, stringSimilarity } = require('../util/CommonUtil.js');
 const reportPath = path.join(__dirname, '../report/');
-
 
 const testUrls = ['https://www.taobao.com', 'https://www.baidu.com', 'https://www.tmall.com'];
 
@@ -13,7 +15,7 @@ let direcrtResponseSampleB = [];
 let proxyResponse = [];
 
 function test(url, requestHeaders = {}) {
-  fdescribe('Test real request against', () => {
+  fdescribe('Test requests in real broswer', () => {
     let proxyServer;
 
     beforeAll((done) => {
@@ -31,8 +33,8 @@ function test(url, requestHeaders = {}) {
       printLog('Closed server for ' + url);
     });
 
-    it(`Request against ${url}`, (done) => {
-      HttpUtil.getRequestData(url).then((arr) => {
+    it(`Request towards ${url}`, (done) => {
+      HttpUtil.getRequestListFromPage(url).then((arr) => {
         const directPromisesA = [];
         const directPromisesB = [];
         const proxyPromises = [];
