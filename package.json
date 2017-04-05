@@ -23,6 +23,7 @@
     "node-easy-cert": "^1.0.0",
     "node-forge": "^0.6.39",
     "npm": "^2.7.0",
+    "pretty-data": "^0.40.0",
     "promise": "^7.0.4",
     "qrcode-npm": "0.0.3",
     "stream-throttle": "^0.1.3",

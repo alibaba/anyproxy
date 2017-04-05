@@ -26,3 +26,4 @@ build/Release
 node_modules
 .lock-wscript
 temp
+.vscode

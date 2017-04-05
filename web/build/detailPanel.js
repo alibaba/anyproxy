@@ -1,3 +1,6 @@
+var PrettyData = require("../../node_modules/pretty-data");
+var Util       = require("../../lib/web_util");
+
 function init(React){
 
 	var DetailPanel = React.createClass({displayName: "DetailPanel",
@@ -25,6 +28,7 @@ function init(React){
 						self.setState({
 							body : {
 								body : resObj.content,
+								type: resObj.type,
 								id   : resObj.id
 							}
 						});
@@ -72,37 +76,47 @@ function init(React){
 						var imgEl = { __html : '<img src="'+ this.state.body.img +'" />'};
 						bodyContent = (React.createElement("div", {dangerouslySetInnerHTML: imgEl}));
 					}else{
+						try{
+							// trying to prettify, sometimes content-types are not right and that raises exceptions
+							if (this.state.body.type == Util.responseTypes.JSON_TYPE)						
+								this.state.body.body = PrettyData.pd.json(this.state.body.body);
+							else if(this.state.body.type == Util.responseTypes.XML_TYPE || this.state.body.type == Util.responseTypes.HTML_TYPE)
+								this.state.body.body = PrettyData.pd.xml(this.state.body.body);
+							else if(this.state.body.type == Util.responseTypes.CSS_TYPE)
+								this.state.body.body = PrettyData.pd.css(this.state.body.body);
+						}catch(e){}
+
 						bodyContent = (React.createElement("pre", {className: "resBodyContent"}, this.state.body.body));
 					}
 				}else{
 					bodyContent = null;
 					this.loadBody();
 				}
-
+					
 				if(this.props.data.resHeader){
 					for(var key in this.props.data.resHeader){
 						resHeaderSection.push(React.createElement("li", {key: "resHeader_" + key}, React.createElement("strong", null, key), " : ", this.props.data.resHeader[key]))
 					}
-				}
+				}					
 
 				detailSection = (
-					React.createElement("div", null, 
-						React.createElement("section", {className: "resHeader"}, 
-							React.createElement("h4", {className: "subTitle"}, "response header"), 
-							React.createElement("div", {className: "detail"}, 
-								React.createElement("ul", {className: "uk-list"}, 
-								    React.createElement("li", null, "HTTP/1.1 ", React.createElement("span", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode)), 
-								    resHeaderSection
+						React.createElement("div", null, 
+							React.createElement("section", {className: "resHeader"}, 
+								React.createElement("h4", {className: "subTitle"}, "response header"), 
+								React.createElement("div", {className: "detail"}, 
+									React.createElement("ul", {className: "uk-list"}, 
+										React.createElement("li", null, "HTTP/1.1 ", React.createElement("span", {className: "http_status http_status_" + this.props.data.statusCode}, this.props.data.statusCode)), 
+										resHeaderSection
+									)
 								)
+							), 
+								
+							React.createElement("section", {className: "resBody"}, 
+								React.createElement("h4", {className: "subTitle"}, "response body"), 
+								React.createElement("div", {className: "detail"}, bodyContent)
 							)
-						), 
-						
-						React.createElement("section", {className: "resBody"}, 
-							React.createElement("h4", {className: "subTitle"}, "response body"), 
-							React.createElement("div", {className: "detail"}, bodyContent)
 						)
-					)
-				);
+					);
 			}
 
 			return (
