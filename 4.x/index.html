@@ -15,7 +15,7 @@
   <script>
     //redirect to Chinese version if in China
     if (new Date().getTimezoneOffset() == "-480" && !(/(cn|en)/i.test(location.href))) {
-      location.href = "/cn";
+      location.href = "./cn.html";
     } else {
       var _hmt = _hmt || []; (function () { var hm = document.createElement("script"); hm.src = "//hm.baidu.com/hm.js?4e51565b7d471fd6623c163a8fd79e07"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(hm, s); })();
     }
