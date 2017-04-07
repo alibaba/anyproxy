@@ -7,7 +7,7 @@ const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
 const HttpsProxyAgent = require('https-proxy-agent');
-const Readable = require('stream');
+const Duplex = require('stream').Duplex;
 
 const PROXY_HOST = 'http://localhost:8001';
 const SOCKET_PROXY_HOST = 'http://localhost:8001';
@@ -18,11 +18,12 @@ const HTTPS_SERVER_BASE = 'https://localhost:3001';
 const WS_SERVER_BASE = 'ws://localhost:3000';
 const WSS_SERVER_BASE = 'wss://localhost:3001';
 
-class CommonReadableStream extends Readable {
+class CommonReadableStream extends Duplex {
   constructor(config) {
     super();
   }
-  _read(size) {}
+  _read() {}
+  _write() {}
 }
 
 
@@ -82,7 +83,7 @@ function proxyPutUpload(url, filepath, headers = {}) {
   return doUpload(url, 'PUT', filepath, headers, true);
 }
 
-function doRequest(method = 'GET', url, params = {}, headers = {}, isProxy, string) {
+function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   headers = Object.assign({}, headers);
   const requestData = {
     method,
@@ -99,40 +100,24 @@ function doRequest(method = 'GET', url, params = {}, headers = {}, isProxy, stri
   }
 
   const requestTask = new Promise((resolve, reject) => {
-    if (fs.existsSync(filepath) && (method === 'POST' || method === 'PUT')) {
-      fs.createReadStream(filepath).pipe(request[method](
-        url,
-        { headers },
-        (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
+    request(
+      requestData,
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
         }
-      ))
-    } else {
-      request(
-        requestData,
-        (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
-        }
-      );
-    }
+      }
+    );
   });
   return requestTask;
 }
 
 function _doRequest(method = 'GET', url, params, headers = {}, isProxy) {
+  let reqStream = new CommonReadableStream();
   headers = Object.assign({}, headers);
   const requestData = {
-    method,
-    form: params,
-    url,
     headers,
     followRedirect: false,
     rejectUnauthorized: false
@@ -145,27 +130,28 @@ function _doRequest(method = 'GET', url, params, headers = {}, isProxy) {
 
   const requestTask = new Promise((resolve, reject) => {
     if (method === 'POST' || method === 'PUT') {
-      let reqStream;
-      if (typeof params === 'string') { //文件路径
+      if (typeof params === 'string') {
         if (fs.existsSync(params)) {
           reqStream = fs.createReadStream(params);
-        } else if (typeof params === 'object') {
-          reqStream = new CommonReadableStream();
-          reqStream.push(new Buffer(JSON.stringify(params)));
         }
-        reqStream.pipe(request[method](
-          url,
-          { headers },
-          (error, response, body) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(response);
-            }
-          }
-        ))
+      } else if (typeof params === 'object') {
+        reqStream.write(new Buffer(JSON.stringify(params)));
       }
+      reqStream.pipe(request[method](
+        url,
+        requestData,
+        (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
+        }
+      ))
     } else {
+      requestData.url = url;
+      requestData.form = params;
+      requestData.method = method;
       request(
         requestData,
         (error, response, body) => {
@@ -380,5 +366,6 @@ module.exports = {
   getRequestListFromPage,
   directRequest,
   proxyRequest,
-  isSupportedProtocol
+  isSupportedProtocol,
+  _doRequest,
 };
