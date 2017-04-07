@@ -7,6 +7,7 @@ const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
 const HttpsProxyAgent = require('https-proxy-agent');
+const Readable = require('stream');
 
 const PROXY_HOST = 'http://localhost:8001';
 const SOCKET_PROXY_HOST = 'http://localhost:8001';
@@ -16,6 +17,14 @@ const HTTP_SERVER_BASE = 'http://localhost:3000';
 const HTTPS_SERVER_BASE = 'https://localhost:3001';
 const WS_SERVER_BASE = 'ws://localhost:3000';
 const WSS_SERVER_BASE = 'wss://localhost:3001';
+
+class CommonReadableStream extends Readable {
+  constructor(config) {
+    super();
+  }
+  _read(size) {}
+}
+
 
 function getHostFromUrl(url = '') {
   const hostReg = /^(https{0,1}:\/\/)(\w+)/;
@@ -73,7 +82,7 @@ function proxyPutUpload(url, filepath, headers = {}) {
   return doUpload(url, 'PUT', filepath, headers, true);
 }
 
-function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
+function doRequest(method = 'GET', url, params = {}, headers = {}, isProxy, string) {
   headers = Object.assign({}, headers);
   const requestData = {
     method,
@@ -90,16 +99,84 @@ function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   }
 
   const requestTask = new Promise((resolve, reject) => {
-    request(
-      requestData,
-      (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
+    if (fs.existsSync(filepath) && (method === 'POST' || method === 'PUT')) {
+      fs.createReadStream(filepath).pipe(request[method](
+        url,
+        { headers },
+        (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
         }
+      ))
+    } else {
+      request(
+        requestData,
+        (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
+        }
+      );
+    }
+  });
+  return requestTask;
+}
+
+function _doRequest(method = 'GET', url, params, headers = {}, isProxy) {
+  headers = Object.assign({}, headers);
+  const requestData = {
+    method,
+    form: params,
+    url,
+    headers,
+    followRedirect: false,
+    rejectUnauthorized: false
+  };
+
+  if (isProxy) {
+    requestData.proxy = PROXY_HOST;
+    requestData.headers['via-proxy'] = 'true';
+  }
+
+  const requestTask = new Promise((resolve, reject) => {
+    if (method === 'POST' || method === 'PUT') {
+      let reqStream;
+      if (typeof params === 'string') { //文件路径
+        if (fs.existsSync(params)) {
+          reqStream = fs.createReadStream(params);
+        } else if (typeof params === 'object') {
+          reqStream = new CommonReadableStream();
+          reqStream.push(new Buffer(JSON.stringify(params)));
+        }
+        reqStream.pipe(request[method](
+          url,
+          { headers },
+          (error, response, body) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(response);
+            }
+          }
+        ))
       }
-    );
+    } else {
+      request(
+        requestData,
+        (error, response, body) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(response);
+          }
+        }
+      );
+    }
   });
   return requestTask;
 }
@@ -246,7 +323,7 @@ function getRequestListFromPage(pageUrl, cb) {
   let _ph;
   let _page;
   let _outObj;
-  const phantom = require('phantom');  
+  const phantom = require('phantom');
   console.log(`collecting requests from ${pageUrl}...`);
   return phantom.create().then(ph => {
     _ph = ph;
