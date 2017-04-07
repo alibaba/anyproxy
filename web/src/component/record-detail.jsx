@@ -5,11 +5,13 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
-import { Menu, Table } from 'antd';
+import { Menu, Table, Button, notification } from 'antd';
+import clipboard from 'clipboard-js'
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
 import { selectText } from 'common/CommonUtil';
+import { curlify } from 'common/curlUtil';
 
 
 import Style from './record-detail.less';
@@ -30,6 +32,7 @@ class RecordDetail extends React.Component {
     };
 
     this.onMenuChange = this.onMenuChange.bind(this);
+    this.copyCurlCmd = this.copyCurlCmd.bind(this)
   }
 
   static propTypes = {
@@ -133,6 +136,25 @@ class RecordDetail extends React.Component {
     );
   }
 
+  getReqCurlDiv() {
+    const { recordDetail } = this.props.requestRecord
+    return (
+      <div className={Style.reqCurl}>{curlify(recordDetail)}</div>
+    )
+  }
+
+  notify(message, type = 'info', duration = 1.6, opts = {}) {
+    notification[type]({ message, duration, ...opts })
+  }
+
+  copyCurlCmd() {
+    const { recordDetail } = this.props.requestRecord
+    clipboard
+      .copy(curlify(recordDetail))
+      .then(() => this.notify('复制成功', 'success'))
+      .catch(() => this.notify('复制失败', 'error'))
+  }
+
   getResBodyDiv() {
     const { recordDetail } = this.props.requestRecord;
 
@@ -213,6 +235,24 @@ class RecordDetail extends React.Component {
           </div>
           <div className={CommonStyle.whiteSpace10} />
           {this.getReqBodyDiv()}
+        </div>
+
+        <div className={Style.section} >
+          <div>
+            <span className={CommonStyle.sectionTitle}>
+              Curl
+              <Button
+                type="primary"
+                size="small"
+                className={Style.curlCopyBtn}
+                onClick={this.copyCurlCmd}
+              >
+                Copy
+              </Button>
+            </span>
+          </div>
+          <div className={CommonStyle.whiteSpace10} />
+          {this.getReqCurlDiv()}
         </div>
 
       </div>
