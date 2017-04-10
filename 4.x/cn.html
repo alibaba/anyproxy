@@ -71,6 +71,8 @@
     <li class="sidebar-header-3"><a href="#windows系统信任ca证书">Windows系统信任CA证书</a></li>
     <li class="sidebar-header-3"><a href="#配置osx系统代理">配置OSX系统代理</a></li>
     <li class="sidebar-header-3"><a href="#配置浏览器http代理">配置浏览器HTTP代理</a></li>
+    <li class="sidebar-header-3"><a href="#ios系统信任ca证书">iOS系统信任CA证书</a></li>
+    <li class="sidebar-header-3"><a href="#ios-&gt;&#x3D;-10.3信任ca证书">iOS &gt;&#x3D; 10.3信任CA证书</a></li>
     <li class="sidebar-header-3"><a href="#配置ios/android系统代理">配置iOS/Android系统代理</a></li>
 </ul>
       </div>
@@ -762,6 +764,16 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 <li>以Chrome的<a href="https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif">SwitchyOmega插件</a>为例</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/jIPZrKmqXRaSledQeJUJ.png" width="500" /></p>
+<h3 id="ios系统信任ca证书"><a class="header-link" href="#ios系统信任ca证书"></a>iOS系统信任CA证书</h3>
+<ul class="list">
+<li>点击web ui中的 <em>Root CA</em>，按提示扫描二维码即可安装</li>
+</ul>
+<p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/BrugmMelGVysLDOIBblj.png" width="260" /></p>
+<h3 id="ios->=-10.3信任ca证书"><a class="header-link" href="#ios->=-10.3信任ca证书"></a>iOS &gt;= 10.3信任CA证书</h3>
+<ul class="list">
+<li>除了上述证书安装过程，还需要在 <em>设置-&gt;通用-&gt;证书信任设置</em> 中把AnyProxy证书的开关打开，否则safari将报错。</li>
+</ul>
+<p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/hVWkXHrzHmOKOtCKGUWx.png" width="500" /></p>
 <h3 id="配置ios/android系统代理"><a class="header-link" href="#配置ios/android系统代理"></a>配置iOS/Android系统代理</h3>
 <ul class="list">
 <li><p>代理服务器都在wifi设置中配置</p>
