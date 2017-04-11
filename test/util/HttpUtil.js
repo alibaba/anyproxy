@@ -76,7 +76,7 @@ function proxyPutUpload(url, filepath, headers = {}) {
 
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   headers = Object.assign({}, headers);
-  
+
   let reqStream = new stream.Readable();
   const requestData = {
     headers,
@@ -328,6 +328,5 @@ module.exports = {
   getRequestListFromPage,
   directRequest,
   proxyRequest,
-  isSupportedProtocol,
-  doRequest
+  isSupportedProtocol
 };
