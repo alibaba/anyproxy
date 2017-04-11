@@ -7,7 +7,7 @@ const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
 const HttpsProxyAgent = require('https-proxy-agent');
-const Duplex = require('stream').Duplex;
+const stream = require('stream');
 
 const PROXY_HOST = 'http://localhost:8001';
 const SOCKET_PROXY_HOST = 'http://localhost:8001';
@@ -17,15 +17,6 @@ const HTTP_SERVER_BASE = 'http://localhost:3000';
 const HTTPS_SERVER_BASE = 'https://localhost:3001';
 const WS_SERVER_BASE = 'ws://localhost:3000';
 const WSS_SERVER_BASE = 'wss://localhost:3001';
-
-class CommonReadableStream extends Duplex {
-  constructor(config) {
-    super();
-  }
-  _read() {}
-  _write() {}
-}
-
 
 function getHostFromUrl(url = '') {
   const hostReg = /^(https{0,1}:\/\/)(\w+)/;
@@ -85,38 +76,8 @@ function proxyPutUpload(url, filepath, headers = {}) {
 
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   headers = Object.assign({}, headers);
-  const requestData = {
-    method,
-    form: params,
-    url,
-    headers,
-    followRedirect: false,
-    rejectUnauthorized: false
-  };
-
-  if (isProxy) {
-    requestData.proxy = PROXY_HOST;
-    requestData.headers['via-proxy'] = 'true';
-  }
-
-  const requestTask = new Promise((resolve, reject) => {
-    request(
-      requestData,
-      (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
-      }
-    );
-  });
-  return requestTask;
-}
-
-function _doRequest(method = 'GET', url, params, headers = {}, isProxy) {
-  let reqStream = new CommonReadableStream();
-  headers = Object.assign({}, headers);
+  
+  let reqStream = new stream.Readable();
   const requestData = {
     headers,
     followRedirect: false,
@@ -131,13 +92,14 @@ function _doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   const requestTask = new Promise((resolve, reject) => {
     if (method === 'POST' || method === 'PUT') {
       if (typeof params === 'string') {
-        if (fs.existsSync(params)) {
-          reqStream = fs.createReadStream(params);
-        }
+        fs.existsSync(params) ?
+          reqStream = fs.createReadStream(params) :
+          reqStream.push(params);
       } else if (typeof params === 'object') {
-        reqStream.write(new Buffer(JSON.stringify(params)));
+        reqStream.push(JSON.stringify(params));
       }
-      reqStream.pipe(request[method](
+      reqStream.push(null);
+      reqStream.pipe(request[method.toLowerCase()](
         url,
         requestData,
         (error, response, body) => {
@@ -367,5 +329,5 @@ module.exports = {
   directRequest,
   proxyRequest,
   isSupportedProtocol,
-  _doRequest,
+  doRequest
 };
