@@ -136,13 +136,6 @@ class RecordDetail extends React.Component {
     );
   }
 
-  getReqCurlDiv() {
-    const { recordDetail } = this.props.requestRecord
-    return (
-      <div className={Style.reqCurl}>{curlify(recordDetail)}</div>
-    )
-  }
-
   notify(message, type = 'info', duration = 1.6, opts = {}) {
     notification[type]({ message, duration, ...opts })
   }
@@ -151,8 +144,8 @@ class RecordDetail extends React.Component {
     const { recordDetail } = this.props.requestRecord
     clipboard
       .copy(curlify(recordDetail))
-      .then(() => this.notify('复制成功', 'success'))
-      .catch(() => this.notify('复制失败', 'error'))
+      .then(() => this.notify('COPY SUCCESS', 'success'))
+      .catch(() => this.notify('COPY FAILED', 'error'))
   }
 
   getResBodyDiv() {
@@ -211,6 +204,15 @@ class RecordDetail extends React.Component {
               <span >HTTP/1.1</span>
             </li>
           </ul>
+          <div className={CommonStyle.whiteSpace10} />
+          <ul className={Style.ulItem} >
+            <li className={Style.liItem} >
+              <strong>CURL:</strong>
+              <span>
+                <a href="javascript:void(0)" onClick={this.copyCurlCmd} >COPY AS CURL</a>
+              </span>
+            </li>
+          </ul>
         </div>
         <div className={Style.section} >
           <div >
@@ -226,7 +228,7 @@ class RecordDetail extends React.Component {
           <div >
             <span className={CommonStyle.sectionTitle}>Cookies</span>
           </div>
-          { this.getCookieDiv(cookieString)}
+          {this.getCookieDiv(cookieString)}
         </div>
 
         <div className={Style.section} >
@@ -236,25 +238,6 @@ class RecordDetail extends React.Component {
           <div className={CommonStyle.whiteSpace10} />
           {this.getReqBodyDiv()}
         </div>
-
-        <div className={Style.section} >
-          <div>
-            <span className={CommonStyle.sectionTitle}>
-              Curl
-              <Button
-                type="primary"
-                size="small"
-                className={Style.curlCopyBtn}
-                onClick={this.copyCurlCmd}
-              >
-                Copy
-              </Button>
-            </span>
-          </div>
-          <div className={CommonStyle.whiteSpace10} />
-          {this.getReqCurlDiv()}
-        </div>
-
       </div>
     );
   }
