@@ -5,6 +5,7 @@
 .hg
 .lock-wscript
 .svn
+.vscode
 .wafpickle-*
 CVS
 npm-debug.log

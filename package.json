@@ -30,7 +30,6 @@
   "scripts": {
     "test": "exit 0"
   },
-  "pre-commit": "test",
   "repository": {
     "type": "git",
     "url": "https://github.com/alibaba/anyproxy.git"
