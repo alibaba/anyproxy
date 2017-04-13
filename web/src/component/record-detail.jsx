@@ -151,6 +151,9 @@ class RecordDetail extends React.Component {
       }
 
       default: {
+        if (!recordDetail.resBody && recordDetail.ref) {
+          reqBodyDiv = <a href={recordDetail.ref} target="_blank">{recordDetail.fileName}</a>;
+        }
         break;
       }
     }
