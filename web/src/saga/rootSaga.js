@@ -25,6 +25,7 @@ import {
   updateLocalMappedConfig,
   updateActiveRecordItem,
   updateLocalInterceptHttpsFlag,
+  updateFechingRecordStatus,
   updateLocalGlobalProxyFlag
 } from 'action/globalStatusAction';
 
@@ -47,9 +48,11 @@ function* doFetchMappedConfig() {
 
 function* doFetchRecordBody(recordId) {
   // const recordBody = { id: recordId };
+  yield put(updateFechingRecordStatus(true));
   const recordBody = yield call(getJSON, '/fetchBody', { id: recordId });
   recordBody.id = parseInt(recordBody.id, 10);
 
+  yield put(updateFechingRecordStatus(false));
   yield put(updateActiveRecordItem(recordId));
   yield put(showRecordDetail(recordBody));
 }

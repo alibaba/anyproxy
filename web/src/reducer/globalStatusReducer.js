@@ -17,6 +17,7 @@ const defaultStatus = {
   panelLoadingPrev: false,
   showNewRecordTip: false,
   isRootCAFileExists: false,
+  fetchingRecord: false,
   wsPort: null,
   mappedConfig:[] // configured map config
 };
@@ -44,7 +45,8 @@ import {
   UPDATE_APP_VERSION,
   UPDATE_IS_ROOTCA_EXISTS,
   UPDATE_SHOW_NEW_RECORD_TIP,
-  UPDATE_GLOBAL_WSPORT
+  UPDATE_GLOBAL_WSPORT,
+  UPDATE_FETCHING_RECORD_STATUS
 } from 'action/globalStatusAction';
 
 // The map to save the mapping relationships of the path and it's location in the tree node
@@ -81,7 +83,7 @@ function getTreeMap(path, sub) {
   return direcotryList;
 }
 
-function requestListReducer (state = defaultStatus, action) {
+function requestListReducer(state = defaultStatus, action) {
   switch (action.type) {
     case STOP_RECORDING: {
       const newState = Object.assign({}, state);
@@ -210,6 +212,12 @@ function requestListReducer (state = defaultStatus, action) {
     case UPDATE_GLOBAL_WSPORT: {
       const newState = Object.assign({}, state);
       newState.wsPort = action.data;
+      return newState;
+    }
+
+    case UPDATE_FETCHING_RECORD_STATUS: {
+      const newState = Object.assign({}, state);
+      newState.fetchingRecord = action.data;
       return newState;
     }
 
