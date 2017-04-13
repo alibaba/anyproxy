@@ -209,7 +209,7 @@ class RecordDetail extends React.Component {
             <li className={Style.liItem} >
               <strong>CURL:</strong>
               <span>
-                <a href="javascript:void(0)" onClick={this.copyCurlCmd} >COPY AS CURL</a>
+                <a href="javascript:void(0)" onClick={this.copyCurlCmd} >copy as CURL</a>
               </span>
             </li>
           </ul>
