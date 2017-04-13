@@ -9,7 +9,7 @@ export function initWs(wsPort = 8003, key = '') {
     throw (new Error('WebSocket is not supportted on this browser'));
   }
 
-  const wsClient = new WebSocket(`ws://localhost:${wsPort}/${key}`);
+  const wsClient = new WebSocket(`ws://${location.hostname}:${wsPort}/${key}`);
 
   wsClient.onerror = (error) => {
     console.error(error);
