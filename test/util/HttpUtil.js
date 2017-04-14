@@ -74,6 +74,10 @@ function proxyPutUpload(url, filepath, headers = {}) {
   return doUpload(url, 'PUT', filepath, headers, true);
 }
 
+/**
+ * @param  params {String}  stream类型或file路径
+ *                {Object}  key-value形式
+ */
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   headers = Object.assign({}, headers);
 
@@ -89,41 +93,47 @@ function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
     requestData.headers['via-proxy'] = 'true';
   }
 
+  const streamReq = (resolve, reject) => {
+    if (typeof params === 'string') {
+      fs.existsSync(params) ?
+        reqStream = fs.createReadStream(params) :
+        reqStream.push(params);
+    } else if (typeof params === 'object') {
+      reqStream.push(JSON.stringify(params));
+    }
+    reqStream.push(null);
+    reqStream.pipe(request[method.toLowerCase()](
+      url,
+      requestData,
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    ))
+  }
+  const commonReq = (resolve, reject) => {
+    requestData.url = url;
+    requestData.form = params;
+    requestData.method = method;
+    request(
+      requestData,
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
+  }
   const requestTask = new Promise((resolve, reject) => {
     if (method === 'POST' || method === 'PUT') {
-      if (typeof params === 'string') {
-        fs.existsSync(params) ?
-          reqStream = fs.createReadStream(params) :
-          reqStream.push(params);
-      } else if (typeof params === 'object') {
-        reqStream.push(JSON.stringify(params));
-      }
-      reqStream.push(null);
-      reqStream.pipe(request[method.toLowerCase()](
-        url,
-        requestData,
-        (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
-        }
-      ))
+      streamReq(resolve, reject);
     } else {
-      requestData.url = url;
-      requestData.form = params;
-      requestData.method = method;
-      request(
-        requestData,
-        (error, response, body) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(response);
-          }
-        }
-      );
+      commonReq(resolve, reject);
     }
   });
   return requestTask;
