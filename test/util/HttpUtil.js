@@ -75,7 +75,7 @@ function proxyPutUpload(url, filepath, headers = {}) {
 }
 
 /**
- * @param  params {String}  stream类型或file路径
+ * @param  params {String}  json类型或file路径
  *                {Object}  key-value形式
  */
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
