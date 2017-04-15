@@ -94,6 +94,7 @@ function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   }
 
   const streamReq = (resolve, reject) => {
+    requestData.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
     if (typeof params === 'string') {
       fs.existsSync(params) ?
         reqStream = fs.createReadStream(params) :
@@ -116,7 +117,7 @@ function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   }
   const commonReq = (resolve, reject) => {
     requestData.url = url;
-    requestData.form = params;
+    requestData.form = '';
     requestData.method = method;
     request(
       requestData,

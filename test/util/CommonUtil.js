@@ -91,7 +91,6 @@ function isCommonResHeaderEqual(directHeaders, proxyHeaders, requestUrl) {
   if (!/gzip/i.test(directHeaders['content-encoding'])) {
     // if the content is gzipped, proxy will unzip and remove the header
     mustEqualFileds.push('content-encoding');
-    mustEqualFileds.push('content-length');
   }
   mustEqualFileds.push('content-type');
   mustEqualFileds.push('cache-control');
@@ -139,13 +138,14 @@ function isCommonReqEqual(url, serverInstance) {
     // By 加里 2017.1.31
     delete proxyReqObj.headers['accept-encoding'];
 
-    // TODO: 有些content-length比对也会有问题，direct出去的有时没有。后面临时加个判断，需要细查
-    if (typeof directReqObj.headers['content-length'] === 'undefined' && proxyReqObj.headers['content-length']) {
-      directReqObj.headers['content-length'] = '0';
-    }
-
     directReqObj.headers['content-type'] = trimFormContentType(directReqObj.headers['content-type']);
     proxyReqObj.headers['content-type'] = trimFormContentType(proxyReqObj.headers['content-type']);
+
+    // avoid compare content-length header via proxy
+    delete directReqObj.headers['content-length'];
+    delete proxyReqObj.headers['content-length'];
+    delete directReqObj.headers['transfer-encoding'];
+    delete proxyReqObj.headers['transfer-encoding'];
 
     isEqual = isEqual && directReqObj.url === proxyReqObj.url;
     isEqual = isEqual && isObjectEqual(directReqObj.headers, proxyReqObj.headers, url);
