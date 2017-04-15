@@ -5,12 +5,8 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
-<<<<<<< HEAD
 import { Menu, Table, Button, notification } from 'antd';
 import clipboard from 'clipboard-js'
-=======
-import { Menu, Table, Spin } from 'antd';
->>>>>>> 4.x-yanran-new
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
