@@ -5,8 +5,12 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
+<<<<<<< HEAD
 import { Menu, Table, Button, notification } from 'antd';
 import clipboard from 'clipboard-js'
+=======
+import { Menu, Table, Spin } from 'antd';
+>>>>>>> 4.x-yanran-new
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
@@ -166,6 +170,9 @@ class RecordDetail extends React.Component {
       }
 
       default: {
+        if (!recordDetail.resBody && recordDetail.ref) {
+          reqBodyDiv = <a href={recordDetail.ref} target="_blank">{recordDetail.fileName}</a>;
+        }
         break;
       }
     }
@@ -280,14 +287,13 @@ class RecordDetail extends React.Component {
     );
   }
 
-  getRecordDetailDiv() {
-    const recordDetail = this.props.requestRecord.recordDetail;
-    if (!recordDetail) {
-      return null;
+  getRecordContentDiv(recordDetail, fetchingRecord) {
+    const getMenuBody = () => {
+      const menuBody = this.state.pageIndex === PageIndexMap.REQUEST_INDEX ?
+        this.getRequestDiv(recordDetail) : this.getResponseDiv(recordDetail);
+      return menuBody;
     }
 
-    const menuBody = this.state.pageIndex === PageIndexMap.REQUEST_INDEX ?
-      this.getRequestDiv(recordDetail) : this.getResponseDiv(recordDetail);
     return (
       <div className={Style.wrapper} >
         <Menu onClick={this.onMenuChange} mode="horizontal" selectedKeys={[this.state.pageIndex]} >
@@ -295,10 +301,29 @@ class RecordDetail extends React.Component {
           <Menu.Item key={PageIndexMap.RESPONSE_INDEX}>Response</Menu.Item>
         </Menu>
         <div className={Style.detailWrapper} >
-          {menuBody}
+          {fetchingRecord ? this.getLoaingDiv() : getMenuBody()}
         </div>
       </div>
     );
+  }
+
+  getLoaingDiv() {
+    return (
+      <div className={Style.loading}>
+        <Spin />
+        <div className={Style.loadingText}>LOADING...</div>
+      </div>
+    );
+  }
+
+  getRecordDetailDiv() {
+    const recordDetail = this.props.requestRecord.recordDetail;
+    const fetchingRecord = this.props.globalStatus.fetchingRecord;
+
+    if (!recordDetail && !fetchingRecord) {
+      return null;
+    }
+    return this.getRecordContentDiv(recordDetail, fetchingRecord);
   }
 
   render() {

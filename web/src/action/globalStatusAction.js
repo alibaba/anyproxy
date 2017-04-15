@@ -30,6 +30,8 @@ export const UPDATE_IS_ROOTCA_EXISTS = 'UPDATE_IS_ROOTCA_EXISTS';
 
 // should we display the tip for new record
 export const UPDATE_SHOW_NEW_RECORD_TIP = 'UPDATE_SHOW_NEW_RECORD_TIP';
+// update if currently loading the record from server
+export const UPDATE_FETCHING_RECORD_STATUS = 'UPDATE_FETCHING_RECORD_STATUS';
 
 export function stopRecording() {
   return {
@@ -204,5 +206,12 @@ export function updateGlobalWsPort(wsPort) {
   return {
     type: UPDATE_GLOBAL_WSPORT,
     data: wsPort
+  }
+}
+
+export function updateFechingRecordStatus(isFetching) {
+  return {
+    type: UPDATE_FETCHING_RECORD_STATUS,
+    data: isFetching
   }
 }
