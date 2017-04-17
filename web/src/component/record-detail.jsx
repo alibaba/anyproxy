@@ -5,11 +5,13 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
-import { Menu, Table, Spin } from 'antd';
+import { Menu, Table, Button, notification } from 'antd';
+import clipboard from 'clipboard-js'
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
 import { selectText } from 'common/CommonUtil';
+import { curlify } from 'common/curlUtil';
 
 
 import Style from './record-detail.less';
@@ -30,6 +32,7 @@ class RecordDetail extends React.Component {
     };
 
     this.onMenuChange = this.onMenuChange.bind(this);
+    this.copyCurlCmd = this.copyCurlCmd.bind(this)
   }
 
   static propTypes = {
@@ -133,6 +136,18 @@ class RecordDetail extends React.Component {
     );
   }
 
+  notify(message, type = 'info', duration = 1.6, opts = {}) {
+    notification[type]({ message, duration, ...opts })
+  }
+
+  copyCurlCmd() {
+    const { recordDetail } = this.props.requestRecord
+    clipboard
+      .copy(curlify(recordDetail))
+      .then(() => this.notify('COPY SUCCESS', 'success'))
+      .catch(() => this.notify('COPY FAILED', 'error'))
+  }
+
   getResBodyDiv() {
     const { recordDetail } = this.props.requestRecord;
 
@@ -192,6 +207,15 @@ class RecordDetail extends React.Component {
               <span >HTTP/1.1</span>
             </li>
           </ul>
+          <div className={CommonStyle.whiteSpace10} />
+          <ul className={Style.ulItem} >
+            <li className={Style.liItem} >
+              <strong>CURL:</strong>
+              <span>
+                <a href="javascript:void(0)" onClick={this.copyCurlCmd} >copy as CURL</a>
+              </span>
+            </li>
+          </ul>
         </div>
         <div className={Style.section} >
           <div >
@@ -207,7 +231,7 @@ class RecordDetail extends React.Component {
           <div >
             <span className={CommonStyle.sectionTitle}>Cookies</span>
           </div>
-            {this.getCookieDiv(cookieString)}
+          {this.getCookieDiv(cookieString)}
         </div>
 
         <div className={Style.section} >
@@ -217,7 +241,6 @@ class RecordDetail extends React.Component {
           <div className={CommonStyle.whiteSpace10} />
           {this.getReqBodyDiv()}
         </div>
-
       </div>
     );
   }
