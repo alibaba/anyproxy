@@ -5,14 +5,13 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
-import { Menu, Table, Button, notification } from 'antd';
+import { Menu, Table, notification, Spin } from 'antd';
 import clipboard from 'clipboard-js'
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
 import { selectText } from 'common/CommonUtil';
 import { curlify } from 'common/curlUtil';
-
 
 import Style from './record-detail.less';
 import CommonStyle from '../style/common.less';
