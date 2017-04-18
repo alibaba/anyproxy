@@ -150,41 +150,6 @@ function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   return requestTask;
 }
 
-// function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
-//   let reqStream = new commonStream();
-//   const userConfig = nurl.parse(url);
-//   const proxyConfig = nurl.parse(PROXY_HOST);
-//   // const
-//   const options = {
-//     method,
-//     path: url,
-//     port: userConfig.port,
-//     hostname: userConfig.hostname,
-//     headers: Object.assign({}, headers),
-//   }
-//   if (isProxy) {
-//     options.port = proxyConfig.port;
-//     options.hostname = proxyConfig.hostname;
-//     options.headers.host = userConfig.host;
-//     options.headers['via-proxy'] = 'true';
-//   }
-//   if (method === 'GET' && params) {
-//     // options.path += `?${qs.stringify(params)}`
-//   }
-//   if (method === 'POST' || 'PUT') {
-//     options.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
-//   }
-//   const requestTask = new Promise((resolve, reject) => {
-//     const req = (/https/i.test(userConfig.protocol) ? https : http).request(options, res => {
-//       resolve(res)
-//     })
-//     req.write(qs.stringify(params));
-//     req.end();
-//     req.on('error', reject);
-//   });
-//   return requestTask;
-// }
-
 
 function doUpload(url, method, filepath, formParams, headers = {}, isProxy) {
   let formData = {
