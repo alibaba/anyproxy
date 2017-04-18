@@ -350,6 +350,5 @@ module.exports = {
   getRequestListFromPage,
   directRequest,
   proxyRequest,
-  isSupportedProtocol,
-  doRequest
+  isSupportedProtocol
 };
