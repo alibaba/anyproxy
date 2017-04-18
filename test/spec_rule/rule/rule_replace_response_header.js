@@ -1,6 +1,6 @@
 //rule scheme : remove the cache headers in response headers
 module.exports = {
-  summary() {
+  *summary() {
     return 'The rule to remove the cache headers in response';
   },
 

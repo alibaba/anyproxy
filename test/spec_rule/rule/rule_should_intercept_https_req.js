@@ -1,7 +1,7 @@
 //rule scheme :
 
 module.exports = {
-  summary() {
+  *summary() {
     return 'Rule to intercept https request';
   },
 

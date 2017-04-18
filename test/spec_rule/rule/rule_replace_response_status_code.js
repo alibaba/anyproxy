@@ -1,7 +1,7 @@
 //replace all the images with local one
 module.exports = {
 
-  summary() {
+  *summary() {
     return 'replace the response status code.';
   },
 

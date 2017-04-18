@@ -1,6 +1,6 @@
 //rule scheme :
 module.exports = {
-  summary() {
+  *summary() {
     return 'The rule to replace request protocol';
   },
 
