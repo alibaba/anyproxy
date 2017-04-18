@@ -3,12 +3,8 @@
  * An util to make the request out
  *
  */
-const http = require('http');
-const https = require('https');
 const request = require('request');
-const nurl = require('url');
 const fs = require('fs');
-const qs = require('querystring');
 const WebSocket = require('ws');
 const HttpsProxyAgent = require('https-proxy-agent');
 const stream = require('stream');
@@ -95,7 +91,7 @@ function proxyPutUpload(url, filepath, headers = {}) {
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
   headers = Object.assign({}, headers);
 
-  let reqStream = new stream.Readable();
+  let reqStream = new commonStream();
   const requestData = {
     headers,
     followRedirect: false,
