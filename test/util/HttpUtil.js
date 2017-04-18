@@ -92,116 +92,102 @@ function proxyPutUpload(url, filepath, headers = {}) {
  * @param  params {String}  json类型或file路径
  *                {Object}  key-value形式
  */
-// function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
-//   headers = Object.assign({}, headers);
-//
-//   let reqStream = new stream.Readable();
-//   const requestData = {
-//     headers,
-//     followRedirect: false,
-//     rejectUnauthorized: false
-//   };
-//
-//   if (isProxy) {
-//     requestData.proxy = PROXY_HOST;
-//     requestData.headers['via-proxy'] = 'true';
-//   }
-//
-//   const streamReq = (resolve, reject) => {
-//     requestData.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
-//     if (typeof params === 'string') {
-//       fs.existsSync(params) ?
-//         reqStream = fs.createReadStream(params) :
-//         reqStream.push(params);
-//     } else if (typeof params === 'object') {
-//       reqStream.push(JSON.stringify(params));
-//     }
-//     reqStream.push(null);
-//     requestData.body = reqStream;
-//     reqStream.pipe(request[method.toLowerCase()](
-//       url,
-//       requestData,
-//       (error, response, body) => {
-//         if (error) {
-//           reject(error);
-//         } else {
-//           resolve(response);
-//         }
-//       }
-//     ))
-//   }
-//   const commonReq = (resolve, reject) => {
-//     requestData.url = url;
-//     // requestData.form = '';
-//     requestData.form = params;
-//     requestData.method = method;
-//     requestData.headers['content-length'] = undefined;
-//     request(
-//       requestData,
-//       (error, response, body) => {
-//         if (error) {
-//           reject(error);
-//         } else {
-//           resolve(response);
-//         }
-//       }
-//     );
-//   }
-//   const requestTask = new Promise((resolve, reject) => {
-//     if (method === 'POST' || method === 'PUT') {
-//       streamReq(resolve, reject);
-//     } else {
-//       commonReq(resolve, reject);
-//     }
-//   });
-//   return requestTask;
-// }
-
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
-  let reqStream = new commonStream();
-  const userConfig = nurl.parse(url);
-  const proxyConfig = nurl.parse(PROXY_HOST);
-  // const
-  const options = {
-    method,
-    path: url,
-    port: userConfig.port,
-    hostname: userConfig.hostname,
-    headers: Object.assign({}, headers),
-  }
+  headers = Object.assign({}, headers);
+
+  let reqStream = new stream.Readable();
+  const requestData = {
+    headers,
+    followRedirect: false,
+    rejectUnauthorized: false
+  };
+
   if (isProxy) {
-    options.port = proxyConfig.port;
-    options.hostname = proxyConfig.hostname;
-    options.headers.host = userConfig.host;
-    options.headers['via-proxy'] = 'true';
+    requestData.proxy = PROXY_HOST;
+    requestData.headers['via-proxy'] = 'true';
   }
-  if (method === 'GET') {
-    // options.path += `?${qs.stringify(params)}`
+
+  const streamReq = (resolve, reject) => {
+    requestData.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
+    if (typeof params === 'string') {
+      fs.existsSync(params) ?
+        reqStream = fs.createReadStream(params) :
+        reqStream.push(params);
+    } else if (typeof params === 'object') {
+      reqStream.push(JSON.stringify(params));
+    }
+    reqStream.push(null);
+    reqStream.pipe(request[method.toLowerCase()](
+      url,
+      requestData,
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    ))
   }
-  if (method === 'POST' || 'PUT') {
-    options.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
+  const commonReq = (resolve, reject) => {
+    requestData.url = url;
+    requestData.method = method;
+    requestData.qs = params;
+    request(
+      requestData,
+      (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(response);
+        }
+      }
+    );
   }
   const requestTask = new Promise((resolve, reject) => {
-    const req = (/https/i.test(userConfig.protocol) ? https : http).request(options, res => {
-      resolve(res)
-    })
-    if (method === 'GET' || 'PUT') {
-      if (typeof params === 'string') {
-        fs.existsSync(params) ?
-          reqStream = fs.createReadStream(params) :
-          reqStream.push(params);
-      } else if (typeof params === 'object') {
-        reqStream.push(JSON.stringify(params));
-      }
-      reqStream.push(null);
-      reqStream.pipe(req);
+    if (method === 'POST' || method === 'PUT') {
+      streamReq(resolve, reject);
     } else {
-      req.end();
+      commonReq(resolve, reject);
     }
-    req.on('error', reject);
   });
   return requestTask;
 }
+
+// function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
+//   let reqStream = new commonStream();
+//   const userConfig = nurl.parse(url);
+//   const proxyConfig = nurl.parse(PROXY_HOST);
+//   // const
+//   const options = {
+//     method,
+//     path: url,
+//     port: userConfig.port,
+//     hostname: userConfig.hostname,
+//     headers: Object.assign({}, headers),
+//   }
+//   if (isProxy) {
+//     options.port = proxyConfig.port;
+//     options.hostname = proxyConfig.hostname;
+//     options.headers.host = userConfig.host;
+//     options.headers['via-proxy'] = 'true';
+//   }
+//   if (method === 'GET' && params) {
+//     // options.path += `?${qs.stringify(params)}`
+//   }
+//   if (method === 'POST' || 'PUT') {
+//     options.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
+//   }
+//   const requestTask = new Promise((resolve, reject) => {
+//     const req = (/https/i.test(userConfig.protocol) ? https : http).request(options, res => {
+//       resolve(res)
+//     })
+//     req.write(qs.stringify(params));
+//     req.end();
+//     req.on('error', reject);
+//   });
+//   return requestTask;
+// }
 
 
 function doUpload(url, method, filepath, formParams, headers = {}, isProxy) {

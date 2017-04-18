@@ -6,6 +6,7 @@ const path = require('path');
 const https = require('https');
 const certMgr = require('../../lib/certMgr');
 const fs = require('fs');
+const nurl = require('url');
 const websocket = require('koa-websocket');
 const color = require('colorful');
 const WebSocketServer = require('ws').Server;
@@ -46,7 +47,7 @@ function KoaServer() {
    */
   this.logRequest = function* (next) {
     const headers = this.request.headers;
-    let key = this.request.protocol + '://' + this.request.host + this.request.url;
+    let key = this.request.protocol + '://' + this.request.host + nurl.parse(this.request.url).pathname; // remove param to get clean key
 
     // take proxy data with 'proxy-' + url
     if (headers['via-proxy'] === 'true') {
@@ -61,7 +62,6 @@ function KoaServer() {
       headers,
       body
     };
-
     yield next;
   };
 
