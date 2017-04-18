@@ -3,8 +3,12 @@
  * An util to make the request out
  *
  */
+const http = require('http');
+const https = require('https');
 const request = require('request');
+const nurl = require('url');
 const fs = require('fs');
+const qs = require('querystring');
 const WebSocket = require('ws');
 const HttpsProxyAgent = require('https-proxy-agent');
 const stream = require('stream');
@@ -17,6 +21,16 @@ const HTTP_SERVER_BASE = 'http://localhost:3000';
 const HTTPS_SERVER_BASE = 'https://localhost:3001';
 const WS_SERVER_BASE = 'ws://localhost:3000';
 const WSS_SERVER_BASE = 'wss://localhost:3001';
+const DEFAULT_CHUNK_COLLECT_THRESHOLD = 20 * 1024 * 1024; // about 20 mb
+
+class commonStream extends stream.Readable {
+  constructor(config) {
+    super({
+      highWaterMark: DEFAULT_CHUNK_COLLECT_THRESHOLD * 5
+    });
+  }
+  _read(size) {}
+}
 
 function getHostFromUrl(url = '') {
   const hostReg = /^(https{0,1}:\/\/)(\w+)/;
@@ -78,67 +92,117 @@ function proxyPutUpload(url, filepath, headers = {}) {
  * @param  params {String}  json类型或file路径
  *                {Object}  key-value形式
  */
+// function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
+//   headers = Object.assign({}, headers);
+//
+//   let reqStream = new stream.Readable();
+//   const requestData = {
+//     headers,
+//     followRedirect: false,
+//     rejectUnauthorized: false
+//   };
+//
+//   if (isProxy) {
+//     requestData.proxy = PROXY_HOST;
+//     requestData.headers['via-proxy'] = 'true';
+//   }
+//
+//   const streamReq = (resolve, reject) => {
+//     requestData.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
+//     if (typeof params === 'string') {
+//       fs.existsSync(params) ?
+//         reqStream = fs.createReadStream(params) :
+//         reqStream.push(params);
+//     } else if (typeof params === 'object') {
+//       reqStream.push(JSON.stringify(params));
+//     }
+//     reqStream.push(null);
+//     requestData.body = reqStream;
+//     reqStream.pipe(request[method.toLowerCase()](
+//       url,
+//       requestData,
+//       (error, response, body) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(response);
+//         }
+//       }
+//     ))
+//   }
+//   const commonReq = (resolve, reject) => {
+//     requestData.url = url;
+//     // requestData.form = '';
+//     requestData.form = params;
+//     requestData.method = method;
+//     requestData.headers['content-length'] = undefined;
+//     request(
+//       requestData,
+//       (error, response, body) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           resolve(response);
+//         }
+//       }
+//     );
+//   }
+//   const requestTask = new Promise((resolve, reject) => {
+//     if (method === 'POST' || method === 'PUT') {
+//       streamReq(resolve, reject);
+//     } else {
+//       commonReq(resolve, reject);
+//     }
+//   });
+//   return requestTask;
+// }
+
 function doRequest(method = 'GET', url, params, headers = {}, isProxy) {
-  headers = Object.assign({}, headers);
-
-  let reqStream = new stream.Readable();
-  const requestData = {
-    headers,
-    followRedirect: false,
-    rejectUnauthorized: false
-  };
-
+  let reqStream = new commonStream();
+  const userConfig = nurl.parse(url);
+  const proxyConfig = nurl.parse(PROXY_HOST);
+  // const
+  const options = {
+    method,
+    path: url,
+    port: userConfig.port,
+    hostname: userConfig.hostname,
+    headers: Object.assign({}, headers),
+  }
   if (isProxy) {
-    requestData.proxy = PROXY_HOST;
-    requestData.headers['via-proxy'] = 'true';
+    options.port = proxyConfig.port;
+    options.hostname = proxyConfig.hostname;
+    options.headers.host = userConfig.host;
+    options.headers['via-proxy'] = 'true';
   }
-
-  const streamReq = (resolve, reject) => {
-    requestData.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
-    if (typeof params === 'string') {
-      fs.existsSync(params) ?
-        reqStream = fs.createReadStream(params) :
-        reqStream.push(params);
-    } else if (typeof params === 'object') {
-      reqStream.push(JSON.stringify(params));
-    }
-    reqStream.push(null);
-    reqStream.pipe(request[method.toLowerCase()](
-      url,
-      requestData,
-      (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
-      }
-    ))
+  if (method === 'GET') {
+    // options.path += `?${qs.stringify(params)}`
   }
-  const commonReq = (resolve, reject) => {
-    requestData.url = url;
-    requestData.form = '';
-    requestData.method = method;
-    request(
-      requestData,
-      (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(response);
-        }
-      }
-    );
+  if (method === 'POST' || 'PUT') {
+    options.headers['content-type'] = 'text/plain'; //otherwise, koa-body could not recognize
   }
   const requestTask = new Promise((resolve, reject) => {
-    if (method === 'POST' || method === 'PUT') {
-      streamReq(resolve, reject);
+    const req = (/https/i.test(userConfig.protocol) ? https : http).request(options, res => {
+      resolve(res)
+    })
+    if (method === 'GET' || 'PUT') {
+      if (typeof params === 'string') {
+        fs.existsSync(params) ?
+          reqStream = fs.createReadStream(params) :
+          reqStream.push(params);
+      } else if (typeof params === 'object') {
+        reqStream.push(JSON.stringify(params));
+      }
+      reqStream.push(null);
+      reqStream.pipe(req);
     } else {
-      commonReq(resolve, reject);
+      req.end();
     }
+    req.on('error', reject);
   });
   return requestTask;
 }
+
 
 function doUpload(url, method, filepath, formParams, headers = {}, isProxy) {
   let formData = {
@@ -339,5 +403,6 @@ module.exports = {
   getRequestListFromPage,
   directRequest,
   proxyRequest,
-  isSupportedProtocol
+  isSupportedProtocol,
+  doRequest
 };
