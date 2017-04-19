@@ -56,7 +56,7 @@ class App extends React.Component {
 
     this.scrollHandlerTimeout = null;
     this.stopRefreshTimout = null;
-    this.stopRefreshTokenScrollTop = -1; // the token used to decide the move distance
+    this.stopRefreshTokenScrollTop = null; // the token used to decide the move distance
   }
 
   static propTypes = {
@@ -87,17 +87,17 @@ class App extends React.Component {
 
   // if is scrolling up during refresh, will stop the refresh
   detectIfToStopRefreshing(currentScrollTop) {
-    if (!this.stopRefreshTimout) {
+    if (!this.stopRefreshTokenScrollTop) {
       this.stopRefreshTokenScrollTop = currentScrollTop;
     }
 
     this.stopRefreshTimout = setTimeout(() => {
-      // if the scrollbar is scrolled up more than 30px, stop refreshing
+      // if the scrollbar is scrolled up more than 70px, stop refreshing
       if ((this.stopRefreshTokenScrollTop - currentScrollTop) > 70) {
         this.stopRefresh();
         this.stopRefreshTokenScrollTop = null;
       }
-    }, 100);
+    }, 50);
   }
 
   initRecrodPanelWrapperRef(ref) {
