@@ -260,9 +260,7 @@ function getRequestListFromPage(pageUrl, cb) {
     }, _outObj);
     return _page.open(pageUrl);
   })
-  .then(status => {
-    return _outObj.property('urls');
-  })
+  .then(status => _outObj.property('urls'))
   .then(urls => {
     _page.close();
     _ph.exit();
