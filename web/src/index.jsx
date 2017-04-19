@@ -67,6 +67,7 @@ class App extends React.Component {
 
   stopRefresh() {
     this.wsListenerRef && this.wsListenerRef.stopPanelRefreshing();
+    this.state.refreshing = false;
     this.setState({
       refreshing: false
     });
@@ -74,6 +75,7 @@ class App extends React.Component {
 
   resumeFresh() {
     this.wsListenerRef && this.wsListenerRef.resumePanelRefreshing();
+    this.state.refreshing = true;
     this.setState({
       refreshing: true
     });
@@ -92,8 +94,8 @@ class App extends React.Component {
     }
 
     this.stopRefreshTimout = setTimeout(() => {
-      // if the scrollbar is scrolled up more than 70px, stop refreshing
-      if ((this.stopRefreshTokenScrollTop - currentScrollTop) > 70) {
+      // if the scrollbar is scrolled up more than 50px, stop refreshing
+      if ((this.stopRefreshTokenScrollTop - currentScrollTop) > 50) {
         this.stopRefresh();
         this.stopRefreshTokenScrollTop = null;
       }
@@ -205,7 +207,7 @@ class App extends React.Component {
 
     // if there are new data, reset the status of loadingNext and loadingPrev
     if (nextRecordList !== currentRecordList) {
-      // scroll the window to last remembered position, when in loading next mode
+      // scroll the window to last remembered position, when in loading pre mode
       if (this.state.loadingPrev) {
         const nextBeginId = nextRecordList[0].id;
         const currentBeginId = currentRecordList[0].id;
@@ -214,7 +216,9 @@ class App extends React.Component {
           // each line is limited to 29px
           const scrollPosition = 29 * (nextRecordList.length - currentRecordList.length);
           if (this.recordTableRef) {
-            this.recordTableRef.scrollTop = scrollPosition;
+            setTimeout(() => {
+              this.recordTableRef.scrollTop = scrollPosition;
+            }, 200);
           }
         }
 
