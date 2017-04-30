@@ -7,6 +7,9 @@ import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import InlineSVG from 'svg-inline-react';
 import { message, Modal, Popover, Button } from 'antd';
+import { getQueryParameter } from 'common/CommonUtil';
+import { MenuKeyMap } from 'common/Constant';
+
 import {
   resumeRecording,
   stopRecording,
@@ -17,8 +20,13 @@ import {
   updateShouldClearRecord,
   updateIsRootCAExists,
   updateGlobalWsPort,
+  showFilter,
   updateLocalAppVersion
 } from 'action/globalStatusAction';
+
+const {
+  RECORD_FILTER: RECORD_FILTER_MENU_KEY
+} = MenuKeyMap;
 
 import { getJSON } from 'common/ApiUtil';
 
@@ -31,6 +39,7 @@ class HeaderMenu extends React.Component {
     super();
     this.state = {
       ruleSummary: '',
+      inAppMode: getQueryParameter('in_app_mode'),
       runningDetailVisible: false
     };
 
@@ -43,6 +52,7 @@ class HeaderMenu extends React.Component {
     this.showRunningInfo = this.showRunningInfo.bind(this);
     this.handleRuningInfoVisibleChange = this.handleRuningInfoVisibleChange.bind(this);
     this.toggleGlobalProxyFlag = this.toggleGlobalProxyFlag.bind(this);
+    this.showFilter = this.showFilter.bind(this);
   }
 
   static propTypes = {
@@ -70,10 +80,15 @@ class HeaderMenu extends React.Component {
       runningDetailVisible: visible
     });
   }
+
   showRunningInfo() {
     this.setState({
       runningDetailVisible: true
     });
+  }
+
+  showFilter() {
+    this.props.dispatch(showFilter());
   }
 
   togglerHttpsIntercept() {
@@ -148,12 +163,15 @@ class HeaderMenu extends React.Component {
 
   render() {
     const { globalStatus } = this.props;
-    const { ipAddress } = this.state;
+    const { activeMenuKey } = globalStatus;
+    const { ipAddress, inAppMode } = this.state;
 
     const stopMenuStyle = StyleBind('menuItem', { disabled: globalStatus.recording !== true });
     const resumeMenuStyle = StyleBind('menuItem', { disabled: globalStatus.recording === true });
 
     const runningTipStyle = StyleBind('menuItem', 'rightMenuItem', { active: this.state.runningDetailVisible });
+
+    const showFilterMenuStyle = StyleBind('menuItem', { active: activeMenuKey === RECORD_FILTER_MENU_KEY });
 
     const addressDivs = ipAddress ? (
       this.state.ipAddress.map((singleIpAddress) => {
@@ -192,7 +210,7 @@ class HeaderMenu extends React.Component {
         href="javascript:void(0)"
         onClick={this.stopRecording}
       >
-        <div className={Style.stopIcon}>
+        <div className={Style.filterIcon}>
           <InlineSVG src={require('svg-inline!assets/stop.svg')} />
         </div>
         <span>Stop</span>
@@ -212,6 +230,19 @@ class HeaderMenu extends React.Component {
       </a>
     );
 
+    const filterMenu = (
+      <a
+        className={showFilterMenuStyle}
+        href="javascript:void(0)"
+        onClick={this.showFilter}
+      >
+        <div className={Style.stopIcon}>
+          <InlineSVG src={require('svg-inline!assets/filter.svg')} />
+        </div>
+        <span>Filter</span>
+      </a>
+    );
+
     return (
       <div className={Style.wrapper} >
         <div className={Style.menuList} >
@@ -225,6 +256,7 @@ class HeaderMenu extends React.Component {
             <InlineSVG src={require('svg-inline!assets/clear.svg')} />
             <span>Clear</span>
           </a>
+          {inAppMode ? filterMenu : null}
 
           <Popover
             content={runningInfoDiv}
