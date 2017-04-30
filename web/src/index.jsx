@@ -7,6 +7,7 @@ import enUS from 'antd/lib/locale-provider/en_US';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from 'saga/rootSaga';
 import { MenuKeyMap } from 'common/Constant';
+import { getQueryParameter } from 'common/CommonUtil';
 
 import reducer from 'reducer/rootReducer';
 import HeaderMenu from 'component/header-menu';
@@ -38,6 +39,7 @@ class App extends React.Component {
     this.state = {
       showResizePanel: false,
       panelIndex: '',
+      inAppMode: getQueryParameter('in_app_mode'),
       refreshing: true
     };
 
@@ -246,11 +248,15 @@ class App extends React.Component {
 
   render() {
     const { lastActiveRecordId, currentActiveRecordId } = this.props.globalStatus;
+    const leftMenuDiv = (
+      <div className={Style.leftPanel} >
+        <LeftMenu />
+      </div>
+    );
+
     return (
       <div className={Style.indexWrapper} >
-        <div className={Style.leftPanel} >
-          <LeftMenu />
-        </div>
+        {this.state.inAppMode ? null : leftMenuDiv}
         <div className={Style.middlePanel} >
           {this.getMiddlePanel()}
         </div>
