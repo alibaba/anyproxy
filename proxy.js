@@ -215,6 +215,14 @@ class ProxyCore extends events.EventEmitter {
   close() {
     // clear recorder cache
 
+    // destroy conns & cltSockets when close proxy server
+    for(const [ key, conn ] of this.requestHandler.conns){
+      conn.destroy()
+    }
+    for(const [ key, cltSocket ] of this.requestHandler.cltSockets){
+      cltSocket.destroy()
+    }
+
     this.httpProxyServer && this.httpProxyServer.close();
     this.httpProxyServer = null;
 
@@ -295,4 +303,3 @@ module.exports.utils = {
   systemProxyMgr: require('./lib/systemProxyMgr'),
   certMgr,
 };
-
