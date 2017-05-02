@@ -214,14 +214,23 @@ class ProxyCore extends events.EventEmitter {
    */
   close() {
     // clear recorder cache
-
-    this.httpProxyServer && this.httpProxyServer.close();
-    this.httpProxyServer = null;
-
-    this.status = PROXY_STATUS_CLOSED;
-    logUtil.printLog('server closed ' + this.proxyHostName + ':' + this.proxyPort);
-
-    return this
+    return new Promise((resolve) => {
+      if (this.httpProxyServer) {
+        this.httpProxyServer.close((error) => {
+          if (error) {
+            console.error(error);
+            logUtil.printLog(`proxy server close FAILED : ${error.message}`, logUtil.T_ERR);
+          } else {
+            this.httpProxyServer = null;
+            this.status = PROXY_STATUS_CLOSED;
+            logUtil.printLog(`proxy server closed at ${this.proxyHostName}:${this.proxyPort}`);
+          }
+          resolve(error);
+        });
+      } else {
+        resolve();
+      }
+    })
   }
 }
 
@@ -268,18 +277,34 @@ class ProxyServer extends ProxyCore {
   }
 
   close() {
-    super.close();
-    if (this.recorder) {
-      logUtil.printLog('clearing cache file...');
-      this.recorder.clear();
-    }
-    const tmpWebServer = this.webServerInstance;
-    this.recorder = null;
-    this.webServerInstance = null;
-
     return new Promise((resolve, reject) => {
+      super.close()
+        .then((error) => {
+          if (error) {
+            resolve(error);
+            return;
+          }
+        });
+
+      if (this.recorder) {
+        logUtil.printLog('clearing cache file...');
+        this.recorder.clear();
+      }
+      const tmpWebServer = this.webServerInstance;
+      this.recorder = null;
+      this.webServerInstance = null;
       if (tmpWebServer) {
-        resolve(tmpWebServer.close());
+        logUtil.printLog('closing webserver...');
+        tmpWebServer.close((error) => {
+          if (error) {
+            console.error(error);
+            logUtil.printLog(`proxy web server close FAILED: ${error.message}`, logUtil.T_ERR);
+          } else {
+            logUtil.printLog(`proxy web server closed at ${this.proxyHostName} : ${this.webPort}`);
+          }
+
+          resolve(error);
+        })
       } else {
         resolve(null);
       }
