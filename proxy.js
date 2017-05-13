@@ -216,12 +216,23 @@ class ProxyCore extends events.EventEmitter {
     // clear recorder cache
     return new Promise((resolve) => {
       if (this.httpProxyServer) {
+        // destroy conns & cltSockets when close proxy server
+        for (const [key, conn] of this.requestHandler.conns) {
+          logUtil.log(`destroying connection: ${key}`);
+          conn.destroy()
+        }
+        for (const [key, cltSocket] of this.requestHandler.cltSockets) {
+          logUtil.log(`destroying socket: ${key}`);
+
+          cltSocket.destroy()
+        }
         this.httpProxyServer.close((error) => {
           if (error) {
             console.error(error);
             logUtil.printLog(`proxy server close FAILED : ${error.message}`, logUtil.T_ERR);
           } else {
             this.httpProxyServer = null;
+
             this.status = PROXY_STATUS_CLOSED;
             logUtil.printLog(`proxy server closed at ${this.proxyHostName}:${this.proxyPort}`);
           }
@@ -320,4 +331,3 @@ module.exports.utils = {
   systemProxyMgr: require('./lib/systemProxyMgr'),
   certMgr,
 };
-
