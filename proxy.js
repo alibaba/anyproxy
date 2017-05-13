@@ -116,6 +116,28 @@ class ProxyCore extends events.EventEmitter {
   }
 
   /**
+  * manage all created socket
+  * for each new socket, we put them to a map;
+  * if the socket is closed itself, we remove it from the map
+  * when the `close` method is called, we'll close the sockes before the server closed
+  *
+  * @param {Socket} the http socket that is creating
+  * @returns undefined
+  * @memberOf ProxyCore
+  */
+  handleExistConnections(socket) {
+    const self = this;
+    self.socketIndex ++;
+    const key = `socketIndex_${self.socketIndex}`;
+    self.socketPool[key] = socket;
+    console.info('===> set socket with key ', key);
+
+    // if the socket is closed already, removed it from pool
+    socket.on('close', () => {
+      delete self.socketPool[key];
+    });
+  }
+  /**
    * start the proxy server
    *
    * @returns ProxyCore
@@ -124,6 +146,9 @@ class ProxyCore extends events.EventEmitter {
    */
   start() {
     const self = this;
+    self.socketIndex = 0;
+    self.socketPool = {};
+
     if (self.status !== PROXY_STATUS_INIT) {
       throw new Error('server status is not PROXY_STATUS_INIT, can not run start()');
     }
@@ -153,6 +178,14 @@ class ProxyCore extends events.EventEmitter {
         function (callback) {
           self.httpProxyServer.on('connect', self.requestHandler.connectReqHandler);
 
+          callback(null);
+        },
+
+        function (callback) {
+          // remember all sockets, so we can destory them when call the method 'close';
+          self.httpProxyServer.on('connection', (socket) => {
+            self.handleExistConnections.call(self, socket);
+          });
           callback(null);
         },
 
@@ -218,14 +251,21 @@ class ProxyCore extends events.EventEmitter {
       if (this.httpProxyServer) {
         // destroy conns & cltSockets when close proxy server
         for (const [key, conn] of this.requestHandler.conns) {
-          logUtil.log(`destroying connection: ${key}`);
-          conn.destroy()
+          logUtil.printLog(`destorying https connection : ${key}`);
+          conn.end();
         }
-        for (const [key, cltSocket] of this.requestHandler.cltSockets) {
-          logUtil.log(`destroying socket: ${key}`);
 
-          cltSocket.destroy()
+        for (const [key, cltSocket] of this.requestHandler.cltSockets) {
+          logUtil.printLog(`endding https cltSocket : ${key}`);
+          cltSocket.end();
         }
+
+        if (this.socketPool) {
+          for (const key in this.socketPool) {
+            this.socketPool[key].destroy();
+          }
+        }
+
         this.httpProxyServer.close((error) => {
           if (error) {
             console.error(error);
