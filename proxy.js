@@ -130,7 +130,6 @@ class ProxyCore extends events.EventEmitter {
     self.socketIndex ++;
     const key = `socketIndex_${self.socketIndex}`;
     self.socketPool[key] = socket;
-    console.info('===> set socket with key ', key);
 
     // if the socket is closed already, removed it from pool
     socket.on('close', () => {
