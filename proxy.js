@@ -116,6 +116,27 @@ class ProxyCore extends events.EventEmitter {
   }
 
   /**
+  * manage all created socket
+  * for each new socket, we put them to a map;
+  * if the socket is closed itself, we remove it from the map
+  * when the `close` method is called, we'll close the sockes before the server closed
+  *
+  * @param {Socket} the http socket that is creating
+  * @returns undefined
+  * @memberOf ProxyCore
+  */
+  handleExistConnections(socket) {
+    const self = this;
+    self.socketIndex ++;
+    const key = `socketIndex_${self.socketIndex}`;
+    self.socketPool[key] = socket;
+
+    // if the socket is closed already, removed it from pool
+    socket.on('close', () => {
+      delete self.socketPool[key];
+    });
+  }
+  /**
    * start the proxy server
    *
    * @returns ProxyCore
@@ -124,6 +145,9 @@ class ProxyCore extends events.EventEmitter {
    */
   start() {
     const self = this;
+    self.socketIndex = 0;
+    self.socketPool = {};
+
     if (self.status !== PROXY_STATUS_INIT) {
       throw new Error('server status is not PROXY_STATUS_INIT, can not run start()');
     }
@@ -153,6 +177,14 @@ class ProxyCore extends events.EventEmitter {
         function (callback) {
           self.httpProxyServer.on('connect', self.requestHandler.connectReqHandler);
 
+          callback(null);
+        },
+
+        function (callback) {
+          // remember all sockets, so we can destory them when call the method 'close';
+          self.httpProxyServer.on('connection', (socket) => {
+            self.handleExistConnections.call(self, socket);
+          });
           callback(null);
         },
 
@@ -214,14 +246,41 @@ class ProxyCore extends events.EventEmitter {
    */
   close() {
     // clear recorder cache
+    return new Promise((resolve) => {
+      if (this.httpProxyServer) {
+        // destroy conns & cltSockets when close proxy server
+        for (const [key, conn] of this.requestHandler.conns) {
+          logUtil.printLog(`destorying https connection : ${key}`);
+          conn.end();
+        }
 
-    this.httpProxyServer && this.httpProxyServer.close();
-    this.httpProxyServer = null;
+        for (const [key, cltSocket] of this.requestHandler.cltSockets) {
+          logUtil.printLog(`endding https cltSocket : ${key}`);
+          cltSocket.end();
+        }
 
-    this.status = PROXY_STATUS_CLOSED;
-    logUtil.printLog('server closed ' + this.proxyHostName + ':' + this.proxyPort);
+        if (this.socketPool) {
+          for (const key in this.socketPool) {
+            this.socketPool[key].destroy();
+          }
+        }
 
-    return this
+        this.httpProxyServer.close((error) => {
+          if (error) {
+            console.error(error);
+            logUtil.printLog(`proxy server close FAILED : ${error.message}`, logUtil.T_ERR);
+          } else {
+            this.httpProxyServer = null;
+
+            this.status = PROXY_STATUS_CLOSED;
+            logUtil.printLog(`proxy server closed at ${this.proxyHostName}:${this.proxyPort}`);
+          }
+          resolve(error);
+        });
+      } else {
+        resolve();
+      }
+    })
   }
 }
 
@@ -268,18 +327,34 @@ class ProxyServer extends ProxyCore {
   }
 
   close() {
-    super.close();
-    if (this.recorder) {
-      logUtil.printLog('clearing cache file...');
-      this.recorder.clear();
-    }
-    const tmpWebServer = this.webServerInstance;
-    this.recorder = null;
-    this.webServerInstance = null;
-
     return new Promise((resolve, reject) => {
+      super.close()
+        .then((error) => {
+          if (error) {
+            resolve(error);
+            return;
+          }
+        });
+
+      if (this.recorder) {
+        logUtil.printLog('clearing cache file...');
+        this.recorder.clear();
+      }
+      const tmpWebServer = this.webServerInstance;
+      this.recorder = null;
+      this.webServerInstance = null;
       if (tmpWebServer) {
-        resolve(tmpWebServer.close());
+        logUtil.printLog('closing webserver...');
+        tmpWebServer.close((error) => {
+          if (error) {
+            console.error(error);
+            logUtil.printLog(`proxy web server close FAILED: ${error.message}`, logUtil.T_ERR);
+          } else {
+            logUtil.printLog(`proxy web server closed at ${this.proxyHostName} : ${this.webPort}`);
+          }
+
+          resolve(error);
+        })
       } else {
         resolve(null);
       }
@@ -295,4 +370,3 @@ module.exports.utils = {
   systemProxyMgr: require('./lib/systemProxyMgr'),
   certMgr,
 };
-
