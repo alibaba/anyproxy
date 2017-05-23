@@ -265,8 +265,9 @@ class ProxyServer extends ProxyCore {
       this.webServerInstance = new WebInterface(this.proxyWebinterfaceConfig, this.recorder);
     }
 
+    const p = this.webServerInstance ? this.webServerInstance.start() : Promise.resolve();
     // start web server
-    this.webServerInstance.start().then(() => {
+    p.then(() => {
       // start proxy core
       super.start();
     })
