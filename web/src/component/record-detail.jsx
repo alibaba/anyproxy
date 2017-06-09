@@ -152,7 +152,7 @@ class RecordDetail extends React.Component {
 
     const self = this;
 
-    let reqBodyDiv = <div>{recordDetail.resBody} </div>;
+    let reqBodyDiv = <div className={Style.codeWrapper}> <pre>{recordDetail.resBody} </pre></div>;
 
     switch (recordDetail.type) {
       case 'image': {
