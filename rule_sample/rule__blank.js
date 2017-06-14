@@ -3,11 +3,11 @@ read the following wiki before using rule file
 https://github.com/alibaba/anyproxy/wiki/What-is-rule-file-and-how-to-write-one
 */
 module.exports = {
-	/*
-	These functions will overwrite the default ones, write your own when necessary.
-    Comments in Chinese are nothing but a translation of key points. Be relax if you dont understand.
+    /*
+    These functions will overwrite the default ones, write your own when necessary.
+    Comments in Chinese are nothing but a translation of key points, so don't worry if you can't read them.
     致中文用户：中文注释都是只摘要，必要时请参阅英文文档。欢迎提出修改建议。
-	*/
+    */
     summary:function(){
         return "this is a blank rule for AnyProxy";
     },
@@ -16,7 +16,7 @@ module.exports = {
 
 
     //=======================
-    //when getting a request from user
+    //when getting a request from the user
     //收到用户请求之后
     //=======================
 
@@ -27,21 +27,21 @@ module.exports = {
     },
 
     //是否在本地直接发送响应（不再向服务器发出请求）
-	//whether to intercept this request by local logic 
-	//if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
+    //whether to intercept this request by local logic 
+    //if the return value is true, anyproxy will call dealLocalResponse to get response data and will not send request to remote server anymore
     //req is the user's request sent to the proxy server
-	shouldUseLocalResponse : function(req,reqBody){
+    shouldUseLocalResponse : function(req,reqBody){
         return false;
-	},
+    },
 
     //如果shouldUseLocalResponse返回true，会调用这个函数来获取本地响应内容
     //you may deal the response locally instead of sending it to server
     //this function be called when shouldUseLocalResponse returns true 
     //callback(statusCode,resHeader,responseData)
     //e.g. callback(200,{"content-type":"text/html"},"hello world")
-	dealLocalResponse : function(req,reqBody,callback){
+    dealLocalResponse : function(req,reqBody,callback){
         callback(statusCode,resHeader,responseData)
-	},
+    },
 
 
 
