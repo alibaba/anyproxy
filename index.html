@@ -341,14 +341,14 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
 <pre class="hljs"><code><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</code></pre><ul class="list">
 <li>modify the response status code</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.reponse);
+<pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.response);
 newResponse.statusCode = <span class="hljs-number">404</span>;
 <span class="hljs-keyword">return</span> {
   <span class="hljs-attr">response</span>: newResponse
 };</code></pre><ul class="list">
 <li>modify the response content</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.reponse);
+<pre class="hljs"><code><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.response);
 newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <span class="hljs-keyword">return</span> {
   <span class="hljs-attr">response</span>: newResponse
@@ -468,8 +468,8 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
 <ul class="list">
 <li>modify the post body of <a href="http://httpbin.org/post">http://httpbin.org/post</a></li>
 </ul>
-<pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/* 
-  sample: 
+<pre class="hljs"><code>anyproxy --rule https://raw.githubusercontent.com/alibaba/anyproxy/4.x/rule_sample/sample_modify_request_data.js</code></pre><pre class="hljs"><code><span class="hljs-comment">/*
+  sample:
     modify the post data towards http://httpbin.org/post
   test:
     curl -H "Content-Type: text/plain" -X POST -d 'original post data' http://httpbin.org/post --proxy http://127.0.0.1:8001
@@ -477,6 +477,7 @@ newResponse.body += <span class="hljs-string">'--from anyproxy--'</span>;
     { "data": "i-am-anyproxy-modified-post-data" }
 */</span>
 <span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">summary</span>: <span class="hljs-string">'Rule to modify request data'</span>,
   *beforeSendRequest(requestDetail) {
     <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">'http://httpbin.org/post'</span>) === <span class="hljs-number">0</span>) {
       <span class="hljs-keyword">return</span> {
