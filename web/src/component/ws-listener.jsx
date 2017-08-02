@@ -14,7 +14,7 @@ import {
 const RecordWorkder = require('worker-loader?inline!./record-worker.jsx');
 import { getJSON } from 'common/ApiUtil';
 
-const myRecordWorder = new RecordWorkder(window.URL.createObjectURL(new Blob(RecordWorkder)));
+const myRecordWorder = new RecordWorkder(window.URL.createObjectURL(new Blob([RecordWorkder.toString()])));
 const fetchLatestLog = function () {
   getJSON('/latestLog')
     .then((data) => {
