@@ -74,6 +74,8 @@
     <li class="sidebar-header-3"><a href="#ios系统信任ca证书">iOS系统信任CA证书</a></li>
     <li class="sidebar-header-3"><a href="#ios-&gt;&#x3D;-10.3信任ca证书">iOS &gt;&#x3D; 10.3信任CA证书</a></li>
     <li class="sidebar-header-3"><a href="#配置ios/android系统代理">配置iOS/Android系统代理</a></li>
+    <li class="sidebar-header-2"><a href="#faq-1">FAQ</a></li>
+    <li class="sidebar-header-3"><a href="#the-connection-is-not-private">The connection is not private</a></li>
 </ul>
       </div>
     </div>
@@ -99,6 +101,8 @@
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/SqVntpzmscXPbSzfcGcr.png" width="500" /></p>
 <h2 id="快速上手"><a class="header-link" href="#快速上手"></a>快速上手</h2>
 <h3 id="安装"><a class="header-link" href="#安装"></a>安装</h3>
+<p>对于Debian或者Ubuntu系统，在安装AnyProxy之前，可能还需要安装 <code>nodejs-legacy</code></p>
+<pre class="hljs"><code>sudo apg-get install nodejs-legacy</code></pre><p>然后，安装AnyProxy</p>
 <pre class="hljs"><code>npm install -g anyproxy@beta <span class="hljs-comment">#本文档对应的AnyProxy为4.0Beta版</span></code></pre><h3 id="启动"><a class="header-link" href="#启动"></a>启动</h3>
 <ul class="list">
 <li>命令行启动AnyProxy，默认端口号8001</li>
@@ -175,9 +179,9 @@ anyproxy --intercept <span class="hljs-comment">#启动AnyProxy，并解析所�
 </li>
 <li><p>Step 3, 测试规则</p>
 <ul class="list">
-<li><p>用curl测试 </p>
+<li><p>用curl测试</p>
 <pre class="hljs"><code>curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001</code></pre></li>
-<li><p>用浏览器测试：配置浏览器http代理为 127.0.0.1:8001，访问 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a> </p>
+<li><p>用浏览器测试：配置浏览器http代理为 127.0.0.1:8001，访问 <a href="http://httpbin.org/user-agent">http://httpbin.org/user-agent</a></p>
 </li>
 <li><p>经过代理服务器后，期望的返回如下</p>
 </li>
@@ -232,17 +236,17 @@ npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-commen
 <p>规则模块应该符合cmd规范，一个典型的规则模块代码结构如下。模块中所有方法都是可选的，只需实现业务感兴趣的部分即可。</p>
 <pre class="hljs"><code><span class="hljs-built_in">module</span>.exports = {
   <span class="hljs-comment">// 模块介绍</span>
-  summary: <span class="hljs-string">'my customized rule for AnyProxy'</span>, 
+  summary: <span class="hljs-string">'my customized rule for AnyProxy'</span>,
   <span class="hljs-comment">// 发送请求前拦截处理</span>
-  *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> },
   <span class="hljs-comment">// 发送响应前处理</span>
-  *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> },
   <span class="hljs-comment">// 是否处理https请求</span>
-  *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> }, 
+  *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> },
   <span class="hljs-comment">// 请求出错的事件</span>
-  *onError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> }, 
+  *onError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> },
   <span class="hljs-comment">// https连接服务器出错</span>
-  *onConnectError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> } 
+  *onConnectError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> }
 };</code></pre><blockquote>
 <p>规则文件中，除了summary，都是由 <a href="https://www.npmjs.com/package/co">co</a> 驱动的，函数需要满足yieldable。可以返回promise或使用generator函数。</p>
 </blockquote>
@@ -255,7 +259,7 @@ npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-commen
 <h4 id="beforesendrequest(requestdetail)"><a class="header-link" href="#beforesendrequest(requestdetail)"></a>beforeSendRequest(requestDetail)</h4>
 <ul class="list">
 <li>AnyProxy向服务端发送请求前，会调用<code>beforeSendRequest</code>，并带上参数<code>requestDetail</code></li>
-<li><code>requestDetail</code> <ul class="list">
+<li><code>requestDetail</code><ul class="list">
 <li><code>protocol</code> {string} 请求使用的协议，http或者https</li>
 <li><code>requestOptions</code> {object} 即将发送的请求配置，供require(&#39;http&#39;).request作为使用。详见：<a href="https://nodejs.org/api/http.html#http_http_request_options_callback">https://nodejs.org/api/http.html#http_http_request_options_callback</a></li>
 <li><code>requestData</code> {object} 请求Body</li>
@@ -319,16 +323,16 @@ newOption.path = <span class="hljs-string">'/redirect/to/another/path'</span>;
 <ul class="list">
 <li>AnyProxy向客户端发送请求前，会调用<code>beforeSendResponse</code>，并带上参数<code>requestDetail</code> <code>responseDetail</code></li>
 <li><code>requestDetail</code> 同<code>beforeSendRequest</code>中的参数</li>
-<li><code>responseDetail</code> <ul class="list">
+<li><code>responseDetail</code><ul class="list">
 <li><code>response</code> {object} 服务端的返回信息，包括<code>statusCode</code> <code>header</code> <code>body</code>三个字段</li>
 <li><code>_res</code> {object} 原始的服务端返回对象</li>
 </ul>
 </li>
 <li><p>举例，请求 <em>anyproxy.io</em> 时，<code>responseDetail</code>参数内容大致如下</p>
-<pre class="hljs"><code>{ 
-  <span class="hljs-attr">response</span>: { 
+<pre class="hljs"><code>{
+  <span class="hljs-attr">response</span>: {
     <span class="hljs-attr">statusCode</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">header</span>: { 
+    <span class="hljs-attr">header</span>: {
       <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'image/gif'</span>,
       <span class="hljs-attr">Connection</span>: <span class="hljs-string">'close'</span>,
       <span class="hljs-string">'Cache-Control'</span>: <span class="hljs-string">'...'</span>
@@ -687,7 +691,7 @@ proxyServer.close();</code></pre><ul class="list">
 <li>使用示例</li>
 </ul>
 <pre class="hljs"><code><span class="hljs-comment">// 配置127.0.0.1:8001为全局http代理服务器</span>
-AnyProxy.utils.systemProxyMgr.enableGlobalProxy(<span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-string">'8001'</span>);    
+AnyProxy.utils.systemProxyMgr.enableGlobalProxy(<span class="hljs-string">'127.0.0.1'</span>, <span class="hljs-string">'8001'</span>);
 
 <span class="hljs-comment">// 关闭全局代理服务器</span>
 AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
@@ -772,7 +776,7 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/BrugmMelGVysLDOIBblj.png" width="260" /></p>
 <h3 id="ios->=-10.3信任ca证书"><a class="header-link" href="#ios->=-10.3信任ca证书"></a>iOS &gt;= 10.3信任CA证书</h3>
 <ul class="list">
-<li>除了上述证书安装过程，还需要在 <em>设置-&gt;通用-&gt;证书信任设置</em> 中把AnyProxy证书的开关打开，否则safari将报错。</li>
+<li>除了上述证书安装过程，还需要在 <em>设置-&gt;通用-&gt;关于本机-&gt;证书信任设置</em> 中把AnyProxy证书的开关打开，否则safari将报错。</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/hVWkXHrzHmOKOtCKGUWx.png" width="500" /></p>
 <h3 id="配置ios/android系统代理"><a class="header-link" href="#配置ios/android系统代理"></a>配置iOS/Android系统代理</h3>
@@ -787,6 +791,38 @@ AnyProxy.utils.systemProxyMgr.disableGlobalProxy();</code></pre></li>
 <li>Android HTTP代理配置</li>
 </ul>
 <p class="img-container"><img src="https://zos.alipayobjects.com/rmsportal/YQtbQYVNuOszZGdAOauU.png" width="260" /></p>
+<h2 id="faq-1"><a class="header-link" href="#faq-1"></a>FAQ</h2>
+<h3 id="the-connection-is-not-private"><a class="header-link" href="#the-connection-is-not-private"></a>The connection is not private</h3>
+<p>访问特定的HTTPS站点时，AnyProxy会提示该站点不是一个安全的网站，这通常是因为站点的证书设置不能被正确信任（比如，<a href="https://github.com/nodejs/node/issues/4175">Nodejs不读取系统配置，需要手动传入ca</a>）。</p>
+<p>在评估了安全风险后，可以用以下方式绕过证书校验：</p>
+<ul class="list">
+<li><p>命令行启动</p>
+<p>通过启动参数 <code>--ignore-unauthorized-ssl</code> 来忽略<strong>所有的</strong>证书认证的错误。</p>
+<pre class="hljs"><code>anyproxy -i --ignore-unauthorized-ssl</code></pre></li>
+<li><p>作为npm模块启动   </p>
+<p>在构造AnyProxy实例的时候，传入参数<code>dangerouslyIgnoreUnauthorized:true</code>, 如下：</p>
+<pre class="hljs"><code> <span class="hljs-keyword">const</span> options = {
+  ...,
+  <span class="hljs-attr">dangerouslyIgnoreUnauthorized</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// 请注意这个配置对AnyProxy所有请求都生效</span>
+ };
+
+ <span class="hljs-keyword">const</span> anyproxyIns = <span class="hljs-keyword">new</span> AnyProxy.ProxyCore(options);
+ anyproxyIns.start();</code></pre></li>
+<li><p>通过自定义的Rule来修改   </p>
+<p>我们自然也可以借助自定义的Rule来对特定请求配置<code>rejectUnauthorized</code>。</p>
+<pre class="hljs"><code><span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">'https://the-site-you-know.com'</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
+      <span class="hljs-comment">// 设置属性 rejectUnauthorized 为 false</span>
+      newRequestOptions.rejectUnauthorized = <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">requestOptions</span>: newRequestOptions
+      };
+    }
+  },
+};</code></pre></li>
+</ul>
     </div>
   </article>
 
