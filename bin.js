@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
-var program     = require('commander'),
-    color       = require('colorful'),
-    fs          = require("fs"),
-    path        = require("path"),
-    npm         = require("npm"),
-    packageInfo = require("./package.json"),
-    util        = require("./lib/util"),
-    logUtil     = require("./lib/log");
+var program       = require('commander'),
+    color         = require('colorful'),
+    fs            = require("fs"),
+    path          = require("path"),
+    globalModules = require("global-modules"),
+    npm           = require(path.join(globalModules, "npm")),
+    packageInfo   = require("./package.json"),
+    util          = require("./lib/util"),
+    logUtil       = require("./lib/log");
 
 program
     .version(packageInfo.version)
