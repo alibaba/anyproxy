@@ -29,7 +29,7 @@ Change Logs since 3.x:
 To Debian and Ubuntu users, you may need to install `nodejs-legacy` at the same time
 
 ```bash
-sudo apg-get install nodejs-legacy
+sudo apt-get install nodejs-legacy
 ```
 
 Then install the AnyProxy
@@ -222,20 +222,11 @@ Rule module could do the following stuff:
   ```js
   // file: sample.js
   module.exports = {
-    summary: 'a rule to modify response',
+    summary: 'a rule to hack response',
     *beforeSendResponse(requestDetail, responseDetail) {
       if (requestDetail.url === 'http://httpbin.org/user-agent') {
         const newResponse = responseDetail.response;
-
-        newResponse.body += '<br/><span style="color:blue">-- AnyProxy Hacked! --</span>';
-
-        newResponse.body += `<script>
-          setTimeout(
-            function (){
-              window.alert("Sorry, You Are Hacked...")
-            }, 300);
-          </script>`;
-        newResponse.header['Content-Type'] = 'text/html';
+        newResponse.body += '- AnyProxy Hacked!';
 
         return new Promise((resolve, reject) => {
           setTimeout(() => { // delay

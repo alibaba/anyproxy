@@ -4,7 +4,7 @@
 To Debian and Ubuntu users, you may need to install `nodejs-legacy` at the same time
 
 ```bash
-sudo apg-get install nodejs-legacy
+sudo apt-get install nodejs-legacy
 ```
 
 Then install the AnyProxy

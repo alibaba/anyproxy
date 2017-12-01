@@ -14,6 +14,7 @@ Github主页：https://github.com/alibaba/anyproxy/tree/4.x
 * 基于Node.js，开放二次开发能力，允许自定义请求处理逻辑
 * 支持Https的解析
 * 提供GUI界面，用以观察请求
+
 相比3.x版本，AnyProxy 4.0的主要变化：
 
 * 规则文件（Rule）全面支持Promise和Generator
@@ -29,7 +30,7 @@ Github主页：https://github.com/alibaba/anyproxy/tree/4.x
 对于Debian或者Ubuntu系统，在安装AnyProxy之前，可能还需要安装 `nodejs-legacy`
 
 ```bash
-sudo apg-get install nodejs-legacy
+sudo apt-get install nodejs-legacy
 ```
 
 然后，安装AnyProxy
@@ -223,19 +224,11 @@ AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模�
   ```js
   // file: sample.js
   module.exports = {
-    summary: 'a rule to modify response',
+    summary: 'a rule to hack response',
     *beforeSendResponse(requestDetail, responseDetail) {
       if (requestDetail.url === 'http://httpbin.org/user-agent') {
         const newResponse = responseDetail.response;
-        newResponse.body += '<br/><span style="color:blue">-- AnyProxy Hacked! --</span>';
-
-        newResponse.body += `<script>
-          setTimeout(
-            function (){
-              window.alert("Sorry, You Are Hacked...")
-            }, 300);
-          </script>`;
-        newResponse.header['Content-Type'] = 'text/html';
+        newResponse.body += '- AnyProxy Hacked!';
 
         return new Promise((resolve, reject) => {
           setTimeout(() => { // delay

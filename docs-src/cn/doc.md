@@ -5,7 +5,7 @@
 对于Debian或者Ubuntu系统，在安装AnyProxy之前，可能还需要安装 `nodejs-legacy`
 
 ```bash
-sudo apg-get install nodejs-legacy
+sudo apt-get install nodejs-legacy
 ```
 
 然后，安装AnyProxy

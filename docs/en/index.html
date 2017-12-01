@@ -754,7 +754,7 @@
 <h1 id="getting-start">Getting Start</h1>
 <h3 id="install">install</h3>
 <p>To Debian and Ubuntu users, you may need to install <code>nodejs-legacy</code> at the same time</p>
-<pre><code class="lang-bash">sudo apg-get install nodejs-legacy
+<pre><code class="lang-bash">sudo apt-get install nodejs-legacy
 </code></pre>
 <p>Then install the AnyProxy</p>
 <pre><code class="lang-bash">npm install -g anyproxy
@@ -957,20 +957,11 @@ anyproxy --intercept <span class="hljs-comment">#launch anyproxy and intercept a
 <li><p>Step 1&#xFF0C;Write the rule file, save as sample.js</p>
 <pre><code class="lang-js"><span class="hljs-comment">// file: sample.js</span>
 <span class="hljs-built_in">module</span>.exports = {
-  summary: <span class="hljs-string">&apos;a rule to modify response&apos;</span>,
+  summary: <span class="hljs-string">&apos;a rule to hack response&apos;</span>,
   *beforeSendResponse(requestDetail, responseDetail) {
     <span class="hljs-keyword">if</span> (requestDetail.url === <span class="hljs-string">&apos;http://httpbin.org/user-agent&apos;</span>) {
       <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
-
-      newResponse.body += <span class="hljs-string">&apos;&lt;br/&gt;&lt;span style=&quot;color:blue&quot;&gt;-- AnyProxy Hacked! --&lt;/span&gt;&apos;</span>;
-
-      newResponse.body += <span class="hljs-string">`&lt;script&gt;
-        setTimeout(
-          function (){
-            window.alert(&quot;Sorry, You Are Hacked...&quot;)
-          }, 300);
-        &lt;/script&gt;`</span>;
-      newResponse.header[<span class="hljs-string">&apos;Content-Type&apos;</span>] = <span class="hljs-string">&apos;text/html&apos;</span>;
+      newResponse.body += <span class="hljs-string">&apos;- AnyProxy Hacked!&apos;</span>;
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
         setTimeout(() =&gt; { <span class="hljs-comment">// delay</span>
@@ -1620,7 +1611,7 @@ You can change the request with rule of course. For this scenario, all you need 
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Getting-Start","level":"1.2","depth":1,"anchor":"#getting-start","path":"doc.md","ref":"doc.md#getting-start","articles":[{"title":"Install","level":"1.2.1","depth":2,"anchor":"#install","path":"doc.md","ref":"doc.md#install","articles":[]},{"title":"Launch","level":"1.2.2","depth":2,"anchor":"#launch","path":"doc.md","ref":"doc.md#launch","articles":[]},{"title":"Options","level":"1.2.3","depth":2,"anchor":"#options","path":"doc.md","ref":"doc.md#options","articles":[]},{"title":"As Node Module","level":"1.2.4","depth":2,"anchor":"#use-anyproxy-as-an-npm-module","path":"doc.md","ref":"doc.md#use-anyproxy-as-an-npm-module","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"en","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2017-12-01T13:25:56.899Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-12-01T13:25:58.040Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Getting-Start","level":"1.2","depth":1,"anchor":"#getting-start","path":"doc.md","ref":"doc.md#getting-start","articles":[{"title":"Install","level":"1.2.1","depth":2,"anchor":"#install","path":"doc.md","ref":"doc.md#install","articles":[]},{"title":"Launch","level":"1.2.2","depth":2,"anchor":"#launch","path":"doc.md","ref":"doc.md#launch","articles":[]},{"title":"Options","level":"1.2.3","depth":2,"anchor":"#options","path":"doc.md","ref":"doc.md#options","articles":[]},{"title":"As Node Module","level":"1.2.4","depth":2,"anchor":"#use-anyproxy-as-an-npm-module","path":"doc.md","ref":"doc.md#use-anyproxy-as-an-npm-module","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"en","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2017-12-01T13:58:00.991Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-12-01T13:58:02.250Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
