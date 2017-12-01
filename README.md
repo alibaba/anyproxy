@@ -22,7 +22,7 @@ AnyProxy是一个基于NodeJS的，可供插件配置的HTTP/HTTPS代理服务�
 
 主页：[AnyProxy.io](http://anyproxy.io)
 
-![](https://gw.alipayobjects.com/zos/rmsportal/gUfcjGxLONndTfllxynC.jpg)
+![](https://gw.alipayobjects.com/zos/rmsportal/gUfcjGxLONndTfllxynC.jpg@_90q)
 
 ----------------
 
