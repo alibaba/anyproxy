@@ -1,0 +1,91 @@
+@import '../style/constant.less';
+
+.wrapper {
+  padding: 5px 15px;
+  word-wrap: break-word;
+}
+
+.loading {
+  text-align: center;
+  padding-top: 100px;
+  .loadingText {
+    margin-top: 15px;
+    color: @primary-color;
+    font-size: @font-size-big;
+  }
+}
+
+.detailWrapper {
+  padding: 5px;
+}
+
+.section {
+  padding: 10px 0;
+  font-size: @font-size-xs;
+  border-bottom: 1px solid @border-color-base;
+  &.noBorder {
+    border: none;
+  }
+}
+
+.okStatus {
+  color: @success-color;
+}
+
+.reqBody, .resBody {
+  min-width: 200px;
+  padding-left: 15px;
+}
+
+.imageBody {
+  max-width: 100%;
+  max-height: 400px;
+}
+
+.ulItem {
+  padding-left: 15px;
+  overflow: hidden;
+}
+
+.liItem {
+  overflow: hidden;
+  strong {
+    float: left;
+    // min-width: 125px;
+    // text-align: right;
+    opacity: 0.8;
+  }
+  span {
+    display: block;
+    overflow: hidden;
+    opacity: 0.87;
+    padding-left: 15px;
+  }
+}
+
+.cookieWrapper {
+  padding-top: 15px;
+  :global {
+    .ant-table-middle .ant-table-thead > tr > th,
+    .ant-table-middle .ant-table-tbody > tr > td {
+      padding: 5px 8px;
+      background-color: transparent;
+    }
+  }
+}
+.noCookes {
+  text-align: center;
+  color: @tip-color;
+  padding: 7px 0 8px;
+  border-bottom: 1px solid @light-border-color;
+}
+.odd {
+  background-color: @light-background-color;
+}
+
+.codeWrapper {
+  overflow: auto;
+  padding: 15px;
+  background-color: @info-bkg-color;
+  border: 1px solid @light-border-color;
+}

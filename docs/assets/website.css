@@ -1,0 +1,51 @@
+.book .book-summary ul.summary li.active>a, .book .book-summary ul.summary li a:hover {
+  color: #008cff;
+  background: transparent;
+  text-decoration: none !important;
+}
+
+h1 {
+  color: #2674BA;
+}
+h2 {
+  color: #0099CC;
+}
+h3 {
+  color: #108ee9;
+}
+h4 {
+  color: #662D91;
+}
+h5 {
+  color: #444444;
+}
+
+.gitbook-link {
+  display: none !important;
+}
+
+.summary-title-span {
+  position: relative !important;
+  padding: 0 !important;
+}
+.rule-title:after,
+.sample-title:after {
+  font-size: 12px;
+  padding: 0 3px;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.rule-title:after{
+  content: 'rule';
+  background-color: #108ee9;
+}
+
+.sample-title:after {
+  content: 'sample';
+  background-color: #00a854;
+}
+
+.page-inner {
+  max-width: 1000px !important;
+}

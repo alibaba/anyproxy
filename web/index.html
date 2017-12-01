@@ -3,55 +3,18 @@
 <head>
     <title>AnyProxy</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/css/uikit.gradient.min.css" />
-    <link rel="stylesheet" href="/css/page.css" />
-	<link rel="stylesheet" type="text/css" href="/css/jstree_style/style.min.css">
-
-    <link rel="icon" type="image/png" href="/favico.png" />
+    <link rel="icon" type="image/png" href="/favico.png">
+    <link rel="stylesheet" href="/dist/main.css" />
+    <style type="text/css">
+      #root {
+        height: 100%;
+        width: 100%;
+        min-width: 1050px;
+        overflow: auto;
+      }
+    </style>
 </head>
 <body>
-	<div class="topHead">
-		<div class="logoWrapper">
-			<h1>AnyProxy</h1>
-			<div id="J_indicatorEl"></div>
-		</div>
-
-		<div class="ctrlWrapper">
-			<a href="#"><span class="topBtn J_statusBtn"><i class="uk-icon-stop"></i>Stop</span></a>
-			<a href="#"><span class="topBtn J_statusBtn btn_disable"><i class="uk-icon-play"></i>Resume</span></a>
-			<a href="#"><span class="topBtn J_clearBtn"><i class="uk-icon-eraser"></i>Clear(Ctrl+X)</span></a>
-
-			<span class="sep">|</span>
-			<a href="/fetchCrtFile" target="_blank"><span class="topBtn"><i class="uk-icon-download"></i>Download rootCA.crt</span></a>
-			<a href="/qr_root" class="J_fetchRootQR" target="_blank"><span class="topBtn"><i class="uk-icon-qrcode"></i>QRCode of rootCA.crt</span></a>
-
-			<span class="sep">|</span>
-			<a href="https://github.com/alibaba/anyproxy" target="_blank"><span class="topBtn"><i class="uk-icon-github"></i>Github</span></a>
-		</div>
-
-		<div class="ctrlWrapper">
-			<span id="J_filterBtnContainer"></span>
-			<span id="J_filterContainer"></span>
-			<span class="sep">|</span>
-
-			{@if customMenu.length}
-				{@each customMenu as item}
-					<a href="#"><span class="topBtn J_customButton" iframeUrl="${item.url}"><i class="${item.icon}"></i>${item.name}</span></a>
-				{@/each}
-				<span class="sep">|</span>
-			{@/if}
-
-			<span title="${rule}"><i class="uk-icon-chain"></i>Rule : ${rule}</span>
-		</div>
-
-		<div style="clear:both"></div>
-	</div>
-
-	<div class="mainTableWrapper" id="J_content"></div>
-
-	<input type="hidden" id="socketPort" value="${wsPort}" />
-	<input type="hidden" id="baseUrl" value="${ipAddress}" />
-
-    <script src="./page.js"></script>
+  <div id="root"></div>
+  <script type="text/javascript" src="/dist/main.js"></script>
 </body>
-</html>

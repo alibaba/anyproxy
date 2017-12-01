@@ -1,0 +1,7 @@
+node_modules
+dist
+web
+web2
+resource
+*.sh
+docs

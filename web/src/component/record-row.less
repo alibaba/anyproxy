@@ -1,0 +1,69 @@
+@import '../style/constant.less';
+
+.tableRow {
+  display: block;
+  cursor: pointer;
+  font-size: @font-size-sm;
+  td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+}
+
+.lightBackgroundColor {
+  background: @light-background-color;
+}
+
+.id {
+  padding-left: 20px;
+  text-align: center;
+}
+
+.method {
+  text-align: left;
+}
+
+.code {
+  text-align: center;
+}
+
+// .host {
+//   width: 200px;
+// }
+
+.path {
+  max-width: 0;
+  min-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mime {
+  min-width: 160px;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// .time {
+//   width: 100px;
+// }
+
+.okStatus {
+  color: @ok-color;
+}
+
+.errorStatus {
+  color: @error-color;
+}
+
+.https {
+  background: url('../assets/https.png');
+  width: 11px;
+  height: 11px;
+  margin-left: 1px;
+  background-size: contain;
+  display: inline-block;
+}

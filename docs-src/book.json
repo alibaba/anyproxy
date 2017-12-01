@@ -1,0 +1,11 @@
+{
+  "title": "AnyProxy",
+  "author": "AnyProxy",
+  "description": "A fully configurable http/https proxy in NodeJS",
+  "plugins": [
+
+  ],
+  "pluginsConfig": {
+    
+  }
+}

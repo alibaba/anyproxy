@@ -1,0 +1,26 @@
+@keyframes rotation {
+        0% {
+            -webkit-transform: rotate(0deg);
+            opacity: 0.1;
+        }
+
+        20% {
+            opacity: 0.1;
+        }
+
+        40% {
+            opacity: 0.25;
+        }
+
+        80% {
+            opacity: 0.1;
+        }
+
+        100% {
+            -webkit-transform: rotate(359deg);
+            opacity: 0.1;
+        }
+  }
+.rotation {
+animation: rotation 1.2s infinite cubic-bezier(.63,.33,.46,.71);
+}

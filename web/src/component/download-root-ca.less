@@ -1,0 +1,58 @@
+@import '../style/constant.less';
+.wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 10px 13px 15px;
+  color: @tip-color;
+  text-align: center;
+  :global {
+    .ant-btn {
+      width: 100%;
+      font-weight: 400;
+    }
+  }
+}
+
+.title {
+  font-size: @middlepanel-font-size;
+  text-align: left;
+  font-weight: 200;
+  color: @hint-color;
+  margin-bottom: 12px;
+}
+
+.fullHeightWrapper {
+  height: 100%;
+  padding-bottom: 100px;
+  margin-bottom: -100px;
+  min-height: 500px;
+}
+
+.arCodeDivWrapper {
+  margin-top: 63px;
+}
+
+.generateRootCaTip {
+  padding-top: 100px;
+  .strongColor {
+    color: @default-color;
+    padding-top: 10px;
+    font-weight: 500;
+  }
+  span {
+    display: block;
+  }
+}
+
+.generateCAButton {
+  margin-top: 50px;
+}
+
+.buttons {
+  width: 100%;
+  .tipSpan {
+    margin-top: 18px;
+    display: block;
+  }
+}

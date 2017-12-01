@@ -1,0 +1,209 @@
+@import '../style/constant.less';
+
+@svg-default-color: #3A3A3A;
+.wrapper {
+    width: 100%;
+}
+
+.menuList {
+  overflow: hidden;
+}
+
+.menuItem {
+  color: @default-color;
+  font-size: @font-size-xs;
+  float: left;
+  cursor: pointer;
+  padding: 0 5px;
+  opacity: 0.87;
+  min-width: 95px;
+  padding: 0 25px;
+  text-align: center;
+  -webkit-app-region: no-drag;
+  -webkit-user-select: text;
+  &:focus {
+    text-decoration: none;
+  }
+
+  i {
+    display: block;
+  }
+
+  .playIcon, .stopIcon {
+    svg {
+      width: 18px;
+    }
+  }
+
+  .eyeIcon {
+    svg {
+      width: 27px;
+    }
+  }
+
+  .tipIcon {
+    svg {
+      width: 22px;
+    }
+  }
+
+  svg {
+    width: 23px;
+    height: 21px;
+    cursor: pointer;
+    polyline {
+        fill: @svg-default-color;
+        stroke: @svg-default-color;
+      }
+      g {
+        fill: @svg-default-color;
+        opacity: 1;
+      }
+
+      g > use {
+        fill: @svg-default-color;
+      }
+  }
+
+  span {
+    display: block;
+    line-height: 30px;
+    color: @top-menu-span-color;
+  }
+
+  &:hover {
+    color: @primary-color;
+    span {
+      color: @primary-color;
+    }
+
+    svg {
+      polyline {
+        fill: @primary-color;
+        stroke: @primary-color;
+      }
+      g {
+        fill: @primary-color;
+      }
+
+      use {
+        fill: @primary-color;
+      }
+    }
+  }
+
+  &.disabled {
+    color: @tip-color;
+  }
+
+  &.active {
+    color: @primary-color;
+    span {
+      color: @primary-color;
+    }
+
+    svg {
+      polyline {
+        fill: @primary-color;
+        stroke: @primary-color;
+      }
+
+      // fill: @primary-color;
+      // stroke: @primary-color;
+      g {
+        fill: @primary-color;
+      }
+
+      use {
+        fill: @primary-color;
+      }
+    }
+  }
+
+  &.rightMenuItem {
+    float: right;
+    padding-right: 0;
+    margin-right: 35px;
+  }
+}
+
+.menuItemSpliter {
+  display: block;
+  float: left;
+  width: 1px;
+  background-color: @top-menu-spliter-color;
+  height: 30px;
+  margin: 5px 20px 0;
+}
+
+.ruleTip {
+  color: @tip-color;
+  line-height: 26px;
+  i {
+    padding-right: 5px;
+  }
+}
+
+.modalInfo {
+   li {
+    font-size: @font-size-reg;
+    overflow: hidden;
+    strong {
+      font-weight: normal;
+      float: left;
+    }
+
+    span {
+      display: block;
+      overflow: hidden;
+      padding-left: 10px;
+      color: @tip-color;
+    }
+  }
+
+  :global {
+    .ant-modal-title {
+      color: @default-color;
+      font-weight: 400;
+    }
+    .ant-btn {
+      font-weight: normal;
+    }
+  }
+}
+
+.runningInfoDivWrapper {
+  line-height: 1.5;
+  li {
+    overflow: hidden;
+    strong {
+      float: left;
+    }
+
+    span {
+      overflow: hidden;
+      padding-left: 5px;
+      display: block;
+    }
+  }
+  :global {
+    .ant-btn {
+      margin-top: 10px;
+    }
+
+    .ant-popover {
+      font-size: @font-size-reg;
+    }
+
+    .ant-popover-title {
+      color: @default-color;
+      font-weight: bold;
+      padding-left: 20px;
+    }
+
+    .ant-popover-inner-content {
+      padding-bottom: 25px;
+      padding-left: 20px;
+    }
+  }
+}

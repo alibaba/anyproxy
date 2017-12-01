@@ -1,0 +1,66 @@
+@import './constant.less';
+@import './animate.less';
+
+body {
+  line-height: 1.5;
+  font-size: @font-size-reg;
+  position: relative;
+  font-family: "PingFangSC-Regular", "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif !important;
+  word-wrap: break-word;
+  min-height: 500px;
+}
+
+.sectionTitle {
+  display: block;
+  font-size: @font-size-reg;
+  border-left: 3px solid @primary-color;
+  line-height: 1;
+  padding-left: 5px;
+}
+
+.whiteSpace10 {
+  display: block;
+  width: 100%;
+  height: 10px;
+}
+
+.whiteSpace20 {
+  display: block;
+  width: 100%;
+  height: 20px;
+}
+
+.whiteSpace30 {
+  display: block;
+  width: 100%;
+  height: 30px;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.topAlign {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  div {
+    line-height: 1;
+  }
+}
+
+:global {
+  .ant-btn {
+    min-width: 100px;
+  }
+}
+
+.relativeWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

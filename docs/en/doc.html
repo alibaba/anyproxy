@@ -1,0 +1,1635 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Getting-Start · AnyProxy</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="author" content="AnyProxy">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="doc.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+        <link rel="shortcut icon" href="/assets/favicon.png" type="image/png">
+        <link rel="stylesheet" href="/assets/styles/website.css">
+        <script src="/assets/main.js" ></script>
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    <div class="summary-title-span Introduction">
+                      Introduction
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="doc.html">
+            
+                <a href="doc.html#getting-start">
+            
+                    
+                    <div class="summary-title-span Getting-Start">
+                      Getting-Start
+                    </div>
+
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="doc.html">
+            
+                <a href="doc.html#install">
+            
+                    
+                    <div class="summary-title-span Install">
+                      Install
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="doc.html">
+            
+                <a href="doc.html#launch">
+            
+                    
+                    <div class="summary-title-span Launch">
+                      Launch
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="doc.html">
+            
+                <a href="doc.html#options">
+            
+                    
+                    <div class="summary-title-span Options">
+                      Options
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="doc.html">
+            
+                <a href="doc.html#use-anyproxy-as-an-npm-module">
+            
+                    
+                    <div class="summary-title-span As Node Module">
+                      As Node Module
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="doc.html">
+            
+                <a href="doc.html#proxy-https">
+            
+                    
+                    <div class="summary-title-span Proxy HTTPS">
+                      Proxy HTTPS
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="doc.html">
+            
+                <a href="doc.html#rule-introduction">
+            
+                    
+                    <div class="summary-title-span Rule Introduction">
+                      Rule Introduction
+                    </div>
+
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="doc.html">
+            
+                <a href="doc.html#sample">
+            
+                    
+                    <div class="summary-title-span Sample">
+                      Sample
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="doc.html">
+            
+                <a href="doc.html#how-does-it-work">
+            
+                    
+                    <div class="summary-title-span How Does It Work">
+                      How Does It Work
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="doc.html">
+            
+                <a href="doc.html#how-to-load-rule-module">
+            
+                    
+                    <div class="summary-title-span Load A Rule">
+                      Load A Rule
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="doc.html">
+            
+                <a href="doc.html#rule-module-interface">
+            
+                    
+                    <div class="summary-title-span Rule Module Interfaces">
+                      Rule Module Interfaces
+                    </div>
+
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="doc.html">
+            
+                <a href="doc.html#summary">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      summary
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="doc.html">
+            
+                <a href="doc.html#beforesendrequest">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      beforeSendRequest
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="doc.html">
+            
+                <a href="doc.html#beforesendresponse">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      beforeSendResponse
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="doc.html">
+            
+                <a href="doc.html#beforedealhttpsrequest">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      beforeDealHttpsRequest
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="doc.html">
+            
+                <a href="doc.html#onerror">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      onError
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="doc.html">
+            
+                <a href="doc.html#onconnecterror">
+            
+                    
+                    <div class="summary-title-span rule-title">
+                      onConnectError
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="doc.html">
+            
+                <a href="doc.html#rule-samples">
+            
+                    
+                    <div class="summary-title-span Rule Samples">
+                      Rule Samples
+                    </div>
+
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="doc.html">
+            
+                <a href="doc.html#use-local-response">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Use local response
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="doc.html">
+            
+                <a href="doc.html#modify-request-header">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify Request Header
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="doc.html">
+            
+                <a href="doc.html#modify-request-body">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify Request Body
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="doc.html">
+            
+                <a href="doc.html#modify-the-request-target">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify The Request Target
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="doc.html">
+            
+                <a href="doc.html#modify-request-protocol">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify Request Protocol
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="doc.html">
+            
+                <a href="doc.html#modify-response-status-code">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify Response Status Code
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.7" data-path="doc.html">
+            
+                <a href="doc.html#modify-the-response-header">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify The Response Header
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.8" data-path="doc.html">
+            
+                <a href="doc.html#modify-response-data-and-delay">
+            
+                    
+                    <div class="summary-title-span sample-title">
+                      Modify Response Data And Delay
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="doc.html">
+            
+                <a href="doc.html#config-certification">
+            
+                    
+                    <div class="summary-title-span Config Certification">
+                      Config Certification
+                    </div>
+
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="doc.html">
+            
+                <a href="doc.html#config-root-ca-in-osx">
+            
+                    
+                    <div class="summary-title-span Config Root CA In OSX">
+                      Config Root CA In OSX
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" data-path="doc.html">
+            
+                <a href="doc.html#config-root-ca-in-windows">
+            
+                    
+                    <div class="summary-title-span Configure Root CA In windows">
+                      Configure Root CA In windows
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="doc.html">
+            
+                <a href="doc.html#config-osx-system-proxy">
+            
+                    
+                    <div class="summary-title-span Config OSX System Proxy">
+                      Config OSX System Proxy
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="doc.html">
+            
+                <a href="doc.html#config-http-proxy-server">
+            
+                    
+                    <div class="summary-title-span Config As Http Proxy Server">
+                      Config As Http Proxy Server
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="doc.html">
+            
+                <a href="doc.html#trust-root-ca-in-ios">
+            
+                    
+                    <div class="summary-title-span Trust Root CA In IOS">
+                      Trust Root CA In IOS
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="doc.html">
+            
+                <a href="doc.html#trust-root-ca-in-ios-after-103">
+            
+                    
+                    <div class="summary-title-span Trust Root CA In iOS after 10.3">
+                      Trust Root CA In iOS after 10.3
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.7" data-path="doc.html">
+            
+                <a href="doc.html#config-iosandroid-proxy-server">
+            
+                    
+                    <div class="summary-title-span Config IOS/Android Proxy Server">
+                      Config IOS/Android Proxy Server
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.8" data-path="doc.html">
+            
+                <a href="doc.html">
+            
+                    
+                    <div class="summary-title-span FAQ">
+                      FAQ
+                    </div>
+
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Getting-Start</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="getting-start">Getting Start</h1>
+<h3 id="install">install</h3>
+<p>To Debian and Ubuntu users, you may need to install <code>nodejs-legacy</code> at the same time</p>
+<pre><code class="lang-bash">sudo apg-get install nodejs-legacy
+</code></pre>
+<p>Then install the AnyProxy</p>
+<pre><code class="lang-bash">npm install -g anyproxy@beta <span class="hljs-comment"># 4.x is in beta now</span>
+</code></pre>
+<h3 id="launch">launch</h3>
+<ul>
+<li>start AnyProxy in command line, with default port 8001</li>
+</ul>
+<pre><code class="lang-bash">anyproxy
+</code></pre>
+<ul>
+<li>now you can use http proxy server by 127.0.0.1:8001</li>
+<li>visit <a href="http://127.0.0.1:8002" target="_blank">http://127.0.0.1:8002</a> to see the http requests</li>
+</ul>
+<h3 id="options">options</h3>
+<ul>
+<li>specify the port of http proxy</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --port 1080
+</code></pre>
+<h3 id="use-anyproxy-as-an-npm-module">Use AnyProxy as an npm module</h3>
+<p>AnyProxy can be used as an npm module</p>
+<blockquote>
+<p>To enable https feature, please guide users to use <code>anyproxy-ca</code> in cli. Or use methods under <code>AnyProxy.utils.certMgr</code> to generate certificates.</p>
+</blockquote>
+<ul>
+<li>install</li>
+</ul>
+<pre><code class="lang-bash">npm i anyproxy@beta --save <span class="hljs-comment"># 4.0 is in beta now</span>
+</code></pre>
+<ul>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> AnyProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;anyproxy&apos;</span>);
+<span class="hljs-keyword">const</span> options = {
+  port: <span class="hljs-number">8001</span>,
+  rule: <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;myRuleModule&apos;</span>),
+  webInterface: {
+    enable: <span class="hljs-literal">true</span>,
+    webPort: <span class="hljs-number">8002</span>,
+    wsPort: <span class="hljs-number">8003</span>,
+  },
+  throttle: <span class="hljs-number">10000</span>,
+  forceProxyHttps: <span class="hljs-literal">false</span>,
+  silent: <span class="hljs-literal">false</span>
+};
+<span class="hljs-keyword">const</span> proxyServer = <span class="hljs-keyword">new</span> AnyProxy.ProxyServer(options);
+
+proxyServer.on(<span class="hljs-string">&apos;ready&apos;</span>, () =&gt; { <span class="hljs-comment">/* */</span> });
+proxyServer.on(<span class="hljs-string">&apos;error&apos;</span>, (e) =&gt; { <span class="hljs-comment">/* */</span> });
+proxyServer.start();
+
+<span class="hljs-comment">//when finished</span>
+proxyServer.close();
+</code></pre>
+<ul>
+<li><p>Class: AnyProxy.proxyServer</p>
+<ul>
+<li><p>create a proxy server</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> proxy = <span class="hljs-keyword">new</span> AnyProxy.proxyServer(options)
+</code></pre>
+</li>
+<li><p><code>options</code></p>
+<ul>
+<li><code>port</code> {number} required, port number of proxy server</li>
+<li><code>rule</code> {object} your rule module</li>
+<li><code>throttle</code> {number} throttle in kb/s, unlimited for default</li>
+<li><code>forceProxyHttps</code> {boolean} in force intercept all https request, false for default</li>
+<li><code>silent</code> {boolean} if keep silent in console, false for default<code>false</code></li>
+<li><code>dangerouslyIgnoreUnauthorized</code> {boolean} if ignore certificate error in request, false for default</li>
+<li><code>webInterface</code> {object} config for web interface<ul>
+<li><code>enable</code> {boolean} if enable web interface, false for default</li>
+<li><code>webPort</code> {number} port number for web interface</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Event: <code>ready</code></p>
+<ul>
+<li>emit when proxy server is ready</li>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js">proxy.on(<span class="hljs-string">&apos;ready&apos;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ })
+</code></pre>
+</li>
+<li><p>Event: <code>error</code></p>
+<ul>
+<li>emit when error happened inside proxy server</li>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js">proxy.on(<span class="hljs-string">&apos;error&apos;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ })
+</code></pre>
+</li>
+<li><p>Method: <code>start</code></p>
+<ul>
+<li>start proxy server</li>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js">proxy.start();
+</code></pre>
+</li>
+<li><p>Method: <code>close</code></p>
+<ul>
+<li>close proxy server</li>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js">proxy.close();
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>AnyProxy.utils.systemProxyMgr</p>
+<ul>
+<li>manage the system proxy config. sudo password may be required</li>
+<li>sample</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-comment">// set 127.0.0.1:8001 as system http server</span>
+AnyProxy.utils.systemProxyMgr.enableGlobalProxy(<span class="hljs-string">&apos;127.0.0.1&apos;</span>, <span class="hljs-string">&apos;8001&apos;</span>);
+
+<span class="hljs-comment">// disable global proxy server</span>
+AnyProxy.utils.systemProxyMgr.disableGlobalProxy();
+</code></pre>
+</li>
+<li><p>AnyProxy.utils.certMgr</p>
+<ul>
+<li>Manage certificates of AnyProxy</li>
+<li><code>AnyProxy.utils.certMgr.ifRootCAFileExists()</code><ul>
+<li>detect if AnyProx rootCA exists</li>
+</ul>
+</li>
+<li><code>AnyProxy.utils.certMgr.generateRootCA(callback)</code><ul>
+<li>generate a rootCA</li>
+</ul>
+</li>
+<li>Sample</li>
+</ul>
+<pre><code class="lang-js">  <span class="hljs-keyword">const</span> AnyProxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;AnyProxy&apos;</span>);
+  <span class="hljs-keyword">const</span> exec = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;child_process&apos;</span>).exec;
+
+  <span class="hljs-keyword">if</span> (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
+    AnyProxy.utils.certMgr.generateRootCA((error, keyPath) =&gt; {
+      <span class="hljs-comment">// let users to trust this CA before using proxy</span>
+      <span class="hljs-keyword">if</span> (!error) {
+        <span class="hljs-keyword">const</span> certDir = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;path&apos;</span>).dirname(keyPath);
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;The cert is generated at&apos;</span>, certDir);
+        <span class="hljs-keyword">const</span> isWin = <span class="hljs-regexp">/^win/</span>.test(process.platform);
+        <span class="hljs-keyword">if</span> (isWin) {
+          exec(<span class="hljs-string">&apos;start .&apos;</span>, { cwd: certDir });
+        } <span class="hljs-keyword">else</span> {
+          exec(<span class="hljs-string">&apos;open .&apos;</span>, { cwd: certDir });
+        }
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">&apos;error when generating rootCA&apos;</span>, error);
+      }
+    });
+  }
+</code></pre>
+</li>
+</ul>
+<h1 id="proxy-https">Proxy Https</h1>
+<ul>
+<li>AnyProxy does NOT intercept https requests by default. To view decrypted info, you have to config the CA certificate.</li>
+</ul>
+<blockquote>
+<p>Under the hood, AnyProxy decryptes https requests by man-in-the-middle attack. Users have to trust the CA cert in advance. Otherwise, client side will issue errors about unsecure network.</p>
+</blockquote>
+<ul>
+<li>generate certifycates and intercept</li>
+</ul>
+<pre><code class="lang-bash">anyproxy-ca <span class="hljs-comment">#generate root CA. manually trust it after that.</span>
+anyproxy --intercept <span class="hljs-comment">#launch anyproxy and intercept all https traffic</span>
+</code></pre>
+<ul>
+<li><a href="#config-certification">Appendix&#xFF1A;how to trust CA</a></li>
+</ul>
+<h1 id="rule-introduction">Rule Introduction</h1>
+<p>AnyProxy provides the ability to load your own rules written in javascript. With rule module, you could customize the logic to handle requests.</p>
+<blockquote>
+<p>Make sure your rule file is got from a trusted source. Otherwise, you may face some unknown security risk.</p>
+</blockquote>
+<p>Rule module could do the following stuff:</p>
+<ul>
+<li>intercept and modify the request which is being sent<ul>
+<li>editable fields include request header, body, target address</li>
+</ul>
+</li>
+<li>intercept and modify the response from server<ul>
+<li>editable fields include response status code, header, body</li>
+</ul>
+</li>
+<li>intercept https requests, modify request and response</li>
+</ul>
+<h3 id="sample">sample</h3>
+<ul>
+<li><p>Target</p>
+<ul>
+<li>write a rule module to append some text to the response of GET <a href="http://httpbin.org/user-agent" target="_blank">http://httpbin.org/user-agent</a>, and delay the response for 5 seconds</li>
+</ul>
+</li>
+<li><p>Step 1&#xFF0C;Write the rule file, save as sample.js</p>
+<pre><code class="lang-js"><span class="hljs-comment">// file: sample.js</span>
+<span class="hljs-built_in">module</span>.exports = {
+  summary: <span class="hljs-string">&apos;a rule to modify response&apos;</span>,
+  *beforeSendResponse(requestDetail, responseDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url === <span class="hljs-string">&apos;http://httpbin.org/user-agent&apos;</span>) {
+      <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
+      newResponse.body += <span class="hljs-string">&apos;-- AnyProxy Hacked! --&apos;</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
+        setTimeout(() =&gt; { <span class="hljs-comment">// delay</span>
+          resolve({ response: newResponse });
+        }, <span class="hljs-number">5000</span>);
+      });
+    }
+  },
+};
+</code></pre>
+</li>
+<li><p>Step 2, start AnyProxy and load the rule file</p>
+<ul>
+<li>run <code>anyproxy --rule sample.js</code></li>
+</ul>
+</li>
+<li><p>Step 3, test</p>
+<ul>
+<li><p>use curl</p>
+<pre><code class="lang-bash">curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
+</code></pre>
+</li>
+<li><p>use browser. Point the http proxy of browser to 127.0.0.1:8001, then visit <a href="http://httpbin.org/user-agent" target="_blank">http://httpbin.org/user-agent</a></p>
+</li>
+<li><p>the expected response from proxy is</p>
+</li>
+</ul>
+<pre><code>{
+  &quot;user-agent&quot;: &quot;curl/7.43.0&quot;
+}
+- AnyProxy Hacked!
+</code></pre></li>
+<li><p>Step 4, view the request log</p>
+<ul>
+<li>visit <a href="http://127.0.0.1:8002" target="_blank">http://127.0.0.1:8002</a>, the request just sent should be listed here</li>
+</ul>
+</li>
+</ul>
+<h3 id="how-does-it-work">how does it work</h3>
+<ul>
+<li>The flow chart is as follows</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/TWyNuSJtEZBdrdcOMRjE.png" width="550"></p>
+<ul>
+<li><p>When got an http request, the entire process of proxy server is</p>
+<ul>
+<li>AnyProxy collects all the quest info, include method, header, body</li>
+<li>AnyProxy calls <code>beforeSendRequest</code> of the rule module. Rule module deal the request, return new request param or response content</li>
+<li>If <code>beforeSendRequest</code> returns the response content, AnyProxy will send the response to client without sending to target server. The process ends here.</li>
+<li>Send request to target server, collect response</li>
+<li>Call <code>beforeSendResponse</code> of the rule module. Rule module deal the response data</li>
+<li>Send response to client</li>
+</ul>
+</li>
+<li><p>When AnyProxy get https request, it could replace the certificate and decrypt the request data</p>
+<ul>
+<li>AnyProxy calls <code>beforeDealHttpsRequest</code> of the rule module</li>
+<li>If the function returns <code>true</code>, AnyProxy will do the man-in-the-middle attack to it. Otherwise, the request will not be dealed.</li>
+</ul>
+</li>
+</ul>
+<h3 id="how-to-load-rule-module">how to load rule module</h3>
+<ul>
+<li><p>use local file</p>
+<pre><code class="lang-bash">anyproxy --rule ./rule.js
+</code></pre>
+</li>
+<li><p>use an online rule file</p>
+<pre><code class="lang-bash">anyproxy --rule https://sample.com/rule.js
+</code></pre>
+</li>
+<li><p>use an npm module</p>
+<ul>
+<li>AnyProxy uses <code>require()</code> to load rule module. You could either load a local npm module or a global-installed one.</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule ./myRulePkg/ <span class="hljs-comment">#local module</span>
+npm i -g myRulePkg &amp;&amp; anyproxy --rule myRulePkg <span class="hljs-comment">#global-installed module</span>
+</code></pre>
+</li>
+</ul>
+<h1 id="rule-module-interface">Rule module interface</h1>
+<p>A typical rule module is as follows. All the functions are optional, just write the part you are interested in.</p>
+<pre><code class="lang-js"><span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-comment">// introduction</span>
+  summary: <span class="hljs-string">&apos;my customized rule for AnyProxy&apos;</span>,
+  <span class="hljs-comment">// intercept before send request to server</span>
+  *beforeSendRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> },
+  <span class="hljs-comment">// deal response before send to client</span>
+  *beforeSendResponse(requestDetail, responseDetail) { <span class="hljs-comment">/* ... */</span> },
+  <span class="hljs-comment">// if deal https request</span>
+  *beforeDealHttpsRequest(requestDetail) { <span class="hljs-comment">/* ... */</span> },
+  <span class="hljs-comment">// error happened when dealing requests</span>
+  *onError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> },
+  <span class="hljs-comment">// error happened when connect to https server</span>
+  *onConnectError(requestDetail, error) { <span class="hljs-comment">/* ... */</span> }
+};
+</code></pre>
+<blockquote>
+<p>All functions in your rule file, except summary, are all driven by <a href="https://www.npmjs.com/package/co" target="_blank">co</a> . They should be yieldable, i.e. return a promise or be a generator function.</p>
+</blockquote>
+<h3 id="summary">summary</h3>
+<h4 id="summary">summary</h4>
+<ul>
+<li>Introduction of this rule file. AnyProxy will read this field and give some tip to user.</li>
+</ul>
+<h3 id="beforesendrequest">beforeSendRequest</h3>
+<h4 id="beforesendrequestrequestdetail">beforeSendRequest(requestDetail)</h4>
+<ul>
+<li>Before sending request to server, AnyProxy will call <code>beforeSendRequest</code> with param <code>requestDetail</code></li>
+<li><code>requestDetail</code><ul>
+<li><code>protocol</code> {string} the protocol to use, http or https</li>
+<li><code>requestOptions</code> {object} the options of the request-to-go, a param of require(&apos;http&apos;).request . ref: <a href="https://nodejs.org/api/http.html#http_http_request_options_callback" target="_blank">https://nodejs.org/api/http.html#http_http_request_options_callback</a></li>
+<li><code>requestData</code> {object} request body</li>
+<li><code>url</code> {string} request url</li>
+<li><code>_req</code> {object} the native node.js request object</li>
+</ul>
+</li>
+<li><p>e.g. When requesting  <em>anyproxy.io</em>, <code>requestDetail</code> is something like the following</p>
+<pre><code class="lang-js">{
+  protocol: <span class="hljs-string">&apos;http&apos;</span>,
+  url: <span class="hljs-string">&apos;http://anyproxy.io/&apos;</span>,
+  requestOptions: {
+    hostname: <span class="hljs-string">&apos;anyproxy.io&apos;</span>,
+    port: <span class="hljs-number">80</span>,
+    path: <span class="hljs-string">&apos;/&apos;</span>,
+    method: <span class="hljs-string">&apos;GET&apos;</span>,
+    headers: {
+      Host: <span class="hljs-string">&apos;anyproxy.io&apos;</span>,
+      <span class="hljs-string">&apos;Proxy-Connection&apos;</span>: <span class="hljs-string">&apos;keep-alive&apos;</span>,
+      <span class="hljs-string">&apos;User-Agent&apos;</span>: <span class="hljs-string">&apos;...&apos;</span>
+    }
+  },
+  requestData: <span class="hljs-string">&apos;...&apos;</span>,
+  _req: { <span class="hljs-comment">/* ... */</span>}
+}
+</code></pre>
+</li>
+<li><p>Any of these return values are valid</p>
+<ul>
+<li>do nothing, and return null</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+</code></pre>
+<ul>
+<li>modify the request protocol&#xFF0C;i.e. force use https</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> {
+  protocol: <span class="hljs-string">&apos;https&apos;</span>
+};
+</code></pre>
+<ul>
+<li>modify request param</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">var</span> newOption = <span class="hljs-built_in">Object</span>.assign({}, requestDetail.requestOptions);
+newOption.path = <span class="hljs-string">&apos;/redirect/to/another/path&apos;</span>;
+<span class="hljs-keyword">return</span> {
+  requestOptions: newOption
+};
+</code></pre>
+<ul>
+<li>modify request body</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> {
+  requestData: <span class="hljs-string">&apos;my new request data&apos;</span>
+  <span class="hljs-comment">// requestOptions can also be used here</span>
+};
+</code></pre>
+<ul>
+<li>give response to the client, not sending request any longer. <code>statusCode</code> <code>headers</code>are required is this situation.</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> {
+  response: {
+    statusCode: <span class="hljs-number">200</span>,
+    header: { <span class="hljs-string">&apos;content-type&apos;</span>: <span class="hljs-string">&apos;text/html&apos;</span> },
+    body: <span class="hljs-string">&apos;this could be a &lt;string&gt; or &lt;buffer&gt;&apos;</span>
+  }
+};
+</code></pre>
+</li>
+</ul>
+<h3 id="beforesendresponse">beforeSendResponse</h3>
+<h4 id="beforesendresponserequestdetail-responsedetail">beforeSendResponse(requestDetail, responseDetail)</h4>
+<ul>
+<li>Before sending response to client, AnyProxy will call <code>beforeSendResponse</code> with param <code>requestDetail</code> <code>responseDetail</code></li>
+<li><code>requestDetail</code> is the same param as in <code>beforeSendRequest</code></li>
+<li><code>responseDetail</code><ul>
+<li><code>response</code> {object} the response from server, includes <code>statusCode</code> <code>header</code> <code>body</code></li>
+<li><code>_res</code> {object} the native node.js response object</li>
+</ul>
+</li>
+<li><p>e.g. When requesting <em>anyproxy.io</em>, <code>responseDetail</code> is something like the following</p>
+<pre><code class="lang-js">{
+  response: {
+    statusCode: <span class="hljs-number">200</span>,
+    header: {
+      <span class="hljs-string">&apos;Content-Type&apos;</span>: <span class="hljs-string">&apos;image/gif&apos;</span>,
+      Connection: <span class="hljs-string">&apos;close&apos;</span>,
+      <span class="hljs-string">&apos;Cache-Control&apos;</span>: <span class="hljs-string">&apos;...&apos;</span>
+    },
+    body: <span class="hljs-string">&apos;...&apos;</span>
+  },
+  _res: { <span class="hljs-comment">/* ... */</span> }
+}
+</code></pre>
+</li>
+<li><p>Any of these return values are valid</p>
+<ul>
+<li>do nothing, and return null</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+</code></pre>
+<ul>
+<li>modify the response status code</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.response);
+newResponse.statusCode = <span class="hljs-number">404</span>;
+<span class="hljs-keyword">return</span> {
+  response: newResponse
+};
+</code></pre>
+<ul>
+<li>modify the response content</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">var</span> newResponse = <span class="hljs-built_in">Object</span>.assign({}, responseDetail.response);
+newResponse.body += <span class="hljs-string">&apos;--from anyproxy--&apos;</span>;
+<span class="hljs-keyword">return</span> {
+  response: newResponse
+};
+</code></pre>
+</li>
+</ul>
+<h3 id="beforedealhttpsrequest">beforeDealHttpsRequest</h3>
+<h4 id="beforedealhttpsrequestrequestdetail">beforeDealHttpsRequest(requestDetail)</h4>
+<ul>
+<li>When receiving https request, AnyProxy will call <code>beforeDealHttpsRequest</code> with param <code>requestDetail</code></li>
+<li>If configed with <code>forceProxyHttps</code> in launching, AnyProxy will skip calling this method</li>
+<li>Only by returning true, AnyProxy will try to replace the certificate and intercept the https request.</li>
+<li><code>requestDetail</code><ul>
+<li><code>host</code> {string} the target host to request. Due to the request protocol, full url couldn&apos;t be got here</li>
+<li><code>_req</code> {object} the native node.js request object. The <code>_req</code> here refers to the CONNECT request.</li>
+</ul>
+</li>
+<li>return value<ul>
+<li><code>true</code> or <code>false</code>, whether AnyProxy should intercept the https request</li>
+</ul>
+</li>
+</ul>
+<h3 id="onerror">onError</h3>
+<h4 id="onerrorrequestdetail-error">onError(requestDetail, error)</h4>
+<ul>
+<li>AnyProxy will call this method when an error happened in request handling.</li>
+<li>Errors usually are issued during requesting, e.g. DNS failure, request timeout</li>
+<li><code>requestDetail</code> is the same one as in <code>beforeSendRequest</code></li>
+<li><p>Any of these return values are valid</p>
+<ul>
+<li>do nothing, and AnyProxy will response a default error page</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+</code></pre>
+<ul>
+<li>return a customized error page</li>
+</ul>
+<pre><code class="lang-js"><span class="hljs-keyword">return</span> {
+  response: {
+    statusCode: <span class="hljs-number">200</span>,
+    header: { <span class="hljs-string">&apos;content-type&apos;</span>: <span class="hljs-string">&apos;text/html&apos;</span> },
+    body: <span class="hljs-string">&apos;this could be a &lt;string&gt; or &lt;buffer&gt;&apos;</span>
+  }
+};
+</code></pre>
+</li>
+</ul>
+<h3 id="onconnecterror">onConnectError</h3>
+<h4 id="onconnecterrorrequestdetail-error">onConnectError(requestDetail, error)</h4>
+<ul>
+<li>AnyProxy will call this method when failed to connect target server in https request</li>
+<li><code>requestDetail</code> is the same one as in <code>beforeDealHttpsRequest</code></li>
+<li>no return value is required</li>
+</ul>
+<h1 id="rule-samples">Rule Samples</h1>
+<ul>
+<li>here are some samples about frequently used rule file</li>
+<li>try these samples by <code>anyproxy --rule http://....js</code></li>
+<li>how to test with curl:<ul>
+<li>request the server directly <code>curl http://httpbin.org/</code></li>
+<li>request the server via proxy <code>curl http://httpbin.org/ --proxy http://127.0.0.1:8001</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="use-local-response">use local response</h3>
+<ul>
+<li>intercept the request towards <a href="http://httpbin.org" target="_blank">http://httpbin.org</a> , return the local-defined response</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_use_<span class="hljs-built_in">local</span>_response.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    intercept all requests toward httpbin.org, use a local response
+  test:
+    curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">const</span> localResponse = {
+      statusCode: <span class="hljs-number">200</span>,
+      header: { <span class="hljs-string">&apos;Content-Type&apos;</span>: <span class="hljs-string">&apos;application/json&apos;</span> },
+      body: <span class="hljs-string">&apos;{&quot;hello&quot;: &quot;this is local response&quot;}&apos;</span>
+    };
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> {
+        response: localResponse
+      };
+    }
+  },
+};
+</code></pre>
+<h3 id="modify-request-header">modify request header</h3>
+<ul>
+<li>modify the user-agent sent to httpbin.org</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_request_header.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    modify the user-agent in requests toward httpbin.org
+  test:
+    curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
+      newRequestOptions.headers[<span class="hljs-string">&apos;User-Agent&apos;</span>] = <span class="hljs-string">&apos;AnyProxy/0.0.0&apos;</span>;
+      <span class="hljs-keyword">return</span> {
+        requestOptions: newRequestOptions
+      };
+    }
+  },
+};
+</code></pre>
+<h3 id="modify-request-body">modify request body</h3>
+<ul>
+<li>modify the post body of <a href="http://httpbin.org/post" target="_blank">http://httpbin.org/post</a></li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_request_data.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/*
+  sample:
+    modify the post data towards http://httpbin.org/post
+  test:
+    curl -H &quot;Content-Type: text/plain&quot; -X POST -d &apos;original post data&apos; http://httpbin.org/post --proxy http://127.0.0.1:8001
+  expected response:
+    { &quot;data&quot;: &quot;i-am-anyproxy-modified-post-data&quot; }
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  summary: <span class="hljs-string">&apos;Rule to modify request data&apos;</span>,
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org/post&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> {
+        requestData: <span class="hljs-string">&apos;i-am-anyproxy-modified-post-data&apos;</span>
+      };
+    }
+  },
+};
+</code></pre>
+<h3 id="modify-the-request-target">modify the request target</h3>
+<ul>
+<li>send all the request towards <a href="http://httpbin.org/" target="_blank">http://httpbin.org/</a> to <a href="http://httpbin.org/user-agent" target="_blank">http://httpbin.org/user-agent</a></li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_request_path.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    redirect all httpbin.org requests to http://httpbin.org/user-agent
+  test:
+    curl http://httpbin.org/any-path --proxy http://127.0.0.1:8001
+  expected response:
+    { &quot;user-agent&quot;: &quot;curl/7.43.0&quot; }
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
+      newRequestOptions.path = <span class="hljs-string">&apos;/user-agent&apos;</span>;
+      newRequestOptions.method = <span class="hljs-string">&apos;GET&apos;</span>;
+      <span class="hljs-keyword">return</span> {
+        requestOptions: newRequestOptions
+      };
+    }
+  },
+};
+</code></pre>
+<h3 id="modify-request-protocol">modify request protocol</h3>
+<ul>
+<li>modify the http request towards <a href="http://httpbin.org" target="_blank">http://httpbin.org</a> to https</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_request_protocol.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    redirect all http requests of httpbin.org to https
+  test:
+    curl &apos;http://httpbin.org/get?show_env=1&apos; --proxy http://127.0.0.1:8001
+  expected response:
+    { &quot;X-Forwarded-Protocol&quot;: &quot;https&quot; }
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newOption = requestDetail.requestOptions;
+      newOption.port = <span class="hljs-number">443</span>;
+      <span class="hljs-keyword">return</span> {
+        protocol: <span class="hljs-string">&apos;https&apos;</span>,
+        requestOptions: newOption
+      };
+    }
+  }
+};
+</code></pre>
+<h3 id="modify-response-status-code">modify response status code</h3>
+<ul>
+<li>modify all status code from <a href="http://httpbin.org" target="_blank">http://httpbin.org</a> to 404</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_response_statuscode.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    modify all status code of http://httpbin.org/ to 404
+  test:
+    curl -I &apos;http://httpbin.org/user-agent&apos; --proxy http://127.0.0.1:8001
+  expected response:
+    HTTP/1.1 404 Not Found
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendResponse(requestDetail, responseDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
+      newResponse.statusCode = <span class="hljs-number">404</span>;
+      <span class="hljs-keyword">return</span> {
+        response: newResponse
+      };
+    }
+  }
+};
+</code></pre>
+<h3 id="modify-the-response-header">modify the response header</h3>
+<ul>
+<li>add X-Proxy-By:AnyProxy to the response header from <a href="http://httpbin.org/user-agent" target="_blank">http://httpbin.org/user-agent</a></li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_response_header.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    modify response header of http://httpbin.org/user-agent
+  test:
+    curl -I &apos;http://httpbin.org/user-agent&apos; --proxy http://127.0.0.1:8001
+  expected response:
+    X-Proxy-By: AnyProxy
+*/</span>
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendResponse(requestDetail, responseDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://httpbin.org/user-agent&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
+      newResponse.header[<span class="hljs-string">&apos;X-Proxy-By&apos;</span>] = <span class="hljs-string">&apos;AnyProxy&apos;</span>;
+      <span class="hljs-keyword">return</span> {
+        response: newResponse
+      };
+    }
+  }
+};
+</code></pre>
+<h3 id="modify-response-data-and-delay">modify response data and delay</h3>
+<ul>
+<li>append some info to the response of <a href="http://httpbin.org/user-agent" target="_blank">http://httpbin.org/user-agent</a>, then delay the response for 5 seconds.</li>
+</ul>
+<pre><code class="lang-bash">anyproxy --rule rule_sample/sample_modify_response_data.js
+</code></pre>
+<pre><code class="lang-js"><span class="hljs-comment">/* 
+  sample: 
+    modify response data of http://httpbin.org/user-agent
+  test:
+    curl &apos;http://httpbin.org/user-agent&apos; --proxy http://127.0.0.1:8001
+  expected response:
+    { &quot;user-agent&quot;: &quot;curl/7.43.0&quot; } -- AnyProxy Hacked! --
+*/</span>
+
+<span class="hljs-built_in">module</span>.exports = {
+  *beforeSendResponse(requestDetail, responseDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url === <span class="hljs-string">&apos;http://httpbin.org/user-agent&apos;</span>) {
+      <span class="hljs-keyword">const</span> newResponse = responseDetail.response;
+      newResponse.body += <span class="hljs-string">&apos;-- AnyProxy Hacked! --&apos;</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>((resolve, reject) =&gt; {
+        setTimeout(() =&gt; { <span class="hljs-comment">// delay the response for 5s</span>
+          resolve({ response: newResponse });
+        }, <span class="hljs-number">5000</span>);
+      });
+    }
+  },
+};
+</code></pre>
+<h1 id="config-certification">Config Certification</h1>
+<h3 id="config-root-ca-in-osx">Config root CA in OSX</h3>
+<ul>
+<li>this kind of errors is usually caused by untrusted root CA</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/CBkLGYgvoHAYwNVAYkpk.png" width="450"></p>
+<blockquote>
+<p>Warning: please keep your root CA safe since it may influence your system security.</p>
+</blockquote>
+<p>install &#xFF1A;</p>
+<ul>
+<li><p>double click <em>rootCA.crt</em></p>
+</li>
+<li><p>add cert into login or system</p>
+</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/bCwNUFFpvsmVuljQKrIk.png" width="350"></p>
+<ul>
+<li>find the newly imported AnyProxy certificates, configured as <strong>Always Trust</strong></li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/HOmEElNGdoZEWFMLsTNT.png" width="700"></p>
+<h3 id="config-root-ca-in-windows">Config root CA in windows</h3>
+<p><img src="https://t.alipayobjects.com/tfscom/T1D3hfXeFtXXXXXXXX.jpg" width="700"></p>
+<h3 id="config-osx-system-proxy">Config OSX system proxy</h3>
+<ul>
+<li>the config is in wifi - advanced</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/vduwhobSTypTfgniBvoa.png" width="500"></p>
+<h3 id="config-http-proxy-server">config http proxy server</h3>
+<ul>
+<li>take Chrome extent [SwitchyOmega] as an example(<a href="https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)&#x4E3A;&#x4F8B;" target="_blank">https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)&#x4E3A;&#x4F8B;</a></li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/jIPZrKmqXRaSledQeJUJ.png" width="500"></p>
+<h3 id="trust-root-ca-in-ios">trust root CA in iOS</h3>
+<ul>
+<li>Click <em>Root CA</em> in web ui, and follow the instruction to install</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/BrugmMelGVysLDOIBblj.png" width="260"></p>
+<h3 id="trust-root-ca-in-ios-after-103">trust root CA in iOS after 10.3</h3>
+<ul>
+<li>Besides installing root CA, you have to &quot;turn on&quot; the certificate for web manually in <em>settings - general - about - Certificate Trust Settings</em>. Otherwire, safari will not trust the root CA generated by AnyProxy.</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/hVWkXHrzHmOKOtCKGUWx.png" width="500"></p>
+<h3 id="config-iosandroid-proxy-server">config iOS/Android proxy server</h3>
+<ul>
+<li><p>proxy settings are placed in wifi setting</p>
+</li>
+<li><p>iOS</p>
+</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/tLGqIozhffTccUgPakuw.png" width="260"></p>
+<ul>
+<li>Android</li>
+</ul>
+<p><img src="https://zos.alipayobjects.com/rmsportal/YQtbQYVNuOszZGdAOauU.png" width="260"></p>
+<h1 id="faq">FAQ</h1>
+<h3 id="q-can-not-deal-https-request-in-rule-module">Q: can not deal https request in rule module.</h3>
+<ul>
+<li>A: Any of these options could be used to change the way AnyProxy deall https requests<ol>
+<li>config <code>--intercept</code> when luanching AnyProxy via cli, or use <code>forceProxyHttps</code> when using as an npm module</li>
+<li>place a <code>beforeDealHttpsRequest</code> function in your rule file and determine which request to intercept by your own.</li>
+</ol>
+</li>
+</ul>
+<h3 id="q-get-an-error-says-function-is-not-yieldable">Q: get an error says <em>function is not yieldable</em></h3>
+<ul>
+<li>A: Rule module is driven by <a href="https://www.npmjs.com/package/co" target="_blank">co</a>. The functions inside should  be yieldable, i.e. return a promise or be a generator function.</li>
+</ul>
+<h3 id="q-the-connection-is-not-private">Q: The connection is not private</h3>
+<p>AnyProxy will propmt this message when the certification of the site you&apos;re visiting is not issued by a common known CA. This happens when the certification is self-signed. If you know and trust it, you can ignore the error as below.</p>
+<ul>
+<li><p>If you run AnyProxy by command line
+Pass in the option <code>--ignore-unauthorized-ssl</code> to ignore the certification errors, please mind that the option will be active for all connections.</p>
+<pre><code class="lang-bash">anyproxy -i --ignore-unauthorized-ssl
+</code></pre>
+</li>
+<li><p>If you run AnyProxy by Nodejs
+Pass in the option <code>dangerouslyIgnoreUnauthorized:true</code>, like this:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> options = {
+ ...,
+ dangerouslyIgnoreUnauthorized: <span class="hljs-literal">true</span>
+};
+
+<span class="hljs-keyword">const</span> anyproxyIns = <span class="hljs-keyword">new</span> AnyProxy.ProxyCore(options);
+anyproxyIns.start();
+</code></pre>
+<p><em>This is also a global option, all certification errors will be ignored</em></p>
+</li>
+<li><p>With the help of AnyProxy Rule
+You can change the request with rule of course. For this scenario, all you need is to pass in an option to Nodejs <code>Http.rquest</code>, as we do in AnyProxy. A simple demo below:</p>
+<pre><code class="lang-js"><span class="hljs-built_in">module</span>.exports = {
+  *beforeSendRequest(requestDetail) {
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;https://the-site-you-know.com&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
+      <span class="hljs-comment">// set rejectUnauthorized as false</span>
+      newRequestOptions.rejectUnauthorized = <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">return</span> {
+        requestOptions: newRequestOptions
+      };
+    }
+  },
+};
+</code></pre>
+<p>And we get a bonous here, AnyProxy will only ignore the errors for the site(s) we want it to!</p>
+</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Introduction">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="doc.html#install" class="navigation navigation-next " aria-label="Next page: Install">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Getting-Start","level":"1.2","depth":1,"next":{"title":"Install","level":"1.2.1","depth":2,"anchor":"#install","path":"doc.md","ref":"doc.md#install","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"en","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"doc.md","mtime":"2017-12-01T11:51:40.356Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-12-01T13:25:58.040Z"},"basePath":".","book":{"language":"en"}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
