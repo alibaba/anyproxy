@@ -7,7 +7,7 @@ Ref: [中文文档](../cn)
 
 Github:
 
-* https://github.com/alibaba/anyproxy/tree/4.x
+* https://github.com/alibaba/anyproxy
 
 Features:
 
