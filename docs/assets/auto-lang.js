@@ -16,7 +16,7 @@ function isInLocaleView() {
 
 function initDefaultLocaleAndStatic() {
   if (!isInLocaleView()) {
-    location.href = isUTF8Zone() ? '/cn' : '/en';
+    location.href = isUTF8Zone() ? '/cn' : 'en';
   }
 }
 

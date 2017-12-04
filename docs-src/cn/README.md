@@ -7,7 +7,7 @@ Ref: [English Doc](../en)
 
 AnyProxy是一个开放式的HTTP代理服务器。
 
-Github主页：https://github.com/alibaba/anyproxy/tree/4.x
+Github主页：https://github.com/alibaba/anyproxy
 
 主要特性包括：
 
