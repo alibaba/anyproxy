@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-'use strict'
+'use strict';
+
 const program = require('commander'),
   color = require('colorful'),
   packageInfo = require('../package.json'),
@@ -17,6 +18,7 @@ program
   .option('-i, --intercept', 'intercept(decrypt) https requests when root CA exists')
   .option('-s, --silent', 'do not print anything into terminal')
   .option('-c, --clear', 'clear all the certificates and temp files')
+  .option('--ws-intercept', 'intercept websocket')
   .option('--ignore-unauthorized-ssl', 'ignore all ssl error')
   .parse(process.argv);
 
@@ -62,7 +64,8 @@ if (program.clear) {
       webInterface: {
         enable: true,
         webPort: program.web,
-      },        
+      },
+      wsIntercept: program.wsIntercept,
       forceProxyHttps: program.intercept,
       dangerouslyIgnoreUnauthorized: !!program.ignoreUnauthorizedSsl,
       silent: program.silent
@@ -107,7 +110,7 @@ if (program.clear) {
     } catch (e) {}
     logUtil.printLog(errorTipText, logUtil.T_ERR);
     try {
-      proxyServer && proxyServer.close();        
+      proxyServer && proxyServer.close();
     } catch (e) {}
     process.exit();
   });

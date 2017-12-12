@@ -5,15 +5,12 @@
 
 import React, { PropTypes } from 'react';
 import ClassBind from 'classnames/bind';
-import { Menu, Table, notification, Spin } from 'antd';
-import clipboard from 'clipboard-js'
-import JsonViewer from 'component/json-viewer';
+import { Menu, Spin } from 'antd';
 import ModalPanel from 'component/modal-panel';
 import RecordRequestDetail from 'component/record-request-detail';
 import RecordResponseDetail from 'component/record-response-detail';
+import RecordWsMessageDetail from 'component/record-ws-message-detail';
 import { hideRecordDetail } from 'action/recordAction';
-import { selectText } from 'common/CommonUtil';
-import { curlify } from 'common/curlUtil';
 
 import Style from './record-detail.less';
 import CommonStyle from '../style/common.less';
@@ -21,7 +18,8 @@ import CommonStyle from '../style/common.less';
 const StyleBind = ClassBind.bind(Style);
 const PageIndexMap = {
   REQUEST_INDEX: 'REQUEST_INDEX',
-  RESPONSE_INDEX: 'RESPONSE_INDEX'
+  RESPONSE_INDEX: 'RESPONSE_INDEX',
+  WEBSOCKET_INDEX: 'WEBSOCKET_INDEX'
 };
 
 // the maximum length of the request body to decide whether to offer a download link for the request body
@@ -54,6 +52,10 @@ class RecordDetail extends React.Component {
     });
   }
 
+  hasWebSocket (recordDetail = {}) {
+    return recordDetail && recordDetail.method && recordDetail.method.toLowerCase() === 'websocket';
+  }
+
   getRequestDiv(recordDetail) {
     return <RecordRequestDetail recordDetail={recordDetail} />;
   }
@@ -62,18 +64,45 @@ class RecordDetail extends React.Component {
     return <RecordResponseDetail recordDetail={recordDetail} />;
   }
 
-  getRecordContentDiv(recordDetail, fetchingRecord) {
+  getWsMessageDiv(recordDetail) {
+    const { globalStatus } = this.props;
+    return <RecordWsMessageDetail recordDetail={recordDetail} wsPort={globalStatus.wsPort} />;
+  }
+
+  getRecordContentDiv(recordDetail = {}, fetchingRecord) {
     const getMenuBody = () => {
-      const menuBody = this.state.pageIndex === PageIndexMap.REQUEST_INDEX ?
-        this.getRequestDiv(recordDetail) : this.getResponseDiv(recordDetail);
+      let menuBody = null;
+      switch (this.state.pageIndex) {
+        case PageIndexMap.REQUEST_INDEX: {
+          menuBody = this.getRequestDiv(recordDetail);
+          break;
+        }
+        case PageIndexMap.RESPONSE_INDEX: {
+          menuBody = this.getResponseDiv(recordDetail);
+          break;
+        }
+        case PageIndexMap.WEBSOCKET_INDEX: {
+          menuBody = this.getWsMessageDiv(recordDetail);
+          break;
+        }
+        default: {
+          menuBody = this.getRequestDiv(recordDetail);
+          break;
+        }
+      }
       return menuBody;
     }
+
+    const websocketMenu = (
+      <Menu.Item key={PageIndexMap.WEBSOCKET_INDEX}>WebSocket</Menu.Item>
+    );
 
     return (
       <div className={Style.wrapper} >
         <Menu onClick={this.onMenuChange} mode="horizontal" selectedKeys={[this.state.pageIndex]} >
           <Menu.Item key={PageIndexMap.REQUEST_INDEX}>Request</Menu.Item>
           <Menu.Item key={PageIndexMap.RESPONSE_INDEX}>Response</Menu.Item>
+          {this.hasWebSocket(recordDetail) ? websocketMenu : null}
         </Menu>
         <div className={Style.detailWrapper} >
           {fetchingRecord ? this.getLoaingDiv() : getMenuBody()}
@@ -92,13 +121,25 @@ class RecordDetail extends React.Component {
   }
 
   getRecordDetailDiv() {
-    const recordDetail = this.props.requestRecord.recordDetail;
-    const fetchingRecord = this.props.globalStatus.fetchingRecord;
+    const { requestRecord, globalStatus } = this.props;
+    const recordDetail = requestRecord.recordDetail;
+    const fetchingRecord = globalStatus.fetchingRecord;
 
     if (!recordDetail && !fetchingRecord) {
       return null;
     }
     return this.getRecordContentDiv(recordDetail, fetchingRecord);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { requestRecord } = nextProps;
+    const { pageIndex } = this.state;
+    // if this is not websocket, reset the index to RESPONSE_INDEX
+    if (!this.hasWebSocket(requestRecord.recordDetail) && pageIndex === PageIndexMap.WEBSOCKET_INDEX) {
+      this.setState({
+        pageIndex: PageIndexMap.RESPONSE_INDEX
+      });
+    }
   }
 
   render() {

@@ -11,10 +11,11 @@ export function formatDate(date, formatter) {
     if (typeof date !== 'object') {
         date = new Date(date);
     }
+
     const transform = function(value) {
         return value < 10 ? '0' + value : value;
     };
-    return formatter.replace(/^YYYY|MM|DD|hh|mm|ss/g, function(match) {
+    return formatter.replace(/^YYYY|MM|DD|hh|mm|ss|ms/g, function(match) {
         switch (match) {
             case 'YYYY':
                 return transform(date.getFullYear());
@@ -28,6 +29,8 @@ export function formatDate(date, formatter) {
                 return transform(date.getHours());
             case 'ss':
                 return transform(date.getSeconds());
+            case 'ms':
+              return transform(date.getMilliseconds());
         }
     });
 }

@@ -271,5 +271,6 @@ module.exports = {
   printHilite,
   isCommonReqEqual,
   parseUrlQuery,
-  stringSimilarity
+  stringSimilarity,
+  isArrayEqual: _isDeepEqual
 };

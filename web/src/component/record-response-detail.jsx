@@ -31,7 +31,7 @@ class RecordResponseDetail extends React.Component {
   }
 
   static propTypes = {
-    requestRecord: PropTypes.object
+    recordDetail: PropTypes.object
   }
 
   onSelectText(e) {

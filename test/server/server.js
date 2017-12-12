@@ -305,7 +305,7 @@ KoaServer.prototype.start = function () {
         });
       });
 
-      wss.on('error', e => console.error('erro happened in wss:%s', error));
+      wss.on('error', e => console.error('error happened in wss:%s', e));
 
       self.httpsServer.listen(HTTPS_PORT);
 

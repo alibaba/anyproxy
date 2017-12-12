@@ -13,6 +13,7 @@ const DEFAULT_OPTIONS = {
     webPort: 8002,  // optional, port for web interface
     wsPort: 8003,  // optional, internal port for web socket
   },
+  wsIntercept: true,
   throttle: 10000,    // optional, speed limit in kb/s
   forceProxyHttps: true, // intercept https as well
   dangerouslyIgnoreUnauthorized: true,
