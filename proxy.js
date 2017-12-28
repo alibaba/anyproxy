@@ -120,15 +120,15 @@ class ProxyCore extends events.EventEmitter {
   }
 
   /**
-  * manage all created socket
-  * for each new socket, we put them to a map;
-  * if the socket is closed itself, we remove it from the map
-  * when the `close` method is called, we'll close the sockes before the server closed
-  *
-  * @param {Socket} the http socket that is creating
-  * @returns undefined
-  * @memberOf ProxyCore
-  */
+   * manage all created socket
+   * for each new socket, we put them to a map;
+   * if the socket is closed itself, we remove it from the map
+   * when the `close` method is called, we'll close the sockes before the server closed
+   *
+   * @param {Socket} the http socket that is creating
+   * @returns undefined
+   * @memberOf ProxyCore
+   */
   handleExistConnections(socket) {
     const self = this;
     self.socketIndex ++;
@@ -332,13 +332,13 @@ class ProxyServer extends ProxyCore {
         resolve(null);
       }
     })
-    .then(() => {
-      // start proxy core
-      super.start()
-    })
-    .catch((e) => {
-      this.emit('error', e);
-    });
+      .then(() => {
+        // start proxy core
+        super.start()
+      })
+      .catch((e) => {
+        this.emit('error', e);
+      });
   }
 
   close() {

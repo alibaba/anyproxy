@@ -46,37 +46,37 @@ if (program.clear) {
       resolve(null);
     }
   })
-  .catch(e => {
-    logUtil.printLog('Failed to load rule file', logUtil.T_ERR);
-    logUtil.printLog(e, logUtil.T_ERR);
-    process.exit();
-  })
+    .catch(e => {
+      logUtil.printLog('Failed to load rule file', logUtil.T_ERR);
+      logUtil.printLog(e, logUtil.T_ERR);
+      process.exit();
+    })
 
-  //start proxy
-  .then(ruleModule => {
-    proxyServer = new AnyProxy.ProxyServer({
-      type: 'http',
-      port: program.port || 8001,
-      throttle: program.throttle,
-      rule: ruleModule,
-      webInterface: {
-        enable: true,
-        webPort: program.web,
-      },        
-      forceProxyHttps: program.intercept,
-      dangerouslyIgnoreUnauthorized: !!program.ignoreUnauthorizedSsl,
-      silent: program.silent
+    //start proxy
+    .then(ruleModule => {
+      proxyServer = new AnyProxy.ProxyServer({
+        type: 'http',
+        port: program.port || 8001,
+        throttle: program.throttle,
+        rule: ruleModule,
+        webInterface: {
+          enable: true,
+          webPort: program.web,
+        },
+        forceProxyHttps: program.intercept,
+        dangerouslyIgnoreUnauthorized: !!program.ignoreUnauthorizedSsl,
+        silent: program.silent
+      });
+      // proxyServer.on('ready', () => {});
+      proxyServer.start();
+    })
+    .catch(e => {
+      logUtil.printLog(e, logUtil.T_ERR);
+      if (e && e.code) {
+        logUtil.printLog('code ' + e.code, logUtil.T_ERR);
+      }
+      logUtil.printLog(e.stack, logUtil.T_ERR);
     });
-    // proxyServer.on('ready', () => {});
-    proxyServer.start();
-  })
-  .catch(e => {
-    logUtil.printLog(e, logUtil.T_ERR);
-    if (e && e.code) {
-      logUtil.printLog('code ' + e.code, logUtil.T_ERR);
-    }
-    logUtil.printLog(e.stack, logUtil.T_ERR);
-  });
 
   process.on('exit', (code) => {
     if (code > 0) {
@@ -107,7 +107,7 @@ if (program.clear) {
     } catch (e) {}
     logUtil.printLog(errorTipText, logUtil.T_ERR);
     try {
-      proxyServer && proxyServer.close();        
+      proxyServer && proxyServer.close();
     } catch (e) {}
     process.exit();
   });
