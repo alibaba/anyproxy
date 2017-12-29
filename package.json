@@ -21,6 +21,7 @@
     "es6-promise": "^3.3.1",
     "express": "^4.8.5",
     "iconv-lite": "^0.4.6",
+    "iltorb": "^2.0.3",
     "inquirer": "^3.0.1",
     "ip": "^0.3.2",
     "juicer": "^0.6.6-stable",
@@ -92,7 +93,7 @@
     "worker-loader": "^0.7.1"
   },
   "scripts": {
-    "prepublish":"npm run buildweb",
+    "prepublish": "npm run buildweb",
     "test": "node test.js",
     "lint": "eslint .",
     "testserver": "node test/server/startServer.js",
