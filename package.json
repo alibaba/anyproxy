@@ -101,7 +101,7 @@
     "buildweb": "NODE_ENV=production webpack --config web/webpack.config.js --process --colors",
     "webserver": "NODE_ENV=test webpack --config web/webpack.config.js --process --colors --watch",
     "doc:serve": "node build_scripts/prebuild-doc.js && gitbook serve ./docs-src ./docs --log debug",
-    "doc:build": "node build_scripts/prebuild-doc.js && gitbook build ./docs-src ./docs"
+    "doc:build": "./build_scripts/build-doc-site.sh"
   },
   "pre-commit": [
     "lint"
