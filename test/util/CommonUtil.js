@@ -130,13 +130,6 @@ function isCommonReqEqual(url, serverInstance) {
     isEqual = isEqual && proxyReqObj.headers['via-proxy'] === 'true';
     delete proxyReqObj.headers['via-proxy'];
 
-    // exclued accept-encoding from comparing, since the proxy will remove it before sending it out
-    delete directReqObj.headers['accept-encoding'];
-
-    // TODO: 我这里proxy出去的options里没有accept-encoding, 但node自己加上了。Why ?
-    // By 加里 2017.1.31
-    delete proxyReqObj.headers['accept-encoding'];
-
     directReqObj.headers['content-type'] = trimFormContentType(directReqObj.headers['content-type']);
     proxyReqObj.headers['content-type'] = trimFormContentType(proxyReqObj.headers['content-type']);
 

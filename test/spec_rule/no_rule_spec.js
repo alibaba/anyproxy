@@ -212,6 +212,31 @@ function testRequest(protocol = 'http') {
         });
     });
 
+    it('304 should work as direct without proxy rules', (done) => {
+      const url = constructUrl('/test/response/304');
+
+      proxyGet(url, CommonRequestHeader)
+        .then(proxyRes => {
+          directGet(url, CommonRequestHeader)
+            .then(directRes => {
+              expect(directRes.statusCode).toEqual(304);
+              expect(directRes.body).toEqual('');
+
+              expect(directRes.statusCode).toEqual(proxyRes.statusCode);
+              expect(isCommonResHeaderEqual(directRes.headers, proxyRes.headers, url)).toBe(true);
+              expect(directRes.body).toEqual(proxyRes.body);
+              expect(isCommonReqEqual(url, serverInstance)).toBe(true);
+              done();
+            }, error => {
+              console.error('error happened in direct 304 request:', error);
+              done.fail('error happened in direct 304 request');
+            });
+        }, error => {
+          console.error('error happened in proxy 304 request:', error);
+          done.fail('error happened in proxy 304 request');
+        });
+    })
+
     describe('Response code should be honored as direct without proxy rules', () => {
       [301, 302, 303].forEach(code => {
         testRedirect(code);

@@ -103,6 +103,11 @@ KoaServer.prototype.constructRouter = function () {
     });
   });
 
+  router.get('/test/response/304', this.logRequest, function *(next) {
+    this.response.set('Content-Encoding', 'gzip');
+    this.status = 304;
+  });
+
   router.get('/test/response/303', function *(next) {
     printLog('now to redirect 303');
     this.redirect('/test');
