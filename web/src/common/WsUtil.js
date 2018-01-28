@@ -4,12 +4,21 @@
 */
 import { message } from 'antd';
 
-export function initWs(wsPort = 8003, key = '') {
+/**
+* Initiate a ws connection.
+* The default pay `do-not-proxy` means the ws do not need to be proxied.
+* This is very important for AnyProxy its' own server, such as WEB UI, and the
+* websocket detail panel, to prevent a recursive proxy.
+* @param {wsPort} wsPort the port of websocket
+* @param {key} path the path of the ws url
+*
+*/
+export function initWs(wsPort = 8003, path = 'do-not-proxy') {
   if(!WebSocket){
     throw (new Error('WebSocket is not supportted on this browser'));
   }
 
-  const wsClient = new WebSocket(`ws://${location.hostname}:${wsPort}/${key}`);
+  const wsClient = new WebSocket(`ws://${location.hostname}:${wsPort}/${path}`);
 
   wsClient.onerror = (error) => {
     console.error(error);
@@ -30,4 +39,3 @@ export function initWs(wsPort = 8003, key = '') {
 export default {
   initWs: initWs
 };
-

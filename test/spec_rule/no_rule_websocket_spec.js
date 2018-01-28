@@ -6,23 +6,32 @@
 const ProxyServerUtil = require('../util/ProxyServerUtil.js');
 const { generateWsUrl, directWs, proxyWs } = require('../util/HttpUtil.js');
 const Server = require('../server/server.js');
-const { printLog } = require('../util/CommonUtil.js');
+const { printLog, isArrayEqual } = require('../util/CommonUtil.js');
 
 testWebsocket('ws');
 testWebsocket('wss');
+testWebsocket('ws', true);
+testWebsocket('wss', true);
 
-function testWebsocket(protocol) {
+function testWebsocket(protocol, masked = false) {
   describe('Test WebSocket in protocol : ' + protocol, () => {
     const url = generateWsUrl(protocol, '/test/socket');
     let serverInstance;
     let proxyServer;
+    // the message to
+    const testMessageArray = [
+      'Send the message with default option1',
+      'Send the message with default option2',
+      'Send the message with default option3',
+      'Send the message with default option4'
+    ];
 
     beforeAll((done) => {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
       printLog('Start server for no_rule_websocket_spec');
       serverInstance = new Server();
 
-      proxyServer = ProxyServerUtil.proxyServerWithoutHttpsIntercept();
+      proxyServer = ProxyServerUtil.defaultProxyServer();
 
       setTimeout(() => {
         done();
@@ -36,32 +45,57 @@ function testWebsocket(protocol) {
     });
 
     it('Default websocket option', done => {
-      const sendMessage = 'Send the message with default option';
-      let directMessage; // set the flag for direct message, compare when both direct and proxy got message
-      let proxyMessage;
+      const directMessages = []; // set the flag for direct message, compare when both direct and proxy got message
+      const proxyMessages = [];
+      let directHeaders;
+      let proxyHeaders;
 
       const ws = directWs(url);
-      const porxyWsRef = proxyWs(url);
+      const proxyWsRef = proxyWs(url);
       ws.on('open', () => {
-        ws.send(sendMessage);
+        ws.send(testMessageArray[0], masked);
+        for (let i = 1; i < testMessageArray.length; i++) {
+          setTimeout(() => {
+            ws.send(testMessageArray[i], masked);
+          }, 1000);
+        }
       });
 
-      porxyWsRef.on('open', () => {
-        porxyWsRef.send(sendMessage);
+      proxyWsRef.on('open', () => {
+        try {
+          proxyWsRef.send(testMessageArray[0], masked);
+          for (let i = 1; i < testMessageArray.length; i++) {
+            setTimeout(() => {
+              proxyWsRef.send(testMessageArray[i], masked);
+            }, 1000);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      ws.on('headers', (headers) => {
+        directHeaders = headers;
+        compareMessageIfReady();
+      });
+
+      proxyWsRef.on('headers', (headers) => {
+        proxyHeaders = headers;
+        compareMessageIfReady();
       });
 
       ws.on('message', (data, flag) => {
         const message = JSON.parse(data);
         if (message.type === 'onMessage') {
-          directMessage = message.content;
+          directMessages.push(message.content);
           compareMessageIfReady();
         }
       });
 
-      porxyWsRef.on('message', (data, flag) => {
+      proxyWsRef.on('message', (data, flag) => {
         const message = JSON.parse(data);
         if (message.type === 'onMessage') {
-          proxyMessage = message.content;
+          proxyMessages.push(message.content);
           compareMessageIfReady();
         }
       });
@@ -71,70 +105,24 @@ function testWebsocket(protocol) {
         done.fail('Error happened in direct websocket');
       });
 
-      porxyWsRef.on('error', error => {
+      proxyWsRef.on('error', error => {
         console.error('error happened in proxy websocket:', error);
         done.fail('Error happened in proxy websocket');
       });
 
       function compareMessageIfReady() {
-        if (directMessage && proxyMessage) {
-          expect(directMessage).toEqual(proxyMessage);
-          expect(directMessage).toEqual(sendMessage);
-          done();
-        }
-      }
-    });
-
-    it('masked:true', done => {
-      const sendMessage = 'Send the message with option masked:true';
-      let directMessage; // set the flag for direct message, compare when both direct and proxy got message
-      let proxyMessage;
-
-      const ws = directWs(url);
-      const porxyWsRef = proxyWs(url);
-      ws.on('open', () => {
-        ws.send(sendMessage, { masked: true });
-      });
-
-      porxyWsRef.on('open', () => {
-        porxyWsRef.send(sendMessage, { masked: true });
-      });
-
-      ws.on('message', (data, flag) => {
-        const message = JSON.parse(data);
-        if (message.type === 'onMessage') {
-          directMessage = message.content;
-          compareMessageIfReady();
-        }
-      });
-
-      porxyWsRef.on('message', (data, flag) => {
-        const message = JSON.parse(data);
-        if (message.type === 'onMessage') {
-          proxyMessage = message.content;
-          compareMessageIfReady();
-        }
-      });
-
-      ws.on('error', error => {
-        console.error('error happened in direct websocket:', error);
-        done.fail('Error happened in direct websocket');
-      });
-
-      porxyWsRef.on('error', error => {
-        console.error('error happened in proxy websocket:', error);
-
-        done.fail('Error happened in proxy websocket');
-      });
-
-      function compareMessageIfReady() {
-        if (directMessage && proxyMessage) {
-          expect(directMessage).toEqual(proxyMessage);
-          expect(directMessage).toEqual(sendMessage);
+        const targetLen = testMessageArray.length;
+        if (directMessages.length === targetLen
+          && proxyMessages.length === targetLen
+          && directHeaders && proxyHeaders
+        ) {
+          expect(isArrayEqual(directMessages, testMessageArray)).toBe(true);
+          expect(isArrayEqual(directMessages, proxyMessages)).toBe(true);
+          expect(directHeaders['x-anyproxy-websocket']).toBeUndefined();
+          expect(proxyHeaders['x-anyproxy-websocket']).toBe('true');
           done();
         }
       }
     });
   });
 }
-

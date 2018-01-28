@@ -21,6 +21,7 @@
     "compression": "^1.4.4",
     "es6-promise": "^3.3.1",
     "express": "^4.8.5",
+    "fast-json-stringify": "^0.17.0",
     "iconv-lite": "^0.4.6",
     "inquirer": "^3.0.1",
     "ip": "^0.3.2",
