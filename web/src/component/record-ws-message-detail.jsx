@@ -49,8 +49,7 @@ class RecordWsMessageDetail extends React.Component {
   }
 
   static propTypes = {
-    recordDetail: PropTypes.object,
-    wsPort: PropTypes.number
+    recordDetail: PropTypes.object
   }
 
   toggleRefresh () {
@@ -112,13 +111,11 @@ class RecordWsMessageDetail extends React.Component {
   }
 
   componentDidMount () {
-    const { wsPort, recordDetail } = this.props;
-    if (!wsPort) {
-      return;
-    }
+    const { recordDetail } = this.props;
+
     this.refreshPage();
 
-    this.wsClient = initWs(wsPort);
+    this.wsClient = initWs();
     this.wsClient.addEventListener('message', this.onMessageHandler);
   }
 

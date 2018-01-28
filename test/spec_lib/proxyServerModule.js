@@ -16,8 +16,7 @@ describe('AnyProxy.proxyServer basic test', () => {
       rule: null,
       webInterface: {
         enable: true,
-        webPort: 8002,
-        wsPort: 8003,
+        webPort: 8002
       },
       throttle: 10000,
       forceProxyHttps: false,

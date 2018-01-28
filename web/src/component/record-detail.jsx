@@ -66,7 +66,7 @@ class RecordDetail extends React.Component {
 
   getWsMessageDiv(recordDetail) {
     const { globalStatus } = this.props;
-    return <RecordWsMessageDetail recordDetail={recordDetail} wsPort={globalStatus.wsPort} />;
+    return <RecordWsMessageDetail recordDetail={recordDetail} />;
   }
 
   getRecordContentDiv(recordDetail = {}, fetchingRecord) {

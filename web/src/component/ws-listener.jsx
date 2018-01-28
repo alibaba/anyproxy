@@ -140,12 +140,11 @@ class WsListener extends React.Component {
   }
 
   initWs() {
-    const { wsPort } = this.props.globalStatus;
-    if (!wsPort || this.state.wsInited) {
+    if (this.state.wsInited) {
       return;
     }
     this.state.wsInited = true;
-    const wsClient = initWs(wsPort);
+    const wsClient = initWs();
     wsClient.onmessage = this.onWsMessage;
   }
 

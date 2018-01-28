@@ -11,7 +11,6 @@ export const FETCH_MAPPED_CONFIG = 'FETCH_MAPPED_CONFIG';
 export const UPDATE_LOCAL_MAPPED_CONFIG = 'UPDATE_LOCAL_MAPPED_CONFIG';
 export const UPDATE_REMOTE_MAPPED_CONFIG = 'UPDATE_REMOTE_MAPPED_CONFIG';
 export const UPDATE_ACTIVE_RECORD_ITEM = 'UPDATE_ACTIVE_RECORD_ITEM';
-export const UPDATE_GLOBAL_WSPORT = 'UPDATE_GLOBAL_WSPORT';
 
 export const TOGGLE_REMOTE_INTERCEPT_HTTPS = 'TOGGLE_REMOTE_INTERCEPT_HTTPS';
 export const UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG = 'UPDATE_LOCAL_INTERCEPT_HTTPS_FLAG';
@@ -200,13 +199,6 @@ export function updateIsRootCAExists(exists) {
     type: UPDATE_IS_ROOTCA_EXISTS,
     data: exists
   };
-}
-
-export function updateGlobalWsPort(wsPort) {
-  return {
-    type: UPDATE_GLOBAL_WSPORT,
-    data: wsPort
-  }
 }
 
 export function updateFechingRecordStatus(isFetching) {

@@ -18,7 +18,6 @@ const defaultStatus = {
   showNewRecordTip: false,
   isRootCAFileExists: false,
   fetchingRecord: false,
-  wsPort: null,
   mappedConfig:[] // configured map config
 };
 
@@ -45,7 +44,6 @@ import {
   UPDATE_APP_VERSION,
   UPDATE_IS_ROOTCA_EXISTS,
   UPDATE_SHOW_NEW_RECORD_TIP,
-  UPDATE_GLOBAL_WSPORT,
   UPDATE_FETCHING_RECORD_STATUS
 } from 'action/globalStatusAction';
 
@@ -206,12 +204,6 @@ function requestListReducer(state = defaultStatus, action) {
     case UPDATE_IS_ROOTCA_EXISTS: {
       const newState = Object.assign({}, state);
       newState.isRootCAFileExists = action.data;
-      return newState;
-    }
-
-    case UPDATE_GLOBAL_WSPORT: {
-      const newState = Object.assign({}, state);
-      newState.wsPort = action.data;
       return newState;
     }
 

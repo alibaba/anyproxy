@@ -19,7 +19,6 @@ import {
   toggleRemoteGlobalProxyFlag,
   updateShouldClearRecord,
   updateIsRootCAExists,
-  updateGlobalWsPort,
   showFilter,
   updateLocalAppVersion
 } from 'action/globalStatusAction';
@@ -141,14 +140,12 @@ class HeaderMenu extends React.Component {
           ruleSummary: response.ruleSummary,
           rootCADirPath: response.rootCADirPath,
           ipAddress: response.ipAddress,
-          port: response.port,
-          wsPort: response.wsPort
+          port: response.port
         });
         this.props.dispatch(updateLocalInterceptHttpsFlag(response.currentInterceptFlag));
         this.props.dispatch(updateLocalGlobalProxyFlag(response.currentGlobalProxyFlag));
         this.props.dispatch(updateLocalAppVersion(response.appVersion));
         this.props.dispatch(updateIsRootCAExists(response.rootCAExists));
-        this.props.dispatch(updateGlobalWsPort(response.wsPort));
       })
       .catch((error) => {
         console.error(error);
