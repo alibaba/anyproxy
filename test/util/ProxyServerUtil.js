@@ -23,10 +23,16 @@ const DEFAULT_OPTIONS = {
 *
 * @return An instance of proxy, could be closed by calling `instance.close()`
 */
-function defaultProxyServer() {
+function defaultProxyServer(webinterfaceEnable = true) {
   const AnyProxy = util.freshRequire('../proxy.js');
 
   const options = util.merge({}, DEFAULT_OPTIONS);
+  util.merge(options, {
+    webInterface: {
+      enable: webinterfaceEnable,
+      webPort: 8002
+    }
+  })
   const instance = new AnyProxy.ProxyServer(options);
   instance.on('error', e => {
     console.log('server instance error', e);

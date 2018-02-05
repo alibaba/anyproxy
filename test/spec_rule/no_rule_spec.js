@@ -31,9 +31,11 @@ const ProxyServerUtil = require('../util/ProxyServerUtil.js');
 
 testRequest('http');
 testRequest('https');
+testRequest('http', false);
+testRequest('https', false);
 
 // Test suites for http and https request
-function testRequest(protocol = 'http') {
+function testRequest(protocol = 'http', needWeb = true) {
   function constructUrl(urlPath) {
     return generateUrl(protocol, urlPath);
   }
@@ -47,7 +49,7 @@ function testRequest(protocol = 'http') {
       printLog('Start server for no_rule_spec');
 
       serverInstance = new Server();
-      proxyServer = ProxyServerUtil.defaultProxyServer();
+      proxyServer = ProxyServerUtil.defaultProxyServer(needWeb);
       setTimeout(() => {
         done();
       }, 2000);

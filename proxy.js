@@ -329,16 +329,17 @@ class ProxyServer extends ProxyCore {
     // start web interface if neeeded
     if (this.proxyWebinterfaceConfig && this.proxyWebinterfaceConfig.enable) {
       this.webServerInstance = new WebInterface(this.proxyWebinterfaceConfig, this.recorder);
-    }
-
-    // start web server
-    this.webServerInstance.start().then(() => {
-      // start proxy core
+      // start web server
+      this.webServerInstance.start().then(() => {
+        // start proxy core
+        super.start();
+      })
+      .catch((e) => {
+        this.emit('error', e);
+      });
+    } else {
       super.start();
-    })
-    .catch((e) => {
-      this.emit('error', e);
-    });
+    }
   }
 
   close() {
