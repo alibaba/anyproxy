@@ -8,6 +8,7 @@
   * [其他命令](README.md#其他命令)
   * [作为npm模块启动](README.md#作为npm模块使用)
 * [代理HTTPS](README.md#代理https)
+* [代理WebSocket](README.md#代理websocket)
 * [rule模块](README.md#rule模块)
   * [开发示例](README.md#开发示例)
   * [处理流程](README.md#处理流程)
