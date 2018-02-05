@@ -7,6 +7,7 @@
   * [Options](README.md#options)
   * [As Node Module](README.md#use-anyproxy-as-an-npm-module)
 * [Proxy HTTPS](README.md#proxy-https)
+* [Proxy WebSocket](README.md#proxy-websocket)
 * [Rule Introduction](README.md#rule-introduction)
   * [Sample](README.md#sample)
   * [How Does It Work](README.md#how-does-it-work)
