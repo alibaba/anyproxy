@@ -79,11 +79,11 @@ const options = {
   rule: require('myRuleModule'),
   webInterface: {
     enable: true,
-    webPort: 8002,
-    wsPort: 8003,
+    webPort: 8002
   },
   throttle: 10000,
   forceProxyHttps: false,
+  wsIntercept: false, // 不开启websocket代理
   silent: false
 };
 const proxyServer = new AnyProxy.ProxyServer(options);
@@ -110,6 +110,7 @@ proxyServer.close();
     * `forceProxyHttps` {boolean} 是否强制拦截所有的https，忽略规则模块的返回，默认`false`
     * `silent` {boolean} 是否屏蔽所有console输出，默认`false`
     * `dangerouslyIgnoreUnauthorized` {boolean} 是否忽略请求中的证书错误，默认`false`
+    * `wsIntercept` {boolean} 是否开启websocket代理，默认`false`
     * `webInterface` {object} web版界面配置
       * `enable` {boolean} 是否启用web版界面，默认`false`
       * `webPort` {number} web版界面端口号，默认`8002`

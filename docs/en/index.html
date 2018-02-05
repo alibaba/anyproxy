@@ -7,7 +7,7 @@
         <title>Introduction · AnyProxy</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="generator" content="GitBook 3.2.2">
         <meta name="author" content="AnyProxy">
         
         
@@ -795,11 +795,11 @@
   rule: <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;myRuleModule&apos;</span>),
   webInterface: {
     enable: <span class="hljs-literal">true</span>,
-    webPort: <span class="hljs-number">8002</span>,
-    wsPort: <span class="hljs-number">8003</span>,
+    webPort: <span class="hljs-number">8002</span>
   },
   throttle: <span class="hljs-number">10000</span>,
   forceProxyHttps: <span class="hljs-literal">false</span>,
+  wsIntercept: <span class="hljs-literal">false</span>,
   silent: <span class="hljs-literal">false</span>
 };
 <span class="hljs-keyword">const</span> proxyServer = <span class="hljs-keyword">new</span> AnyProxy.ProxyServer(options);
@@ -823,11 +823,12 @@ proxyServer.close();
 <li><code>port</code> {number} required, port number of proxy server</li>
 <li><code>rule</code> {object} your rule module</li>
 <li><code>throttle</code> {number} throttle in kb/s, unlimited for default</li>
-<li><code>forceProxyHttps</code> {boolean} in force intercept all https request, false for default</li>
-<li><code>silent</code> {boolean} if keep silent in console, false for default<code>false</code></li>
-<li><code>dangerouslyIgnoreUnauthorized</code> {boolean} if ignore certificate error in request, false for default</li>
+<li><code>forceProxyHttps</code> {boolean} in force intercept all https request, default to <code>false</code></li>
+<li><code>silent</code> {boolean} if keep silent in console, false for default <code>false</code></li>
+<li><code>dangerouslyIgnoreUnauthorized</code> {boolean} if ignore certificate error in request, default to <code>false</code></li>
+<li><code>wsIntercept</code> {boolean} whether to intercept websocket, default to <code>false</code></li>
 <li><code>webInterface</code> {object} config for web interface<ul>
-<li><code>enable</code> {boolean} if enable web interface, false for default</li>
+<li><code>enable</code> {boolean} if enable web interface, default to <code>false</code></li>
 <li><code>webPort</code> {number} port number for web interface</li>
 </ul>
 </li>
@@ -1623,7 +1624,7 @@ You can change the request with rule of course. For this scenario, all you need 
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Getting-Start","level":"1.2","depth":1,"anchor":"#getting-start","path":"README.md","ref":"README.md#getting-start","articles":[{"title":"Install","level":"1.2.1","depth":2,"anchor":"#install","path":"README.md","ref":"README.md#install","articles":[]},{"title":"Launch","level":"1.2.2","depth":2,"anchor":"#launch","path":"README.md","ref":"README.md#launch","articles":[]},{"title":"Options","level":"1.2.3","depth":2,"anchor":"#options","path":"README.md","ref":"README.md#options","articles":[]},{"title":"As Node Module","level":"1.2.4","depth":2,"anchor":"#use-anyproxy-as-an-npm-module","path":"README.md","ref":"README.md#use-anyproxy-as-an-npm-module","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"en","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2018-01-03T15:10:19.585Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-01-03T15:10:20.722Z"},"basePath":".","book":{"language":"en"}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Getting-Start","level":"1.2","depth":1,"anchor":"#getting-start","path":"README.md","ref":"README.md#getting-start","articles":[{"title":"Install","level":"1.2.1","depth":2,"anchor":"#install","path":"README.md","ref":"README.md#install","articles":[]},{"title":"Launch","level":"1.2.2","depth":2,"anchor":"#launch","path":"README.md","ref":"README.md#launch","articles":[]},{"title":"Options","level":"1.2.3","depth":2,"anchor":"#options","path":"README.md","ref":"README.md#options","articles":[]},{"title":"As Node Module","level":"1.2.4","depth":2,"anchor":"#use-anyproxy-as-an-npm-module","path":"README.md","ref":"README.md#use-anyproxy-as-an-npm-module","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"en","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2018-02-05T02:16:34.020Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2018-02-05T02:16:35.891Z"},"basePath":".","book":{"language":"en"}});
         });
     </script>
 </div>
