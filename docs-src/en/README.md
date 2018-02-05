@@ -78,11 +78,11 @@ const options = {
   rule: require('myRuleModule'),
   webInterface: {
     enable: true,
-    webPort: 8002,
-    wsPort: 8003,
+    webPort: 8002
   },
   throttle: 10000,
   forceProxyHttps: false,
+  wsIntercept: false,
   silent: false
 };
 const proxyServer = new AnyProxy.ProxyServer(options);
@@ -106,11 +106,12 @@ proxyServer.close();
     * `port` {number} required, port number of proxy server
     * `rule` {object} your rule module
     * `throttle` {number} throttle in kb/s, unlimited for default
-    * `forceProxyHttps` {boolean} in force intercept all https request, false for default
-    * `silent` {boolean} if keep silent in console, false for default`false`
-    * `dangerouslyIgnoreUnauthorized` {boolean} if ignore certificate error in request, false for default
+    * `forceProxyHttps` {boolean} in force intercept all https request, default to `false`
+    * `silent` {boolean} if keep silent in console, false for default `false`
+    * `dangerouslyIgnoreUnauthorized` {boolean} if ignore certificate error in request, default to `false`
+    * `wsIntercept` {boolean} whether to intercept websocket, default to `false`
     * `webInterface` {object} config for web interface
-      * `enable` {boolean} if enable web interface, false for default
+      * `enable` {boolean} if enable web interface, default to `false`
       * `webPort` {number} port number for web interface
   * Event: `ready`
     * emit when proxy server is ready
