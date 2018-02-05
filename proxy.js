@@ -310,7 +310,6 @@ class ProxyServer extends ProxyCore {
    * @param {object} [config.webInterface] - config of the web interface
    * @param {boolean} [config.webInterface.enable=false] - if web interface is enabled
    * @param {number} [config.webInterface.webPort=8002] - http port of the web interface
-   * @param {number} [config.webInterface.wsPort] - web socket port of the web interface
    */
   constructor(config) {
     // prepare a recorder
