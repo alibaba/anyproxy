@@ -93,7 +93,7 @@ class LeftMenu extends React.Component {
             title="Only show the filtered result"
           >
             <span className={Style.filterIcon}>
-              <InlineSVG src={require('svg-inline!assets/filter.svg')} />
+              <InlineSVG src={require('svg-inline-loader!assets/filter.svg')} />
             </span>
             <span>Filter</span>
           </a>
@@ -105,7 +105,7 @@ class LeftMenu extends React.Component {
             title="Download the root CA to the computer and your phone"
           >
             <span className={Style.downloadIcon}>
-              <InlineSVG src={require('svg-inline!assets/download.svg')} />
+              <InlineSVG src={require('svg-inline-loader!assets/download.svg')} />
             </span>
             <span>RootCA</span>
           </a>
