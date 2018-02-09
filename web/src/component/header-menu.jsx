@@ -208,7 +208,7 @@ class HeaderMenu extends React.Component {
         onClick={this.stopRecording}
       >
         <div className={Style.filterIcon}>
-          <InlineSVG src={require('svg-inline!assets/stop.svg')} />
+          <InlineSVG src={require('svg-inline-loader!assets/stop.svg')} />
         </div>
         <span>Stop</span>
       </a>
@@ -221,7 +221,7 @@ class HeaderMenu extends React.Component {
         onClick={this.resumeRecording}
       >
         <div className={Style.stopIcon}>
-          <InlineSVG src={require('svg-inline!assets/play.svg')} />
+          <InlineSVG src={require('svg-inline-loader!assets/play.svg')} />
         </div>
         <span>Resume</span>
       </a>
@@ -234,7 +234,7 @@ class HeaderMenu extends React.Component {
         onClick={this.showFilter}
       >
         <div className={Style.stopIcon}>
-          <InlineSVG src={require('svg-inline!assets/filter.svg')} />
+          <InlineSVG src={require('svg-inline-loader!assets/filter.svg')} />
         </div>
         <span>Filter</span>
       </a>
@@ -250,7 +250,7 @@ class HeaderMenu extends React.Component {
             onClick={this.clearAllRecord}
             title="Ctrl + X"
           >
-            <InlineSVG src={require('svg-inline!assets/clear.svg')} />
+            <InlineSVG src={require('svg-inline-loader!assets/clear.svg')} />
             <span>Clear</span>
           </a>
           {inAppMode ? filterMenu : null}
@@ -269,7 +269,7 @@ class HeaderMenu extends React.Component {
               href="javascript:void(0)"
             >
               <div className={Style.tipIcon} >
-                <InlineSVG src={require('svg-inline!assets/tip.svg')} />
+                <InlineSVG src={require('svg-inline-loader!assets/tip.svg')} />
               </div>
               <span>Proxy Info</span>
             </a>

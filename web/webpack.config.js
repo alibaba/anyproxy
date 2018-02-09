@@ -3,6 +3,8 @@ const path = require('path');
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+
 const extractCss = new ExtractTextPlugin('[name].css', {
   disable: false,
   allChunks: true
@@ -22,73 +24,91 @@ module.exports = {
     filename: 'main.js'
   },
   resolve: {
-    root: path.join(__dirname, 'src'),
-    extensions: ['', '.js', '.jsx']
+    modules: [
+      'node_modules',
+      path.join(__dirname, 'src')
+    ],
+    extensions: ['.', '.js', '.jsx']
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       exclude: /node_modules/,
-      loader: 'babel',
-      query: {
+      loader: 'babel-loader',
+      options: {
         presets: ['es2015', 'stage-0']
       }
     },
     {
       test: /\.jsx$/,
       exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['es2015', 'stage-0', 'react'],
-        plugins: ['transform-runtime', ['import', { libraryName: 'antd', style: true }]]
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['es2015', 'stage-0', 'react'],
+          plugins: [['import', { libraryName: 'antd', style: true }]]
+        }
       }
     },
     {
       test: function (filePath) {
         return (/antd\/.*\.less$/.test(filePath) || /\.global\.less$/.test(filePath));
       },
-      loader: ExtractTextPlugin.extract('css!postcss!less')
+      use: ExtractTextPlugin.extract({use: 'css-loader!postcss-loader!less-loader'})
     },
     {
       test: function (filePath) {
         return (/\.less$/.test(filePath) && !/\.global\.less$/.test(filePath) && !/antd\/.*\.less$/.test(filePath));
       },
-      loader: ExtractTextPlugin.extract('css?modules&localIdentName=[local]___[hash:base64:5]!postcss!less')
+      use: ExtractTextPlugin.extract({use: 'css-loader?modules&localIdentName=[local]___[hash:base64:5]!postcss-loader!less-loader'})
     },
     {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('css')
+      use: ExtractTextPlugin.extract({use:'css-loader'})
     },
     {
       test: /\.png(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=image/png'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=image/png'
+      }
     },
     {
       test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/font-woff'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      }
     },
     {
       test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/font-woff'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      }
     },
     {
       test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/octet-stream'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+      }
     },
     {
       test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/octet-stream'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+      }
     },
     {
       test: /font\.svg(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=image/svg+xml'
+      use: {
+        loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
+      }
     }]
-  },
-  postcss: function () {
-    return [autoprefixer];
   },
   plugins: [
     extractCss,
-    defineProperty
-  ]
+    defineProperty,
+    new UglifyJsPlugin()
+  ],
+  stats: {
+    children: false
+  }
 };
