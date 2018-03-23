@@ -6,7 +6,7 @@
 const ProxyServerUtil = require('../util/ProxyServerUtil.js');
 const { generateWsUrl, directWs, proxyWs } = require('../util/HttpUtil.js');
 const Server = require('../server/server.js');
-const { printLog, isArrayEqual } = require('../util/CommonUtil.js');
+const { printLog, isArrayEqual, isCommonReqEqual } = require('../util/CommonUtil.js');
 
 testWebsocket('ws');
 testWebsocket('wss');
@@ -25,6 +25,11 @@ function testWebsocket(protocol, masked = false) {
       'Send the message with default option3',
       'Send the message with default option4'
     ];
+
+    const websocketHeaders = {
+      referer: 'https://www.anyproxy.io/websocket/test',
+      origin: 'www.anyproxy.io'
+    }
 
     beforeAll((done) => {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 200000;
@@ -47,11 +52,11 @@ function testWebsocket(protocol, masked = false) {
     it('Default websocket option', done => {
       const directMessages = []; // set the flag for direct message, compare when both direct and proxy got message
       const proxyMessages = [];
-      let directHeaders;
-      let proxyHeaders;
+      let directResHeaders;
+      let proxyResHeaders;
 
-      const ws = directWs(url);
-      const proxyWsRef = proxyWs(url);
+      const ws = directWs(url, websocketHeaders);
+      const proxyWsRef = proxyWs(url, websocketHeaders);
       ws.on('open', () => {
         ws.send(testMessageArray[0], masked);
         for (let i = 1; i < testMessageArray.length; i++) {
@@ -74,13 +79,13 @@ function testWebsocket(protocol, masked = false) {
         }
       });
 
-      ws.on('headers', (headers) => {
-        directHeaders = headers;
+      ws.on('upgrade', (res) => {
+        directResHeaders = res.headers;
         compareMessageIfReady();
       });
 
-      proxyWsRef.on('headers', (headers) => {
-        proxyHeaders = headers;
+      proxyWsRef.on('upgrade', (res) => {
+        proxyResHeaders = res.headers;
         compareMessageIfReady();
       });
 
@@ -114,12 +119,13 @@ function testWebsocket(protocol, masked = false) {
         const targetLen = testMessageArray.length;
         if (directMessages.length === targetLen
           && proxyMessages.length === targetLen
-          && directHeaders && proxyHeaders
+          && directResHeaders && proxyResHeaders
         ) {
           expect(isArrayEqual(directMessages, testMessageArray)).toBe(true);
           expect(isArrayEqual(directMessages, proxyMessages)).toBe(true);
-          expect(directHeaders['x-anyproxy-websocket']).toBeUndefined();
-          expect(proxyHeaders['x-anyproxy-websocket']).toBe('true');
+          expect(directResHeaders['x-anyproxy-websocket']).toBeUndefined();
+          expect(proxyResHeaders['x-anyproxy-websocket']).toBe('true');
+          expect(isCommonReqEqual(url, serverInstance)).toBe(true);
           done();
         }
       }
