@@ -1,0 +1,81 @@
+@import '../style/constant.less';
+
+.wrapper {
+  position: relative;
+  -webkit-user-select: none;
+  :global {
+    .ant-table {
+      border: none;
+      border-radius: 0;
+      border-bottom: 0;
+      padding-bottom: 50px;
+      .ant-table-body {
+        height: calc(100% - 114px);
+        overflow: auto;
+      }
+
+    }
+    th {
+      padding-top: 15px !important;
+      padding-bottom: 12px !important;
+      border: none !important;
+      border: none !important;
+    }
+  }
+
+  .firstRow {
+    padding-left: 20px;
+    text-align: center;
+  }
+
+  .leftRow {
+    text-align: left;
+  }
+
+  .centerRow {
+    text-align: center;
+  }
+
+  .pathRow {
+    min-width: 300px;
+  }
+}
+.row {
+  cursor: pointer;
+  font-size: @font-size-xs;
+  td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    border: none;
+  }
+}
+
+.lightBackgroundColor {
+  background: @light-background-color;
+}
+
+.lightColor {
+  color: @tip-color;
+}
+
+.activeRow {
+  background: @active-color !important;
+  color: #fff;
+  :global {
+    td {
+      background-color: transparent !important;
+    }
+  }
+}
+
+.okStatus {
+  color: @ok-color;
+}
+
+tr.loading {
+  text-align: center;
+  color: @tip-color;
+  i {
+    margin-right: 5px;
+  }
+}

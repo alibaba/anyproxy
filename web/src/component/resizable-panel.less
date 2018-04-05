@@ -1,0 +1,39 @@
+@import '../style/constant.less';
+.wrapper {
+  display: block;
+  background-color: #fff;
+  position: relative;
+  width: 360px;
+  height: 100%;
+  -webkit-box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.15);
+  -moz-box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.15);
+  box-shadow: 10px 0px 21px 0px rgba(97,95,97,0.15);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+}
+
+.contentWrapper, .content {
+  height: 100%;
+}
+
+.dragBar {
+  width: 1px;
+  background-color: @hint-color;
+  z-index: 2000;
+  cursor: col-resize;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 15px;
+  i {
+    font-size: @font-size-large;
+  }
+  &:hover {
+    color: @primary-color;
+  }
+}

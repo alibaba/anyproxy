@@ -1,0 +1,79 @@
+@import './style/constant.less';
+
+.indexWrapper {
+  display: block;
+  position: relative;
+  height: 100%;
+}
+
+.leftPanel {
+  width: 158px;
+  height: 100%;
+  min-height: 300px;
+  float: left;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+
+.middlePanel {
+  float: left;
+  height: 100%;
+}
+
+.rightPanel {
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  z-index: 0;
+}
+
+.headerWrapper {
+  border-bottom: 1px solid @hint-color;
+  padding-bottom: 5px;
+  padding-top: 25px;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+
+.tableWrapper {
+  clear: both;
+  position: absolute;
+  top: 89px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  transform: translateZ(0);
+}
+
+.resumeTip {
+  display: block;
+  background-color: @primary-color;
+  color: #fff;
+  position: absolute;
+  right: 30px;
+  bottom: 15px;
+  padding: 10px 10px;
+  opacity: 0.9;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
+  -moz-box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
+  box-shadow: 1px 1px 9px 0px rgba(0,0,0,0.37);
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.arrowDown {
+  display: block;
+  position: absolute;
+  bottom: -15px;
+  right: 60px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid @primary-color;
+  opacity: 0.9;
+}

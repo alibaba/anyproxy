@@ -1,0 +1,56 @@
+@import '../style/constant.less';
+.wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.contentWrapper {
+  overflow: hidden;
+}
+
+.toMessage {
+  float: right;
+  clear: both;
+  margin: 5px auto;
+  .content {
+    background-color: @primary-color;
+  }
+}
+
+.fromMessage {
+  float: left;
+  clear: both;
+  max-width: 40%;
+  margin: 5px auto;
+  .content {
+    background: @success-color;
+  }
+}
+
+.time {
+  font-size: @font-size-xs;
+  color: @tip-color;
+}
+
+.content {
+  clear: both;
+  border-radius: @border-radius-base;
+  color: #fff;
+  padding: 7px 8px;
+  font-size: @font-size-sm;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.refreshBtn {
+  position: fixed;
+  right: 20px;
+  bottom: 5px;
+  opacity: 0.53;
+  font-size: @font-size-large;
+  cursor: pointer;
+}

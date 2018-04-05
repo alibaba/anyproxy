@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="27px" height="20px" viewBox="0 0 27 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41 (35326) - http://www.bohemiancoding.com/sketch -->
+    <title>eye-slash</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="view-eye-path-1" points="21.995689 0.818019485 23.4099026 2.23223305 5.73223305 19.9099026 4.31801948 18.495689"></polygon>
+        <mask id="eye-mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-0.5" y="-0.5" width="20.0918831" height="20.0918831">
+            <rect x="3.81801948" y="0.318019485" width="20.0918831" height="20.0918831" fill="white"></rect>
+            <use xlink:href="#view-eye-path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="eye-Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-505.000000, -163.000000)">
+            <g id="eye-slash" transform="translate(505.000000, 163.000000)">
+                <g id="eys-slash-group1" transform="translate(0.000000, 1.000000)" fill="#3A3A3A">
+                    <path d="M27,9 C23.9831661,3.54935292 19.0604961,0 13.5,0 C7.93950391,0 3.01683393,3.54935292 0,9 C3.01683393,14.4506471 7.93950391,18 13.5,18 C19.0604961,18 23.9831661,14.4506471 27,9 Z M13.5,15 C16.8137085,15 19.5,12.3137085 19.5,9 C19.5,5.6862915 16.8137085,3 13.5,3 C10.1862915,3 7.5,5.6862915 7.5,9 C7.5,12.3137085 10.1862915,15 13.5,15 Z" id="Combined-Shape"></path>
+                    <ellipse id="eye-boll" cx="13.5" cy="9" rx="3" ry="3"></ellipse>
+                </g>
+                <g id="eye-slash-border">
+                    <use fill="#3A3A3A" fill-rule="evenodd" xlink:href="#view-eye-path-1"></use>
+                    <use stroke="#FFFFFF" mask="url(#eye-mask-2)" stroke-width="1" xlink:href="#view-eye-path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
