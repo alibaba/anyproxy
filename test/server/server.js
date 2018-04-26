@@ -7,7 +7,6 @@ const https = require('https');
 const certMgr = require('../../lib/certMgr');
 const fs = require('fs');
 const nurl = require('url');
-const websocket = require('koa-websocket');
 const color = require('colorful');
 const WebSocketServer = require('ws').Server;
 const tls = require('tls');
@@ -63,6 +62,23 @@ function KoaServer() {
       body
     };
     yield next;
+  };
+
+  this.logWsRequest = function (wsReq) {
+    const headers = wsReq.headers;
+    const host = headers.host;
+    const isEncript = true && wsReq.connection && wsReq.connection.encrypted;
+    const protocol = isEncript ? 'wss' : 'ws';
+    let key = `${protocol}://${host}${wsReq.url}`;
+    // take proxy data with 'proxy-' + url
+    if (headers['via-proxy'] === 'true') {
+      key = PROXY_KEY_PREFIX + key;
+    }
+
+    self.requestRecordMap[key] = {
+      headers: wsReq.headers,
+      body: ''
+    }
   };
 
   this.start();
@@ -236,11 +252,14 @@ KoaServer.prototype.constructRouter = function () {
   return router;
 };
 
-KoaServer.prototype.constructWsRouter = function () {
-  const wsRouter = KoaRouter();
-  const self = this;
-  wsRouter.get('/test/socket', function *(next) {
-    const ws = this.websocket;
+KoaServer.prototype.createWsServer = function (httpServer) {
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/test/socket'
+  });
+  wsServer.on('connection', (ws, wsReq) => {
+    const self = this;
+    self.logWsRequest(wsReq);
     const messageObj = {
       type: 'initial',
       content: 'default message'
@@ -251,10 +270,7 @@ KoaServer.prototype.constructWsRouter = function () {
       printLog('message from request socket: ' + message);
       self.handleRecievedMessage(ws, message);
     });
-    yield next;
-  });
-
-  return wsRouter;
+  })
 };
 
 KoaServer.prototype.getRequestRecord = function (key) {
@@ -277,14 +293,13 @@ KoaServer.prototype.handleRecievedMessage = function (ws, message) {
 KoaServer.prototype.start = function () {
   printLog('Starting the server...');
   const router = this.constructRouter();
-  const wsRouter = this.constructWsRouter();
   const self = this;
   const app = Koa();
-  websocket(app);
 
   app.use(router.routes());
-  app.ws.use(wsRouter.routes());
   this.httpServer = app.listen(DEFAULT_PORT);
+  this.createWsServer(this.httpServer);
+
 
   printLog('HTTP is now listening on port :' + DEFAULT_PORT);
 
@@ -303,7 +318,8 @@ KoaServer.prototype.start = function () {
         server: self.httpsServer
       });
 
-      wss.on('connection', (ws) => {
+      wss.on('connection', (ws, wsReq) => {
+        self.logWsRequest(wsReq);
         ws.on('message', (message) => {
           printLog('received in wss: ' + message);
           self.handleRecievedMessage(ws, message);

@@ -187,17 +187,20 @@ function doUpload(url, method, filepath, formParams, headers = {}, isProxy) {
   return requestTask;
 }
 
-function doWebSocket(url, isProxy) {
+function doWebSocket(url, headers = {}, isProxy) {
   let ws;
   if (isProxy) {
+    headers['via-proxy'] = 'true';
     const agent = new HttpsProxyAgent(SOCKET_PROXY_HOST);
     ws = new WebSocket(url, {
       agent,
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      headers
     });
   } else {
     ws = new WebSocket(url, {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      headers
     });
   }
 
@@ -252,12 +255,12 @@ function directOptions(url, headers = {}) {
   return directRequest('OPTIONS', url, {}, headers);
 }
 
-function proxyWs(url) {
-  return doWebSocket(url, true);
+function proxyWs(url, headers) {
+  return doWebSocket(url, headers, true);
 }
 
-function directWs(url) {
-  return doWebSocket(url);
+function directWs(url, headers) {
+  return doWebSocket(url, headers);
 }
 
 /**

@@ -120,6 +120,7 @@ function isCommonResHeaderEqual(directHeaders, proxyHeaders, requestUrl) {
 *
 */
 function isCommonReqEqual(url, serverInstance) {
+  console.info('==> trying to get the url ', url);
   try {
     let isEqual = true;
 
@@ -138,6 +139,27 @@ function isCommonReqEqual(url, serverInstance) {
     delete proxyReqObj.headers['content-length'];
     delete directReqObj.headers['transfer-encoding'];
     delete proxyReqObj.headers['transfer-encoding'];
+
+    // delete the headers that should not be passed by AnyProxy
+    delete directReqObj.headers.connection;
+    delete proxyReqObj.headers.connection;
+
+    // delete the headers related to websocket establishment
+    const directHeaderKeys = Object.keys(directReqObj.headers);
+    directHeaderKeys.forEach((key) => {
+      // if the key matchs 'sec-websocket', delete it
+      if (/sec-websocket/ig.test(key)) {
+        delete directReqObj.headers[key];
+      }
+    });
+
+    const proxyHeaderKeys = Object.keys(proxyReqObj.headers);
+    proxyHeaderKeys.forEach((key) => {
+      // if the key matchs 'sec-websocaket', delete it
+      if (/sec-websocket/ig.test(key)) {
+        delete proxyReqObj.headers[key];
+      }
+    });
 
     isEqual = isEqual && directReqObj.url === proxyReqObj.url;
     isEqual = isEqual && isObjectEqual(directReqObj.headers, proxyReqObj.headers, url);
