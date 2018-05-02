@@ -17,7 +17,7 @@ let direcrtResponseSampleB = [];
 let proxyResponse = [];
 
 function test(url, requestHeaders = {}) {
-  fdescribe('Test requests in real broswer', () => {
+  describe('Test requests in real broswer', () => {
     let proxyServer;
 
     beforeAll((done) => {
