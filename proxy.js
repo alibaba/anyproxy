@@ -4,14 +4,14 @@ const http = require('http'),
   https = require('https'),
   async = require('async'),
   color = require('colorful'),
-  certMgr = require('./lib/certMgr'),
-  Recorder = require('./lib/recorder'),
-  logUtil = require('./lib/log'),
-  util = require('./lib/util'),
+  certMgr = require('./dist/certMgr'),
+  Recorder = require('./dist/recorder'),
+  logUtil = require('./dist/log'),
+  util = require('./dist/util'),
   events = require('events'),
   co = require('co'),
-  WebInterface = require('./lib/webInterface'),
-  wsServerMgr = require('./lib/wsServerMgr'),
+  WebInterface = require('./dist/webInterface'),
+  wsServerMgr = require('./dist/wsServerMgr'),
   ThrottleGroup = require('stream-throttle').ThrottleGroup;
 
 // const memwatch = require('memwatch-next');
@@ -382,6 +382,6 @@ module.exports.ProxyServer = ProxyServer;
 module.exports.ProxyRecorder = Recorder;
 module.exports.ProxyWebServer = WebInterface;
 module.exports.utils = {
-  systemProxyMgr: require('./lib/systemProxyMgr'),
+  systemProxyMgr: require('./dist/systemProxyMgr'),
   certMgr,
 };

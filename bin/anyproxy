@@ -5,9 +5,9 @@
 const program = require('commander'),
   color = require('colorful'),
   packageInfo = require('../package.json'),
-  ruleLoader = require('../lib/ruleLoader'),
-  util = require('../lib/util'),
-  logUtil = require('../lib/log');
+  ruleLoader = require('../dist/ruleLoader'),
+  util = require('../dist/util'),
+  logUtil = require('../dist/log');
 
 program
   .version(packageInfo.version)
@@ -23,13 +23,13 @@ program
   .parse(process.argv);
 
 if (program.clear) {
-  require('../lib/certMgr').clearCerts(() => {
+  require('../dist/certMgr').clearCerts(() => {
     util.deleteFolderContentsRecursive(util.getAnyProxyPath('cache'));
     console.log(color.green('done !'));
     process.exit(0);
   });
 } else if (program.root) {
-  require('../lib/certMgr').generateRootCA(() => {
+  require('../dist/certMgr').generateRootCA(() => {
     process.exit(0);
   });
 } else {

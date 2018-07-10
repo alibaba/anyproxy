@@ -1,0 +1,22 @@
+{
+  "compilerOnSave": true,
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "commonjs",
+    "baseUrl": "./lib",
+    "allowJs": true,
+    "lib": ["es6"],
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true,
+    "outDir": "./dist"
+  },
+  "exclude": [
+    "node_modules",
+    "./dist"
+  ],
+  "include": [
+    "./lib/*",
+    "./bin/*"
+  ]
+}
