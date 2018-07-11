@@ -12,11 +12,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as mime from 'mime-types';
 import * as color from 'colorful';
-import {Buffer} from 'buffer';
-import * as crypto from 'crypto';
-// import buffer from 'buffer';
+import { Buffer } from 'buffer';
+import { execSync } from 'child_process';
 import logUtil from './log';
-// const Buffer = buffer.Buffer;
+
 
   const networkInterfaces = require('os').networkInterfaces();
 
@@ -113,7 +112,7 @@ import logUtil from './log';
   * 比如在useLocalResponse的时候会使用到
   */
   function contentType (filepath: string): string {
-    return mime.contentType(path.extname(filepath));
+    return mime.contentType(path.extname(filepath)) || '';
   };
 
   /*
@@ -323,20 +322,26 @@ import logUtil from './log';
     return ipReg.test(domain);
   };
 
-  /**
-  * To generic a Sec-WebSocket-Accept value
-  * 1. append the `Sec-WebSocket-Key` request header with `matic string`
-  * 2. get sha1 hash of the string
-  * 3. get base64 of the sha1 hash
-  */
-  function genericWsSecAccept (wsSecKey) {
-    // the string to generate the Sec-WebSocket-Accept
-    const magicString = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
-    const targetString = `${wsSecKey}${magicString}`;
-    const shasum = crypto.createHash('sha1');
-    shasum.update(targetString);
-    return shasum.digest('base64');
-  }
+  function execScriptSync (cmd: string): object {
+    let stdout,
+      status = 0;
+    try {
+      stdout = execSync(cmd);
+    } catch (err) {
+      stdout = err.stdout;
+      status = err.status;
+    }
+
+    return {
+      stdout: stdout.toString(),
+      status
+    };
+  };
+
+  function guideToHomePage (): void {
+    logUtil.info('Refer to http://anyproxy.io for more detail');
+  };
+
 
 const Util = {
   lower_keys,
@@ -357,7 +362,8 @@ const Util = {
   isIpDomain,
   getByteSize,
   deleteFolderContentsRecursive,
-  genericWsSecAccept,
+  execScriptSync,
+  guideToHomePage,
   formatDate
 }
 
