@@ -200,6 +200,13 @@ anyproxy --intercept #launch anyproxy and intercept all https traffic
 
 * [Appendix：how to trust CA](#config-certification)
 
+# Proxy WebSocket
+
+```bash
+anyproxy --ws-intercept
+```
+> The `wss` requests will be handled automatically when the `HTTPS` intercept is turned on, but AnyProxy will not record the data by default. You need to specify the `--ws-intercept` to tell AnyProxy to record it.
+
 # Rule Introduction
 
 AnyProxy provides the ability to load your own rules written in javascript. With rule module, you could customize the logic to handle requests.

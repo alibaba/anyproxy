@@ -2,7 +2,7 @@
   "name": "anyproxy",
   "version": "4.0.11",
   "description": "A fully configurable HTTP/HTTPS proxy in Node.js",
-  "main": "proxy.js",
+  "main": "dist/proxy.js",
   "bin": {
     "anyproxy-ca": "bin/anyproxy-ca",
     "anyproxy": "bin/anyproxy"
@@ -97,7 +97,7 @@
   "scripts": {
     "prepublish": "npm run buildweb",
     "build": "NODE_ENV=production && node gulpfile.js",
-    "dev": "NODE_ENV=test && node gulpfile.js",
+    "dev": "NODE_ENV=test && node gulpfile.js watch",
     "test": "node test.js",
     "lint": "eslint .",
     "testserver": "node test/server/startServer.js",

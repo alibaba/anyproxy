@@ -9,6 +9,7 @@ const program = require('commander'),
   util = require('../dist/util'),
   rootCACheck = require('./rootCaCheck'),
   startServer = require('./startServer'),
+  certMgr = require('../dist/certMgr'),
   logUtil = require('../dist/log');
 
 program
@@ -25,13 +26,13 @@ program
   .parse(process.argv);
 
 if (program.clear) {
-  require('../dist/certMgr').clearCerts(() => {
+  certMgr.clearCerts(() => {
     util.deleteFolderContentsRecursive(util.getAnyProxyPath('cache'));
     console.log(color.green('done !'));
     process.exit(0);
   });
 } else if (program.root) {
-  require('../dist/certMgr').generateRootCA(() => {
+  certMgr.generateRootCA(() => {
     process.exit(0);
   });
 } else {

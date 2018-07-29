@@ -200,6 +200,14 @@ anyproxy --intercept #启动AnyProxy，并解析所有https请求
 
 * [附录：如何信任CA证书](#证书配置)
 
+# 代理WebSocket
+
+```bash
+anyproxy --ws-intercept
+```
+
+> 当启用`HTTPS`代理时，`wss`也会被代理，但是不会被AnyProxy记录。需要开启`--ws-intercept`后才会从界面上看到相应内容。
+
 # rule模块
 
 AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模块（rule），来自定义网络请求的处理逻辑。

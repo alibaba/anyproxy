@@ -4,7 +4,7 @@
 */
 
 const thunkify = require('thunkify');
-const AnyProxy = require('../proxy');
+const AnyProxy = require('../dist/proxy');
 const logUtil = require('../dist/log');
 
 const certMgr = AnyProxy.utils.certMgr;
