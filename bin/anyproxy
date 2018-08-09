@@ -7,7 +7,7 @@ const program = require('commander'),
   co = require('co'),
   packageInfo = require('../package.json'),
   util = require('../lib/util'),
-  rootCACheck = require('./rootCaCheck'),
+  rootCACheck = require('./rootCACheck'),
   startServer = require('./startServer'),
   logUtil = require('../lib/log');
 
