@@ -14,7 +14,7 @@ import * as mime from 'mime-types';
 import * as color from 'colorful';
 import { Buffer } from 'buffer';
 import { execSync } from 'child_process';
-import * as logUtil from './log';
+import logUtil from './log';
 
 
   const networkInterfaces = require('os').networkInterfaces();
