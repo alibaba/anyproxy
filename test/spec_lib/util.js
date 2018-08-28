@@ -2,7 +2,7 @@
 * test for rule replaceOption rule
 *
 */
-const util = require('../../lib/util');
+const util = require('../../lib/util').default;
 
 describe('utils', () => {
   it('should get some free ports', done => {

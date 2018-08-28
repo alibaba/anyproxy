@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@types/node": "^8.10.21",
+    "@types/ws": "^6.0.0",
     "antd": "^2.5.0",
     "autoprefixer": "^6.4.1",
     "babel-core": "^6.14.0",

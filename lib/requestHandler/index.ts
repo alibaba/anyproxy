@@ -1,16 +1,31 @@
 'use strict';
+/// <reference path="../../typings/index.d.ts" />
 
 import UserReqHandler from './UserReqHandler';
+import HttpsServerMgr from '../httpsServerMgr';
+import Recorder from '../recorder';
 
-const
-  net = require('net'),
-  color = require('colorful'),
-  util = require('../util'),
-  logUtil = require('../log'),
-  co = require('co'),
-  WebSocket = require('ws'),
-  CommonReadableStream = require('./CommonReadableStream'),
-  HttpsServerMgr = require('../httpsServerMgr');
+import * as color from 'colorful';
+import * as co from 'co';
+import * as net from 'net';
+import * as http from 'http';
+import * as WebSocket from 'ws';
+import util from '../util';
+import logUtil from '../log';
+import CommonReadableStream from './CommonReadableStream';
+
+interface IWsReqInfo {
+  headers: http.IncomingHttpHeaders;
+  noWsHeaders: http.IncomingHttpHeaders;
+  hostName: string;
+  port: string;
+  path: string;
+  protocol: 'wss' | 'ws';
+}
+
+interface IWebsocketOptionHeaders {
+  [key: string]: string;
+}
 
 /**
 * get request info from the ws client, includes:
@@ -22,7 +37,7 @@ const
  @param @required wsClient the ws client of WebSocket
 *
 */
-function getWsReqInfo(wsReq) {
+function getWsReqInfo(wsReq: http.IncomingMessage): IWsReqInfo {
   const headers = wsReq.headers || {};
   const host = headers.host;
   const hostName = host.split(':')[0];
@@ -31,12 +46,12 @@ function getWsReqInfo(wsReq) {
   // TODO 如果是windows机器，url是不是全路径？需要对其过滤，取出
   const path = wsReq.url || '/';
 
-  const isEncript = true && wsReq.connection && wsReq.connection.encrypted;
+  const isEncript = true && wsReq.connection && (wsReq.connection as any).encrypted;
   /**
    * construct the request headers based on original connection,
    * but delete the `sec-websocket-*` headers as they are already consumed by AnyProxy
    */
-  const getNoWsHeaders = () => {
+  const getNoWsHeaders = (): http.IncomingHttpHeaders => {
     const originHeaders = Object.assign({}, headers);
     const originHeaderKeys = Object.keys(originHeaders);
     originHeaderKeys.forEach((key) => {
@@ -49,16 +64,15 @@ function getWsReqInfo(wsReq) {
     delete originHeaders.connection;
     delete originHeaders.upgrade;
     return originHeaders;
-  }
-
+  };
 
   return {
-    headers: headers, // the full headers of origin ws connection
+    headers, // the full headers of origin ws connection
     noWsHeaders: getNoWsHeaders(),
-    hostName: hostName,
-    port: port,
-    path: path,
-    protocol: isEncript ? 'wss' : 'ws'
+    hostName,
+    port,
+    path,
+    protocol: isEncript ? 'wss' : 'ws',
   };
 }
 /**
@@ -70,12 +84,13 @@ function getWsReqInfo(wsReq) {
  * @param {object} httpsServerMgr
  * @returns
  */
-function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
-  const reqHandlerCtx = this; reqHandlerCtx.conns = new Map(); reqHandlerCtx.cltSockets = new Map()
+function getConnectReqHandler(userRule: AnyProxyRule, recorder: Recorder, httpsServerMgr: HttpsServerMgr)
+  : (req: http.IncomingMessage, socket: net.Socket, head: Buffer[]) => void {
+  const reqHandlerCtx = this; reqHandlerCtx.conns = new Map(); reqHandlerCtx.cltSockets = new Map();
 
-  return function (req, cltSocket, head) {
-    const host = req.url.split(':')[0],
-      targetPort = req.url.split(':')[1];
+  return function(req: http.IncomingMessage, cltSocket: net.Socket, head: Buffer[]): void {
+    const host = req.url.split(':')[0];
+    const targetPort = req.url.split(':')[1];
     let shouldIntercept;
     let interceptWsRequest = false;
     let requestDetail;
@@ -90,12 +105,12 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
       4.1 if (websocket || do_not_intercept) --> pipe to target server
       4.2 else --> pipe to local server and do man-in-the-middle attack
     */
-    co(function *() {
+    co(function *(): Generator {
       // determine whether to use the man-in-the-middle server
       logUtil.printLog(color.green('received https CONNECT request ' + host));
       requestDetail = {
         host: req.url,
-        _req: req
+        _req: req,
       };
       // the return value in default rule is null
       // so if the value is null, will take it as final value
@@ -106,14 +121,14 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
         shouldIntercept = reqHandlerCtx.forceProxyHttps;
       }
     })
-      .then(() =>
-        new Promise((resolve) => {
+      .then(() => {
+        return new Promise((resolve) => {
           // mark socket connection as established, to detect the request protocol
           cltSocket.write('HTTP/' + req.httpVersion + ' 200 OK\r\n\r\n', 'UTF-8', resolve);
-        })
-      )
-      .then(() =>
-        new Promise((resolve, reject) => {
+        });
+      })
+      .then(() => {
+        return new Promise((resolve, reject) => {
           let resolved = false;
           cltSocket.on('data', (chunk) => {
             requestStream.push(chunk);
@@ -139,8 +154,8 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
           cltSocket.on('end', () => {
             requestStream.push(null);
           });
-        })
-      )
+        });
+      })
       .then((result) => {
         // log and recorder
         if (shouldIntercept) {
@@ -149,7 +164,7 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
           logUtil.printLog('will bypass the man-in-the-middle proxy');
         }
 
-        //record
+        // record
         if (recorder) {
           resourceInfo = {
             host,
@@ -157,7 +172,7 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
             path: '',
             url: 'https://' + host,
             req,
-            startTime: new Date().getTime()
+            startTime: new Date().getTime(),
           };
           resourceInfoId = recorder.appendRecord(resourceInfo);
         }
@@ -168,18 +183,19 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
           // server info from the original request
           const originServer = {
             host,
-            port: (targetPort === 80) ? 443 : targetPort
-          }
+            port: (targetPort === '80') ? 443 : targetPort,
+          };
 
           const localHttpServer = {
             host: 'localhost',
-            port: reqHandlerCtx.httpServerPort
-          }
+            port: reqHandlerCtx.httpServerPort,
+          };
 
           // for ws request, redirect them to local ws server
           return interceptWsRequest ? localHttpServer : originServer;
         } else {
-          return httpsServerMgr.getSharedHttpsServer(host).then(serverInfo => ({ host: serverInfo.host, port: serverInfo.port }));
+          return httpsServerMgr.getSharedHttpsServer(host)
+            .then((serverInfo) => ({ host: serverInfo.host, port: serverInfo.port }));
         }
       })
       .then((serverInfo) => {
@@ -189,7 +205,7 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
 
         return new Promise((resolve, reject) => {
           const conn = net.connect(serverInfo.port, serverInfo.host, () => {
-            //throttle for direct-foward https
+            // throttle for direct-foward https
             if (global._throttle && !shouldIntercept) {
               requestStream.pipe(conn);
               conn.pipe(global._throttle.throttle()).pipe(cltSocket);
@@ -205,8 +221,8 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
             reject(e);
           });
 
-          reqHandlerCtx.conns.set(serverInfo.host + ':' + serverInfo.port, conn)
-          reqHandlerCtx.cltSockets.set(serverInfo.host + ':' + serverInfo.port, cltSocket)
+          reqHandlerCtx.conns.set(serverInfo.host + ':' + serverInfo.port, conn);
+          reqHandlerCtx.cltSockets.set(serverInfo.host + ':' + serverInfo.port, cltSocket);
         });
       })
       .then(() => {
@@ -220,40 +236,40 @@ function getConnectReqHandler(userRule, recorder, httpsServerMgr) {
           recorder && recorder.updateRecord(resourceInfoId, resourceInfo);
         }
       })
-      .catch(co.wrap(function *(error) {
+      .catch(co.wrap(function *(error: Error): Generator {
         logUtil.printLog(util.collectErrorLog(error), logUtil.T_ERR);
 
         try {
           yield userRule.onConnectError(requestDetail, error);
-        } catch (e) { }
+        } catch (e) { console.error(e); }
 
         try {
           let errorHeader = 'Proxy-Error: true\r\n';
           errorHeader += 'Proxy-Error-Message: ' + (error || 'null') + '\r\n';
           errorHeader += 'Content-Type: text/html\r\n';
           cltSocket.write('HTTP/1.1 502\r\n' + errorHeader + '\r\n\r\n');
-        } catch (e) { }
+        } catch (e) { console.error(e); }
       }));
-  }
+  };
 }
 
 /**
 * get a websocket event handler
-  @param @required {object} wsClient
+* @param @required {object} wsClient
 */
-function getWsHandler(userRule, recorder, wsClient, wsReq) {
+function getWsHandler(userRule: AnyProxyRule, recorder: Recorder, wsClient: WebSocket, wsReq: http.IncomingMessage): void {
   const self = this;
   try {
     let resourceInfoId = -1;
-    const resourceInfo = {
-      wsMessages: [] // all ws messages go through AnyProxy
+    const resourceInfo: AnyProxyRecorder.ResourceInfo = {
+      wsMessages: [] as AnyProxyRecorder.WsResourceInfo[], // all ws messages go through AnyProxy
     };
     const clientMsgQueue = [];
     const serverInfo = getWsReqInfo(wsReq);
     const wsUrl = `${serverInfo.protocol}://${serverInfo.hostName}:${serverInfo.port}${serverInfo.path}`;
     const proxyWs = new WebSocket(wsUrl, '', {
       rejectUnauthorized: !self.dangerouslyIgnoreUnauthorized,
-      headers: serverInfo.noWsHeaders
+      headers: serverInfo.noWsHeaders as IWebsocketOptionHeaders,
     });
 
     if (recorder) {
@@ -263,7 +279,7 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
         path: serverInfo.path,
         url: wsUrl,
         req: wsReq,
-        startTime: new Date().getTime()
+        startTime: new Date().getTime(),
       });
       resourceInfoId = recorder.appendRecord(resourceInfo);
     }
@@ -283,7 +299,7 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
       } else {
         clientMsgQueue.push(message);
       }
-    }
+    };
 
     /**
     * consume the message in queue when the proxy ws is not ready yet
@@ -294,7 +310,7 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
         const message = clientMsgQueue.shift();
         proxyWs.send(message);
       }
-    }
+    };
 
     /**
     * When the source ws is closed, we need to close the target websocket.
@@ -303,7 +319,7 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
     const getCloseFromOriginEvent = (event) => {
       const code = event.code || '';
       const reason = event.reason || '';
-      let targetCode = '';
+      let targetCode;
       let targetReason = '';
       if (code >= 1004 && code <= 1006) {
         targetCode = 1000; // normal closure
@@ -315,9 +331,9 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
 
       return {
         code: targetCode,
-        reason: targetReason
-      }
-    }
+        reason: targetReason,
+      };
+    };
 
     /**
     * consruct a message Record from message event
@@ -329,7 +345,7 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
       const message = {
         time: Date.now(),
         message: messageEvent.data,
-        isToServer: isToServer
+        isToServer,
       };
 
       // resourceInfo.wsMessages.push(message);
@@ -338,15 +354,15 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
 
     proxyWs.onopen = () => {
       consumeMsgQueue();
-    }
+    };
 
     // this event is fired when the connection is build and headers is returned
     proxyWs.on('upgrade', (response) => {
       resourceInfo.endTime = new Date().getTime();
       const headers = response.headers;
-      resourceInfo.res = { //construct a self-defined res object
+      resourceInfo.res = { // construct a self-defined res object
         statusCode: response.statusCode,
-        headers: headers,
+        headers,
       };
 
       resourceInfo.statusCode = response.statusCode;
@@ -361,29 +377,29 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
       // https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent#Status_codes
       wsClient.close(1001, e.message);
       proxyWs.close(1001);
-    }
+    };
 
     proxyWs.onmessage = (event) => {
       recordMessage(event, false);
       wsClient.readyState === 1 && wsClient.send(event.data);
-    }
+    };
 
     proxyWs.onclose = (event) => {
       logUtil.debug(`proxy ws closed with code: ${event.code} and reason: ${event.reason}`);
       const targetCloseInfo = getCloseFromOriginEvent(event);
       wsClient.readyState !== 3 && wsClient.close(targetCloseInfo.code, targetCloseInfo.reason);
-    }
+    };
 
     wsClient.onmessage = (event) => {
       recordMessage(event, true);
       sendProxyMessage(event);
-    }
+    };
 
     wsClient.onclose = (event) => {
       logUtil.debug(`original ws closed with code: ${event.code} and reason: ${event.reason}`);
       const targetCloseInfo = getCloseFromOriginEvent(event);
       proxyWs.readyState !== 3 && proxyWs.close(targetCloseInfo.code, targetCloseInfo.reason);
-    }
+    };
   } catch (e) {
     logUtil.debug('WebSocket Proxy Error:' + e.message);
     logUtil.debug(e.stack);
@@ -392,7 +408,14 @@ function getWsHandler(userRule, recorder, wsClient, wsReq) {
 }
 
 class RequestHandler {
-
+  public forceProxyHttps: boolean;
+  public dangerouslyIgnoreUnauthorized: boolean;
+  public httpServerPort: string;
+  public wsIntercept: boolean;
+  public connectReqHandler: () => void;
+  private userRequestHandler: () => void;
+  private wsHandler: () => void;
+  private httpsServerMgr: HttpsServerMgr;
   /**
    * Creates an instance of RequestHandler.
    *
@@ -405,7 +428,7 @@ class RequestHandler {
    *
    * @memberOf RequestHandler
    */
-  constructor(config, rule, recorder) {
+  constructor(config: AnyProxyConfig, rule: AnyProxyRule, recorder: Recorder) {
     const reqHandlerCtx = this;
     this.forceProxyHttps = false;
     this.dangerouslyIgnoreUnauthorized = false;
@@ -425,8 +448,8 @@ class RequestHandler {
     }
 
     this.httpServerPort = config.httpServerPort;
-    const default_rule = util.freshRequire('./rule_default');
-    const userRule = util.merge(default_rule, rule);
+    const defaultRule = util.freshRequire('./rule_default');
+    const userRule = util.merge(defaultRule, rule);
 
     const userReqHandler = new UserReqHandler(reqHandlerCtx, userRule, recorder);
     reqHandlerCtx.userRequestHandler = userReqHandler.handler.bind(userReqHandler);
@@ -434,11 +457,11 @@ class RequestHandler {
 
     reqHandlerCtx.httpsServerMgr = new HttpsServerMgr({
       handler: reqHandlerCtx.userRequestHandler,
-      wsHandler: reqHandlerCtx.wsHandler // websocket
+      wsHandler: reqHandlerCtx.wsHandler, // websocket
     });
 
     this.connectReqHandler = getConnectReqHandler.apply(reqHandlerCtx, [userRule, recorder, reqHandlerCtx.httpsServerMgr]);
   }
 }
 
-module.exports = RequestHandler;
+export default RequestHandler;

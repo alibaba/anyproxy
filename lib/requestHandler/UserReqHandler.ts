@@ -1,40 +1,64 @@
 /// <reference path="../../typings/index.d.ts" />
 
-import RequestErrorHandler from './requestErrorHandler';
+declare interface ErrorResponse {
+  statusCode: number;
+  header: OneLevelObjectType;
+  body: string;
+}
 
-const
-  url = require('url'),
-  https = require('https'),
-  http = require('http'),
-  color = require('colorful'),
-  Buffer = require('buffer').Buffer,
-  util = require('../util'),
-  Stream = require('stream'),
-  logUtil = require('../log'),
-  CommonReadableStream = require('./CommonReadableStream'),
-  zlib = require('zlib'),
-  brotliTorb = require('brotli'),
-  co = require('co');
+import * as url from 'url';
+import * as https from 'https';
+import * as http from 'http';
+import * as color from 'colorful';
+import * as buffer from 'buffer';
+import * as Stream from 'stream';
+import * as zlib from 'zlib';
+import * as brotliTorb from 'brotli';
+import * as co from 'co';
+import util from '../util';
+import logUtil from '../log';
+import RequestErrorHandler from './requestErrorHandler';
+import CommonReadableStream from './CommonReadableStream';
+import Recorder from '../recorder';
+const Buffer = buffer.Buffer;
+// const
+//   url = require('url'),
+//   https = require('https'),
+//   http = require('http'),
+//   color = require('colorful'),
+//   Buffer = require('buffer').Buffer,
+//   util = require('../util').default,
+//   Stream = require('stream'),
+//   logUtil = require('../log'),
+//   CommonReadableStream = require('./CommonReadableStream'),
+//   zlib = require('zlib'),
+//   brotliTorb = require('brotli'),
+//   co = require('co');
 
 const requestErrorHandler = new RequestErrorHandler();
 const DEFAULT_CHUNK_COLLECT_THRESHOLD = 20 * 1024 * 1024; // about 20 mb
 
 // to fix issue with TLS cache, refer to: https://github.com/nodejs/node/issues/8368
-https.globalAgent.maxCachedSessions = 0;
+(https.globalAgent as any).maxCachedSessions = 0;
 
 /**
  * fetch remote response
  *
  * @param {string} protocol
- * @param {object} options options of http.request
- * @param {buffer} reqData request body
+ * @param {object} options
+ * @param {buffer} reqData
  * @param {object} config
  * @param {boolean} config.dangerouslyIgnoreUnauthorized
  * @param {boolean} config.chunkSizeThreshold
  * @returns
  */
-function fetchRemoteResponse(protocol, options, reqData, config) {
-  reqData = reqData || '';
+function fetchRemoteResponse(
+  protocol: string, options: https.RequestOptions | http.RequestOptions ,
+  reqData: Buffer, config: {
+    dangerouslyIgnoreUnauthorized: boolean;
+    chunkSizeThreshold: number;
+  }): Promise<any> {
+  reqData = reqData || Buffer.from('');
   return new Promise((resolve, reject) => {
     delete options.headers['content-length']; // will reset the content-length after rule
     delete options.headers['Content-Length'];
@@ -42,17 +66,18 @@ function fetchRemoteResponse(protocol, options, reqData, config) {
     delete options.headers['transfer-encoding'];
 
     if (config.dangerouslyIgnoreUnauthorized) {
-      options.rejectUnauthorized = false;
+      (options as https.RequestOptions).rejectUnauthorized = false;
     }
 
     if (!config.chunkSizeThreshold) {
       throw new Error('chunkSizeThreshold is required');
     }
 
-    //send request
-    const proxyReq = (/https/i.test(protocol) ? https : http).request(options, (res) => {
+    const finalHttpModule: typeof https | typeof http = /https/i.test(protocol) ? https : http;
+    // send request
+    const proxyReq: http.ClientRequest = (finalHttpModule as any).request(options, (res: http.IncomingMessage): void => {
       res.headers = util.getHeaderFromRawHeaders(res.rawHeaders);
-      //deal response header
+      // deal response header
       const statusCode = res.statusCode;
       const resHeader = res.headers;
       let resDataChunks = []; // array of data chunks or stream
@@ -69,9 +94,9 @@ function fetchRemoteResponse(protocol, options, reqData, config) {
             // remove gzip related header, and ungzip the content
             // note there are other compression types like deflate
             const contentEncoding = resHeader['content-encoding'] || resHeader['Content-Encoding'];
-            const ifServerGzipped = /gzip/i.test(contentEncoding);
-            const isServerDeflated = /deflate/i.test(contentEncoding);
-            const isBrotlied = /br/i.test(contentEncoding);
+            const ifServerGzipped = /gzip/i.test((contentEncoding as string));
+            const isServerDeflated = /deflate/i.test((contentEncoding as string));
+            const isBrotlied = /br/i.test((contentEncoding as string));
 
             /**
              * when the content is unzipped, update the header content
@@ -82,10 +107,10 @@ function fetchRemoteResponse(protocol, options, reqData, config) {
                 delete resHeader['content-encoding'];
                 delete resHeader['Content-Encoding'];
               }
-            }
+            };
 
             // set origin content length into header
-            resHeader['x-anyproxy-origin-content-length'] = originContentLen;
+            resHeader['x-anyproxy-origin-content-length'] = '' + originContentLen;
 
             // only do unzip when there is res data
             if (ifServerGzipped && originContentLen) {
@@ -133,7 +158,7 @@ function fetchRemoteResponse(protocol, options, reqData, config) {
         });
       };
 
-      //deal response data
+      // deal response data
       res.on('data', (chunk) => {
         rawResChunks.push(chunk);
         if (resDataStream) { // stream mode
@@ -176,16 +201,16 @@ function fetchRemoteResponse(protocol, options, reqData, config) {
 /*
 * get error response for exception scenarios
 */
-function getErrorResponse(error, fullUrl) {
+function getErrorResponse(error: NodeJS.ErrnoException, fullUrl: string): ErrorResponse {
   // default error response
   const errorResponse = {
     statusCode: 500,
     header: {
       'Content-Type': 'text/html; charset=utf-8',
       'Proxy-Error': true,
-      'Proxy-Error-Message': error ? JSON.stringify(error) : 'null'
+      'Proxy-Error-Message': error ? JSON.stringify(error) : 'null',
     },
-    body: requestErrorHandler.getErrorContent(error, fullUrl)
+    body: requestErrorHandler.getErrorContent(error, fullUrl),
   };
 
   return errorResponse;
@@ -193,13 +218,16 @@ function getErrorResponse(error, fullUrl) {
 
 
 export default class UserReqHandler {
-  constructor(ctx, userRule, recorder) {
+  public userRule: AnyProxyRule;
+  public recorder: Recorder;
+  private reqHandlerCtx: any;
+  constructor(ctx: any, userRule: AnyProxyRule, recorder: Recorder) {
     this.userRule = userRule;
     this.recorder = recorder;
     this.reqHandlerCtx = ctx;
   }
 
-  handler(req, userRes) {
+  public handler(req: http.IncomingMessage, userRes: http.ServerResponse): void {
     /*
     note
       req.url is wired
@@ -208,7 +236,7 @@ export default class UserReqHandler {
     */
     const self = this;
     const host = req.headers.host;
-    const protocol = (!!req.connection.encrypted && !(/^http:/).test(req.url)) ? 'https' : 'http';
+    const protocol = (!!(req.connection as any).encrypted && !(/^http:/).test(req.url)) ? 'https' : 'http';
     const fullUrl = protocol === 'http' ? req.url : (protocol + '://' + host + req.url);
 
     const urlPattern = url.parse(fullUrl);
@@ -246,10 +274,10 @@ export default class UserReqHandler {
     const prepareRequestDetail = () => {
       const options = {
         hostname: urlPattern.hostname || req.headers.host,
-        port: urlPattern.port || req.port || (/https/.test(protocol) ? 443 : 80),
+        port: urlPattern.port || (req as any).port || (/https/.test(protocol) ? 443 : 80),
         path,
         method: req.method,
-        headers: req.headers
+        headers: req.headers,
       };
 
       requestDetail = {
@@ -257,7 +285,7 @@ export default class UserReqHandler {
         protocol,
         url: fullUrl,
         requestData: reqData,
-        _req: req
+        _req: req,
       };
 
       return Promise.resolve();
@@ -294,7 +322,7 @@ export default class UserReqHandler {
       if (!responseInfo) {
         throw new Error('failed to get response info');
       } else if (!responseInfo.statusCode) {
-        throw new Error('failed to get response status code')
+        throw new Error('failed to get response status code');
       } else if (!responseInfo.header) {
         throw new Error('filed to get response header');
       }
@@ -326,7 +354,7 @@ export default class UserReqHandler {
       }
 
       return responseInfo;
-    }
+    };
 
     // fetch complete request data
     co(fetchReqData)
@@ -342,29 +370,29 @@ export default class UserReqHandler {
             protocol,
             url: protocol + '://' + host + path,
             req,
-            startTime: new Date().getTime()
+            startTime: new Date().getTime(),
           };
           resourceInfoId = self.recorder.appendRecord(resourceInfo);
         }
 
         try {
-          resourceInfo.reqBody = reqData.toString(); //TODO: deal reqBody in webInterface.js
+          resourceInfo.reqBody = reqData.toString(); // TODO: deal reqBody in webInterface.js
           self.recorder && self.recorder.updateRecord(resourceInfoId, resourceInfo);
-        } catch (e) { }
+        } catch (e) { console.error(e); }
       })
 
       // invoke rule before sending request
-      .then(co.wrap(function *() {
+      .then(co.wrap(function*(): Generator {
         const userModifiedInfo = (yield self.userRule.beforeSendRequest(Object.assign({}, requestDetail))) || {};
         const finalReqDetail = {};
         ['protocol', 'requestOptions', 'requestData', 'response'].map((key) => {
-          finalReqDetail[key] = userModifiedInfo[key] || requestDetail[key]
+          finalReqDetail[key] = userModifiedInfo[key] || requestDetail[key];
         });
         return finalReqDetail;
       }))
 
       // route user config
-      .then(co.wrap(function *(userConfig) {
+      .then(co.wrap(function *(userConfig: AnyProxyRequestDetail): Generator {
         if (userConfig.response) {
           // user-assigned local response
           userConfig._directlyPassToRespond = true;
@@ -379,7 +407,7 @@ export default class UserReqHandler {
               statusCode: remoteResponse.statusCode,
               header: remoteResponse.header,
               body: remoteResponse.body,
-              rawBody: remoteResponse.rawBody
+              rawBody: remoteResponse.rawBody,
             },
             _res: remoteResponse._res,
           };
@@ -389,18 +417,19 @@ export default class UserReqHandler {
       }))
 
       // invoke rule before responding to client
-      .then(co.wrap(function *(responseData) {
+      .then(co.wrap(function*(responseData: AnyProxyReponseDetail): Generator {
         if (responseData._directlyPassToRespond) {
           return responseData;
         } else if (responseData.response.body && responseData.response.body instanceof CommonReadableStream) { // in stream mode
           return responseData;
         } else {
           // TODO: err etimeout
-          return (yield self.userRule.beforeSendResponse(Object.assign({}, requestDetail), Object.assign({}, responseData))) || responseData;
+          return (yield self.userRule.beforeSendResponse(
+            Object.assign({}, requestDetail), Object.assign({}, responseData))) || responseData;
         }
       }))
 
-      .catch(co.wrap(function *(error) {
+      .catch(co.wrap(function *(error: NodeJS.ErrnoException): Generator {
         logUtil.printLog(util.collectErrorLog(error), logUtil.T_ERR);
 
         let errorResponse = getErrorResponse(error, fullUrl);
@@ -411,18 +440,18 @@ export default class UserReqHandler {
           if (userResponse && userResponse.response && userResponse.response.header) {
             errorResponse = userResponse.response;
           }
-        } catch (e) { }
+        } catch (e) { console.error(e); }
 
         return {
-          response: errorResponse
+          response: errorResponse,
         };
       }))
       .then(sendFinalResponse)
 
-      //update record info
+      // update record info
       .then((responseInfo) => {
         resourceInfo.endTime = new Date().getTime();
-        resourceInfo.res = { //construct a self-defined res object
+        resourceInfo.res = { // construct a self-defined res object
           statusCode: responseInfo.statusCode,
           headers: responseInfo.header,
         };

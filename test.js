@@ -1,7 +1,7 @@
 const Jasmine = require('jasmine');
 
 const jasmine = new Jasmine();
-const util = require('./lib/util');
+const util = require('./lib/util').default;
 const path = require('path');
 
 const testTmpPath = path.join(__dirname, './test/temp');

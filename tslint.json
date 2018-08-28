@@ -1,0 +1,48 @@
+{
+  "extends": "tslint:recommended",
+  "rulesDirectory": [
+  ],
+  "tslint.options": {
+    "project": "tsconfig.json",
+    "typeCheck": true
+  },
+  "rules": {
+    "jsdoc-format": false,
+    "object-literal-sort-keys": false,
+    "quotemark": [true, "single"],
+    "ordered-imports": false,
+    "only-arrow-functions": false,
+    "no-reference": false,
+    "typedef": [
+      true,
+      "call-signature",
+      "parameter",
+      "member-variable-declaration"
+    ],
+    "max-line-length": {
+      "options": [
+        140
+      ]
+    },
+    "new-parens": true,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": false,
+    "no-unused-expression": [
+      true,
+      "allow-fast-null-checks"
+    ],
+    "no-console": {
+      "severity": "warning",
+      "options": [
+        "debug",
+        "info",
+        "log",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    }
+  }
+}

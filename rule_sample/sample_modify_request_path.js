@@ -9,13 +9,18 @@
 module.exports = {
   *beforeSendRequest(requestDetail) {
     if (requestDetail.url.indexOf('https://httpbin.org/user-agent') === 0) {
+      console.info(requestDetail._req.connection._peername);
       const newRequestOptions = requestDetail.requestOptions;
-      requestDetail.protocol = 'http';
+      requestDetail.protocol = 'https';
       newRequestOptions.hostname = '127.0.0.1'
-      newRequestOptions.port = '8008';
-      newRequestOptions.path = '/index.html';
+      newRequestOptions.port = '3001';
+      newRequestOptions.path = '/test';
       newRequestOptions.method = 'GET';
       return requestDetail;
+    }
+
+    if (requestDetail.url.indexOf('http://mobilegw.stable.alipay.net/mgw.htm') === 0) {
+      console.info(requestDetail.requestData.toString())
     }
   },
   *beforeDealHttpsRequest(requestDetail) {
