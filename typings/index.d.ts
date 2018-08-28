@@ -38,11 +38,14 @@ declare namespace AnyProxyRecorder {
     statusCode?: number,
     resHeader?: ResponseHeader,
     host?: string,
+    protocol?: string,
     method?: string,
     path?: string,
     url?: string,
     startTime?: number,
     endTime?: number,
+    req?: any,
+    reqBody?: string,
     res?: {
       statusCode: number,
       headers: ResponseHeader
