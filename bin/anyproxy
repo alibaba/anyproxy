@@ -9,7 +9,7 @@ const program = require('commander'),
   util = require('../dist/util').default,
   rootCACheck = require('./rootCaCheck'),
   startServer = require('./startServer'),
-  certMgr = require('../dist/certMgr'),
+  certMgr = require('../dist/certMgr').default,
   logUtil = require('../dist/log');
 
 program

@@ -1,12 +1,20 @@
-'use strict'
+'use strict';
 
-const EasyCert = require('node-easy-cert');
-const co = require('co');
-const os = require('os');
-const inquirer = require('inquirer');
+import * as EasyCert from 'node-easy-cert';
+import * as co from 'co';
+import * as os from 'os';
+import * as inquirer from 'inquirer';
+import util from './util';
+import logUtil from './log';
 
-const util = require('./util').default;
-const logUtil = require('./log');
+declare interface ICertMgr {
+  ifRootCAFileExists?: boolean;
+  generateRootCA?: ( cb: (error: boolean, keyPath: string, crtPath: string) => void ) => void;
+  getCAStatus?: () => Generator;
+  trustRootCA?: () => Generator;
+  getRootCAFilePath?: () => string;
+  getCertificate?: (serverName: string, cb: (err: Error, key: string, crt: string) => void) => void;
+}
 
 const options = {
   rootDirPath: util.getAnyProxyPath('certificates'),
@@ -15,24 +23,24 @@ const options = {
     { name: 'countryName', value: 'CN' },
     { name: 'organizationName', value: 'AnyProxy' },
     { shortName: 'ST', value: 'SH' },
-    { shortName: 'OU', value: 'AnyProxy SSL Proxy' }
-  ]
+    { shortName: 'OU', value: 'AnyProxy SSL Proxy' },
+  ],
 };
 
 const easyCert = new EasyCert(options);
-const crtMgr = util.merge({}, easyCert);
+const crtMgr: ICertMgr = util.merge({}, easyCert);
 
 // rename function
 crtMgr.ifRootCAFileExists = easyCert.isRootCAFileExists;
 
-crtMgr.generateRootCA = function (cb) {
+crtMgr.generateRootCA = function(cb: (error: boolean, keyPath: string, crtPath: string) => void): void {
   doGenerate(false);
 
   // set default common name of the cert
-  function doGenerate(overwrite) {
+  function doGenerate(overwrite: boolean): void {
     const rootOptions = {
       commonName: 'AnyProxy',
-      overwrite: !!overwrite
+      overwrite: !!overwrite,
     };
 
     easyCert.generateRootCA(rootOptions, (error, keyPath, crtPath) => {
@@ -41,10 +49,11 @@ crtMgr.generateRootCA = function (cb) {
   }
 };
 
-crtMgr.getCAStatus = function *() {
-  return co(function *() {
+crtMgr.getCAStatus = function *(): Generator {
+  return co(function *(): Generator {
     const result = {
       exist: false,
+      trusted: undefined,
     };
     const ifExist = easyCert.isRootCAFileExists();
     if (!ifExist) {
@@ -57,12 +66,12 @@ crtMgr.getCAStatus = function *() {
       return result;
     }
   });
-}
+};
 
 /**
  * trust the root ca by command
  */
-crtMgr.trustRootCA = function *() {
+crtMgr.trustRootCA = function *(): Generator {
   const platform = os.platform();
   const rootCAPath = crtMgr.getRootCAFilePath();
   const trustInquiry = [
@@ -70,8 +79,8 @@ crtMgr.trustRootCA = function *() {
       type: 'list',
       name: 'trustCA',
       message: 'The rootCA is not trusted yet, install it to the trust store now?',
-      choices: ['Yes', "No, I'll do it myself"]
-    }
+      choices: ['Yes', 'No, I\'ll do it myself'],
+    },
   ];
 
   if (platform === 'darwin') {
@@ -79,7 +88,8 @@ crtMgr.trustRootCA = function *() {
     if (answer.trustCA === 'Yes') {
       logUtil.info('About to trust the root CA, this may requires your password');
       // https://ss64.com/osx/security-cert.html
-      const result = util.execScriptSync(`sudo security add-trusted-cert -d -k /Library/Keychains/System.keychain ${rootCAPath}`);
+      const result =
+        (util.execScriptSync(`sudo security add-trusted-cert -d -k /Library/Keychains/System.keychain ${rootCAPath}`) as IExecScriptResult);
       if (result.status === 0) {
         logUtil.info('Root CA install, you are ready to intercept the https now');
       } else {
@@ -98,6 +108,6 @@ crtMgr.trustRootCA = function *() {
     logUtil.info('You can install the root CA manually.');
   }
   logUtil.info('The root CA file path is: ' + crtMgr.getRootCAFilePath());
-}
+};
 
-module.exports = crtMgr;
+export default crtMgr;

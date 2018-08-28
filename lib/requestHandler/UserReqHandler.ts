@@ -1,6 +1,6 @@
 /// <reference path="../../typings/index.d.ts" />
 
-declare interface ErrorResponse {
+declare interface IErrorResponse {
   statusCode: number;
   header: OneLevelObjectType;
   body: string;
@@ -201,7 +201,7 @@ function fetchRemoteResponse(
 /*
 * get error response for exception scenarios
 */
-function getErrorResponse(error: NodeJS.ErrnoException, fullUrl: string): ErrorResponse {
+function getErrorResponse(error: NodeJS.ErrnoException, fullUrl: string): IErrorResponse {
   // default error response
   const errorResponse = {
     statusCode: 500,

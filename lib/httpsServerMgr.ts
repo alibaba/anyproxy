@@ -1,25 +1,46 @@
-'use strict'
+'use strict';
 
-//manage https servers
-const async = require('async'),
-  https = require('https'),
-  tls = require('tls'),
-  crypto = require('crypto'),
-  color = require('colorful'),
-  certMgr = require('./certMgr'),
-  logUtil = require('./log'),
-  util = require('./util').default,
-  wsServerMgr = require('./wsServerMgr'),
-  co = require('co'),
-  constants = require('constants'),
-  asyncTask = require('async-task-mgr');
+import * as async from 'async';
+import * as https from 'https';
+import * as http from 'http';
+import * as tls from 'tls';
+import * as crypto from 'crypto';
+import * as color from 'colorful';
+import * as WebSocket from 'ws';
+import * as constants from 'constants';
+import * as AsyncTask from 'async-task-mgr';
+import Recorder from './recorder';
+import certMgr from './certMgr';
+import logUtil from './log';
+import util from './util';
+import * as wsServerMgr from './wsServerMgr';
+import * as co from 'co';
 
-const createSecureContext = tls.createSecureContext || crypto.createSecureContext;
-//using sni to avoid multiple ports
-function SNIPrepareCert(serverName, SNICallback) {
-  let keyContent,
-    crtContent,
-    ctx;
+// // manage https servers
+// const async = require('async'),
+//   https = require('https'),
+//   tls = require('tls'),
+//   crypto = require('crypto'),
+//   color = require('colorful'),
+//   certMgr = require('./certMgr'),
+//   logUtil = require('./log'),
+//   util = require('./util').default,
+//   wsServerMgr = require('./wsServerMgr'),
+//   co = require('co'),
+//   constants = require('constants'),
+//   asyncTask = require('async-task-mgr');
+
+declare type THttpsRequestHanlder = (req: http.IncomingMessage, userRes: http.ServerResponse) => void;
+declare type TWsRequestHandler =
+  (userRule: AnyProxyRule, recorder: Recorder, wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
+
+const createSecureContext = tls.createSecureContext || (crypto as any).createSecureContext;
+// using sni to avoid multiple ports
+function SNIPrepareCert(
+  serverName: string, SNICallback: (error: Error, ctx: tls.SecureContext) => void): void {
+  let keyContent;
+  let crtContent;
+  let ctx;
 
   async.series([
     (callback) => {
@@ -37,13 +58,13 @@ function SNIPrepareCert(serverName, SNICallback) {
       try {
         ctx = createSecureContext({
           key: keyContent,
-          cert: crtContent
+          cert: crtContent,
         });
         callback();
       } catch (e) {
         callback(e);
       }
-    }
+    },
   ], (err) => {
     if (!err) {
       const tipText = 'proxy server for __NAME established'.replace('__NAME', serverName);
@@ -56,18 +77,17 @@ function SNIPrepareCert(serverName, SNICallback) {
   });
 }
 
-//config.port - port to start https server
-//config.handler - request handler
-
-
 /**
  * Create an https server
  *
  * @param {object} config
- * @param {number} config.port
- * @param {function} config.handler
+ * @param {number} config.port port to start https server
+ * @param {function} config.handler  request handler
  */
-function createHttpsServer(config) {
+function createHttpsServer(config: {
+  port: number;
+  handler: THttpsRequestHanlder;
+}): Promise<https.Server> {
   if (!config || !config.port || !config.handler) {
     throw (new Error('please assign a port'));
   }
@@ -78,7 +98,7 @@ function createHttpsServer(config) {
         secureOptions: constants.SSL_OP_NO_SSLv3 || constants.SSL_OP_NO_TLSv1,
         SNICallback: SNIPrepareCert,
         key: keyContent,
-        cert: crtContent
+        cert: crtContent,
       }, config.handler).listen(config.port);
       resolve(server);
     });
@@ -92,7 +112,11 @@ function createHttpsServer(config) {
 * @param @required {number} config.port the port to listen on
 * @param @required {function} handler the handler of each connect
 */
-function createIPHttpsServer(config) {
+function createIPHttpsServer(config: {
+  port: number;
+  ip: string;
+  handler: THttpsRequestHanlder;
+}): Promise<https.Server> {
   if (!config || !config.port || !config.handler) {
     throw (new Error('please assign a port'));
   }
@@ -106,7 +130,7 @@ function createIPHttpsServer(config) {
       const server = https.createServer({
         secureOptions: constants.SSL_OP_NO_SSLv3 || constants.SSL_OP_NO_TLSv1,
         key: keyContent,
-        cert: crtContent
+        cert: crtContent,
       }, config.handler).listen(config.port);
 
       resolve(server);
@@ -122,26 +146,39 @@ function createIPHttpsServer(config) {
  * @param {function} config.handler handler to deal https request
  *
  */
-class httpsServerMgr {
-  constructor(config) {
+class HttpsServerMgr {
+  private instanceDefaultHost: string;
+  private httpsAsyncTask: AsyncTask;
+  private handler: THttpsRequestHanlder;
+  private wsHandler: TWsRequestHandler;
+  constructor(config: {
+    handler: THttpsRequestHanlder;
+    wsHandler: TWsRequestHandler;
+  }) {
     if (!config || !config.handler) {
       throw new Error('handler is required');
     }
     this.instanceDefaultHost = '127.0.0.1';
-    this.httpsAsyncTask = new asyncTask();
+    this.httpsAsyncTask = new AsyncTask();
     this.handler = config.handler;
-    this.wsHandler = config.wsHandler
+    this.wsHandler = config.wsHandler;
   }
 
-  getSharedHttpsServer(hostname) {
+  public getSharedHttpsServer(hostname: string): Promise<{
+      host: string;
+      port: number;
+    }> {
     // ip address will have a unique name
     const finalHost = util.isIpDomain(hostname) ? hostname : this.instanceDefaultHost;
 
     const self = this;
-    function prepareServer(callback) {
+    function prepareServer(callback: (e: Error, result?: {
+      host: string;
+      port: number;
+    }) => void): void {
       let instancePort;
       co(util.getFreePort)
-        .then(co.wrap(function *(port) {
+        .then(co.wrap(function *(port: number): Generator {
           instancePort = port;
           let httpsServer = null;
 
@@ -150,18 +187,18 @@ class httpsServerMgr {
             httpsServer = yield createIPHttpsServer({
               ip: hostname,
               port,
-              handler: self.handler
+              handler: self.handler,
             });
           } else {
             httpsServer = yield createHttpsServer({
               port,
-              handler: self.handler
+              handler: self.handler,
             });
           }
 
           wsServerMgr.getWsServer({
             server: httpsServer,
-            connHandler: self.wsHandler
+            connHandler: self.wsHandler,
           });
 
           httpsServer.on('upgrade', (req, cltSocket, head) => {
@@ -175,7 +212,7 @@ class httpsServerMgr {
           callback(null, result);
           return result;
         }))
-        .catch(e => {
+        .catch((e) => {
           callback(e);
         });
     }
@@ -194,4 +231,4 @@ class httpsServerMgr {
   }
 }
 
-export default httpsServerMgr;
+export default HttpsServerMgr;

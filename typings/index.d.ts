@@ -79,3 +79,7 @@ declare interface AnyProxyReponseDetail {
 declare interface OneLevelObjectType {
   [key: string]: string | boolean | number
 }
+
+declare interface IExecScriptResult {
+  status: number;
+}
