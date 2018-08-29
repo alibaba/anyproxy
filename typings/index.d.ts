@@ -85,4 +85,5 @@ declare interface OneLevelObjectType {
 
 declare interface IExecScriptResult {
   status: number;
+  stdout?: string;
 }

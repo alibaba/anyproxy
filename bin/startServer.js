@@ -3,7 +3,7 @@
 */
 
 const ruleLoader = require('../dist/ruleLoader');
-const logUtil = require('../dist/log');
+const logUtil = require('../dist/log').default;
 const AnyProxy = require('../dist/proxy');
 
 module.exports = function startServer(program) {

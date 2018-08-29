@@ -1,9 +1,9 @@
 'use strict';
 
-const proxyUtil = require('./util').default;
-const path = require('path');
-const fs = require('fs');
-const request = require('request');
+import proxyUtil from './util';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as request from 'request';
 
 const cachePath = proxyUtil.getAnyProxyPath('cache');
 
@@ -13,7 +13,7 @@ const cachePath = proxyUtil.getAnyProxyPath('cache');
  * @param {any} url
  * @returns {string} cachePath
  */
-function cacheRemoteFile(url) {
+function cacheRemoteFile(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
     request(url, (error, response, body) => {
       if (error) {
@@ -39,7 +39,7 @@ function cacheRemoteFile(url) {
  * @param {any} filePath
  * @returns module
  */
-function loadLocalPath(filePath) {
+function loadLocalPath(filePath: string): Promise<NodeJS.Module> {
   return new Promise((resolve, reject) => {
     const ruleFilePath = path.resolve(process.cwd(), filePath);
     if (fs.existsSync(ruleFilePath)) {
@@ -57,14 +57,14 @@ function loadLocalPath(filePath) {
  * @param {any} urlOrPath
  * @returns module
  */
-function requireModule(urlOrPath) {
+function requireModule(urlOrPath: string): Promise<NodeJS.Module> {
   return new Promise((resolve, reject) => {
     if (/^http/i.test(urlOrPath)) {
       resolve(cacheRemoteFile(urlOrPath));
     } else {
       resolve(urlOrPath);
     }
-  }).then(localPath => loadLocalPath(localPath));
+  }).then((localPath: string) => loadLocalPath(localPath));
 }
 
 module.exports = {

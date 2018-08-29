@@ -2,8 +2,9 @@
 * manage the websocket server
 *
 */
-const ws = require('ws');
-const logUtil = require('./log.js');
+import * as ws from 'ws';
+import * as http from 'http';
+import logUtil from './log.js';
 
 const WsServer = ws.Server;
 
@@ -13,9 +14,12 @@ const WsServer = ws.Server;
                    {string} config.server
                    {handler} config.handler
 */
-function getWsServer(config) {
+function getWsServer(config: {
+  server: http.Server;
+  connHandler: (wsClient: ws, wsReq: http.IncomingMessage) => void;
+}): ws.Server {
   const wss = new WsServer({
-    server: config.server
+    server: config.server,
   });
 
   wss.on('connection', config.connHandler);
@@ -24,16 +28,19 @@ function getWsServer(config) {
     headers.push('x-anyproxy-websocket:true');
   });
 
-  wss.on('error', e => {
+  wss.on('error', (e) => {
     logUtil.error(`error in websocket proxy: ${e.message},\r\n ${e.stack}`);
-    console.error('error happened in proxy websocket:', e)
+    console.error('error happened in proxy websocket:', e);
   });
 
-  wss.on('close', e => {
+  wss.on('close', (e) => {
     console.error('==> closing the ws server');
   });
 
   return wss;
 }
 
-module.exports.getWsServer = getWsServer;
+export default {
+  getWsServer,
+};
+

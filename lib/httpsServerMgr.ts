@@ -9,11 +9,10 @@ import * as color from 'colorful';
 import * as WebSocket from 'ws';
 import * as constants from 'constants';
 import * as AsyncTask from 'async-task-mgr';
-import Recorder from './recorder';
 import certMgr from './certMgr';
 import logUtil from './log';
 import util from './util';
-import * as wsServerMgr from './wsServerMgr';
+import wsServerMgr from './wsServerMgr';
 import * as co from 'co';
 
 // // manage https servers
@@ -31,8 +30,7 @@ import * as co from 'co';
 //   asyncTask = require('async-task-mgr');
 
 declare type THttpsRequestHanlder = (req: http.IncomingMessage, userRes: http.ServerResponse) => void;
-declare type TWsRequestHandler =
-  (userRule: AnyProxyRule, recorder: Recorder, wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
+declare type TWsRequestHandler = (wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
 
 const createSecureContext = tls.createSecureContext || (crypto as any).createSecureContext;
 // using sni to avoid multiple ports

@@ -1,5 +1,5 @@
 'use strict';
-
+/*tslint:disable:no-console */
 import * as color from 'colorful';
 import util from './util';
 
@@ -12,7 +12,7 @@ enum LogLevelMap {
   rule_error = 2,
   warn = 3,
   debug = 4,
-};
+}
 
 function setPrintStatus(status: boolean): void {
   ifPrint = !!status;
@@ -22,7 +22,7 @@ function setLogLevel(level: string): void {
   logLevel = parseInt(level, 10);
 }
 
-function printLog(content: string, type?: LogLevelMap) {
+function printLog(content: string, type?: LogLevelMap): void {
   if (!ifPrint) {
     return;
   }
@@ -75,35 +75,34 @@ function printLog(content: string, type?: LogLevelMap) {
   }
 }
 
-module.exports.printLog = printLog;
-
-function debug (content): void {
+function debug(content: string): void {
   printLog(content, LogLevelMap.debug);
-};
+}
 
-function info (content): void {
+function info(content: string): void {
   printLog(content, LogLevelMap.tip);
-};
+}
 
-function warn (content) {
+function warn(content: string): void {
   printLog(content, LogLevelMap.warn);
-};
+}
 
-function error (content) {
+function error(content: string): void {
   printLog(content, LogLevelMap.system_error);
-};
+}
 
-function ruleError (content) {
+function ruleError(content: string): void {
   printLog(content, LogLevelMap.rule_error);
-};
+}
 
-module.exports.setPrintStatus = setPrintStatus;
-module.exports.setLogLevel = setLogLevel;
-module.exports.T_TIP = LogLevelMap.tip;
-module.exports.T_ERR = LogLevelMap.system_error;
-module.exports.T_RULE_ERROR = LogLevelMap.rule_error;
-module.exports.T_WARN = LogLevelMap.warn;
-module.exports.T_DEBUG = LogLevelMap.debug;
+// module.exports.setPrintStatus = setPrintStatus;
+// module.exports.setLogLevel = setLogLevel;
+// module.exports.T_TIP = LogLevelMap.tip;
+// module.exports.T_ERR = LogLevelMap.system_error;
+// module.exports.T_RULE_ERROR = LogLevelMap.rule_error;
+// module.exports.T_WARN = LogLevelMap.warn;
+// module.exports.T_DEBUG = LogLevelMap.debug;
+// module.exports.printLog = printLog;
 
 const LogUtil = {
   setPrintStatus,
@@ -121,5 +120,4 @@ const LogUtil = {
   T_DEBUG: LogLevelMap.debug,
 };
 
-exports.LogUtil = LogUtil;
 export default LogUtil;

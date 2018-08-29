@@ -13,6 +13,7 @@
     "ordered-imports": false,
     "only-arrow-functions": false,
     "no-reference": false,
+    "forin": false,
     "typedef": [
       true,
       "call-signature",

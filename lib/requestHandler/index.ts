@@ -414,7 +414,7 @@ class RequestHandler {
   public wsIntercept: boolean;
   public connectReqHandler: () => void;
   private userRequestHandler: () => void;
-  private wsHandler: () => void;
+  private wsHandler: (wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
   private httpsServerMgr: HttpsServerMgr;
   /**
    * Creates an instance of RequestHandler.

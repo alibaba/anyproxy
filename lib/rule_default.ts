@@ -17,7 +17,7 @@ module.exports = {
    * @param {buffer} requestDetail.response.body
    * @returns
    */
-  *beforeSendRequest(requestDetail) {
+  *beforeSendRequest(requestDetail: AnyProxyRequestDetail): Generator {
     return null;
   },
 
@@ -28,7 +28,7 @@ module.exports = {
    * @param {object} requestDetail
    * @param {object} responseDetail
    */
-  *beforeSendResponse(requestDetail, responseDetail) {
+  *beforeSendResponse(requestDetail: AnyProxyRequestDetail, responseDetail: AnyProxyReponseDetail): Generator {
     return null;
   },
 
@@ -40,7 +40,7 @@ module.exports = {
    * @param {any} requestDetail
    * @returns
    */
-  *beforeDealHttpsRequest(requestDetail) {
+  *beforeDealHttpsRequest(requestDetail: AnyProxyRequestDetail): Generator {
     return null;
   },
 
@@ -51,7 +51,7 @@ module.exports = {
    * @param {any} error
    * @returns
    */
-  *onError(requestDetail, error) {
+  *onError(requestDetail: AnyProxyRequestDetail, error: NodeJS.ErrnoException): Generator {
     return null;
   },
 
@@ -63,7 +63,7 @@ module.exports = {
    * @param {any} error
    * @returns
    */
-  *onConnectError(requestDetail, error) {
+  *onConnectError(requestDetail: AnyProxyRequestDetail, error: NodeJS.ErrnoException): Generator {
     return null;
   },
 };

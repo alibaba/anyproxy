@@ -15,12 +15,13 @@ import * as color from 'colorful';
 import { Buffer } from 'buffer';
 import { execSync } from 'child_process';
 import logUtil from './log';
+import * as os from 'os';
+import { IncomingHttpHeaders } from 'http';
 
-
-const networkInterfaces = require('os').networkInterfaces();
+const networkInterfaces = os.networkInterfaces();
 
 // {"Content-Encoding":"gzip"} --> {"content-encoding":"gzip"}
-function lower_keys (obj: object): object {
+function lower_keys(obj: object): object {
   for (const key in obj) {
     const val = obj[key];
     delete obj[key];
@@ -29,15 +30,15 @@ function lower_keys (obj: object): object {
   }
 
   return obj;
-};
+}
 
-function merge (baseObj: object, extendObj: object): object {
+function merge(baseObj: object, extendObj: object): object {
   for (const key in extendObj) {
     baseObj[key] = extendObj[key];
   }
 
   return baseObj;
-};
+}
 
 function getUserHome(): string {
   return process.env.HOME || process.env.USERPROFILE;
@@ -51,7 +52,7 @@ function getAnyProxyHome(): string {
   return home;
 }
 
-function getAnyProxyPath (pathName): string {
+function getAnyProxyPath(pathName: string): string {
   const home = getAnyProxyHome();
   const targetPath = path.join(home, pathName);
   if (!fs.existsSync(targetPath)) {
@@ -63,41 +64,41 @@ function getAnyProxyPath (pathName): string {
 /**
  * 简易字符串render替换
  */
-function simpleRender (str: string, object: object, regexp: RegExp) {
+function simpleRender(str: string, object: object, regexp: RegExp): string {
   return String(str).replace(regexp || (/\{\{([^{}]+)\}\}/g), (match, name) => {
     if (match.charAt(0) === '\\') {
       return match.slice(1);
     }
     return (object[name] != null) ? object[name] : '';
   });
-};
+}
 
 /**
  * 读取指定目录下的子目录
  */
-function filewalker (root: string, cb: Function) {
+function filewalker(root: string, cb: (err: Error, result: any) => void): void {
   root = root || process.cwd();
 
   const ret = {
     directory: [],
-    file: []
+    file: [],
   };
 
   fs.readdir(root, (err, list) => {
     if (list && list.length) {
       list.map((item) => {
-        const fullPath = path.join(root, item),
-          stat = fs.lstatSync(fullPath);
+        const fullPath = path.join(root, item);
+        const stat = fs.lstatSync(fullPath);
 
         if (stat.isFile()) {
           ret.file.push({
             name: item,
-            fullPath
+            fullPath,
           });
         } else if (stat.isDirectory()) {
           ret.directory.push({
             name: item,
-            fullPath
+            fullPath,
           });
         }
       });
@@ -105,20 +106,20 @@ function filewalker (root: string, cb: Function) {
 
     cb && cb.apply(null, [null, ret]);
   });
-};
+}
 
 /*
 * 获取文件所对应的content-type以及content-length等信息
 * 比如在useLocalResponse的时候会使用到
 */
-function contentType (filepath: string): string {
+function contentType(filepath: string): string {
   return mime.contentType(path.extname(filepath)) || '';
-};
+}
 
 /*
 * 读取file的大小，以byte为单位
 */
-function contentLength (filepath: string): number {
+function contentLength(filepath: string): number {
   try {
     const stat = fs.statSync(filepath);
     return stat.size;
@@ -127,30 +128,30 @@ function contentLength (filepath: string): number {
     logUtil.printLog(color.red(e));
     return 0;
   }
-};
+}
 
 /*
 * remove the cache before requiring, the path SHOULD BE RELATIVE TO UTIL.JS
 */
-function freshRequire (modulePath: string): NodeModule {
+function freshRequire(modulePath: string): NodeModule {
   delete require.cache[require.resolve(modulePath)];
   return require(modulePath);
-};
+}
 
 /*
 * format the date string
 * @param date Date or timestamp
 * @param formatter YYYYMMDDHHmmss
 */
-function formatDate (date: Date | number, formatter: string): string {
-  let finalDate : Date;
+function formatDate(date: Date | number, formatter: string): string {
+  let finalDate: Date;
   if (typeof date !== 'object') {
     finalDate = new Date(date);
   } else {
     finalDate = date;
   }
-  const transform = function (value) {
-    return value < 10 ? '0' + value : value;
+  const transform = function(value: number): string {
+    return value < 10 ? '0' + value : '' + value;
   };
   return formatter.replace(/^YYYY|MM|DD|hh|mm|ss/g, (match) => {
     switch (match) {
@@ -167,11 +168,10 @@ function formatDate (date: Date | number, formatter: string): string {
       case 'ss':
         return transform(finalDate.getSeconds());
       default:
-        return ''
+        return '';
     }
   });
-};
-
+}
 
 /**
 * get headers(Object) from rawHeaders(Array)
@@ -179,9 +179,9 @@ function formatDate (date: Date | number, formatter: string): string {
 
 */
 
-function getHeaderFromRawHeaders (rawHeaders: Array<string>) {
+function getHeaderFromRawHeaders(rawHeaders: string[]): IncomingHttpHeaders {
   const headerObj = {};
-  const _handleSetCookieHeader = function (key, value) {
+  const handleSetCookieHeader = function(key: string, value: string): void {
     if (headerObj[key].constructor === Array) {
       headerObj[key].push(value);
     } else {
@@ -204,7 +204,7 @@ function getHeaderFromRawHeaders (rawHeaders: Array<string>) {
         // headers with same fields could be combined with comma. Ref: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
         // set-cookie should NOT be combined. Ref: https://tools.ietf.org/html/rfc6265
         if (key.toLowerCase() === 'set-cookie') {
-          _handleSetCookieHeader(key, value);
+          handleSetCookieHeader(key, value);
         } else {
           headerObj[key] = headerObj[key] + ',' + value;
         }
@@ -212,9 +212,9 @@ function getHeaderFromRawHeaders (rawHeaders: Array<string>) {
     }
   }
   return headerObj;
-};
+}
 
-function getAllIpAddress (): Array<string> {
+function getAllIpAddress(): string[] {
   const allIp = [];
 
   Object.keys(networkInterfaces).map((nic) => {
@@ -226,7 +226,7 @@ function getAllIpAddress (): Array<string> {
   });
 
   return allIp.length ? allIp : ['127.0.0.1'];
-};
+}
 
 function deleteFolderContentsRecursive(dirPath: string, ifClearFolderItself: boolean): void {
   if (!dirPath.trim() || dirPath === '/') {
@@ -254,7 +254,9 @@ function deleteFolderContentsRecursive(dirPath: string, ifClearFolderItself: boo
           } catch (er) {
             if (process.platform === 'win32' && (er.code === 'ENOTEMPTY' || er.code === 'EBUSY' || er.code === 'EPERM')) {
               // Retry on windows, sometimes it takes a little time before all the files in the directory are gone
-              if (Date.now() - start > 1000) throw er;
+              if (Date.now() - start > 1000) {
+                throw er;
+              }
             } else if (er.code === 'ENOENT') {
               break;
             } else {
@@ -269,7 +271,7 @@ function deleteFolderContentsRecursive(dirPath: string, ifClearFolderItself: boo
   }
 }
 
-function getFreePort (): Promise<number> {
+function getFreePort(): Promise<number> {
   return new Promise((resolve, reject) => {
     const server = require('net').createServer();
     server.unref();
@@ -283,7 +285,7 @@ function getFreePort (): Promise<number> {
   });
 }
 
-function collectErrorLog (error: any): string {
+function collectErrorLog(error: any): string {
   if (error && error.code && error.toString()) {
     return error.toString();
   } else {
@@ -291,40 +293,41 @@ function collectErrorLog (error: any): string {
     try {
       const errorString = error.toString();
       if (errorString.indexOf('You may only yield a function') >= 0) {
-        result = 'Function is not yieldable. Did you forget to provide a generator or promise in rule file ? \nFAQ http://anyproxy.io/4.x/#faq';
+        result = 'Function is not yieldable. Did you forget to provide a generator or promise in rule file ? '
+          + '\nFAQ http://anyproxy.io/4.x/#faq';
       }
-    } catch (e) {}
-    return result
+    } catch (e) { logUtil.error(e.stack); }
+    return result;
   }
 }
 
-function isFunc (source: object): boolean {
+function isFunc(source: object): boolean {
   return source && Object.prototype.toString.call(source) === '[object Function]';
-};
+}
 
 /**
 * @param {object} content
 * @returns the size of the content
 */
-function getByteSize (content: Buffer): number {
+function getByteSize(content: Buffer): number {
   return Buffer.byteLength(content);
-};
+}
 
 /*
 * identify whether the
 */
-function isIpDomain (domain: string): boolean {
+function isIpDomain(domain: string): boolean {
   if (!domain) {
     return false;
   }
   const ipReg = /^\d+?\.\d+?\.\d+?\.\d+?$/;
 
   return ipReg.test(domain);
-};
+}
 
-function execScriptSync (cmd: string): object {
-  let stdout,
-    status = 0;
+function execScriptSync(cmd: string): object {
+  let stdout;
+  let status = 0;
   try {
     stdout = execSync(cmd);
   } catch (err) {
@@ -334,14 +337,13 @@ function execScriptSync (cmd: string): object {
 
   return {
     stdout: stdout.toString(),
-    status
+    status,
   };
-};
+}
 
-function guideToHomePage (): void {
+function guideToHomePage(): void {
   logUtil.info('Refer to http://anyproxy.io for more detail');
-};
-
+}
 
 const Util = {
   lower_keys,

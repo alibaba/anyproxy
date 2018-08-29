@@ -1,20 +1,43 @@
 'use strict';
 
-//websocket server manager
+// websocket server manager
+import * as WebSocket from 'ws';
+import Recorder from './recorder';
+import logUtil from './log';
+import { Server } from 'http';
 
-const WebSocketServer = require('ws').Server;
-const logUtil = require('./log');
+declare interface IWsMessage {
+  type?: 'error' | 'body';
+  error?: string;
+  reqRef?: string;
+  content?: {
+    id: number;
+    body: string;
+    error?: string;
+  };
+}
 
-function resToMsg(msg, recorder, cb) {
-  let result = {},
-    jsonData;
+declare interface IWsServerConfig {
+  server: Server;
+}
+
+declare interface IMultiMessageQueue {
+  type: 'updateMultiple' | 'updateLatestWsMsg';
+  content: AnyProxyRecorder.WsResourceInfo[] | AnyProxyRecorder.WsResourceInfo;
+}
+
+const WebSocketServer = WebSocket.Server;
+
+function resToMsg(msg: string, recorder: Recorder, cb: (result: IWsMessage) => void): void {
+  let result: IWsMessage = {};
+  let jsonData;
 
   try {
     jsonData = JSON.parse(msg);
   } catch (e) {
     result = {
       type: 'error',
-      error: 'failed to parse your request : ' + e.toString()
+      error: 'failed to parse your request : ' + e.toString(),
     };
     cb && cb(result);
     return;
@@ -31,12 +54,12 @@ function resToMsg(msg, recorder, cb) {
         result.content = {
           id: null,
           body: null,
-          error: err.toString()
+          error: err.toString(),
         };
       } else {
         result.content = {
           id: jsonData.id,
-          body: data.toString()
+          body: data.toString(),
         };
       }
       cb && cb(result);
@@ -46,10 +69,13 @@ function resToMsg(msg, recorder, cb) {
   }
 }
 
-//config.server
+// config.server
 
-class wsServer {
-  constructor(config, recorder) {
+class WsServer {
+  private config: IWsServerConfig;
+  private recorder: Recorder;
+  private wss: WebSocket.Server;
+  constructor(config: IWsServerConfig, recorder: Recorder) {
     if (!recorder) {
       throw new Error('proxy recorder is required');
     } else if (!config || !config.server) {
@@ -61,18 +87,18 @@ class wsServer {
     self.recorder = recorder;
   }
 
-  start() {
+  public start(): Promise<any> {
     const self = this;
     const config = self.config;
     const recorder = self.recorder;
     return new Promise((resolve, reject) => {
-      //web socket interface
+      // web socket interface
       const wss = new WebSocketServer({
         server: config.server,
         clientTracking: true,
       });
       resolve();
-      
+
       // the queue of the messages to be delivered
       let messageQueue = [];
       // the flat to indicate wheter to broadcast the record
@@ -83,12 +109,12 @@ class wsServer {
         sendMultipleMessage();
       }, 50);
 
-      function sendMultipleMessage(data) {
+      function sendMultipleMessage(data?: AnyProxyRecorder.WsResourceInfo): void {
         // if the flag goes to be true, and there are records to send
         if (broadcastFlag && messageQueue.length > 0) {
-          wss && wss.broadcast({
+          wss && broadcast({
             type: 'updateMultiple',
-            content: messageQueue
+            content: messageQueue,
           });
           messageQueue = [];
           broadcastFlag = false;
@@ -97,7 +123,7 @@ class wsServer {
         }
       }
 
-      wss.broadcast = function (data) {
+      function broadcast(data?: IMultiMessageQueue | string): void {
         if (typeof data === 'object') {
           try {
             data = JSON.stringify(data);
@@ -105,17 +131,17 @@ class wsServer {
             console.error('==> errorr when do broadcast ', e, data);
           }
         }
-        for (const client of wss.clients) {
+        wss.clients.forEach(function(client: WebSocket): void {
           try {
             client.send(data);
           } catch (e) {
             logUtil.printLog('websocket failed to send data, ' + e, logUtil.T_ERR);
           }
-        }
-      };
+        });
+      }
 
       wss.on('connection', (ws) => {
-        ws.on('message', (msg) => {
+        ws.on('message', (msg: string) => {
           resToMsg(msg, recorder, (res) => {
             res && ws.send(JSON.stringify(res));
           });
@@ -130,28 +156,27 @@ class wsServer {
         logUtil.printLog('websocket error, ' + e, logUtil.T_ERR);
       });
 
-      wss.on('close', () => { });
+      wss.on('close', (err: Error) => { logUtil.error(err.stack); });
 
       recorder.on('update', (data) => {
         try {
           sendMultipleMessage(data);
         } catch (e) {
-          console.log('ws error');
-          console.log(e);
+          logUtil.error('ws error');
+          logUtil.error(e.stack);
         }
       });
 
       recorder.on('updateLatestWsMsg', (data) => {
         try {
           // console.info('==> update latestMsg ', data);
-          wss && wss.broadcast({
+          wss && broadcast({
             type: 'updateLatestWsMsg',
-            content: data
+            content: data,
           });
         } catch (e) {
           logUtil.error(e.message);
           logUtil.error(e.stack);
-          console.error(e);
         }
       });
 
@@ -159,7 +184,7 @@ class wsServer {
     });
   }
 
-  closeAll() {
+  public closeAll(): Promise<any> {
     const self = this;
     return new Promise((resolve, reject) => {
       self.wss.close((e) => {
@@ -173,4 +198,4 @@ class wsServer {
   }
 }
 
-module.exports = wsServer;
+module.exports = WsServer;

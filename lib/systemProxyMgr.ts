@@ -1,12 +1,21 @@
-'use strict'
+'use strict';
+/* tslint:disable:max-line-length */
+import * as child_process from 'child_process';
+import logUtil from './log';
 
-const child_process = require('child_process');
+declare interface IProxyManager {
+  networkType?: string;
+  getNetworkType?: () => string;
+  enableGlobalProxy?: (ip: string, port: string, proxyType: 'http' | 'https') => void;
+  disableGlobalProxy?: (proxyType: 'http' | 'https') => void;
+  getProxyState?: () => IExecScriptResult;
+}
 
 const networkTypes = ['Ethernet', 'Thunderbolt Ethernet', 'Wi-Fi'];
 
-function execSync(cmd) {
-  let stdout,
-    status = 0;
+function execSync(cmd: string): IExecScriptResult {
+  let stdout;
+  let status = 0;
   try {
     stdout = child_process.execSync(cmd);
   } catch (err) {
@@ -16,7 +25,7 @@ function execSync(cmd) {
 
   return {
     stdout: stdout.toString(),
-    status
+    status,
   };
 }
 
@@ -51,13 +60,12 @@ function execSync(cmd) {
  * ------------------------------------------------------------------------
  */
 
-const macProxyManager = {};
+const macProxyManager: IProxyManager = {
+};
 
-macProxyManager.getNetworkType = () => {
-  for (let i = 0; i < networkTypes.length; i++) {
-    const type = networkTypes[i],
-      result = execSync('networksetup -getwebproxy ' + type);
-
+macProxyManager.getNetworkType = function(): string {
+  for (const type of networkTypes) {
+    const result = execSync('networksetup -getwebproxy ' + type);
     if (result.status === 0) {
       macProxyManager.networkType = type;
       return type;
@@ -70,7 +78,7 @@ macProxyManager.getNetworkType = () => {
 
 macProxyManager.enableGlobalProxy = (ip, port, proxyType) => {
   if (!ip || !port) {
-    console.log('failed to set global proxy server.\n ip and port are required.');
+    logUtil.warn('failed to set global proxy server.\n ip and port are required.');
     return;
   }
 
@@ -125,11 +133,11 @@ macProxyManager.getProxyState = () => {
  * ------------------------------------------------------------------------
  */
 
-const winProxyManager = {};
+const winProxyManager: IProxyManager = {};
 
 winProxyManager.enableGlobalProxy = (ip, port) => {
   if (!ip && !port) {
-    console.log('failed to set global proxy server.\n ip and port are required.');
+    logUtil.warn('failed to set global proxy server.\n ip and port are required.');
     return;
   }
 
@@ -145,8 +153,12 @@ winProxyManager.enableGlobalProxy = (ip, port) => {
 
 winProxyManager.disableGlobalProxy = () => execSync('reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f');
 
-winProxyManager.getProxyState = () => ''
+winProxyManager.getProxyState = () => {
+  return {
+    status: -1,
+  };
+};
 
-winProxyManager.getNetworkType = () => ''
+winProxyManager.getNetworkType = () => '';
 
 module.exports = /^win/.test(process.platform) ? winProxyManager : macProxyManager;
