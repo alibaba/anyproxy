@@ -7,17 +7,27 @@ declare module NodeJS {
   }
 }
 
+declare interface AnyProxyWebInterfaceConfig {
+  webPort?: number;
+}
+
 declare interface AnyProxyConfig {
-  port: string; // 代理监听端口
-  httpServerPort: string; // web server 的端口
-  forceProxyHttps: boolean;
-  dangerouslyIgnoreUnauthorized: boolean; // 是否忽略https证书
-  wsIntercept: boolean; // 是否代理websocket
-  chunkSizeThreshold: number; // throttle的配置
+  port?: string; // port of the proxy server
+  httpServerPort?: string; // web server 的端口
+  type?: 'http' | 'https'; // type of the proxy server
+  forceProxyHttps?: boolean; // proxy https also
+  dangerouslyIgnoreUnauthorized?: boolean; // should ignore
+  wsIntercept?: boolean; // should proxy websocket
+  throttle?: string; // speed limit in kb/s
+  hostname?: string; // the hostname of this proxy, default to 'localhost'
+  recorder?: any; // A Recorder instance
+  silent?: boolean; // if keep the console silent
+  rule?: any; // rule module to use
+  webInterface?: AnyProxyWebInterfaceConfig;
 }
 
 declare interface AnyProxyRule {
-  summary?: string,
+  summary?: string | Function,
   beforeSendRequest?: Function,
   beforeSendResponse?: Function,
   beforeDealHttpsRequest?: Function,
@@ -86,4 +96,9 @@ declare interface OneLevelObjectType {
 declare interface IExecScriptResult {
   status: number;
   stdout?: string;
+}
+
+declare module "*.json" {
+  const value: any;
+  export default value;
 }

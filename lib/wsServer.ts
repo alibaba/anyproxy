@@ -1,10 +1,11 @@
 'use strict';
 
-// websocket server manager
+// websocket server manager, for the webinterface websocket handling
 import * as WebSocket from 'ws';
 import Recorder from './recorder';
 import logUtil from './log';
-import { Server } from 'http';
+import * as http from 'http';
+import * as https from 'https';
 
 declare interface IWsMessage {
   type?: 'error' | 'body';
@@ -18,7 +19,8 @@ declare interface IWsMessage {
 }
 
 declare interface IWsServerConfig {
-  server: Server;
+  server: http.Server | https.Server;
+  connHandler?: (wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
 }
 
 declare interface IMultiMessageQueue {
@@ -198,4 +200,4 @@ class WsServer {
   }
 }
 
-module.exports = WsServer;
+export default WsServer;

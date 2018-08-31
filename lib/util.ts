@@ -309,7 +309,7 @@ function isFunc(source: object): boolean {
 * @param {object} content
 * @returns the size of the content
 */
-function getByteSize(content: Buffer): number {
+function getByteSize(content: Buffer | string): number {
   return Buffer.byteLength(content);
 }
 

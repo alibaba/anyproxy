@@ -412,9 +412,11 @@ class RequestHandler {
   public dangerouslyIgnoreUnauthorized: boolean;
   public httpServerPort: string;
   public wsIntercept: boolean;
+  public conns: Map<string, net.Socket>;
+  public cltSockets: Map<string, net.Socket>;
   public connectReqHandler: () => void;
-  private userRequestHandler: () => void;
-  private wsHandler: (wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
+  public userRequestHandler: () => void;
+  public wsHandler: (wsClient: WebSocket, wsReq: http.IncomingMessage) => void;
   private httpsServerMgr: HttpsServerMgr;
   /**
    * Creates an instance of RequestHandler.

@@ -2,22 +2,44 @@
 
 const DEFAULT_WEB_PORT = 8002; // port for web interface
 
-const express = require('express'),
-  url = require('url'),
-  bodyParser = require('body-parser'),
-  fs = require('fs'),
-  path = require('path'),
-  events = require('events'),
-  qrCode = require('qrcode-npm'),
-  util = require('./util').default,
-  certMgr = require('./certMgr').default,
-  wsServer = require('./wsServer'),
-  juicer = require('juicer'),
-  ip = require('ip'),
-  compress = require('compression');
+import * as express from 'express';
+import * as url from 'url';
+import * as bodyParser from 'body-parser';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as events from 'events';
+import * as qrCode from 'qrcode-npm';
+import * as juicer from 'juicer';
+import * as ip from 'ip';
+import * as http from 'http';
+import * as compress from 'compression';
+import * as buffer from 'buffer';
+import util from './util';
+import certMgr from './certMgr';
+import WsServer from './wsServer';
+import Recorder from './recorder';
+import LogUtil from './log';
 
+/*tslint:disable:no-var-requires*/
 const packageJson = require('../package.json');
 
+// const express = require('express'),
+//   url = require('url'),
+//   bodyParser = require('body-parser'),
+//   fs = require('fs'),
+//   path = require('path'),
+//   events = require('events'),
+//   qrCode = require('qrcode-npm'),
+//   util = require('./util').default,
+//   certMgr = require('./certMgr').default,
+//   wsServer = require('./wsServer'),
+//   juicer = require('juicer'),
+//   ip = require('ip'),
+//   compress = require('compression');
+
+// const packageJson = require('../package.json');
+
+const Buffer = buffer.Buffer;
 const MAX_CONTENT_SIZE = 1024 * 2000; // 2000kb
 /**
  *
@@ -25,18 +47,13 @@ const MAX_CONTENT_SIZE = 1024 * 2000; // 2000kb
  * @class webInterface
  * @extends {events.EventEmitter}
  */
-class webInterface extends events.EventEmitter {
-
-  /**
-   * Creates an instance of webInterface.
-   *
-   * @param {object} config
-   * @param {number} config.webPort
-   * @param {object} recorder
-   *
-   * @memberOf webInterface
-   */
-  constructor(config, recorder) {
+class WebInterface extends events.EventEmitter {
+  public webPort: number;
+  private recorder: Recorder;
+  private app: Express.Application;
+  private server: http.Server;
+  private wsServer: WsServer;
+  constructor(config: AnyProxyWebInterfaceConfig, recorder: Recorder) {
     if (!recorder) {
       throw new Error('recorder is required for web interface');
     }
@@ -44,7 +61,7 @@ class webInterface extends events.EventEmitter {
     const self = this;
     self.webPort = config.webPort || DEFAULT_WEB_PORT;
     self.recorder = recorder;
-    self.config = config || {};
+    // self.config = config || {};
 
     self.app = this.getServer();
     self.server = null;
@@ -54,25 +71,25 @@ class webInterface extends events.EventEmitter {
   /**
    * get the express server
    */
-  getServer() {
+  public getServer(): Express.Application {
     const self = this;
     const recorder = self.recorder;
-    const ipAddress = ip.address(),
+    const ipAddress = ip.address();
       // userRule = proxyInstance.proxyRule,
-      webBasePath = 'web';
+    const webBasePath = 'web';
     let ruleSummary = '';
     let customMenu = [];
 
     try {
-      ruleSummary = ''; //userRule.summary();
-      customMenu = ''; // userRule._getCustomMenu();
-    } catch (e) { }
+      ruleSummary = ''; // userRule.summary();
+      customMenu = []; // userRule._getCustomMenu();
+    } catch (e) { LogUtil.error(e.stack); }
 
-    const myAbsAddress = 'http://' + ipAddress + ':' + self.webPort + '/',
-      staticDir = path.join(__dirname, '../', webBasePath);
+    const myAbsAddress = 'http://' + ipAddress + ':' + self.webPort + '/';
+    const staticDir = path.join(__dirname, '../', webBasePath);
 
     const app = express();
-    app.use(compress()); //invoke gzip
+    app.use(compress()); // invoke gzip
     app.use((req, res, next) => {
       res.setHeader('note', 'THIS IS A REQUEST FROM ANYPROXY WEB INTERFACE');
       return next();
@@ -97,7 +114,7 @@ class webInterface extends events.EventEmitter {
           res.json({});
         } else if (result.mime) {
           if (query.raw === 'true') {
-            //TODO : cache query result
+            // TODO : cache query result
             res.type(result.mime).end(result.content);
           } else if (query.download === 'true') {
             res.setHeader('Content-disposition', `attachment; filename=${result.fileName}`);
@@ -118,21 +135,21 @@ class webInterface extends events.EventEmitter {
       if (query && query.id) {
         recorder.getDecodedBody(parseInt(query.id, 10), (err, result) => {
           // 返回下载信息
-          const _resDownload = function (isDownload) {
+          const resDownload = function(isDownload: boolean): void {
             isDownload = typeof isDownload === 'boolean' ? isDownload : true;
             res.json({
               id: query.id,
               type: result.type,
-              method: result.meethod,
+              method: result.method,
               fileName: result.fileName,
-              ref: `/downloadBody?id=${query.id}&download=${isDownload}&raw=${!isDownload}`
+              ref: `/downloadBody?id=${query.id}&download=${isDownload}&raw=${!isDownload}`,
             });
           };
 
           // 返回内容
-          const _resContent = () => {
-            if (util.getByteSize(result.content || '') > MAX_CONTENT_SIZE) {
-              _resDownload(true);
+          const resContent = () => {
+            if (util.getByteSize(result.content || Buffer.from('')) > MAX_CONTENT_SIZE) {
+              resDownload(true);
               return;
             }
 
@@ -140,7 +157,7 @@ class webInterface extends events.EventEmitter {
               id: query.id,
               type: result.type,
               method: result.method,
-              resBody: result.content
+              resBody: result.content,
             });
           };
 
@@ -151,14 +168,14 @@ class webInterface extends events.EventEmitter {
               result.mime.indexOf('text') === 0 ||
               // deal with 'application/x-javascript' and 'application/javascript'
               result.mime.indexOf('javascript') > -1) {
-              _resContent();
+              resContent();
             } else if (result.type === 'image') {
-              _resDownload(false);
+              resDownload(false);
             } else {
-              _resDownload(true);
+              resDownload(true);
             }
           } else {
-            _resContent();
+            resContent();
           }
         });
       } else {
@@ -203,49 +220,51 @@ class webInterface extends events.EventEmitter {
 
     app.get('/fetchCrtFile', (req, res) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      const _crtFilePath = certMgr.getRootCAFilePath();
-      if (_crtFilePath) {
+      const crtFilePath = certMgr.getRootCAFilePath();
+      if (crtFilePath) {
         res.setHeader('Content-Type', 'application/x-x509-ca-cert');
         res.setHeader('Content-Disposition', 'attachment; filename="rootCA.crt"');
-        res.end(fs.readFileSync(_crtFilePath, { encoding: null }));
+        res.end(fs.readFileSync(crtFilePath, { encoding: null }));
       } else {
         res.setHeader('Content-Type', 'text/html');
         res.end('can not file rootCA ,plase use <strong>anyproxy --root</strong> to generate one');
       }
     });
 
-    //make qr code
+    // make qr code
     app.get('/qr', (req, res) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      const qr = qrCode.qrcode(4, 'M'),
-        targetUrl = myAbsAddress;
+      const qr = qrCode.qrcode(4, 'M');
+      const targetUrl = myAbsAddress;
       qr.addData(targetUrl);
       qr.make();
       const qrImageTag = qr.createImgTag(4);
-      const resDom = '<a href="__url"> __img <br> click or scan qr code to start client </a>'.replace(/__url/, targetUrl).replace(/__img/, qrImageTag);
+      const resDom = '<a href="__url"> __img <br> click or scan qr code to start client </a>'
+        .replace(/__url/, targetUrl).replace(/__img/, qrImageTag);
       res.setHeader('Content-Type', 'text/html');
       res.end(resDom);
     });
 
     app.get('/api/getQrCode', (req, res) => {
       res.setHeader('Access-Control-Allow-Origin', '*');
-      const qr = qrCode.qrcode(4, 'M'),
-        targetUrl = myAbsAddress + 'fetchCrtFile';
+      const qr = qrCode.qrcode(4, 'M');
+      const targetUrl = myAbsAddress + 'fetchCrtFile';
 
       qr.addData(targetUrl);
       qr.make();
       const qrImageTag = qr.createImgTag(4);
 
-      // resDom = '<a href="__url"> __img <br> click or scan qr code to download rootCA.crt </a>'.replace(/__url/,targetUrl).replace(/__img/,qrImageTag);
+      // resDom = '<a href="__url"> __img <br> click or scan qr code to download rootCA.crt </a>'
+      // .replace(/__url/,targetUrl).replace(/__img/,qrImageTag);
       // res.setHeader("Content-Type", "text/html");
       // res.end(resDom);
 
-      const isRootCAFileExists = certMgr.isRootCAFileExists();
+      const isRootCAFileExists = certMgr.ifRootCAFileExists();
       res.json({
         status: 'success',
         url: targetUrl,
         isRootCAFileExists,
-        qrImgDom: qrImageTag
+        qrImgDom: qrImageTag,
       });
     });
 
@@ -254,7 +273,7 @@ class webInterface extends events.EventEmitter {
       res.setHeader('Access-Control-Allow-Origin', '*');
       const rootCAExists = certMgr.isRootCAFileExists();
       const rootDirPath = certMgr.getRootDirPath();
-      const interceptFlag = false; //proxyInstance.getInterceptFlag(); TODO
+      const interceptFlag = false; // proxyInstance.getInterceptFlag(); TODO
       const globalProxyFlag = false; // TODO: proxyInstance.getGlobalProxyFlag();
       res.json({
         status: 'success',
@@ -264,8 +283,8 @@ class webInterface extends events.EventEmitter {
         currentGlobalProxyFlag: globalProxyFlag,
         ruleSummary: ruleSummary || '',
         ipAddress: util.getAllIpAddress(),
-        port: '', //proxyInstance.proxyPort, // TODO
-        appVersion: packageJson.version
+        port: '', // proxyInstance.proxyPort, // TODO
+        appVersion: packageJson.version,
       });
     });
 
@@ -276,23 +295,23 @@ class webInterface extends events.EventEmitter {
         certMgr.generateRootCA(() => {
           res.json({
             status: 'success',
-            code: 'done'
+            code: 'done',
           });
         });
       } else {
         res.json({
           status: 'success',
-          code: 'root_ca_exists'
+          code: 'root_ca_exists',
         });
       }
     });
 
     app.use((req, res, next) => {
-      const indexTpl = fs.readFileSync(path.join(staticDir, '/index.html'), { encoding: 'utf8' }),
-        opt = {
+      const indexTpl = fs.readFileSync(path.join(staticDir, '/index.html'), { encoding: 'utf8' });
+      const opt = {
           rule: ruleSummary || '',
           customMenu: customMenu || [],
-          ipAddress: ipAddress || '127.0.0.1'
+          ipAddress: ipAddress || '127.0.0.1',
         };
 
       if (url.parse(req.url).pathname === '/') {
@@ -306,25 +325,25 @@ class webInterface extends events.EventEmitter {
     return app;
   }
 
-  start() {
+  public start(): Promise<undefined> {
     const self = this;
     return new Promise((resolve, reject) => {
-      self.server = self.app.listen(self.webPort);
-      self.wsServer = new wsServer({
-        server: self.server
+      self.server = (self.app as any).listen(self.webPort);
+      self.wsServer = new WsServer({
+        server: self.server,
       }, self.recorder);
       self.wsServer.start();
       resolve();
-    })
+    });
   }
 
-  close() {
+  public close(cb: (error: Error) => void): void {
     this.server && this.server.close();
     this.wsServer && this.wsServer.closeAll();
     this.server = null;
     this.wsServer = null;
-    this.proxyInstance = null;
+    // this.proxyInstance = null;
   }
 }
 
-module.exports = webInterface;
+export default WebInterface;

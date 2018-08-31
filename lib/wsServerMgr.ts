@@ -1,9 +1,10 @@
 /**
-* manage the websocket server
+* manage the websocket server, for proxy target only
 *
 */
 import * as ws from 'ws';
 import * as http from 'http';
+import * as https from 'https';
 import logUtil from './log.js';
 
 const WsServer = ws.Server;
@@ -15,7 +16,7 @@ const WsServer = ws.Server;
                    {handler} config.handler
 */
 function getWsServer(config: {
-  server: http.Server;
+  server: http.Server | https.Server;
   connHandler: (wsClient: ws, wsReq: http.IncomingMessage) => void;
 }): ws.Server {
   const wss = new WsServer({

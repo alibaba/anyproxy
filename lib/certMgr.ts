@@ -8,11 +8,13 @@ import util from './util';
 import logUtil from './log';
 
 declare interface ICertMgr {
-  ifRootCAFileExists?: boolean;
   generateRootCA?: ( cb: (error: boolean, keyPath: string, crtPath: string) => void ) => void;
   getCAStatus?: () => Generator;
   trustRootCA?: () => Generator;
   getRootCAFilePath?: () => string;
+  ifRootCAFileExists?: () => boolean;
+  isRootCAFileExists?: () => boolean;
+  getRootDirPath?: () => string;
   getCertificate?: (serverName: string, cb: (err: Error, key: string, crt: string) => void) => void;
 }
 

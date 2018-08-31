@@ -40,6 +40,7 @@
     "ws": "^5.1.0"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
     "@types/node": "^8.10.21",
     "@types/ws": "^6.0.0",
     "antd": "^2.5.0",

@@ -1,41 +1,28 @@
 'use strict';
+/*tslint:disable:max-line-length */
 
-const http = require('http'),
-  https = require('https'),
-  async = require('async'),
-  color = require('colorful'),
-  certMgr = require('./certMgr').default,
-  Recorder = require('./recorder').default,
-  logUtil = require('./log').default,
-  util = require('./util').default,
-  events = require('events'),
-  co = require('co'),
-  WebInterface = require('./webInterface'),
-  wsServerMgr = require('./wsServerMgr').default,
-  ThrottleGroup = require('stream-throttle').ThrottleGroup;
+import * as http from 'http';
+import * as https from 'https';
+import * as async from 'async';
+import * as color from 'colorful';
+import * as events from 'events';
+import * as throttle from 'stream-throttle';
+import * as co from 'co';
+import certMgr from '../certMgr';
+import Recorder from '../recorder';
+import logUtil from '../log';
+import util from '../util';
+import RequestHandler from '../requestHandler';
+import wsServerMgr from '../wsServerMgr';
+import WebInterface from '../webInterface';
 
-// const memwatch = require('memwatch-next');
+declare type TSyncTaskCb = (err: Error) => void;
 
-// setInterval(() => {
-//   console.log(process.memoryUsage());
-//   const rss = Math.ceil(process.memoryUsage().rss / 1000 / 1000);
-//   console.log('Program is using ' + rss + ' mb of Heap.');
-// }, 1000);
+const ThrottleGroup = throttle.ThrottleGroup;
 
-// memwatch.on('stats', (info) => {
-//   console.log('gc !!');
-//   console.log(process.memoryUsage());
-//   const rss = Math.ceil(process.memoryUsage().rss / 1000 / 1000);
-//   console.log('GC !! Program is using ' + rss + ' mb of Heap.');
-
-//   // var heapUsed = Math.ceil(process.memoryUsage().heapUsed / 1000);
-//   // console.log("Program is using " + heapUsed + " kb of Heap.");
-//   // console.log(info);
-// });
-
-const T_TYPE_HTTP = 'http',
-  T_TYPE_HTTPS = 'https',
-  DEFAULT_TYPE = T_TYPE_HTTP;
+const T_TYPE_HTTP = 'http';
+const T_TYPE_HTTPS = 'https';
+const DEFAULT_TYPE = T_TYPE_HTTP;
 
 const PROXY_STATUS_INIT = 'INIT';
 const PROXY_STATUS_READY = 'READY';
@@ -47,25 +34,24 @@ const PROXY_STATUS_CLOSED = 'CLOSED';
  * @extends {events.EventEmitter}
  */
 class ProxyCore extends events.EventEmitter {
-
+  private socketIndex: number;
+  private status: 'INIT' | 'READY' | 'CLOSED';
+  private proxyPort: string;
+  private proxyType: 'http' | 'https';
+  protected proxyHostName: string;
+  public recorder: Recorder;
+  private httpProxyServer: http.Server | https.Server;
+  protected webServerInstance: WebInterface;
+  private requestHandler: RequestHandler;
+  private proxyRule: AnyProxyRule;
+  private socketPool: {
+    [key: string]: http.IncomingMessage;
+  };
   /**
    * Creates an instance of ProxyCore.
-   *
-   * @param {object} config - configs
-   * @param {number} config.port - port of the proxy server
-   * @param {object} [config.rule=null] - rule module to use
-   * @param {string} [config.type=http] - type of the proxy server, could be 'http' or 'https'
-   * @param {strign} [config.hostname=localhost] - host name of the proxy server, required when this is an https proxy
-   * @param {number} [config.throttle] - speed limit in kb/s
-   * @param {boolean} [config.forceProxyHttps=false] - if proxy all https requests
-   * @param {boolean} [config.silent=false] - if keep the console silent
-   * @param {boolean} [config.dangerouslyIgnoreUnauthorized=false] - if ignore unauthorized server response
-   * @param {object} [config.recorder] - recorder to use
-   * @param {boolean} [config.wsIntercept] - whether intercept websocket
-   *
    * @memberOf ProxyCore
    */
-  constructor(config) {
+  constructor(config: AnyProxyConfig) {
     super();
     config = config || {};
 
@@ -114,12 +100,12 @@ class ProxyCore extends events.EventEmitter {
     this.recorder = config.recorder;
 
     // init request handler
-    const RequestHandler = util.freshRequire('./requestHandler').default;
-    this.requestHandler = new RequestHandler({
+    const RequestHandlerClass = (util.freshRequire('./requestHandler') as any).default;
+    this.requestHandler = new RequestHandlerClass({
       wsIntercept: config.wsIntercept,
       httpServerPort: config.port, // the http server port for http proxy
       forceProxyHttps: !!config.forceProxyHttps,
-      dangerouslyIgnoreUnauthorized: !!config.dangerouslyIgnoreUnauthorized
+      dangerouslyIgnoreUnauthorized: !!config.dangerouslyIgnoreUnauthorized,
     }, this.proxyRule, this.recorder);
   }
 
@@ -133,7 +119,7 @@ class ProxyCore extends events.EventEmitter {
   * @returns undefined
   * @memberOf ProxyCore
   */
-  handleExistConnections(socket) {
+  private handleExistConnections(socket: http.IncomingMessage): void {
     const self = this;
     self.socketIndex ++;
     const key = `socketIndex_${self.socketIndex}`;
@@ -151,7 +137,7 @@ class ProxyCore extends events.EventEmitter {
    *
    * @memberOf ProxyCore
    */
-  start() {
+  public start(): ProxyCore {
     const self = this;
     self.socketIndex = 0;
     self.socketPool = {};
@@ -161,8 +147,8 @@ class ProxyCore extends events.EventEmitter {
     }
     async.series(
       [
-        //creat proxy server
-        function (callback) {
+        // creat proxy server
+        function(callback: TSyncTaskCb): void {
           if (self.proxyType === T_TYPE_HTTPS) {
             certMgr.getCertificate(self.proxyHostName, (err, keyContent, crtContent) => {
               if (err) {
@@ -170,7 +156,7 @@ class ProxyCore extends events.EventEmitter {
               } else {
                 self.httpProxyServer = https.createServer({
                   key: keyContent,
-                  cert: crtContent
+                  cert: crtContent,
                 }, self.requestHandler.userRequestHandler);
                 callback(null);
               }
@@ -181,17 +167,17 @@ class ProxyCore extends events.EventEmitter {
           }
         },
 
-        //handle CONNECT request for https over http
-        function (callback) {
+        // handle CONNECT request for https over http
+        function(callback: TSyncTaskCb): void {
           self.httpProxyServer.on('connect', self.requestHandler.connectReqHandler);
 
           callback(null);
         },
 
-        function (callback) {
+        function(callback: TSyncTaskCb): void {
           wsServerMgr.getWsServer({
             server: self.httpProxyServer,
-            connHandler: self.requestHandler.wsHandler
+            connHandler: self.requestHandler.wsHandler,
           });
           // remember all sockets, so we can destory them when call the method 'close';
           self.httpProxyServer.on('connection', (socket) => {
@@ -200,14 +186,14 @@ class ProxyCore extends events.EventEmitter {
           callback(null);
         },
 
-        //start proxy server
-        function (callback) {
+        // start proxy server
+        function(callback: TSyncTaskCb): void {
           self.httpProxyServer.listen(self.proxyPort);
           callback(null);
         },
       ],
 
-      //final callback
+      // final callback
       (err, result) => {
         if (!err) {
           const tipText = (self.proxyType === T_TYPE_HTTP ? 'Http' : 'Https') + ' proxy started on port ' + self.proxyPort;
@@ -221,7 +207,7 @@ class ProxyCore extends events.EventEmitter {
           let ruleSummaryString = '';
           const ruleSummary = this.proxyRule.summary;
           if (ruleSummary) {
-            co(function *() {
+            co(function *(): Generator {
               if (typeof ruleSummary === 'string') {
                 ruleSummaryString = ruleSummary;
               } else {
@@ -239,10 +225,10 @@ class ProxyCore extends events.EventEmitter {
           logUtil.printLog(color.red(tipText), logUtil.T_ERR);
           logUtil.printLog(err, logUtil.T_ERR);
           self.emit('error', {
-            error: err
+            error: err,
           });
         }
-      }
+      },
     );
 
     return self;
@@ -256,24 +242,34 @@ class ProxyCore extends events.EventEmitter {
    *
    * @memberOf ProxyCore
    */
-  close() {
+  public close(): Promise<Error> {
     // clear recorder cache
     return new Promise((resolve) => {
       if (this.httpProxyServer) {
         // destroy conns & cltSockets when closing proxy server
-        for (const connItem of this.requestHandler.conns) {
-          const key = connItem[0];
-          const conn = connItem[1];
+        this.requestHandler.conns.forEach((conn, key) => {
           logUtil.printLog(`destorying https connection : ${key}`);
           conn.end();
-        }
+        });
 
-        for (const cltSocketItem of this.requestHandler.cltSockets) {
-          const key = cltSocketItem[0];
-          const cltSocket = cltSocketItem[1];
+        this.requestHandler.cltSockets.forEach((cltSocket, key) => {
           logUtil.printLog(`endding https cltSocket : ${key}`);
           cltSocket.end();
-        }
+        });
+
+        // for (const connItem of this.requestHandler.conns) {
+        //   const key = connItem[0];
+        //   const conn = connItem[1];
+        //   logUtil.printLog(`destorying https connection : ${key}`);
+        //   conn.end();
+        // }
+
+        // for (const cltSocketItem of this.requestHandler.cltSockets) {
+        //   const key = cltSocketItem[0];
+        //   const cltSocket = cltSocketItem[1];
+        //   logUtil.printLog(`endding https cltSocket : ${key}`);
+        //   cltSocket.end();
+        // }
 
         if (this.socketPool) {
           for (const key in this.socketPool) {
@@ -296,92 +292,8 @@ class ProxyCore extends events.EventEmitter {
       } else {
         resolve();
       }
-    })
-  }
-}
-
-/**
- * start proxy server as well as recorder and webInterface
- */
-class ProxyServer extends ProxyCore {
-  /**
-   *
-   * @param {object} config - config
-   * @param {object} [config.webInterface] - config of the web interface
-   * @param {boolean} [config.webInterface.enable=false] - if web interface is enabled
-   * @param {number} [config.webInterface.webPort=8002] - http port of the web interface
-   */
-  constructor(config) {
-    // prepare a recorder
-    const recorder = new Recorder();
-    const configForCore = Object.assign({
-      recorder,
-    }, config);
-
-    super(configForCore);
-
-    this.proxyWebinterfaceConfig = config.webInterface;
-    this.recorder = recorder;
-    this.webServerInstance = null;
-  }
-
-  start() {
-    // start web interface if neeeded
-    if (this.proxyWebinterfaceConfig && this.proxyWebinterfaceConfig.enable) {
-      this.webServerInstance = new WebInterface(this.proxyWebinterfaceConfig, this.recorder);
-      // start web server
-      this.webServerInstance.start().then(() => {
-        // start proxy core
-        super.start();
-      })
-      .catch((e) => {
-        this.emit('error', e);
-      });
-    } else {
-      super.start();
-    }
-  }
-
-  close() {
-    return new Promise((resolve, reject) => {
-      super.close()
-        .then((error) => {
-          if (error) {
-            resolve(error);
-          }
-        });
-
-      if (this.recorder) {
-        logUtil.printLog('clearing cache file...');
-        this.recorder.clear();
-      }
-      const tmpWebServer = this.webServerInstance;
-      this.recorder = null;
-      this.webServerInstance = null;
-      if (tmpWebServer) {
-        logUtil.printLog('closing webserver...');
-        tmpWebServer.close((error) => {
-          if (error) {
-            console.error(error);
-            logUtil.printLog(`proxy web server close FAILED: ${error.message}`, logUtil.T_ERR);
-          } else {
-            logUtil.printLog(`proxy web server closed at ${this.proxyHostName} : ${this.webPort}`);
-          }
-
-          resolve(error);
-        })
-      } else {
-        resolve(null);
-      }
     });
   }
 }
 
-module.exports.ProxyCore = ProxyCore;
-module.exports.ProxyServer = ProxyServer;
-module.exports.ProxyRecorder = Recorder;
-module.exports.ProxyWebServer = WebInterface;
-module.exports.utils = {
-  systemProxyMgr: require('./systemProxyMgr'),
-  certMgr,
-};
+export default ProxyCore;
