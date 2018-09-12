@@ -7,7 +7,7 @@
         <title>简介 · AnyProxy</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
-        <meta name="generator" content="GitBook 3.2.2">
+        <meta name="generator" content="GitBook 3.2.3">
         <meta name="author" content="AnyProxy">
         
         
@@ -1386,13 +1386,18 @@ newResponse.body += <span class="hljs-string">&apos;--from anyproxy--&apos;</spa
 <span class="hljs-built_in">module</span>.exports = {
   *beforeSendRequest(requestDetail) {
     <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;https://httpbin.org/user-agent&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-built_in">console</span>.info(requestDetail._req.connection._peername);
       <span class="hljs-keyword">const</span> newRequestOptions = requestDetail.requestOptions;
-      requestDetail.protocol = <span class="hljs-string">&apos;http&apos;</span>;
+      requestDetail.protocol = <span class="hljs-string">&apos;https&apos;</span>;
       newRequestOptions.hostname = <span class="hljs-string">&apos;127.0.0.1&apos;</span>
-      newRequestOptions.port = <span class="hljs-string">&apos;8008&apos;</span>;
-      newRequestOptions.path = <span class="hljs-string">&apos;/index.html&apos;</span>;
+      newRequestOptions.port = <span class="hljs-string">&apos;3001&apos;</span>;
+      newRequestOptions.path = <span class="hljs-string">&apos;/test&apos;</span>;
       newRequestOptions.method = <span class="hljs-string">&apos;GET&apos;</span>;
       <span class="hljs-keyword">return</span> requestDetail;
+    }
+
+    <span class="hljs-keyword">if</span> (requestDetail.url.indexOf(<span class="hljs-string">&apos;http://mobilegw.stable.alipay.net/mgw.htm&apos;</span>) === <span class="hljs-number">0</span>) {
+      <span class="hljs-built_in">console</span>.info(requestDetail.requestData.toString())
     }
   },
   *beforeDealHttpsRequest(requestDetail) {
@@ -1658,7 +1663,7 @@ newResponse.body += <span class="hljs-string">&apos;--from anyproxy--&apos;</spa
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"简介","level":"1.1","depth":1,"next":{"title":"快速开始","level":"1.2","depth":1,"anchor":"#快速开始","path":"README.md","ref":"README.md#快速开始","articles":[{"title":"安装","level":"1.2.1","depth":2,"anchor":"#安装","path":"README.md","ref":"README.md#安装","articles":[]},{"title":"启动","level":"1.2.2","depth":2,"anchor":"#启动","path":"README.md","ref":"README.md#启动","articles":[]},{"title":"其他命令","level":"1.2.3","depth":2,"anchor":"#其他命令","path":"README.md","ref":"README.md#其他命令","articles":[]},{"title":"作为npm模块启动","level":"1.2.4","depth":2,"anchor":"#作为npm模块使用","path":"README.md","ref":"README.md#作为npm模块使用","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"cn","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2018-02-05T16:06:47.879Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2018-02-05T16:06:49.493Z"},"basePath":".","book":{"language":"cn"}});
+            gitbook.page.hasChanged({"page":{"title":"简介","level":"1.1","depth":1,"next":{"title":"快速开始","level":"1.2","depth":1,"anchor":"#快速开始","path":"README.md","ref":"README.md#快速开始","articles":[{"title":"安装","level":"1.2.1","depth":2,"anchor":"#安装","path":"README.md","ref":"README.md#安装","articles":[]},{"title":"启动","level":"1.2.2","depth":2,"anchor":"#启动","path":"README.md","ref":"README.md#启动","articles":[]},{"title":"其他命令","level":"1.2.3","depth":2,"anchor":"#其他命令","path":"README.md","ref":"README.md#其他命令","articles":[]},{"title":"作为npm模块启动","level":"1.2.4","depth":2,"anchor":"#作为npm模块使用","path":"README.md","ref":"README.md#作为npm模块使用","articles":[]}]},"dir":"ltr"},"config":{"plugins":[],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"AnyProxy","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AnyProxy","language":"cn","gitbook":"*","description":"A fully configurable http/https proxy in NodeJS"},"file":{"path":"README.md","mtime":"2018-09-12T08:12:13.669Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2018-09-12T08:12:15.223Z"},"basePath":".","book":{"language":"cn"}});
         });
     </script>
 </div>
