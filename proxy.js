@@ -69,6 +69,7 @@ class ProxyCore extends events.EventEmitter {
     super();
     config = config || {};
 
+    this.localAddress = config.localAddress;
     this.status = PROXY_STATUS_INIT;
     this.proxyPort = config.port;
     this.proxyType = /https/i.test(config.type || DEFAULT_TYPE) ? T_TYPE_HTTPS : T_TYPE_HTTP;
@@ -116,6 +117,7 @@ class ProxyCore extends events.EventEmitter {
     // init request handler
     const RequestHandler = util.freshRequire('./requestHandler');
     this.requestHandler = new RequestHandler({
+      localAddress: config.localAddress,
       wsIntercept: config.wsIntercept,
       httpServerPort: config.port, // the http server port for http proxy
       forceProxyHttps: !!config.forceProxyHttps,
