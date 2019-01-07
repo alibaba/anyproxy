@@ -228,7 +228,7 @@ function stringSimilarity(a, b, precision = 2) {
 * simhash similarity
 */
 function simHasH(a, b) {
-  const simhash = require('node-simhash');
+  const simhash = require('@tuofeng/node-simhash');
   return (simhash.compare(a, b) * 100);
 }
 

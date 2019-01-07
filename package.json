@@ -1,5 +1,5 @@
 {
-  "name": "anyproxy",
+  "name": "@tuofeng/anyproxy",
   "version": "4.0.12",
   "description": "A fully configurable HTTP/HTTPS proxy in Node.js",
   "main": "proxy.js",
@@ -40,6 +40,7 @@
     "ws": "^5.1.0"
   },
   "devDependencies": {
+    "@tuofeng/node-simhash": "^0.1.0",
     "antd": "^2.5.0",
     "autoprefixer": "^6.4.1",
     "babel-core": "^6.14.0",
@@ -69,7 +70,6 @@
     "koa-send": "^3.2.0",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
-    "node-simhash": "^0.1.0",
     "nodeunit": "^0.9.1",
     "phantom": "^4.0.0",
     "postcss-loader": "^0.13.0",
@@ -95,7 +95,7 @@
     "lint": "eslint .",
     "testserver": "node test/server/startServer.js",
     "testOutWeb": "jasmine test/spec_outweb/test_realweb_spec.js",
-    "buildweb": "NODE_ENV=production webpack --config web/webpack.config.js --colors",
+    "buildweb": "NODE_ENV=production npx webpack --config web/webpack.config.js --colors",
     "webserver": "NODE_ENV=test webpack --config web/webpack.config.js --colors --watch",
     "doc:serve": "node build_scripts/prebuild-doc.js && gitbook serve ./docs-src ./docs --log debug",
     "doc:build": "./build_scripts/build-doc-site.sh"
