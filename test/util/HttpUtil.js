@@ -6,18 +6,20 @@
 const request = require('request');
 const fs = require('fs');
 const WebSocket = require('ws');
-const HttpsProxyAgent = require('https-proxy-agent');
+const tunnel = require('tunnel');
 const stream = require('stream');
+const nodeUrl = require('url');
 
 const PROXY_HOST = 'http://localhost:8001';
 const SOCKET_PROXY_HOST = 'http://localhost:8001';
-
 
 const HTTP_SERVER_BASE = 'http://localhost:3000';
 const HTTPS_SERVER_BASE = 'https://localhost:3001';
 const WS_SERVER_BASE = 'ws://localhost:3000';
 const WSS_SERVER_BASE = 'wss://localhost:3001';
 const DEFAULT_CHUNK_COLLECT_THRESHOLD = 20 * 1024 * 1024; // about 20 mb
+
+const SOCKE_PROXY_URL_OBJ = nodeUrl.parse(SOCKET_PROXY_HOST);
 
 class commonStream extends stream.Readable {
   constructor(config) {
@@ -191,7 +193,23 @@ function doWebSocket(url, headers = {}, isProxy) {
   let ws;
   if (isProxy) {
     headers['via-proxy'] = 'true';
-    const agent = new HttpsProxyAgent(SOCKET_PROXY_HOST);
+    let agent = new tunnel.httpOverHttp({
+      proxy: {
+        hostname: SOCKE_PROXY_URL_OBJ.hostname,
+        port: SOCKE_PROXY_URL_OBJ.port
+      }
+    })
+
+    if (url.indexOf('wss') === 0) {
+      agent = new tunnel.httpsOverHttp({
+        rejectUnauthorized: false,
+        proxy: {
+          hostname: SOCKE_PROXY_URL_OBJ.hostname,
+          port: SOCKE_PROXY_URL_OBJ.port
+        }
+      })
+    }
+
     ws = new WebSocket(url, {
       agent,
       rejectUnauthorized: false,

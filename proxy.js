@@ -271,7 +271,7 @@ class ProxyCore extends events.EventEmitter {
         for (const cltSocketItem of this.requestHandler.cltSockets) {
           const key = cltSocketItem[0];
           const cltSocket = cltSocketItem[1];
-          logUtil.printLog(`endding https cltSocket : ${key}`);
+          logUtil.printLog(`closing https cltSocket : ${key}`);
           cltSocket.end();
         }
 

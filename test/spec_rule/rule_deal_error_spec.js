@@ -4,8 +4,9 @@
 */
 const ProxyServerUtil = require('../util/ProxyServerUtil.js');
 const { proxyGet } = require('../util/HttpUtil.js');
-
 const { printLog } = require('../util/CommonUtil.js');
+
+const domain_not_exists = 'not_exist.not_exist_anyproxy_io_domain.com';
 
 let errorInRule = null;
 const ruleNotDealError = {
@@ -62,7 +63,7 @@ function testWrapper(protocol) {
     });
 
     it('Should get a request error', done => {
-      const url = protocol + '://not_exist_url.anyproxy.io';
+      const url = protocol + `://${domain_not_exists}`;
       proxyGet(url)
         .then(proxyRes => {
           expect(proxyRes.statusCode).toEqual(500);
@@ -99,7 +100,7 @@ function testWrapper(protocol) {
     });
 
     it('Should get a request error', done => {
-      const url = protocol + '://not_exist_url.anyproxy.io';
+      const url = protocol + `://${domain_not_exists}`;
       proxyGet(url)
         .then(proxyRes => {
           expect(proxyRes.statusCode).toEqual(200);
@@ -140,7 +141,7 @@ function testHttpsConnect() {
     });
 
     it('Should get a request error', done => {
-      const url = 'https://not_exist_url.anyproxy.io';
+      const url = `https://${domain_not_exists}`;
       proxyGet(url)
         .then(proxyRes => {
           done.fail('should throw an error when requesting');
