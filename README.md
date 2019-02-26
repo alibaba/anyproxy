@@ -20,7 +20,7 @@ Issue: https://github.com/alibaba/anyproxy/issues
 
 AnyProxy是一个基于NodeJS的，可供插件配置的HTTP/HTTPS代理服务器。
 
-主页：[AnyProxy.io](http://anyproxy.io)
+主页：[AnyProxy.io](http://anyproxy.io)，访问可能需要稳定的国际网络环境
 
 ![](https://gw.alipayobjects.com/zos/rmsportal/gUfcjGxLONndTfllxynC.jpg@_90q)
 
