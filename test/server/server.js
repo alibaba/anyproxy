@@ -67,7 +67,7 @@ function KoaServer() {
   this.logWsRequest = function (wsReq) {
     const headers = wsReq.headers;
     const host = headers.host;
-    const isEncript = true && wsReq.connection && wsReq.connection.encrypted;
+    const isEncript = wsReq.connection && wsReq.connection.encrypted;
     const protocol = isEncript ? 'wss' : 'ws';
     let key = `${protocol}://${host}${wsReq.url}`;
     // take proxy data with 'proxy-' + url
