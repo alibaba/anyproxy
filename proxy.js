@@ -3,6 +3,7 @@
 const http = require('http'),
   https = require('https'),
   async = require('async'),
+  fs = require('fs'),
   color = require('colorful'),
   certMgr = require('./lib/certMgr'),
   Recorder = require('./lib/recorder'),
@@ -75,14 +76,26 @@ class ProxyCore extends events.EventEmitter {
     this.proxyHostName = config.hostname || 'localhost';
     this.recorder = config.recorder;
 
+    if (this.proxyType === T_TYPE_HTTPS) {
+      if(config.hostname){
+        if(config.keyCert){
+          this.proxyKeyCert = {
+            key:fs.readFileSync(config.keyCert.key,'utf-8'),
+            cert:fs.readFileSync(config.keyCert.cert,'utf-8')
+          };
+        }
+      } else {
+        throw new Error('hostname is required in https proxy');
+      }
+    };
+
     if (parseInt(process.versions.node.split('.')[0], 10) < 4) {
       throw new Error('node.js >= v4.x is required for anyproxy');
     } else if (config.forceProxyHttps && !certMgr.ifRootCAFileExists()) {
       logUtil.printLog('You can run `anyproxy-ca` to generate one root CA and then re-run this command');
       throw new Error('root CA not found. Please run `anyproxy-ca` to generate one first.');
-    } else if (this.proxyType === T_TYPE_HTTPS && !config.hostname) {
-      throw new Error('hostname is required in https proxy');
-    } else if (!this.proxyPort) {
+    }
+    else if (!this.proxyPort) {
       throw new Error('proxy port is required');
     } else if (!this.recorder) {
       throw new Error('recorder is required');
@@ -164,17 +177,23 @@ class ProxyCore extends events.EventEmitter {
         //creat proxy server
         function (callback) {
           if (self.proxyType === T_TYPE_HTTPS) {
-            certMgr.getCertificate(self.proxyHostName, (err, keyContent, crtContent) => {
-              if (err) {
-                callback(err);
-              } else {
-                self.httpProxyServer = https.createServer({
-                  key: keyContent,
-                  cert: crtContent
-                }, self.requestHandler.userRequestHandler);
-                callback(null);
-              }
-            });
+            if(self.proxyKeyCert){
+              self.httpProxyServer = https.createServer(self.proxyKeyCert, self.requestHandler.userRequestHandler);
+              callback(null);
+            }else{
+              certMgr.getCertificate(self.proxyHostName, (err, keyContent, crtContent) => {
+                if (err) {
+                  callback(err);
+                } else {
+                    self.proxyKeyCert = {
+                      key: keyContent.toString(),
+                      cert: crtContent.toString()
+                    }
+                    self.httpProxyServer = https.createServer(self.proxyKeyCert, self.requestHandler.userRequestHandler);
+                  callback(null);
+                }
+              });
+            }
           } else {
             self.httpProxyServer = http.createServer(self.requestHandler.userRequestHandler);
             callback(null);
