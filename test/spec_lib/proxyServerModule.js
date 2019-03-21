@@ -2,12 +2,13 @@
 * test for rule replaceOption rule
 *
 */
-const ip = require('ip');
 const AnyProxy = require('../../proxy');
-const { proxyGet, directGet } = require('../util/HttpUtil.js');
+const {
+  proxyGet,
+  directGet,
+  generateUrl,
+} = require('../util/HttpUtil.js');
 const Server = require('../server/server.js');
-
-const OUT_BOUND_IP = ip.address();
 
 describe('AnyProxy.proxyServer basic test', () => {
   it('should successfully start a proxy server', done => {
@@ -67,17 +68,17 @@ describe('AnyProxy.proxyServer high order test', () => {
         expect(res && res.statusCode && res.statusCode === 200 && res.body.length > 300).toBe(true);
         done();
       })
-      .catch(done)
+      .catch(done);
   });
 
   it('should work as expected for ip host', done => {
     // test if proxy server works
-    proxyGet(`https://${OUT_BOUND_IP}:3001/test`, {}, {})
+    proxyGet(generateUrl('https', '/test'), {}, {})
       .then(res => {
         expect(res && res.statusCode && res.statusCode === 200).toBe(true);
         done();
       })
-      .catch(done)
+      .catch(done);
   });
 
   it('should start webinterface correctly', done => {
@@ -87,6 +88,26 @@ describe('AnyProxy.proxyServer high order test', () => {
         expect(res && res.statusCode && res.statusCode === 200 && res.body.length > 300).toBe(true);
         done();
       })
-      .catch(done)
+      .catch(done);
+  });
+
+  it('should deal well with the gzip encoding compressed response', done => {
+    proxyGet(generateUrl('https', '/test/gzip'), {}, {})
+      .then(res => {
+        expect(res && res.statusCode === 200).toBe(true);
+        expect(JSON.parse(res.body).type).toBe('gzip');
+        done();
+      })
+      .catch(done);
+  });
+
+  it('should deal well with the brotli encoding compressed response', done => {
+    proxyGet(generateUrl('https', '/test/brotli'), {}, {})
+      .then(res => {
+        expect(res && res.statusCode === 200).toBe(true);
+        expect(JSON.parse(res.body).type).toBe('brotli');
+        done();
+      })
+      .catch(done);
   });
 });
