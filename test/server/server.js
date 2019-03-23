@@ -264,6 +264,13 @@ KoaServer.prototype.constructRouter = function () {
     this.response.body = bufStream.pipe(zlib.createGzip());
   });
 
+  router.get('/test/deflate', this.logRequest, function *(next) {
+    this.status = 200;
+    this.response.set('Content-Encoding', 'deflate');
+    this.response.set('Content-Type', 'application/json');
+    this.response.body = zlib.deflateRawSync('{"type":"deflate","message":"This is a deflate encoding response"}');
+  });
+
   return router;
 };
 

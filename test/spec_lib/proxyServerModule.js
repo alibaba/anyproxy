@@ -91,7 +91,7 @@ describe('AnyProxy.proxyServer high order test', () => {
       .catch(done);
   });
 
-  it('should deal well with the gzip encoding compressed response', done => {
+  it('should deal well with the gzip encoding response', done => {
     proxyGet(generateUrl('https', '/test/gzip'), {}, {})
       .then(res => {
         expect(res && res.statusCode === 200).toBe(true);
@@ -101,7 +101,17 @@ describe('AnyProxy.proxyServer high order test', () => {
       .catch(done);
   });
 
-  it('should deal well with the brotli encoding compressed response', done => {
+  it('should deal well with the deflate encoding response', done => {
+    proxyGet(generateUrl('https', '/test/deflate'), {}, {})
+      .then(res => {
+        expect(res && res.statusCode === 200).toBe(true);
+        expect(JSON.parse(res.body).type).toBe('deflate');
+        done();
+      })
+      .catch(done);
+  });
+
+  it('should deal well with the brotli encoding response', done => {
     proxyGet(generateUrl('https', '/test/brotli'), {}, {})
       .then(res => {
         expect(res && res.statusCode === 200).toBe(true);
