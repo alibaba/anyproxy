@@ -200,6 +200,13 @@ anyproxy --intercept #launch anyproxy and intercept all https traffic
 
 * [Appendix：how to trust CA](#config-certification)
 
+# Proxy WebSocket
+
+```bash
+anyproxy --ws-intercept
+```
+> The `wss` requests will be handled automatically when the `HTTPS` intercept is turned on, but AnyProxy will not record the data by default. You need to specify the `--ws-intercept` to tell AnyProxy to record it.
+
 # Rule Introduction
 
 AnyProxy provides the ability to load your own rules written in javascript. With rule module, you could customize the logic to handle requests.
@@ -521,8 +528,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_use_local_response.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     intercept all requests toward httpbin.org, use a local response
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -551,8 +558,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_header.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify the user-agent in requests toward httpbin.org
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -640,8 +647,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_protocol.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     redirect all http requests of httpbin.org to https
   test:
     curl 'http://httpbin.org/get?show_env=1' --proxy http://127.0.0.1:8001
@@ -670,8 +677,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_statuscode.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify all status code of http://httpbin.org/ to 404
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -699,8 +706,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_header.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify response header of http://httpbin.org/user-agent
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -728,8 +735,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_data.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify response data of http://httpbin.org/user-agent
   test:
     curl 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001

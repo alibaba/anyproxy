@@ -200,6 +200,14 @@ anyproxy --intercept #启动AnyProxy，并解析所有https请求
 
 * [附录：如何信任CA证书](#证书配置)
 
+# 代理WebSocket
+
+```bash
+anyproxy --ws-intercept
+```
+
+> 当启用`HTTPS`代理时，`wss`也会被代理，但是不会被AnyProxy记录。需要开启`--ws-intercept`后才会从界面上看到相应内容。
+
 # rule模块
 
 AnyProxy提供了二次开发的能力，你可以用js编写自己的规则模块（rule），来自定义网络请求的处理逻辑。
@@ -528,8 +536,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_use_local_response.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     intercept all requests toward httpbin.org, use a local response
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -558,8 +566,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_header.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify the user-agent in requests toward httpbin.org
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -647,8 +655,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_protocol.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     redirect all http requests of httpbin.org to https
   test:
     curl 'http://httpbin.org/get?show_env=1' --proxy http://127.0.0.1:8001
@@ -677,8 +685,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_statuscode.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify all status code of http://httpbin.org/ to 404
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -706,8 +714,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_header.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify response header of http://httpbin.org/user-agent
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -735,8 +743,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_data.js
 ```
 ```js
-/*
-  sample:
+/* 
+  sample: 
     modify response data of http://httpbin.org/user-agent
   test:
     curl 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
