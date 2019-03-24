@@ -9,6 +9,6 @@ node ./build_scripts/prebuild-doc.js
 gitbook build ./docs-src ./docs
 
 ## push the doc into github
-git add ./docs
-git commit -m 'building docs'
-git push origin
+# git add ./docs
+# git commit -m 'building docs'
+# git push origin

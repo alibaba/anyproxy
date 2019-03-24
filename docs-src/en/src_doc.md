@@ -163,7 +163,7 @@ proxyServer.close();
   * Sample
 
   ```js
-    const AnyProxy = require('AnyProxy');
+    const AnyProxy = require('anyproxy');
     const exec = require('child_process').exec;
 
     if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
