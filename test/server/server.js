@@ -11,6 +11,9 @@ const color = require('colorful');
 const WebSocketServer = require('ws').Server;
 const tls = require('tls');
 const crypto = require('crypto');
+const stream = require('stream');
+const brotli = require('brotli');
+const zlib = require('zlib');
 
 const createSecureContext = tls.createSecureContext || crypto.createSecureContext;
 
@@ -209,11 +212,6 @@ KoaServer.prototype.constructRouter = function () {
     this.response.set('Allow', 'GET, HEAD, POST, OPTIONS');
   });
 
-  // router.connect('/test/connect', function *(next) {
-  //     printLog('requesting connect /test/connect');
-  //     this.response.body = 'connect_established_body';
-  // });
-
   router.get('/test/should_not_replace_option', this.logRequest, function *(next) {
     this.response.body = 'the_option_that_not_be_replaced';
   });
@@ -247,6 +245,30 @@ KoaServer.prototype.constructRouter = function () {
     printLog('request in get big response of 1GB');
     this.response.type = 'application/octet-stream';
     this.response.body = buf;
+  });
+
+  router.get('/test/brotli', this.logRequest, function *(next) {
+    this.status = 200;
+    this.response.set('Content-Encoding', 'br');
+    this.response.set('Content-Type', 'application/json');
+    const buf = new Buffer('{"type":"brotli","message":"This is a brotli encoding response, but it need to be a long string or the brotli module\'s compress result will be null"}');
+    this.response.body = Buffer.from(brotli.compress(buf));
+  });
+
+  router.get('/test/gzip', this.logRequest, function *(next) {
+    this.status = 200;
+    this.response.set('Content-Encoding', 'gzip');
+    this.response.set('Content-Type', 'application/json');
+    const bufStream = new stream.PassThrough();
+    bufStream.end(new Buffer('{"type":"gzip","message":"This is a gzip encoding response"}'));
+    this.response.body = bufStream.pipe(zlib.createGzip());
+  });
+
+  router.get('/test/deflate', this.logRequest, function *(next) {
+    this.status = 200;
+    this.response.set('Content-Encoding', 'deflate');
+    this.response.set('Content-Type', 'application/json');
+    this.response.body = zlib.deflateRawSync('{"type":"deflate","message":"This is a deflate encoding response"}');
   });
 
   return router;
