@@ -7,7 +7,7 @@ AnyProxy
 
 [npm-image]: https://img.shields.io/npm/v/anyproxy.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/anyproxy
-[node-image]: https://img.shields.io/badge/node.js-%3E=_5.0.0-green.svg?style=flat-square
+[node-image]: https://img.shields.io/badge/node.js-%3E=_6.0.0-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/anyproxy.svg?style=flat-square
 [download-url]: https://npmjs.org/package/anyproxy

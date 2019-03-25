@@ -108,5 +108,8 @@
     "url": "https://github.com/alibaba/anyproxy"
   },
   "author": "ottomao@gmail.com",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=6.0.0"
+  }
 }
