@@ -5,26 +5,29 @@
 
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
-import { message, Button, Spin } from 'antd';
+import { message, Button, Spin, Select } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import { hideRootCA, updateIsRootCAExists } from 'action/globalStatusAction';
 import { MenuKeyMap } from 'common/Constant';
-import { getJSON, ajaxGet, postJSON } from 'common/ApiUtil';
+import { getJSON, postJSON } from 'common/ApiUtil';
 
 import Style from './download-root-ca.less';
 import CommonStyle from '../style/common.less';
+
+const certFileTypes = ['crt', 'cer', 'pem', 'der'];
 
 class DownloadRootCA extends React.Component {
     constructor () {
         super();
         this.state = {
             loadingCAQr: false,
-            generatingCA: false
+            generatingCA: false,
+            fileType: certFileTypes[0]
         };
 
         this.onClose = this.onClose.bind(this);
+        this.onFileTypeChange = this.onFileTypeChange.bind(this);
         this.getQrCodeContent = this.getQrCodeContent.bind(this);
     }
 
@@ -38,7 +41,7 @@ class DownloadRootCA extends React.Component {
             loadingCAQr: true
         });
 
-        getJSON('/api/getQrCode')
+        getJSON('/api/getQrCode', { type: this.state.fileType })
             .then((response) => {
                 this.setState({
                     loadingCAQr: false,
@@ -57,12 +60,33 @@ class DownloadRootCA extends React.Component {
         this.props.dispatch(hideRootCA());
     }
 
+    onFileTypeChange (value) {
+        this.setState({
+            fileType: value
+        }, () => {
+            this.fetchData();
+        });
+    }
+
     getQrCodeContent () {
         const imgDomContent = { __html: this.state.CAQrCodeImageDom };
         const content = (
             <div className={Style.qrCodeWrapper} >
                 <div dangerouslySetInnerHTML={imgDomContent} />
-                <span>Scan to download rootCA.crt to your Phone</span>
+                <div>Scan to download rootCA.{this.state.fileType} to your Phone</div>
+                <div>You can change the CA's file extension:
+                    <Select
+                        defaultValue={this.state.fileType}
+                        className={Style.fileSelect}
+                        onChange={this.onFileTypeChange}
+                    >
+                        {
+                            certFileTypes.map(key => (
+                                <Option key={key} value={key}>{key}</Option>
+                            ))
+                        }
+                    </Select>
+                </div>
             </div>
         );
 
@@ -71,7 +95,6 @@ class DownloadRootCA extends React.Component {
     }
 
     getGenerateRootCADiv () {
-
         const doToggleRemoteIntercept = () => {
             postJSON('/api/generateRootCA')
                 .then((result) => {
@@ -127,8 +150,8 @@ class DownloadRootCA extends React.Component {
                 </div>
 
                 <div className={Style.buttons} >
-                    <a href="/fetchCrtFile" target="_blank">
-                        <Button type="primary" size="large" > Download </Button>
+                    <a href={`/fetchCrtFile?type=${this.state.fileType}`} target="_blank">
+                        <Button type="primary" size="large" >Download</Button>
                     </a>
                     <span className={Style.tipSpan} >Or click the button to download.</span>
                 </div>
@@ -146,7 +169,6 @@ class DownloadRootCA extends React.Component {
         return (
             <ResizablePanel onClose={this.onClose} visible={panelVisible} >
                 {this.props.globalStatus.isRootCAFileExists ? this.getDownloadDiv() : this.getGenerateRootCADiv()}
-
             </ResizablePanel>
         );
     }
