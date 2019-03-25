@@ -1,3 +1,6 @@
+25 March 2019: AnyProxy 3.10.5:
+   * add callback parameter in `fs.writeFile` which is required in Node.js 10.0.0+
+
 26 Feb 2016: AnyProxy 3.10.4:
 
    * let users assign the port for web socket in AnyProxy cli
