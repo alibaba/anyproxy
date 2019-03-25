@@ -536,8 +536,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_use_local_response.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     intercept all requests toward httpbin.org, use a local response
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -566,8 +566,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_header.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     modify the user-agent in requests toward httpbin.org
   test:
     curl http://httpbin.org/user-agent --proxy http://127.0.0.1:8001
@@ -655,8 +655,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_request_protocol.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     redirect all http requests of httpbin.org to https
   test:
     curl 'http://httpbin.org/get?show_env=1' --proxy http://127.0.0.1:8001
@@ -685,8 +685,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_statuscode.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     modify all status code of http://httpbin.org/ to 404
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -714,8 +714,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_header.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     modify response header of http://httpbin.org/user-agent
   test:
     curl -I 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -743,8 +743,8 @@ module.exports = {
 anyproxy --rule rule_sample/sample_modify_response_data.js
 ```
 ```js
-/* 
-  sample: 
+/*
+  sample:
     modify response data of http://httpbin.org/user-agent
   test:
     curl 'http://httpbin.org/user-agent' --proxy http://127.0.0.1:8001
@@ -826,6 +826,8 @@ module.exports = {
 * 证书下载到指定目录后，需要从其他入口进行安装，包括：
   * 设置 -> 安全性与位置信息 -> 加密与凭据 -> 从存储设备安装。找到你下载的证书文件，进行安装
   * 设置 -> 安全 -> 从SD卡安装证书。找到你下载的证书文件，进行安装
+
+不同安卓系统支持安装的证书文件类型也不尽相同，大多数系统支持安装拓展名为 .crt 的证书文件，少部分仅支持 .cer 文件（已知如 OPPO R15），AnyProxy 提供了多种类型的证书文件可在下载安装时选择。
 
 ### 配置iOS/Android系统代理
 
