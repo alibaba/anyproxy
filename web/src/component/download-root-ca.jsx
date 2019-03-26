@@ -62,7 +62,7 @@ class DownloadRootCA extends React.Component {
         const content = (
             <div className={Style.qrCodeWrapper} >
                 <div dangerouslySetInnerHTML={imgDomContent} />
-                <span>Scan to download rootCA.crt to your Phone</span>
+                <span>Scan to download rootCA to your Phone</span>
             </div>
         );
 
