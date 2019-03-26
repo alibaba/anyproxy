@@ -1,0 +1,91 @@
+doctype html
+html(lang="en")
+  head
+    title Download rootCA
+    meta(name='viewport', content='initial-scale=1, maximum-scale=0.5, minimum-scale=1, user-scalable=no')
+  style.
+    body {
+      color: #666;
+      line-height: 1.5;
+      font-size: 16px;
+      font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+    }
+
+    body * {
+      box-sizing: border-box;
+    }
+
+    .logo {
+      font-size: 36px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .any {
+      font-weight: 500;
+    }
+
+    .proxy {
+      font-weight: 100;
+    }
+
+    .title {
+      font-weight: bold;
+      margin: 20px 0 6px;
+    }
+
+    .button {
+      text-align: center;
+      padding: 4px 15px 5px 15px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      height: 32px;
+      margin-bottom: 10px;
+      display: block;
+      text-decoration: none;
+      border-color: #108ee9;
+      color: rgba(0, 0, 0, .65);
+      background-color: #fff;
+      border-style: solid;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #d9d9d9;
+    }
+
+    .primary {
+      color: #fff;
+      background-color: #108ee9;
+      border-color: #108ee9;
+    }
+
+    .more {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .content {
+      word-break: break-all;
+      font-size: 14px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+  body
+    .logo
+      span.any Any
+      span.proxy Proxy
+    .title Download:
+    .content Select a CA file to download, the .crt file is commonly used.
+    a(href="/fetchCrtFile?type=crt").button.primary rootCA.crt
+    a(href="/fetchCrtFile?type=cer").button rootCA.cer
+    .more More
+    .buttons(style='display: none')
+      a(href="/fetchCrtFile?type=pem").button rootCA.pem
+      a(href="/fetchCrtFile?type=der").button rootCA.der
+    .title User-Agent:
+    .content #{ua}
+    script(type='text/javascript').
+      window.document.querySelector('.more').addEventListener('click', function (e) {
+        e.target.style.display = 'none';
+        window.document.querySelector('.buttons').style.display = 'block';
+      });

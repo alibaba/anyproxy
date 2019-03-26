@@ -17,26 +17,12 @@ describe('WebInterface server', () => {
     webServer.close();
   });
 
-  it('should support change CA extensions in /getQrCode', done => {
-    const certFileTypes = ['crt', 'cer', 'pem', 'der'];
-    const tasks = certFileTypes.map((type) => {
-      return directGet(`${webHost}/api/getQrCode`, { type })
-        .then(res => {
-          const body = JSON.parse(res.body);
-          expect(body.qrImgDom).toMatch('<img src="data:image/');
-          expect(body.url).toBe(`${webHost}/fetchCrtFile?type=${type}`);
-        });
-    });
-
-    Promise.all(tasks)
-      .then(done)
-      .catch(done);
-  });
-
-  it('should fallback to .crt file in /getQrCode', done => {
-    directGet(`${webHost}/api/getQrCode`, { type: 'unkonw' })
+  it('should response qrcode string in /getQrCode', done => {
+    directGet(`${webHost}/api/getQrCode`)
       .then(res => {
-        expect(JSON.parse(res.body).url).toBe(`${webHost}/fetchCrtFile?type=crt`);
+        const body = JSON.parse(res.body);
+        expect(body.qrImgDom).toMatch('<img src="data:image/');
+        expect(body.url).toBe(`${webHost}/downloadCrt`);
         done();
       })
       .catch(done);
