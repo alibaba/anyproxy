@@ -621,7 +621,7 @@ Installing CA in Android could be different based on the system, we list some co
   * Settings -> Security & Location > Encryption & credentials -> Install from storage, and find your CA file to install
   * Settings -> Security -> Install from SD card, and find you CA file to install
 
-As we known, there are several file extensions of CA file which may not be recognised by all kinds of Android. The .crt file is the most popular, and a few systems only support .cer file such as OPPO R15. In AnyProxy, you can choose the type of file you need before installing the root CA to your devices.
+There are several file extensions of CA file which may not be compatible with all kinds of Android phones. `.crt` file is the most popular, while a few systems could only use .cer file such as OPPO R15. In AnyProxy, you can choose the type of certificate you need before installing.
 
 ### config iOS/Android proxy server
 

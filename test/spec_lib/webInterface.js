@@ -4,7 +4,7 @@ const { directGet } = require('../util/HttpUtil.js');
 
 describe('WebInterface server', () => {
   let webServer = null;
-  let webHost = 'http://127.0.0.1:8002';
+  const webHost = 'http://127.0.0.1:8002'
 
   beforeAll(() => {
     const recorder = new Recorder();
