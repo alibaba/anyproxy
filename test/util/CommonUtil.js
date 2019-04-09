@@ -6,7 +6,7 @@ const color = require('colorful');
 
 function _isDeepEqual(source, target) {
   // if the objects are Array
-  if (source.constructor === Array && target.constructor === Array) {
+  if (Array.isArray(source) && Array.isArray(target)) {
     if (source.length !== target.length) {
       return false;
     }
