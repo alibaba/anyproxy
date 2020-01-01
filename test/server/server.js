@@ -80,8 +80,11 @@ function KoaServer() {
 
     self.requestRecordMap[key] = {
       headers: wsReq.headers,
-      body: ''
+      body: '',
+      messages: [],
     }
+
+    return self.requestRecordMap[key];
   };
 
   this.start();
@@ -280,18 +283,20 @@ KoaServer.prototype.createWsServer = function (httpServer) {
     path: '/test/socket'
   });
   wsServer.on('connection', (ws, wsReq) => {
-    const self = this;
-    self.logWsRequest(wsReq);
-    const messageObj = {
+    const logRecord = this.logWsRequest(wsReq);
+
+    ws.send(JSON.stringify({
       type: 'initial',
       content: 'default message'
-    };
+    }));
 
-    ws.send(JSON.stringify(messageObj));
     ws.on('message', message => {
       printLog('message from request socket: ' + message);
-      self.handleRecievedMessage(ws, message);
+      this.handleRecievedMessage(ws, message);
+      logRecord.messages.push(message);
     });
+
+    ws.on('error', e => console.error('error happened in websocket server', e));
   })
 };
 
@@ -322,7 +327,6 @@ KoaServer.prototype.start = function () {
   this.httpServer = app.listen(DEFAULT_PORT);
   this.createWsServer(this.httpServer);
 
-
   printLog('HTTP is now listening on port :' + DEFAULT_PORT);
 
   certMgr.getCertificate('localhost', (error, keyContent, crtContent) => {
@@ -336,19 +340,7 @@ KoaServer.prototype.start = function () {
       }, app.callback());
 
       // create wss server
-      const wss = new WebSocketServer({
-        server: self.httpsServer
-      });
-
-      wss.on('connection', (ws, wsReq) => {
-        self.logWsRequest(wsReq);
-        ws.on('message', (message) => {
-          printLog('received in wss: ' + message);
-          self.handleRecievedMessage(ws, message);
-        });
-      });
-
-      wss.on('error', e => console.error('error happened in wss:%s', e));
+      this.createWsServer(self.httpsServer);
 
       self.httpsServer.listen(HTTPS_PORT);
 
