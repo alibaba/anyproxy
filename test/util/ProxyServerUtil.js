@@ -10,10 +10,10 @@ const DEFAULT_OPTIONS = {
   port: 8001,
   webInterface: {
     enable: true,
-    webPort: 8002,  // optional, port for web interface
+    webPort: 8002, // optional, port for web interface
   },
   wsIntercept: true,
-  throttle: 10000,    // optional, speed limit in kb/s
+  throttle: 10000, // optional, speed limit in kb/s
   forceProxyHttps: true, // intercept https as well
   dangerouslyIgnoreUnauthorized: true,
   silent: false //optional, do not print anything into terminal. do not set it when you are still debugging.

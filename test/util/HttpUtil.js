@@ -328,16 +328,16 @@ function getRequestListFromPage(pageUrl, cb) {
     }, _outObj);
     return _page.open(pageUrl);
   })
-  .then(status => _outObj.property('urls'))
-  .then(urls => {
-    _page.close();
-    _ph.exit();
-    return urls;
-  })
-  .catch((err) => {
-    console.log(`failed to collecting requests from ${pageUrl}`);
-    console.log(err);
-  });
+    .then(status => _outObj.property('urls'))
+    .then(urls => {
+      _page.close();
+      _ph.exit();
+      return urls;
+    })
+    .catch((err) => {
+      console.log(`failed to collecting requests from ${pageUrl}`);
+      console.log(err);
+    });
 }
 
 
