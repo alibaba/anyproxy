@@ -248,7 +248,6 @@ class ProxyCore extends events.EventEmitter {
     return self;
   }
 
-
   /**
    * close the proxy server
    *
@@ -326,54 +325,47 @@ class ProxyServer extends ProxyCore {
   }
 
   start() {
+    if (this.recorder) {
+      this.recorder.setDbAutoCompact();
+    }
+
     // start web interface if neeeded
     if (this.proxyWebinterfaceConfig && this.proxyWebinterfaceConfig.enable) {
       this.webServerInstance = new WebInterface(this.proxyWebinterfaceConfig, this.recorder);
       // start web server
-      this.webServerInstance.start().then(() => {
-        // start proxy core
-        super.start();
-      })
-      .catch((e) => {
-        this.emit('error', e);
-      });
+      this.webServerInstance.start()
+      // start proxy core
+        .then(() => {
+          super.start();
+        })
+        .catch((e) => {
+          this.emit('error', e);
+        });
     } else {
       super.start();
     }
   }
 
   close() {
-    return new Promise((resolve, reject) => {
-      super.close()
-        .then((error) => {
-          if (error) {
-            resolve(error);
-          }
-        });
+    const self = this;
+    // release recorder
+    if (self.recorder) {
+      self.recorder.stopDbAutoCompact();
+      self.recorder.clear();
+    }
+    self.recorder = null;
 
-      if (this.recorder) {
-        logUtil.printLog('clearing cache file...');
-        this.recorder.clear();
-      }
-      const tmpWebServer = this.webServerInstance;
-      this.recorder = null;
-      this.webServerInstance = null;
-      if (tmpWebServer) {
-        logUtil.printLog('closing webserver...');
-        tmpWebServer.close((error) => {
-          if (error) {
-            console.error(error);
-            logUtil.printLog(`proxy web server close FAILED: ${error.message}`, logUtil.T_ERR);
-          } else {
-            logUtil.printLog(`proxy web server closed at ${this.proxyHostName} : ${this.webPort}`);
-          }
-
-          resolve(error);
-        })
-      } else {
-        resolve(null);
-      }
-    });
+    // close ProxyCore
+    return super.close()
+      // release webInterface
+      .then(() => {
+        if (self.webServerInstance) {
+          const tmpWebServer = self.webServerInstance;
+          self.webServerInstance = null;
+          logUtil.printLog('closing webInterface...');
+          return tmpWebServer.close();
+        }
+      });
   }
 }
 
