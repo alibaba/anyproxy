@@ -36,3 +36,4 @@ doc_compiled.md
 docs-md/cn/doc.md
 docs-md/en/doc.md
 docs/gitbook/gitbook-plugin-livereload/
+node_modules
