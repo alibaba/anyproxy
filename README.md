@@ -4,6 +4,8 @@ AnyProxy
 [![NPM version][npm-image]][npm-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
+[![Dependency Status](https://david-dm.org/alibaba/anyproxy.svg?style=flat-square)](https://david-dm.org/alibaba/anyproxy)
+[![devDependency Status](https://david-dm.org/alibaba/anyproxy/dev-status.svg?style=flat-square)](https://david-dm.org/alibaba/anyproxy#info=devDependencies)
 
 [npm-image]: https://img.shields.io/npm/v/anyproxy.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/anyproxy
