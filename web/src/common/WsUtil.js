@@ -15,7 +15,7 @@ import { message } from 'antd';
 */
 export function initWs(wsPort = location.port, path = 'do-not-proxy') {
   if(!WebSocket){
-    throw (new Error('WebSocket is not supportted on this browser'));
+    throw (new Error('WebSocket is not supported on this browser'));
   }
 
   const wsClient = new WebSocket(`ws://${location.hostname}:${wsPort}/${path}`);
