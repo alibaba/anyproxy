@@ -13,7 +13,6 @@ import RecordWsMessageDetail from 'component/record-ws-message-detail';
 import { hideRecordDetail } from 'action/recordAction';
 
 import Style from './record-detail.less';
-import CommonStyle from '../style/common.less';
 
 const StyleBind = ClassBind.bind(Style);
 const PageIndexMap = {
@@ -21,9 +20,6 @@ const PageIndexMap = {
   RESPONSE_INDEX: 'RESPONSE_INDEX',
   WEBSOCKET_INDEX: 'WEBSOCKET_INDEX'
 };
-
-// the maximum length of the request body to decide whether to offer a download link for the request body
-const MAXIMUM_REQ_BODY_LENGTH = 10000;
 
 class RecordDetail extends React.Component {
   constructor() {
@@ -65,7 +61,6 @@ class RecordDetail extends React.Component {
   }
 
   getWsMessageDiv(recordDetail) {
-    const { globalStatus } = this.props;
     return <RecordWsMessageDetail recordDetail={recordDetail} />;
   }
 
