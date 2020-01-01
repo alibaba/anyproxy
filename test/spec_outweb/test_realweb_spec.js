@@ -63,20 +63,20 @@ function test(url, requestHeaders = {}) {
                 done();
               });
             })
+              .catch((err) => {
+                printError(err);
+                done();
+              });
+          })
             .catch((err) => {
               printError(err);
               done();
             });
-          })
+        })
           .catch((err) => {
             printError(err);
             done();
           });
-        })
-        .catch((err) => {
-          printError(err);
-          done();
-        });
       });
     })
   })

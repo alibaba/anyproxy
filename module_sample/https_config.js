@@ -3,7 +3,7 @@ const exec = require('child_process').exec;
 
 if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
   AnyProxy.utils.certMgr.generateRootCA((error, keyPath) => {
-        // let users to trust this CA before using proxy
+    // let users to trust this CA before using proxy
     if (!error) {
       const certDir = require('path').dirname(keyPath);
       console.log('The cert is generated at', certDir);
@@ -18,6 +18,6 @@ if (!AnyProxy.utils.certMgr.ifRootCAFileExists()) {
     }
   });
 } else {
-    // clear all the certificates
-    // AnyProxy.utils.certMgr.clearCerts()
+  // clear all the certificates
+  // AnyProxy.utils.certMgr.clearCerts()
 }
