@@ -27,7 +27,7 @@ const {
   RECORD_FILTER: RECORD_FILTER_MENU_KEY
 } = MenuKeyMap;
 
-import { getJSON } from 'common/ApiUtil';
+import { getJSON } from 'common/apiUtil';
 
 import Style from './header-menu.less';
 

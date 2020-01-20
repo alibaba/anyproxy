@@ -6,7 +6,7 @@
 import React, { PropTypes } from 'react';
 import { message, Button, Icon } from 'antd';
 import { formatDate } from 'common/commonUtil';
-import { initWs } from 'common/WsUtil';
+import { initWs } from 'common/wsUtil';
 import ClassBind from 'classnames/bind';
 
 import Style from './record-ws-message-detail.less';

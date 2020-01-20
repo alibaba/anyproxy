@@ -29,7 +29,7 @@ import {
   updateLocalGlobalProxyFlag
 } from 'action/globalStatusAction';
 
-import { getJSON, postJSON, isApiSuccess } from 'common/ApiUtil';
+import { getJSON, postJSON, isApiSuccess } from 'common/apiUtil';
 
 function* doFetchRequestList() {
   const data = yield call(getJSON, '/latestLog');
