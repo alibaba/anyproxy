@@ -5,7 +5,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import InlineSVG from 'svg-inline-react';
-import { getQueryParameter } from 'common/CommonUtil';
+import { getQueryParameter } from 'common/commonUtil';
 
 import Style from './left-menu.less';
 import ClassBind from 'classnames/bind';
@@ -15,7 +15,7 @@ import {
   showRootCA
 } from 'action/globalStatusAction';
 
-import { MenuKeyMap } from 'common/Constant';
+import { MenuKeyMap } from 'common/constant';
 
 const StyleBind = ClassBind.bind(Style);
 const {

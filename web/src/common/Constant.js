@@ -1,5 +1,5 @@
 /**
-* define all Constant variables here
+* define all constant variables here
 */
 
 module.exports.MenuKeyMap = {

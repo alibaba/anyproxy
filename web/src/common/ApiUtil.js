@@ -1,7 +1,7 @@
 /**
 * AJAX操作工具类
 */
-import PromiseUtil from './PromiseUtil';
+import PromiseUtil from './promiseUtil';
 export function getJSON(url, data) {
     const d = PromiseUtil.defer();
     fetch(url + serializeQuery(data))

@@ -4,14 +4,12 @@
  */
 
 import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import { Tree, Form, Input, Button } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
-import PromiseUtil from 'common/PromiseUtil';
+import PromiseUtil from 'common/promiseUtil';
 import { fetchDirectory, hideMapLocal, fetchMappedConfig, updateRemoteMappedConfig } from 'action/globalStatusAction';
-import { MenuKeyMap } from 'common/Constant';
+import { MenuKeyMap } from 'common/constant';
 
 import Style from './map-local.less';
 import CommonStyle from '../style/common.less';

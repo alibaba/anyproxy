@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { message, Button, Spin } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import { hideRootCA, updateIsRootCAExists } from 'action/globalStatusAction';
-import { MenuKeyMap } from 'common/Constant';
+import { MenuKeyMap } from 'common/constant';
 import { getJSON, ajaxGet, postJSON } from 'common/ApiUtil';
 
 import Style from './download-root-ca.less';

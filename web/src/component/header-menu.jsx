@@ -7,8 +7,8 @@ import ClassBind from 'classnames/bind';
 import { connect } from 'react-redux';
 import InlineSVG from 'svg-inline-react';
 import { message, Modal, Popover, Button } from 'antd';
-import { getQueryParameter } from 'common/CommonUtil';
-import { MenuKeyMap } from 'common/Constant';
+import { getQueryParameter } from 'common/commonUtil';
+import { MenuKeyMap } from 'common/constant';
 
 import {
   resumeRecording,
