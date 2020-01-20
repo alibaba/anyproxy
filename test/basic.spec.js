@@ -161,7 +161,7 @@ describe('response data formats', () => {
 });
 
 describe('big files', () => {
-  const BIG_FILE_SIZE = 1024 * 1024 * 1024 - 1; // 2^30-1, 1GB
+  const BIG_FILE_SIZE = 100 * 1024 * 1024 - 1; // 100 mb
   const BUFFER_FILL = 'a';
 
   let server;
@@ -217,7 +217,7 @@ describe('big files', () => {
       }
       done();
     });
-  }, 10 * 1000);
+  }, 120 * 1000);
 
   it('upload big file', (done) => {
     const bufferContent = Buffer.alloc(BIG_FILE_SIZE, BUFFER_FILL);
@@ -235,7 +235,7 @@ describe('big files', () => {
     });
     req.write(bufferContent);
     req.end();
-  }, 60 * 1000);
+  }, 120 * 1000);
 });
 
 describe('web interface', () => {
