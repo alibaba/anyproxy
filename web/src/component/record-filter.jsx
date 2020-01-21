@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { Input, Alert } from 'antd';
 import ResizablePanel from 'component/resizable-panel';
 import { hideFilter, updateFilter } from 'action/globalStatusAction';
-import { MenuKeyMap } from 'common/Constant';
+import { MenuKeyMap } from 'common/constant';
 
 import Style from './record-filter.less';
 import CommonStyle from '../style/common.less';

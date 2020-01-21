@@ -20,10 +20,10 @@ program
   .parse(process.argv);
 
 function openFolderOfFile(filePath) {
-  const isWin = /^win/.test(process.platform);
-  if (isWin) {
+  const platform = process.platform;
+  if (/^win/.test(platform)) {
     exec('start .', { cwd: path.dirname(filePath) });
-  } else {
+  } else if (/darwin/.test(platform)) {
     exec(`open -R ${filePath}`);
   }
 }
@@ -33,7 +33,6 @@ function guideToGenrateCA() {
     if (!error) {
       const certDir = path.dirname(keyPath);
       console.log(`The cert is generated at ${certDir}. Please trust the ${color.bold('rootCA.crt')}.`);
-      // TODO: console.log('guide to install');
       openFolderOfFile(crtPath);
     } else {
       console.error('failed to generate rootCA', error);
@@ -44,7 +43,6 @@ function guideToGenrateCA() {
 function guideToTrustCA() {
   const certPath = AnyProxy.utils.certMgr.getRootCAFilePath();
   if (certPath) {
-    // TODO: console.log('guide to install');
     openFolderOfFile(certPath);
   } else {
     console.error('failed to get cert path');

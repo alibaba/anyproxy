@@ -3,7 +3,7 @@
 */
 
 import React, { PropTypes } from 'react';
-import { formatDate } from 'common/CommonUtil';
+import { formatDate } from 'common/commonUtil';
 
 import Style from './record-row.less';
 import CommonStyle from '../style/common.less';

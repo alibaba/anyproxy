@@ -5,14 +5,14 @@
 
 import React, { PropTypes } from 'react';
 import { message } from 'antd';
-import { initWs } from 'common/WsUtil';
+import { initWs } from 'common/wsUtil';
 import { updateWholeRequest } from 'action/recordAction';
 import {
   updateShouldClearRecord,
   updateShowNewRecordTip
 } from 'action/globalStatusAction';
 const RecordWorker = require('worker-loader?inline!./record-worker.jsx');
-import { getJSON } from 'common/ApiUtil';
+import { getJSON } from 'common/apiUtil';
 
 const myRecordWorker = new RecordWorker(window.URL.createObjectURL(new Blob([RecordWorker.toString()])));
 const fetchLatestLog = function () {

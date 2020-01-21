@@ -5,7 +5,7 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { Table } from 'antd';
-import { formatDate } from 'common/CommonUtil';
+import { formatDate } from 'common/commonUtil';
 
 import Style from './table-panel.less';
 import ClassBind from 'classnames/bind';
