@@ -4,6 +4,7 @@ AnyProxy
 [![NPM version][npm-image]][npm-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
+[![Build Status](https://travis-ci.org/alibaba/anyproxy.svg?branch=master)](https://travis-ci.org/alibaba/anyproxy)
 
 [npm-image]: https://img.shields.io/npm/v/anyproxy.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/anyproxy

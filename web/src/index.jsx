@@ -6,8 +6,8 @@ import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from 'saga/rootSaga';
-import { MenuKeyMap } from 'common/Constant';
-import { getQueryParameter } from 'common/CommonUtil';
+import { MenuKeyMap } from 'common/constant';
+import { getQueryParameter } from 'common/commonUtil';
 
 import reducer from 'reducer/rootReducer';
 import HeaderMenu from 'component/header-menu';

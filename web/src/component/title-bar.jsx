@@ -5,7 +5,7 @@
 
 import React, { PropTypes } from 'react';
 import { Icon } from 'antd';
-import { getQueryParameter } from 'common/CommonUtil';
+import { getQueryParameter } from 'common/commonUtil';
 
 import Style from './title-bar.less';
 

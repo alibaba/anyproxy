@@ -21,7 +21,7 @@ const defaultStatus = {
   mappedConfig:[] // configured map config
 };
 
-import { MenuKeyMap } from 'common/Constant';
+import { MenuKeyMap } from 'common/constant';
 
 import {
   STOP_RECORDING,

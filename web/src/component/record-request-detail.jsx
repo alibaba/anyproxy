@@ -10,7 +10,7 @@ import clipboard from 'clipboard-js'
 import JsonViewer from 'component/json-viewer';
 import ModalPanel from 'component/modal-panel';
 import { hideRecordDetail } from 'action/recordAction';
-import { selectText } from 'common/CommonUtil';
+import { selectText } from 'common/commonUtil';
 import { curlify } from 'common/curlUtil';
 
 import Style from './record-detail.less';
