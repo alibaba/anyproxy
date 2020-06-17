@@ -63,7 +63,7 @@ function doProxyWebSocket(url, headers = {}) {
       expect(body.data).toMatchSnapshot('data');
       return body;
     };
-  
+
     it('GET', async () => {
       const url = `${protocol}://httpbin.org/get`;
       const getParam = {
@@ -71,25 +71,25 @@ function doProxyWebSocket(url, headers = {}) {
       };
       await basicProxyRequest(proxyHost, 'GET', url, {}, getParam).then(assertProxyRes);
     });
-  
+
     it('POST body and header', async () => {
       const url = `${protocol}://httpbin.org/post`;
-      const payloadStream = fs.createReadStream(path.resolve(__dirname, './fixtures/image.png'));
-  
+      const payloadStream = fs.createReadStream(path.resolve(__dirname, './fixtures/upload.txt'));
+
       const postHeaders = {
         anyproxy_header: 'header_value',
       };
-  
+
       const body = await basicProxyRequest(proxyHost, 'POST', url, postHeaders, {}, payloadStream).then(assertProxyRes);
       expect(body.headers['Anyproxy-Header']).toBe(postHeaders.anyproxy_header);
     });
-  
+
     it('PUT', async () => {
       const url = `${protocol}://httpbin.org/put`;
-      const payloadStream = fs.createReadStream(path.resolve(__dirname, './fixtures/image.png'));
+      const payloadStream = fs.createReadStream(path.resolve(__dirname, './fixtures/upload.txt'));
       await basicProxyRequest(proxyHost, 'PUT', url, {}, undefined, payloadStream).then(assertProxyRes);
     });
-  
+
     it('DELETE', async () => {
       const url = `${protocol}://httpbin.org/delete`;
       const param = {
@@ -97,7 +97,7 @@ function doProxyWebSocket(url, headers = {}) {
       };
       await basicProxyRequest(proxyHost, 'DELETE', url, {}, param).then(assertProxyRes);
     });
-  
+
     it('PATCH', async () => {
       const url = `${protocol}://httpbin.org/patch`;
       await basicProxyRequest(proxyHost, 'PATCH', url).then(assertProxyRes);
@@ -111,7 +111,7 @@ function doProxyWebSocket(url, headers = {}) {
           ws.on('open', () => {
             ws.send(wsMsg);
           });
-    
+
           ws.on('message', (msg) => {
             expect(msg).toBe(wsMsg);
             ws.close();
