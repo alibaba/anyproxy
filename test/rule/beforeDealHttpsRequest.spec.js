@@ -34,11 +34,11 @@ describe('Rule beforeDealHttpsRequest', () => {
   });
   it('Should replace the https request body', async () => {
     const url = 'https://httpbin.org/put';
-    const payloadStream = fs.createReadStream(path.resolve(__dirname, '../fixtures/image.png'));
+    const payloadStream = fs.createReadStream(path.resolve(__dirname, '../fixtures/upload.txt'));
     const postHeaders = {
       anyproxy_header: 'header_value',
     };
-  
+
     await basicProxyRequest(proxyHost, 'PUT', url, postHeaders, {}, payloadStream).then((result) => {
       const proxyRes = result.response;
       const body = JSON.parse(result.body);
