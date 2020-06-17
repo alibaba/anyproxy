@@ -58,11 +58,11 @@ describe('Rule replaceRequestData', () => {
 
   it('should replace the request data in proxy if the assertion is true', async () => {
     const url = 'http://httpbin.org/post';
-    const payloadStream = fs.createReadStream(path.resolve(__dirname, '../fixtures/image.png'));
+    const payloadStream = fs.createReadStream(path.resolve(__dirname, '../fixtures/upload.txt'));
     const postHeaders = {
       anyproxy_header: 'header_value',
     };
-  
+
     await basicProxyRequest(proxyHost, 'POST', url, postHeaders, {}, payloadStream).then((result) => {
       const proxyRes = result.response;
       const body = JSON.parse(result.body);
@@ -73,7 +73,7 @@ describe('Rule replaceRequestData', () => {
   });
 
   it('should respond content specified in rule', async () => {
-    const url = 'http://httpbin.org/status/302';  
+    const url = 'http://httpbin.org/status/302';
     await basicProxyRequest(proxyHost, 'GET', url).then((result) => {
       const proxyRes = result.response;
       const body = result.body;
@@ -84,7 +84,7 @@ describe('Rule replaceRequestData', () => {
   });
 
   it('should replace protocol and url', async () => {
-    const url = 'http://domain_not_exists.anyproxy.io/should_be_replaced';  
+    const url = 'http://domain_not_exists.anyproxy.io/should_be_replaced';
     await basicProxyRequest(proxyHost, 'GET', url).then((result) => {
       const proxyRes = result.response;
       expect(proxyRes.statusCode).toBe(302);
