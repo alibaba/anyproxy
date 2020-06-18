@@ -26,7 +26,7 @@ program
 
 if (program.clear) {
   require('../lib/certMgr').clearCerts(() => {
-    util.deleteFolderContentsRecursive(util.getAnyProxyPath('cache'));
+    util.deleteFolderContentsRecursive(util.getAnyProxyTmpPath());
     console.log(color.green('done !'));
     process.exit(0);
   });
