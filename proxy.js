@@ -92,7 +92,6 @@ class ProxyCore extends events.EventEmitter {
 
     // init recorder
     this.recorder = config.recorder;
-
     // init request handler
     const RequestHandler = util.freshRequire('./requestHandler');
     this.requestHandler = new RequestHandler({
@@ -293,13 +292,20 @@ class ProxyServer extends ProxyCore {
    * @param {object} [config.webInterface] - config of the web interface
    * @param {boolean} [config.webInterface.enable=false] - if web interface is enabled
    * @param {number} [config.webInterface.webPort=8002] - http port of the web interface
+   * @param {boolean} [config.cache=false] - never store cache on disk if cache is false
    */
   constructor(config) {
     // prepare a recorder
-    const recorder = new Recorder();
-    const configForCore = Object.assign({
+    if (!('cache' in config)) {
+      config.cache = true;
+    }
+    const recorder = config.cache ? new Recorder() : { fake: true };
+    if (!config.cache && config.webInterface) {
+      config.webInterface.enable = false;
+    }
+    const configForCore = Object.assign(config, {
       recorder,
-    }, config);
+    });
 
     super(configForCore);
 
@@ -309,7 +315,7 @@ class ProxyServer extends ProxyCore {
   }
 
   start() {
-    if (this.recorder) {
+    if (this.recorder && !this.recorder.fake) {
       this.recorder.setDbAutoCompact();
     }
 
@@ -333,7 +339,7 @@ class ProxyServer extends ProxyCore {
   close() {
     const self = this;
     // release recorder
-    if (self.recorder) {
+    if (self.recorder && !self.recorder.fake) {
       self.recorder.stopDbAutoCompact();
       self.recorder.clear();
     }
