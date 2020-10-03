@@ -191,7 +191,7 @@ proxyServer.close();
 
 > Under the hood, AnyProxy decryptes https requests by man-in-the-middle attack. Users have to trust the CA cert in advance. Otherwise, client side will issue errors about unsecure network.
 
-* generate certifycates and intercept
+* generate certificates and intercept
 
 ```bash
 anyproxy-ca #generate root CA. manually trust it after that.
@@ -471,7 +471,7 @@ module.exports = {
 #### beforeDealHttpsRequest(requestDetail)
 
 * When receiving https request, AnyProxy will call `beforeDealHttpsRequest` with param `requestDetail`
-* If configed with `forceProxyHttps` in launching, AnyProxy will skip calling this method
+* If configured with `forceProxyHttps` in launching, AnyProxy will skip calling this method
 * Only by returning true, AnyProxy will try to replace the certificate and intercept the https request.
 * `requestDetail`
   * `host` {string} the target host to request. Due to the request protocol, full url couldn't be got here
@@ -596,7 +596,7 @@ install ：
 
 ### config http proxy server
 
-* take Chrome extent [SwitchyOmega] as an example(https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)为例
+* take Chrome extension [SwitchyOmega] as an example(https://chrome.google.com/webstore/detail/padekgcemlokbadohgkifijomclgjgif)为例
 
 <img src="https://zos.alipayobjects.com/rmsportal/jIPZrKmqXRaSledQeJUJ.png" width="500" />
 
@@ -625,7 +625,7 @@ There are several file extensions of CA file which may not be compatible with al
 
 ### config iOS/Android proxy server
 
-* proxy settings are placed in wifi setting
+* proxy settings are placed in wifi settings
 
 * iOS
 
@@ -640,7 +640,7 @@ There are several file extensions of CA file which may not be compatible with al
 
 
 ### Q: can not deal https request in rule module.
- * A: Any of these options could be used to change the way AnyProxy deall https requests
+ * A: Any of these options could be used to change the way AnyProxy deal https requests
      1. config `--intercept` when luanching AnyProxy via cli, or use `forceProxyHttps` when using as an npm module
      2. place a `beforeDealHttpsRequest` function in your rule file and determine which request to intercept by your own.
 
@@ -689,4 +689,4 @@ AnyProxy will propmt this message when the certification of the site you're visi
   };
   ```
 
-  And we get a bonous here, AnyProxy will only ignore the errors for the site(s) we want it to!
+  And we get a bonus here, AnyProxy will only ignore the errors for the site(s) we want it to!
