@@ -109,6 +109,6 @@
   "author": "ottomao@gmail.com",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=10.12.0"
   }
 }
