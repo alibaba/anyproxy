@@ -1,6 +1,6 @@
 {
-  "name": "anyproxy",
-  "version": "4.1.3",
+  "name": "@ies/anyproxy",
+  "version": "4.1.15",
   "description": "A fully configurable HTTP/HTTPS proxy in Node.js",
   "main": "proxy.js",
   "bin": {
@@ -22,6 +22,7 @@
     "es6-promise": "^3.3.1",
     "express": "^4.8.5",
     "fast-json-stringify": "^0.17.0",
+    "fs-extra": "^8.1.0",
     "iconv-lite": "^0.4.6",
     "inquirer": "^5.2.0",
     "ip": "^0.3.2",
@@ -30,6 +31,7 @@
     "moment": "^2.15.1",
     "nedb": "^1.8.0",
     "node-easy-cert": "^1.0.0",
+    "node-forge": "^0.10.0",
     "pug": "^2.0.0-beta6",
     "qrcode-npm": "0.0.3",
     "request": "^2.74.0",
@@ -90,7 +92,6 @@
     "worker-loader": "^0.7.1"
   },
   "scripts": {
-    "prepublish": "npm run buildweb",
     "test": "npx jest",
     "lint": "eslint .",
     "testserver": "node test/server/startServer.js",
