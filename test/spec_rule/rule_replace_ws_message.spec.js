@@ -10,7 +10,6 @@ describe('Rule to replace the websocket message', () => {
   let proxyServer = null;
 
   beforeAll((done) => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 50000;
     printLog('Start server for rule_replace_ws_message_spec');
 
     testServer = new TestServer();
